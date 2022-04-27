@@ -1,18 +1,17 @@
-﻿namespace RandomSkunk.Results
+namespace RandomSkunk.Results;
+
+/// <summary>
+/// Defines the types of results.
+/// </summary>
+public enum ResultType
 {
     /// <summary>
-    /// Defines the types of results.
+    /// The operation was successful.
     /// </summary>
-    public enum ResultType
-    {
-        /// <summary>
-        /// The operation was successful.
-        /// </summary>
-        Success,
+    Success,
 
-        /// <summary>
-        /// The operation was not successful.
-        /// </summary>
-        Fail
-    }
+    /// <summary>
+    /// The operation was not successful.
+    /// </summary>
+    Fail,
 }

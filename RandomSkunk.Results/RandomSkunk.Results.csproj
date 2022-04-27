@@ -1,9 +1,42 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net461;net6.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
+
+	  <PackageVersion>1.0.0-alpha00</PackageVersion>
+	  <Title>RandomSkunk.Results</Title>
+	  <Description>Implementations of the Result monad.</Description>
+	  <Authors>Brian Friesen</Authors>
+	  <Copyright>Copyright 2022 (c) Brian Friesen. All rights reserved.</Copyright>
+
+	  <PackageId>RandomSkunk.Results</PackageId>
+	  <PackageProjectUrl>https://github.com/bfriesen/RandomSkunk.Results</PackageProjectUrl>
+	  <PackageTags>result monad option some none maybe error</PackageTags>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageLicenseFile>LICENSE</PackageLicenseFile>
+	  <PackageIcon>icon.png</PackageIcon>
+	  <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	  <PackageReleaseNotes>https://github.com/bfriesen/RandomSkunk.Results/blob/main/CHANGELOG.md</PackageReleaseNotes>
+
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	  <PublishRepositoryUrl>True</PublishRepositoryUrl>
+	  <EmbedUntrackedSources>True</EmbedUntrackedSources>
+	  <DebugType>Embedded</DebugType>
   </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
+		<None Include="..\icon.png" Pack="true" PackagePath="\" />
+		<None Include="..\CHANGELOG.md" Pack="false" />
+	</ItemGroup>
 
 </Project>
