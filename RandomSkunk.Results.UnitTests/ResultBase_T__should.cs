@@ -10,12 +10,10 @@ public class ResultBase_T__should
         result.IsSuccess.Should().BeFalse();
         result.IsFail.Should().BeFalse();
         result.CallSite.Should().Be(default(CallSite));
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 
     private class DefaultResultBase<T> : ResultBase<T>

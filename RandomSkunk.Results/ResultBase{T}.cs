@@ -20,7 +20,7 @@ public abstract class ResultBase<T> : ResultBase
     /// <see cref="InvalidOperationException"/> if <see cref="ResultBase.IsSuccess"/> is false.
     /// </summary>
     [NotNull]
-    public virtual T Value => throw new InvalidOperationException($"{nameof(Value)} cannot be accessed if {nameof(IsSuccess)} is false.");
+    public virtual T Value => throw Exceptions.CannotAccessValueUnlessSuccess;
 
     /// <summary>
     /// Determines whether the value of the result equals the <paramref name="otherValue"/>.

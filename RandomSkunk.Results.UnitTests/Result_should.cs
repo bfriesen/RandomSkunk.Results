@@ -15,9 +15,8 @@ public class Result_should
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(ResultType.Success);
         result.CallSite.MemberName.Should().Be(nameof(Create_success_result));
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]

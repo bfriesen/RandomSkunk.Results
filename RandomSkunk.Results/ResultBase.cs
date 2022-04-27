@@ -38,7 +38,7 @@ public abstract class ResultBase
     /// Gets the error of the failed operation, or throws an
     /// <see cref="InvalidOperationException"/> if <see cref="IsFail"/> is false.
     /// </summary>
-    public virtual Error Error => throw new InvalidOperationException($"{nameof(Error)} cannot be accessed if {nameof(IsFail)} is false.");
+    public virtual Error Error => throw Exceptions.CannotAccessErrorUnlessFail;
 
     /// <summary>
     /// Gets information about the code that created this result.

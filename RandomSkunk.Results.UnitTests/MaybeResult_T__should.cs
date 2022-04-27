@@ -16,9 +16,8 @@ public class MaybeResult_T__should
         result.Type.Should().Be(MaybeResultType.Some);
         result.CallSite.MemberName.Should().Be(nameof(Create_some_result));
         result.Value.Should().Be(321);
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
@@ -31,9 +30,8 @@ public class MaybeResult_T__should
         result.Type.Should().Be(MaybeResultType.Some);
         result.CallSite.MemberName.Should().Be(nameof(Create_some_result2));
         result.Value.Should().Be(321);
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
@@ -45,12 +43,10 @@ public class MaybeResult_T__should
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.None);
         result.CallSite.MemberName.Should().Be(nameof(Create_none_result));
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
@@ -62,12 +58,10 @@ public class MaybeResult_T__should
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.None);
         result.CallSite.MemberName.Should().Be(nameof(Create_none_result2));
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
@@ -82,9 +76,8 @@ public class MaybeResult_T__should
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
         result.Error.StackTrace.Should().Be(_stackTrace);
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
@@ -99,9 +92,8 @@ public class MaybeResult_T__should
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
         result.Error.StackTrace.Should().Be(_stackTrace);
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
@@ -116,9 +108,8 @@ public class MaybeResult_T__should
         result.Error.Message.Should().Be(ResultBase.DefaultErrorMessage);
         result.Error.ErrorCode.Should().BeNull();
         result.Error.StackTrace.Should().BeNull();
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]

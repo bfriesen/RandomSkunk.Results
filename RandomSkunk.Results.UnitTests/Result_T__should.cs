@@ -16,9 +16,8 @@ public class Result_T__should
         result.Type.Should().Be(ResultType.Success);
         result.CallSite.MemberName.Should().Be(nameof(Create_success_result));
         result.Value.Should().Be(321);
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
@@ -31,9 +30,8 @@ public class Result_T__should
         result.Type.Should().Be(ResultType.Success);
         result.CallSite.MemberName.Should().Be(nameof(Create_success_result2));
         result.Value.Should().Be(321);
-
-        Action accessingError = () => _ = result.Error;
-        accessingError.Should().Throw<InvalidOperationException>();
+        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
@@ -48,9 +46,8 @@ public class Result_T__should
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
         result.Error.StackTrace.Should().Be(_stackTrace);
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 
     [Fact]
@@ -65,9 +62,8 @@ public class Result_T__should
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
         result.Error.StackTrace.Should().Be(_stackTrace);
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 
     [Fact]
@@ -82,9 +78,8 @@ public class Result_T__should
         result.Error.Message.Should().Be(ResultBase.DefaultErrorMessage);
         result.Error.ErrorCode.Should().BeNull();
         result.Error.StackTrace.Should().BeNull();
-
-        Action accessingValue = () => _ = result.Value;
-        accessingValue.Should().Throw<InvalidOperationException>();
+        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+            .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 
     [Fact]

@@ -29,7 +29,7 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// <see cref="InvalidOperationException"/> if <see cref="IsSome"/> is false.
     /// </summary>
     [NotNull]
-    public override T Value => throw new InvalidOperationException($"{nameof(Value)} cannot be accessed if {nameof(IsSome)} is false.");
+    public override T Value => throw Exceptions.CannotAccessValueUnlessSome;
 
     /// <summary>
     /// Gets the type of the result: <see cref="MaybeResultType.Some"/>,
