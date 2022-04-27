@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// </summary>
 public abstract class ResultBase
 {
-    private static string _defaultError = "Error";
+    private static string _defaultErrorMessage = "Error";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ResultBase"/> class.
@@ -17,10 +17,10 @@ public abstract class ResultBase
     /// Gets or sets the default error message. This value is used when creating a <c>fail</c>
     /// result and an error message is not specified.
     /// </summary>
-    public static string DefaultError
+    public static string DefaultErrorMessage
     {
-        get => _defaultError;
-        set => _defaultError = value ?? throw new ArgumentNullException(nameof(value));
+        get => _defaultErrorMessage;
+        set => _defaultErrorMessage = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     /// <summary>

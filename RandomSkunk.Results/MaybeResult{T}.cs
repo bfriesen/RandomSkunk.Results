@@ -25,6 +25,13 @@ public abstract class MaybeResult<T> : ResultBase<T>
     public virtual bool IsNone => false;
 
     /// <summary>
+    /// Gets the value of the success result, or throws an
+    /// <see cref="InvalidOperationException"/> if <see cref="IsSome"/> is false.
+    /// </summary>
+    [NotNull]
+    public override T Value => throw new InvalidOperationException($"{nameof(Value)} cannot be accessed if {nameof(IsSome)} is false.");
+
+    /// <summary>
     /// Gets the type of the result: <see cref="MaybeResultType.Some"/>,
     /// <see cref="MaybeResultType.None"/>, or <see cref="MaybeResultType.Fail"/>.
     /// </summary>
@@ -63,7 +70,7 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
-    /// <param name="error">The error message that describes the failure.</param>
+    /// <param name="errorMessage">The error message that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
     /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
@@ -71,13 +78,13 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(
-        string? error = null,
+        string? errorMessage = null,
         int? errorCode = null,
         string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        new FailResult(new Error(error ?? DefaultError, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
+        new FailResult(new Error(errorMessage ?? DefaultErrorMessage, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
 
     /// <summary>
     /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or

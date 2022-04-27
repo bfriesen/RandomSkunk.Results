@@ -35,7 +35,7 @@ public abstract class Result<T> : ResultBase<T>
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
-    /// <param name="error">The error message that describes the failure.</param>
+    /// <param name="errorMessage">The error message that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
     /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
@@ -43,13 +43,13 @@ public abstract class Result<T> : ResultBase<T>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail(
-        string? error = null,
+        string? errorMessage = null,
         int? errorCode = null,
         string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        new FailResult(new Error(error ?? DefaultError, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
+        new FailResult(new Error(errorMessage ?? DefaultErrorMessage, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
