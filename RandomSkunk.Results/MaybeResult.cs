@@ -43,6 +43,7 @@ public static class MaybeResult
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="error">The error message that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
@@ -50,8 +51,9 @@ public static class MaybeResult
     public static MaybeResult<T> Fail<T>(
         string? error = null,
         int? errorCode = null,
+        string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        MaybeResult<T>.Fail(error, errorCode, memberName, filePath, lineNumber);
+        MaybeResult<T>.Fail(error, errorCode, stackTrace, memberName, filePath, lineNumber);
 }

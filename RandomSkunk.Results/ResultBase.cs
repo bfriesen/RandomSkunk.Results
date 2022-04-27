@@ -35,16 +35,10 @@ public abstract class ResultBase
     public virtual bool IsFail => false;
 
     /// <summary>
-    /// Gets the error message of the failed operation, or throws an
+    /// Gets the error of the failed operation, or throws an
     /// <see cref="InvalidOperationException"/> if <see cref="IsFail"/> is false.
     /// </summary>
-    public virtual string Error => throw new InvalidOperationException("Error cannot be accessed if IsFail is false.");
-
-    /// <summary>
-    /// Gets the optional error code of the failed operation, or throws an
-    /// <see cref="InvalidOperationException"/> if <see cref="IsFail"/> is false.
-    /// </summary>
-    public virtual int? ErrorCode => throw new InvalidOperationException("ErrorCode cannot be accessed if IsFail is false.");
+    public virtual Error Error => throw new InvalidOperationException($"{nameof(Error)} cannot be accessed if {nameof(IsFail)} is false.");
 
     /// <summary>
     /// Gets information about the code that created this result.

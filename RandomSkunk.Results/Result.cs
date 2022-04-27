@@ -34,6 +34,7 @@ public abstract class Result : ResultBase
     /// </summary>
     /// <param name="error">The error message that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
@@ -41,10 +42,11 @@ public abstract class Result : ResultBase
     public static Result Fail(
         string? error = null,
         int? errorCode = null,
+        string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        new FailResult(error ?? DefaultError, errorCode, new CallSite(memberName, filePath, lineNumber));
+        new FailResult(new Error(error ?? DefaultError, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
 
     /// <summary>
     /// Creates a <c>success</c> result for an operation <em>with</em> a return value.
@@ -68,6 +70,7 @@ public abstract class Result : ResultBase
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="error">The error message that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
@@ -75,10 +78,11 @@ public abstract class Result : ResultBase
     public static Result<T> Fail<T>(
         string? error = null,
         int? errorCode = null,
+        string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        Result<T>.Fail(error, errorCode, memberName, filePath, lineNumber);
+        Result<T>.Fail(error, errorCode, stackTrace, memberName, filePath, lineNumber);
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
@@ -95,7 +99,7 @@ public abstract class Result : ResultBase
     /// <returns>The result of the matching function evaluation.</returns>
     public TResult Match<TResult>(
         Func<TResult> onSuccess,
-        Func<string, int?, TResult> onFail)
+        Func<Error, TResult> onFail)
     {
         if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail == null) throw new ArgumentNullException(nameof(onFail));
@@ -116,7 +120,7 @@ public abstract class Result : ResultBase
     /// </param>
     public void Match(
         Action onSuccess,
-        Action<string, int?> onFail)
+        Action<Error> onFail)
     {
         if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail == null) throw new ArgumentNullException(nameof(onFail));
@@ -142,7 +146,7 @@ public abstract class Result : ResultBase
     /// </returns>
     public Task<TResult> MatchAsync<TResult>(
         Func<Task<TResult>> onSuccess,
-        Func<string, int?, Task<TResult>> onFail)
+        Func<Error, Task<TResult>> onFail)
     {
         if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail == null) throw new ArgumentNullException(nameof(onFail));
@@ -164,7 +168,7 @@ public abstract class Result : ResultBase
     /// <returns>A task representing the asynchronous match operation.</returns>
     public Task MatchAsync(
         Func<Task> onSuccess,
-        Func<string, int?, Task> onFail)
+        Func<Error, Task> onFail)
     {
         if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail == null) throw new ArgumentNullException(nameof(onFail));
@@ -174,13 +178,13 @@ public abstract class Result : ResultBase
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements should be documented
-    protected abstract TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<string, int?, TResult> onFail);
+    protected abstract TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onFail);
 
-    protected abstract void MatchCore(Action onSuccess, Action<string, int?> onFail);
+    protected abstract void MatchCore(Action onSuccess, Action<Error> onFail);
 
-    protected abstract Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<string, int?, Task<TResult>> onFail);
+    protected abstract Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<Error, Task<TResult>> onFail);
 
-    protected abstract Task MatchAsyncCore(Func<Task> onSuccess, Func<string, int?, Task> onFail);
+    protected abstract Task MatchAsyncCore(Func<Task> onSuccess, Func<Error, Task> onFail);
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -195,38 +199,35 @@ public abstract class Result : ResultBase
 
         public override bool IsSuccess => true;
 
-        protected override TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<string, int?, TResult> onFail) => onSuccess();
+        protected override TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onFail) => onSuccess();
 
-        protected override void MatchCore(Action onSuccess, Action<string, int?> onFail) => onSuccess();
+        protected override void MatchCore(Action onSuccess, Action<Error> onFail) => onSuccess();
 
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<string, int?, Task<TResult>> onFail) => onSuccess();
+        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<Error, Task<TResult>> onFail) => onSuccess();
 
-        protected override Task MatchAsyncCore(Func<Task> onSuccess, Func<string, int?, Task> onFail) => onSuccess();
+        protected override Task MatchAsyncCore(Func<Task> onSuccess, Func<Error, Task> onFail) => onSuccess();
     }
 
     private sealed class FailResult : Result
     {
-        public FailResult(string error, int? errorCode, CallSite callSite)
+        public FailResult(Error error, CallSite callSite)
             : base(callSite)
         {
             Error = error;
-            ErrorCode = errorCode;
         }
 
         public override ResultType Type => ResultType.Fail;
 
         public override bool IsFail => true;
 
-        public override string Error { get; }
+        public override Error Error { get; }
 
-        public override int? ErrorCode { get; }
+        protected override TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onFail) => onFail(Error);
 
-        protected override TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<string, int?, TResult> onFail) => onFail(Error, ErrorCode);
+        protected override void MatchCore(Action onSuccess, Action<Error> onFail) => onFail(Error);
 
-        protected override void MatchCore(Action onSuccess, Action<string, int?> onFail) => onFail(Error, ErrorCode);
+        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<Error, Task<TResult>> onFail) => onFail(Error);
 
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<string, int?, Task<TResult>> onFail) => onFail(Error, ErrorCode);
-
-        protected override Task MatchAsyncCore(Func<Task> onSuccess, Func<string, int?, Task> onFail) => onFail(Error, ErrorCode);
+        protected override Task MatchAsyncCore(Func<Task> onSuccess, Func<Error, Task> onFail) => onFail(Error);
     }
 }
