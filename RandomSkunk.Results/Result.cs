@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// The result of an operation that does not have a return value.
 /// </summary>
-public abstract class Result : ResultBase
+public abstract class Result : ResultBase, IEquatable<Result>
 {
     private Result(CallSite callSite)
         : base(callSite)
@@ -41,7 +41,7 @@ public abstract class Result : ResultBase
     /// <returns>A <c>fail</c> result.</returns>
     public static Result Fail(
         string? errorMessage = null,
-        int? errorCode = null,
+        string? errorCode = null,
         string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
@@ -77,7 +77,7 @@ public abstract class Result : ResultBase
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail<T>(
         string? errorMessage = null,
-        int? errorCode = null,
+        string? errorCode = null,
         string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
@@ -85,58 +85,66 @@ public abstract class Result : ResultBase
         Result<T>.Fail(errorMessage, errorCode, stackTrace, memberName, filePath, lineNumber);
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
     /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
     /// </summary>
     /// <typeparam name="TResult">The return type of the functions.</typeparam>
-    /// <param name="onSuccess">
+    /// <param name="success">
     /// The function to evaluate if the result type is <c>success</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
     public TResult Match<TResult>(
-        Func<TResult> onSuccess,
-        Func<Error, TResult> onFail)
+        Func<TResult> success,
+        Func<Error, TResult> fail)
     {
-        if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (success == null) throw new ArgumentNullException(nameof(success));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchCore(onSuccess, onFail);
+        return MatchCore(success, fail);
     }
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
     /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
     /// </summary>
-    /// <param name="onSuccess">
+    /// <param name="success">
     /// The function to evaluate if the result type is <c>success</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
     public void Match(
-        Action onSuccess,
-        Action<Error> onFail)
+        Action success,
+        Action<Error> fail)
     {
-        if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (success == null) throw new ArgumentNullException(nameof(success));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        MatchCore(onSuccess, onFail);
+        MatchCore(success, fail);
     }
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
     /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
     /// </summary>
     /// <typeparam name="TResult">The return type of the functions.</typeparam>
-    /// <param name="onSuccess">
+    /// <param name="success">
     /// The function to evaluate if the result type is <c>success</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
@@ -144,47 +152,64 @@ public abstract class Result : ResultBase
     /// A task that represents the asynchronous match operation, which wraps the result of the
     /// matching function evaluation.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
     public Task<TResult> MatchAsync<TResult>(
-        Func<Task<TResult>> onSuccess,
-        Func<Error, Task<TResult>> onFail)
+        Func<Task<TResult>> success,
+        Func<Error, Task<TResult>> fail)
     {
-        if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (success == null) throw new ArgumentNullException(nameof(success));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchAsyncCore(onSuccess, onFail);
+        return MatchAsyncCore(success, fail);
     }
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
     /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
     /// </summary>
-    /// <param name="onSuccess">
+    /// <param name="success">
     /// The function to evaluate if the result type is <c>success</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
     public Task MatchAsync(
-        Func<Task> onSuccess,
-        Func<Error, Task> onFail)
+        Func<Task> success,
+        Func<Error, Task> fail)
     {
-        if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (success == null) throw new ArgumentNullException(nameof(success));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchAsyncCore(onSuccess, onFail);
+        return MatchAsyncCore(success, fail);
     }
+
+    /// <inheritdoc/>
+    public abstract bool Equals(Result? other);
+
+    /// <inheritdoc/>
+    public override abstract bool Equals(object? other);
+
+    /// <inheritdoc/>
+    public override abstract int GetHashCode();
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements should be documented
-    protected abstract TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onFail);
+    protected abstract TResult MatchCore<TResult>(Func<TResult> success, Func<Error, TResult> fail);
 
-    protected abstract void MatchCore(Action onSuccess, Action<Error> onFail);
+    protected abstract void MatchCore(Action success, Action<Error> fail);
 
-    protected abstract Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<Error, Task<TResult>> onFail);
+    protected abstract Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> success, Func<Error, Task<TResult>> fail);
 
-    protected abstract Task MatchAsyncCore(Func<Task> onSuccess, Func<Error, Task> onFail);
+    protected abstract Task MatchAsyncCore(Func<Task> success, Func<Error, Task> fail);
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -199,13 +224,22 @@ public abstract class Result : ResultBase
 
         public override bool IsSuccess => true;
 
-        protected override TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onFail) => onSuccess();
+        public override bool Equals(Result? other) =>
+            other != null && other.IsSuccess;
 
-        protected override void MatchCore(Action onSuccess, Action<Error> onFail) => onSuccess();
+        public override bool Equals(object? obj) =>
+            obj is Result other && Equals(other);
 
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<Error, Task<TResult>> onFail) => onSuccess();
+        public override int GetHashCode() =>
+            2049151605 + Type.GetHashCode();
 
-        protected override Task MatchAsyncCore(Func<Task> onSuccess, Func<Error, Task> onFail) => onSuccess();
+        protected override TResult MatchCore<TResult>(Func<TResult> success, Func<Error, TResult> fail) => success();
+
+        protected override void MatchCore(Action success, Action<Error> fail) => success();
+
+        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> success, Func<Error, Task<TResult>> fail) => success();
+
+        protected override Task MatchAsyncCore(Func<Task> success, Func<Error, Task> fail) => success();
     }
 
     private sealed class FailResult : Result
@@ -222,12 +256,28 @@ public abstract class Result : ResultBase
 
         public override Error Error { get; }
 
-        protected override TResult MatchCore<TResult>(Func<TResult> onSuccess, Func<Error, TResult> onFail) => onFail(Error);
+        public override bool Equals(Result? other) =>
+            other != null
+                && other.IsFail
+                && other.Error.Equals(Error);
 
-        protected override void MatchCore(Action onSuccess, Action<Error> onFail) => onFail(Error);
+        public override bool Equals(object? obj) =>
+            obj is Result other && Equals(other);
 
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> onSuccess, Func<Error, Task<TResult>> onFail) => onFail(Error);
+        public override int GetHashCode()
+        {
+            int hashCode = 1840328550;
+            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Error>.Default.GetHashCode(Error);
+            return hashCode;
+        }
 
-        protected override Task MatchAsyncCore(Func<Task> onSuccess, Func<Error, Task> onFail) => onFail(Error);
+        protected override TResult MatchCore<TResult>(Func<TResult> success, Func<Error, TResult> fail) => fail(Error);
+
+        protected override void MatchCore(Action success, Action<Error> fail) => fail(Error);
+
+        protected override Task<TResult> MatchAsyncCore<TResult>(Func<Task<TResult>> success, Func<Error, Task<TResult>> fail) => fail(Error);
+
+        protected override Task MatchAsyncCore(Func<Task> success, Func<Error, Task> fail) => fail(Error);
     }
 }

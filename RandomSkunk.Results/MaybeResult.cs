@@ -50,7 +50,7 @@ public static class MaybeResult
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail<T>(
         string? errorMessage = null,
-        int? errorCode = null,
+        string? errorCode = null,
         string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,

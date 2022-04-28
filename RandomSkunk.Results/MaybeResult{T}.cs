@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// absent.
 /// </summary>
 /// <typeparam name="T">The type of the return value of the operation.</typeparam>
-public abstract class MaybeResult<T> : ResultBase<T>
+public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
 {
     private MaybeResult(CallSite callSite)
         : base(callSite)
@@ -28,6 +28,9 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// Gets the value of the success result, or throws an
     /// <see cref="InvalidOperationException"/> if <see cref="IsSome"/> is false.
     /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// If <see cref="IsSome"/> is not true.
+    /// </exception>
     [NotNull]
     public override T Value => throw Exceptions.CannotAccessValueUnlessSome;
 
@@ -36,6 +39,15 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// <see cref="MaybeResultType.None"/>, or <see cref="MaybeResultType.Fail"/>.
     /// </summary>
     public abstract MaybeResultType Type { get; }
+
+    /// <summary>
+    /// Converts the specified value to a <c>success</c> result.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="value"/> is <see langword="null"/>.
+    /// </exception>
+    public static implicit operator MaybeResult<T>([DisallowNull] T value) => Some(value);
 
     /// <summary>
     /// Creates a <c>some</c> result for an operation with a return value.
@@ -47,6 +59,9 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>some</c> result.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="value"/> is <see langword="null"/>.
+    /// </exception>
     public static MaybeResult<T> Some(
         [DisallowNull] T value,
         [CallerMemberName] string memberName = null!,
@@ -79,7 +94,7 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(
         string? errorMessage = null,
-        int? errorCode = null,
+        string? errorCode = null,
         string? stackTrace = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
@@ -87,77 +102,85 @@ public abstract class MaybeResult<T> : ResultBase<T>
         new FailResult(new Error(errorMessage ?? DefaultErrorMessage, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or
-    /// <paramref name="onFail"/> function depending on whether the result type is <c>some</c>,
+    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
+    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
     /// <c>none</c>, or <c>fail</c>.
     /// </summary>
     /// <typeparam name="TResult">The return type of the functions.</typeparam>
-    /// <param name="onSome">
+    /// <param name="some">
     /// The function to evaluate if the result type is <c>some</c>. The value of the
     /// <c>some</c> result is passed to this function.
     /// </param>
-    /// <param name="onNone">
+    /// <param name="none">
     /// The function to evaluate if the result type is <c>none</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
+    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// </exception>
     public TResult Match<TResult>(
-        Func<T, TResult> onSome,
-        Func<TResult> onNone,
-        Func<Error, TResult> onFail)
+        Func<T, TResult> some,
+        Func<TResult> none,
+        Func<Error, TResult> fail)
     {
-        if (onSome == null) throw new ArgumentNullException(nameof(onSome));
-        if (onNone == null) throw new ArgumentNullException(nameof(onNone));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (some == null) throw new ArgumentNullException(nameof(some));
+        if (none == null) throw new ArgumentNullException(nameof(none));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchCore(onSome, onNone, onFail);
+        return MatchCore(some, none, fail);
     }
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or
-    /// <paramref name="onFail"/> function depending on whether the result type is <c>some</c>,
+    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
+    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
     /// <c>none</c>, or <c>fail</c>.
     /// </summary>
-    /// <param name="onSome">
+    /// <param name="some">
     /// The function to evaluate if the result type is <c>some</c>. The value of the
     /// <c>some</c> result is passed to this function.
     /// </param>
-    /// <param name="onNone">
+    /// <param name="none">
     /// The function to evaluate if the result type is <c>none</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
+    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// </exception>
     public void Match(
-        Action<T> onSome,
-        Action onNone,
-        Action<Error> onFail)
+        Action<T> some,
+        Action none,
+        Action<Error> fail)
     {
-        if (onSome == null) throw new ArgumentNullException(nameof(onSome));
-        if (onNone == null) throw new ArgumentNullException(nameof(onNone));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (some == null) throw new ArgumentNullException(nameof(some));
+        if (none == null) throw new ArgumentNullException(nameof(none));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        MatchCore(onSome, onNone, onFail);
+        MatchCore(some, none, fail);
     }
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or
-    /// <paramref name="onFail"/> function depending on whether the result type is <c>some</c>,
+    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
+    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
     /// <c>none</c>, or <c>fail</c>.
     /// </summary>
     /// <typeparam name="TResult">The return type of the functions.</typeparam>
-    /// <param name="onSome">
+    /// <param name="some">
     /// The function to evaluate if the result type is <c>some</c>. The value of the
     /// <c>some</c> result is passed to this function.
     /// </param>
-    /// <param name="onNone">
+    /// <param name="none">
     /// The function to evaluate if the result type is <c>none</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
@@ -165,56 +188,73 @@ public abstract class MaybeResult<T> : ResultBase<T>
     /// A task that represents the asynchronous match operation, which wraps the result of the
     /// matching function evaluation.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
+    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// </exception>
     public Task<TResult> MatchAsync<TResult>(
-        Func<T, Task<TResult>> onSome,
-        Func<Task<TResult>> onNone,
-        Func<Error, Task<TResult>> onFail)
+        Func<T, Task<TResult>> some,
+        Func<Task<TResult>> none,
+        Func<Error, Task<TResult>> fail)
     {
-        if (onSome == null) throw new ArgumentNullException(nameof(onSome));
-        if (onNone == null) throw new ArgumentNullException(nameof(onNone));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (some == null) throw new ArgumentNullException(nameof(some));
+        if (none == null) throw new ArgumentNullException(nameof(none));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchAsyncCore(onSome, onNone, onFail);
+        return MatchAsyncCore(some, none, fail);
     }
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or
-    /// <paramref name="onFail"/> function depending on whether the result type is <c>some</c>,
+    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
+    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
     /// <c>none</c>, or <c>fail</c>.
     /// </summary>
-    /// <param name="onSome">
+    /// <param name="some">
     /// The function to evaluate if the result type is <c>some</c>. The value of the
     /// <c>some</c> result is passed to this function.
     /// </param>
-    /// <param name="onNone">
+    /// <param name="none">
     /// The function to evaluate if the result type is <c>none</c>.
     /// </param>
-    /// <param name="onFail">
+    /// <param name="fail">
     /// The function to evaluate if the result type is <c>fail</c>. The error message and error
     /// code of the <c>fail</c> result are passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
+    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// </exception>
     public Task MatchAsync(
-        Func<T, Task> onSome,
-        Func<Task> onNone,
-        Func<Error, Task> onFail)
+        Func<T, Task> some,
+        Func<Task> none,
+        Func<Error, Task> fail)
     {
-        if (onSome == null) throw new ArgumentNullException(nameof(onSome));
-        if (onNone == null) throw new ArgumentNullException(nameof(onNone));
-        if (onFail == null) throw new ArgumentNullException(nameof(onFail));
+        if (some == null) throw new ArgumentNullException(nameof(some));
+        if (none == null) throw new ArgumentNullException(nameof(none));
+        if (fail == null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchAsyncCore(onSome, onNone, onFail);
+        return MatchAsyncCore(some, none, fail);
     }
+
+    /// <inheritdoc/>
+    public abstract bool Equals(MaybeResult<T>? other);
+
+    /// <inheritdoc/>
+    public override abstract bool Equals(object? other);
+
+    /// <inheritdoc/>
+    public override abstract int GetHashCode();
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 #pragma warning disable SA1600 // Elements should be documented
-    protected abstract TResult MatchCore<TResult>(Func<T, TResult> onSome, Func<TResult> onNone, Func<Error, TResult> onFail);
+    protected abstract TResult MatchCore<TResult>(Func<T, TResult> some, Func<TResult> none, Func<Error, TResult> fail);
 
-    protected abstract void MatchCore(Action<T> onSome, Action onNone, Action<Error> onFail);
+    protected abstract void MatchCore(Action<T> some, Action none, Action<Error> fail);
 
-    protected abstract Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> onSome, Func<Task<TResult>> onNone, Func<Error, Task<TResult>> onFail);
+    protected abstract Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> some, Func<Task<TResult>> none, Func<Error, Task<TResult>> fail);
 
-    protected abstract Task MatchAsyncCore(Func<T, Task> onSome, Func<Task> onNone, Func<Error, Task> onFail);
+    protected abstract Task MatchAsyncCore(Func<T, Task> some, Func<Task> none, Func<Error, Task> fail);
 #pragma warning restore SA1600 // Elements should be documented
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
@@ -232,13 +272,30 @@ public abstract class MaybeResult<T> : ResultBase<T>
         [NotNull]
         public override T Value { get; }
 
-        protected override TResult MatchCore<TResult>(Func<T, TResult> onSome, Func<TResult> onNone, Func<Error, TResult> onFail) => onSome(Value);
+        public override bool Equals(MaybeResult<T>? other) =>
+            other != null
+                && other.IsSome
+                && EqualityComparer<T>.Default.Equals(Value, other.Value);
 
-        protected override void MatchCore(Action<T> onSome, Action onNone, Action<Error> onFail) => onSome(Value);
+        public override bool Equals(object? obj) =>
+            obj is MaybeResult<T> other && Equals(other);
 
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> onSome, Func<Task<TResult>> onNone, Func<Error, Task<TResult>> onFail) => onSome(Value);
+        public override int GetHashCode()
+        {
+            int hashCode = 1265339359;
+            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + EqualityComparer<T>.Default.GetHashCode(Value);
+            hashCode = (hashCode * -1521134295) + IsSome.GetHashCode();
+            return hashCode;
+        }
 
-        protected override Task MatchAsyncCore(Func<T, Task> onSome, Func<Task> onNone, Func<Error, Task> onFail) => onSome(Value);
+        protected override TResult MatchCore<TResult>(Func<T, TResult> some, Func<TResult> none, Func<Error, TResult> fail) => some(Value);
+
+        protected override void MatchCore(Action<T> some, Action none, Action<Error> fail) => some(Value);
+
+        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> some, Func<Task<TResult>> none, Func<Error, Task<TResult>> fail) => some(Value);
+
+        protected override Task MatchAsyncCore(Func<T, Task> some, Func<Task> none, Func<Error, Task> fail) => some(Value);
     }
 
     private sealed class NoneResult : MaybeResult<T>
@@ -254,13 +311,27 @@ public abstract class MaybeResult<T> : ResultBase<T>
 
         public override bool IsNone => true;
 
-        protected override TResult MatchCore<TResult>(Func<T, TResult> onSome, Func<TResult> onNone, Func<Error, TResult> onFail) => onNone();
+        public override bool Equals(MaybeResult<T>? other) =>
+            other != null && other.IsNone;
 
-        protected override void MatchCore(Action<T> onSome, Action onNone, Action<Error> onFail) => onNone();
+        public override bool Equals(object? obj) =>
+            obj is MaybeResult<T> other && Equals(other);
 
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> onSome, Func<Task<TResult>> onNone, Func<Error, Task<TResult>> onFail) => onNone();
+        public override int GetHashCode()
+        {
+            int hashCode = -2070419312;
+            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + IsNone.GetHashCode();
+            return hashCode;
+        }
 
-        protected override Task MatchAsyncCore(Func<T, Task> onSome, Func<Task> onNone, Func<Error, Task> onFail) => onNone();
+        protected override TResult MatchCore<TResult>(Func<T, TResult> some, Func<TResult> none, Func<Error, TResult> fail) => none();
+
+        protected override void MatchCore(Action<T> some, Action none, Action<Error> fail) => none();
+
+        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> some, Func<Task<TResult>> none, Func<Error, Task<TResult>> fail) => none();
+
+        protected override Task MatchAsyncCore(Func<T, Task> some, Func<Task> none, Func<Error, Task> fail) => none();
     }
 
     private sealed class FailResult : MaybeResult<T>
@@ -274,12 +345,30 @@ public abstract class MaybeResult<T> : ResultBase<T>
 
         public override Error Error { get; }
 
-        protected override TResult MatchCore<TResult>(Func<T, TResult> onSome, Func<TResult> onNone, Func<Error, TResult> onFail) => onFail(Error);
+        public override bool Equals(MaybeResult<T>? other) =>
+            other != null
+                && other.IsFail
+                && Error.Equals(other.Error);
 
-        protected override void MatchCore(Action<T> onSome, Action onNone, Action<Error> onFail) => onFail(Error);
+        public override bool Equals(object? obj) =>
+            obj is MaybeResult<T> other && Equals(other);
 
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> onSome, Func<Task<TResult>> onNone, Func<Error, Task<TResult>> onFail) => onFail(Error);
+        public override int GetHashCode()
+        {
+            int hashCode = 1840328550;
+            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + EqualityComparer<Error>.Default.GetHashCode(Error);
+            hashCode = (hashCode * -1521134295) + typeof(T).GetHashCode();
+            hashCode = (hashCode * -1521134295) + IsFail.GetHashCode();
+            return hashCode;
+        }
 
-        protected override Task MatchAsyncCore(Func<T, Task> onSome, Func<Task> onNone, Func<Error, Task> onFail) => onFail(Error);
+        protected override TResult MatchCore<TResult>(Func<T, TResult> some, Func<TResult> none, Func<Error, TResult> fail) => fail(Error);
+
+        protected override void MatchCore(Action<T> some, Action none, Action<Error> fail) => fail(Error);
+
+        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> some, Func<Task<TResult>> none, Func<Error, Task<TResult>> fail) => fail(Error);
+
+        protected override Task MatchAsyncCore(Func<T, Task> some, Func<Task> none, Func<Error, Task> fail) => fail(Error);
     }
 }

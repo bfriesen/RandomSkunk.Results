@@ -19,6 +19,9 @@ public abstract class ResultBase<T> : ResultBase
     /// Gets the value of the success result, or throws an
     /// <see cref="InvalidOperationException"/> if <see cref="ResultBase.IsSuccess"/> is false.
     /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// If <see cref="ResultBase.IsSuccess"/> is not true.
+    /// </exception>
     [NotNull]
     public virtual T Value => throw Exceptions.CannotAccessValueUnlessSuccess;
 
@@ -46,6 +49,9 @@ public abstract class ResultBase<T> : ResultBase
     /// and <see cref="Value"/> equals <paramref name="otherValue"/>; otherwise,
     /// <see langword="false"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="comparer"/> is <see langword="null"/>.
+    /// </exception>
     public bool Equals(T otherValue, IEqualityComparer<T> comparer)
     {
         if (comparer is null) throw new ArgumentNullException(nameof(comparer));
@@ -65,6 +71,9 @@ public abstract class ResultBase<T> : ResultBase
     /// and <paramref name="isSuccessValue"/> evaluates to <see langword="true"/> when
     /// passed <see cref="Value"/>; otherwise, <see langword="false"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="isSuccessValue"/> is <see langword="null"/>.
+    /// </exception>
     public bool Equals(Func<T, bool> isSuccessValue)
     {
         if (isSuccessValue is null) throw new ArgumentNullException(nameof(isSuccessValue));
@@ -76,43 +85,54 @@ public abstract class ResultBase<T> : ResultBase
     /// Gets the value of the success result, or the specified default value if
     /// the result type is <c>fail</c>.
     /// </summary>
-    /// <param name="defaultValue">
+    /// <param name="fallbackValue">
     /// The fallback value to return if <see cref="ResultBase.IsSuccess"/> is
     /// <see langword="false"/>.
     /// </param>
     /// <returns>
     /// <see cref="Value"/> if <see cref="ResultBase.IsSuccess"/> is <see langword="true"/>;
-    /// otherwise, <paramref name="defaultValue"/>.
+    /// otherwise, <paramref name="fallbackValue"/>.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
+    /// </exception>
     [return: NotNull]
-    public T GetValueOr([DisallowNull] T defaultValue)
+    public T GetValueOr([DisallowNull] T fallbackValue)
     {
-        if (defaultValue is null) throw new ArgumentNullException(nameof(defaultValue));
+        if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
         if (IsSuccess)
             return Value;
-        return defaultValue;
+
+        return fallbackValue;
     }
 
     /// <summary>
     /// Gets the value of the success result, or the specified default value if
     /// <see cref="ResultBase.IsSuccess"/> is <see langword="false"/>.
     /// </summary>
-    /// <param name="getDefaultValue">
+    /// <param name="getFallbackValue">
     /// A function that creates the fallback value to return if
     /// <see cref="ResultBase.IsSuccess"/> is <see langword="false"/>.
     /// </param>
     /// <returns>
     /// <see cref="Value"/> if <see cref="ResultBase.IsSuccess"/> is <see langword="true"/>;
-    /// otherwise, the value returned by the <paramref name="getDefaultValue"/> function.
+    /// otherwise, the value returned by the <paramref name="getFallbackValue"/> function.
     /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
+    /// </exception>
     [return: NotNull]
-    public T GetValueOr(Func<T> getDefaultValue)
+    public T GetValueOr(Func<T> getFallbackValue)
     {
-        if (getDefaultValue is null) throw new ArgumentNullException(nameof(getDefaultValue));
+        if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
         if (IsSuccess)
             return Value;
-        return getDefaultValue() ?? throw new ArgumentException("Function must not return null value.", nameof(getDefaultValue));
+
+        return getFallbackValue() ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
     }
 }

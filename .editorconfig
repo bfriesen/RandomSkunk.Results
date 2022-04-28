@@ -21,3 +21,6 @@ dotnet_diagnostic.SA1101.severity = none
 
 # SA1309: Field names should not begin with underscore
 dotnet_diagnostic.SA1309.severity = none
+
+# IDE0070: Use 'System.HashCode'
+dotnet_diagnostic.IDE0070.severity = none

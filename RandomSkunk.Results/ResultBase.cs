@@ -17,6 +17,9 @@ public abstract class ResultBase
     /// Gets or sets the default error message. This value is used when creating a <c>fail</c>
     /// result and an error message is not specified.
     /// </summary>
+    /// <exception cref="ArgumentNullException">
+    /// When setting the property, if the value is <see langword="null"/>.
+    /// </exception>
     public static string DefaultErrorMessage
     {
         get => _defaultErrorMessage;
@@ -38,6 +41,9 @@ public abstract class ResultBase
     /// Gets the error of the failed operation, or throws an
     /// <see cref="InvalidOperationException"/> if <see cref="IsFail"/> is false.
     /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// If <see cref="IsFail"/> is not true.
+    /// </exception>
     public virtual Error Error => throw Exceptions.CannotAccessErrorUnlessFail;
 
     /// <summary>

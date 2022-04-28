@@ -3,7 +3,7 @@ namespace RandomSkunk.Results.UnitTests;
 public class Result_should
 {
     private const string _errorMessage = "My error";
-    private const int _errorCode = 123;
+    private const string _errorCode = "My error code";
     private const string _stackTrace = "My stack trace";
 
     [Fact]
