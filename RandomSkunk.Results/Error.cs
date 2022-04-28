@@ -43,6 +43,29 @@ public sealed class Error : IEquatable<Error>
     /// </summary>
     public string? Identifier { get; }
 
+    /// <summary>
+    /// Creates an <see cref="Error"/> object from the specified <see cref="Exception"/>.
+    /// </summary>
+    /// <param name="exception">The exception to create the error from.</param>
+    /// <param name="messagePrefix">An optional prefix for the exception message.</param>
+    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="identifier">The optional identifier of the error.</param>
+    /// <returns>A new <see cref="Error"/> object.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="exception"/> is <see langword="null"/>.
+    /// </exception>
+    public static Error FromException(
+        Exception exception,
+        string? messagePrefix = null,
+        int? errorCode = null,
+        string? identifier = null)
+    {
+        if (exception is null) throw new ArgumentNullException(nameof(exception));
+        messagePrefix ??= $"{exception.GetType().Name}: ";
+
+        return new Error($"{messagePrefix}{exception.Message}", exception.StackTrace, errorCode, identifier);
+    }
+
     /// <inheritdoc/>
     public override string ToString()
     {
