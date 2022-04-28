@@ -41,19 +41,37 @@ public static class MaybeResult
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="error">The optional error that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail<T>(
-        string? errorMessage = null,
-        string? errorCode = null,
-        string? stackTrace = null,
+        Error? error = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        MaybeResult<T>.Fail(errorMessage, errorCode, stackTrace, memberName, filePath, lineNumber);
+        MaybeResult<T>.Fail(error, memberName, filePath, lineNumber);
+
+    /// <summary>
+    /// Creates a <c>fail</c> result for an operation with a return value.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="errorMessage">The error message that describes the failure.</param>
+    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
+    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
+    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
+    /// <returns>A <c>fail</c> result.</returns>
+    public static MaybeResult<T> Fail<T>(
+        string errorMessage,
+        string? stackTrace = null,
+        int? errorCode = null,
+        string? identifier = null,
+        [CallerMemberName] string memberName = null!,
+        [CallerFilePath] string filePath = null!,
+        [CallerLineNumber] int lineNumber = 0) =>
+        MaybeResult<T>.Fail(errorMessage, stackTrace, errorCode, identifier, memberName, filePath, lineNumber);
 }

@@ -32,21 +32,38 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// <summary>
     /// Creates a <c>fail</c> result for an operation without a return value.
     /// </summary>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="error">The optional error that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result Fail(
-        string? errorMessage = null,
-        string? errorCode = null,
-        string? stackTrace = null,
+        Error? error = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        new FailResult(new Error(errorMessage ?? DefaultErrorMessage, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
+        new FailResult(error ?? new Error(DefaultErrorMessage), new CallSite(memberName, filePath, lineNumber));
+
+    /// <summary>
+    /// Creates a <c>fail</c> result for an operation without a return value.
+    /// </summary>
+    /// <param name="errorMessage">The error message that describes the failure.</param>
+    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
+    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
+    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
+    /// <returns>A <c>fail</c> result.</returns>
+    public static Result Fail(
+        string errorMessage,
+        string? stackTrace = null,
+        int? errorCode = null,
+        string? identifier = null,
+        [CallerMemberName] string memberName = null!,
+        [CallerFilePath] string filePath = null!,
+        [CallerLineNumber] int lineNumber = 0) =>
+        Fail(new Error(errorMessage, stackTrace, errorCode, identifier), memberName, filePath, lineNumber);
 
     /// <summary>
     /// Creates a <c>success</c> result for an operation <em>with</em> a return value.
@@ -68,21 +85,39 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="error">The optional error that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail<T>(
-        string? errorMessage = null,
-        string? errorCode = null,
-        string? stackTrace = null,
+        Error? error = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        Result<T>.Fail(errorMessage, errorCode, stackTrace, memberName, filePath, lineNumber);
+        Result<T>.Fail(error, memberName, filePath, lineNumber);
+
+    /// <summary>
+    /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="errorMessage">The error message that describes the failure.</param>
+    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
+    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
+    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
+    /// <returns>A <c>fail</c> result.</returns>
+    public static Result<T> Fail<T>(
+        string errorMessage,
+        string? stackTrace = null,
+        int? errorCode = null,
+        string? identifier = null,
+        [CallerMemberName] string memberName = null!,
+        [CallerFilePath] string filePath = null!,
+        [CallerLineNumber] int lineNumber = 0) =>
+        Result<T>.Fail(errorMessage, stackTrace, errorCode, identifier, memberName, filePath, lineNumber);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>

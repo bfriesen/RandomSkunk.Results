@@ -8,40 +8,61 @@ public sealed class Error : IEquatable<Error>
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
     /// </summary>
-    /// <param name="message">The error message of the failed operation.</param>
-    /// <param name="errorCode">The optional error code of the failed operation.</param>
-    /// <param name="stackTrace">The optional stack trace of the failed operation.</param>
+    /// <param name="message">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="identifier">The optional identifier of the error.</param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="message"/> is <see langword="null"/>.
     /// </exception>
-    public Error(string message, string? errorCode, string? stackTrace)
+    public Error(string message, string? stackTrace = null, int? errorCode = null, string? identifier = null)
     {
         Message = message ?? throw new ArgumentNullException(nameof(message));
-        ErrorCode = errorCode;
         StackTrace = stackTrace;
+        ErrorCode = errorCode;
+        Identifier = identifier;
     }
 
     /// <summary>
-    /// Gets the error message of the failed operation.
+    /// Gets the error message.
     /// </summary>
     public string Message { get; }
 
     /// <summary>
-    /// Gets the optional error code of the failed operation.
-    /// </summary>
-    public string? ErrorCode { get; }
-
-    /// <summary>
-    /// Gets the optional stack trace of the failed operation.
+    /// Gets the optional stack trace.
     /// </summary>
     public string? StackTrace { get; }
+
+    /// <summary>
+    /// Gets the optional error code.
+    /// </summary>
+    public int? ErrorCode { get; }
+
+    /// <summary>
+    /// Gets the optional identifier of the error.
+    /// </summary>
+    public string? Identifier { get; }
+
+    /// <inheritdoc/>
+    public override string ToString()
+    {
+        var sb = new StringBuilder(Message);
+        if (Identifier != null)
+            sb.AppendLine().Append($"Identifier: {Identifier}");
+        if (ErrorCode != null)
+            sb.AppendLine().Append($"Error code: {ErrorCode}");
+        if (StackTrace != null)
+            sb.AppendLine().AppendLine("Stack trace:").Append(StackTrace);
+        return sb.ToString();
+    }
 
     /// <inheritdoc/>
     public bool Equals(Error? other) =>
         other != null
             && Message == other.Message
+            && StackTrace == other.StackTrace
             && ErrorCode == other.ErrorCode
-            && StackTrace == other.StackTrace;
+            && Identifier == other.Identifier;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) =>
@@ -52,19 +73,9 @@ public sealed class Error : IEquatable<Error>
     {
         int hashCode = 1812228152;
         hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Message);
-        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(ErrorCode ?? string.Empty);
         hashCode = (hashCode * -1521134295) + EqualityComparer<string?>.Default.GetHashCode(StackTrace ?? string.Empty);
+        hashCode = (hashCode * -1521134295) + ErrorCode.GetHashCode();
+        hashCode = (hashCode * -1521134295) + EqualityComparer<string?>.Default.GetHashCode(Identifier ?? string.Empty);
         return hashCode;
-    }
-
-    /// <inheritdoc/>
-    public override string ToString()
-    {
-        var sb = new StringBuilder(Message);
-        if (ErrorCode != null)
-            sb.Append(Environment.NewLine).Append($"Error code: {ErrorCode}");
-        if (StackTrace != null)
-            sb.Append(Environment.NewLine).AppendLine("Stack trace:").Append(StackTrace);
-        return sb.ToString();
     }
 }

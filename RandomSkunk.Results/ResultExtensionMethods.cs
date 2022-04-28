@@ -266,9 +266,7 @@ public static class ResultExtensionMethods
         }
 
         return Result.Fail<TResult>(
-            result.Error.Message,
-            result.Error.ErrorCode,
-            result.Error.StackTrace,
+            result.Error,
             result.CallSite.MemberName,
             result.CallSite.FilePath,
             result.CallSite.LineNumber);
@@ -311,9 +309,7 @@ public static class ResultExtensionMethods
             return MaybeResult.None<TResult>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
 
         return MaybeResult.Fail<TResult>(
-            result.Error.Message,
-            result.Error.ErrorCode,
-            result.Error.StackTrace,
+            result.Error,
             result.CallSite.MemberName,
             result.CallSite.FilePath,
             result.CallSite.LineNumber);
@@ -353,9 +349,7 @@ public static class ResultExtensionMethods
         }
 
         return Result.Fail<TResult>(
-            result.Error.Message,
-            result.Error.ErrorCode,
-            result.Error.StackTrace,
+            result.Error,
             result.CallSite.MemberName,
             result.CallSite.FilePath,
             result.CallSite.LineNumber);
@@ -399,9 +393,7 @@ public static class ResultExtensionMethods
             return MaybeResult.None<TResult>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
 
         return MaybeResult.Fail<TResult>(
-            result.Error.Message,
-            result.Error.ErrorCode,
-            result.Error.StackTrace,
+            result.Error,
             result.CallSite.MemberName,
             result.CallSite.FilePath,
             result.CallSite.LineNumber);

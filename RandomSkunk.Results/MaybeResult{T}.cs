@@ -85,21 +85,38 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="error">The optional error that describes the failure.</param>
     /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
     /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
     /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(
-        string? errorMessage = null,
-        string? errorCode = null,
-        string? stackTrace = null,
+        Error? error = null,
         [CallerMemberName] string memberName = null!,
         [CallerFilePath] string filePath = null!,
         [CallerLineNumber] int lineNumber = 0) =>
-        new FailResult(new Error(errorMessage ?? DefaultErrorMessage, errorCode, stackTrace), new CallSite(memberName, filePath, lineNumber));
+        new FailResult(error ?? new Error(DefaultErrorMessage), new CallSite(memberName, filePath, lineNumber));
+
+    /// <summary>
+    /// Creates a <c>fail</c> result for an operation with a return value.
+    /// </summary>
+    /// <param name="errorMessage">The error message that describes the failure.</param>
+    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
+    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
+    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
+    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
+    /// <returns>A <c>fail</c> result.</returns>
+    public static MaybeResult<T> Fail(
+        string errorMessage,
+        string? stackTrace = null,
+        int? errorCode = null,
+        string? identifier = null,
+        [CallerMemberName] string memberName = null!,
+        [CallerFilePath] string filePath = null!,
+        [CallerLineNumber] int lineNumber = 0) =>
+        Fail(new Error(errorMessage, stackTrace, errorCode, identifier), memberName, filePath, lineNumber);
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
