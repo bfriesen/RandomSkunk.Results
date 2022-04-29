@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines extension methods for result objects.
 /// </summary>
-public static class ResultExtensionMethods
+public static class ResultExtensions
 {
     /// <summary>
     /// Returns <paramref name="result"/> if it is a <c>success</c> result, or a new <c>success</c>
