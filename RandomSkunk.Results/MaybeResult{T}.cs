@@ -5,39 +5,63 @@ namespace RandomSkunk.Results;
 /// absent.
 /// </summary>
 /// <typeparam name="T">The type of the return value of the operation.</typeparam>
-public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
+public abstract class MaybeResult<T> : IEquatable<MaybeResult<T>>
 {
     private MaybeResult()
     {
     }
 
     /// <summary>
-    /// Gets a value indicating whether the result object is the result of a successful
-    /// operation <em>with</em> a value.
-    /// </summary>
-    public virtual bool IsSome => false;
-
-    /// <summary>
-    /// Gets a value indicating whether the result object is the result of a successful
-    /// operation <em>without</em> a value.
-    /// </summary>
-    public virtual bool IsNone => false;
-
-    /// <summary>
-    /// Gets the value of the success result, or throws an
-    /// <see cref="InvalidOperationException"/> if <see cref="IsSome"/> is false.
+    /// Gets the return value of the successful operation, or throws an
+    /// <see cref="InvalidOperationException"/> if this is not a <c>some</c> result.
     /// </summary>
     /// <exception cref="InvalidOperationException">
-    /// If <see cref="IsSome"/> is not true.
+    /// If this result is not a <c>some</c> result.
     /// </exception>
     [NotNull]
-    public override T Value => throw Exceptions.CannotAccessValueUnlessSome;
+    public virtual T Value => throw Exceptions.CannotAccessValueUnlessSome;
+
+    /// <summary>
+    /// Gets the error from the failed operation, or throws an
+    /// <see cref="InvalidOperationException"/> if this is not a <c>fail</c> result.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// If this result is not a <c>fail</c> result.
+    /// </exception>
+    public virtual Error Error => throw Exceptions.CannotAccessErrorUnlessFail;
 
     /// <summary>
     /// Gets the type of the result: <see cref="MaybeResultType.Some"/>,
     /// <see cref="MaybeResultType.None"/>, or <see cref="MaybeResultType.Fail"/>.
     /// </summary>
     public abstract MaybeResultType Type { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>some</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>some</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsSome => Type == MaybeResultType.Some;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>none</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>none</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsNone => Type == MaybeResultType.None;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>fail</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>fail</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsFail => Type == MaybeResultType.Fail;
 
     /// <summary>
     /// Converts the specified value to a <c>success</c> result.
@@ -74,7 +98,7 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(Error? error = null) =>
-        new FailResult(error ?? new Error(DefaultErrorMessage));
+        new FailResult(error ?? new Error());
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
@@ -269,10 +293,6 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
 
         public override MaybeResultType Type => MaybeResultType.Some;
 
-        public override bool IsSuccess => true;
-
-        public override bool IsSome => true;
-
         [NotNull]
         public override T Value { get; }
 
@@ -287,9 +307,8 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
         public override int GetHashCode()
         {
             int hashCode = 1265339359;
-            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
             hashCode = (hashCode * -1521134295) + EqualityComparer<T>.Default.GetHashCode(Value);
-            hashCode = (hashCode * -1521134295) + IsSome.GetHashCode();
             return hashCode;
         }
 
@@ -306,10 +325,6 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
     {
         public override MaybeResultType Type => MaybeResultType.None;
 
-        public override bool IsSuccess => true;
-
-        public override bool IsNone => true;
-
         public override bool Equals(MaybeResult<T>? other) =>
             other != null && other.IsNone;
 
@@ -319,8 +334,7 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
         public override int GetHashCode()
         {
             int hashCode = -2070419312;
-            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
-            hashCode = (hashCode * -1521134295) + IsNone.GetHashCode();
+            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
             return hashCode;
         }
 
@@ -339,8 +353,6 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
 
         public override MaybeResultType Type => MaybeResultType.Fail;
 
-        public override bool IsFail => true;
-
         public override Error Error { get; }
 
         public override bool Equals(MaybeResult<T>? other) =>
@@ -354,10 +366,8 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
         public override int GetHashCode()
         {
             int hashCode = 1840328550;
-            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
             hashCode = (hashCode * -1521134295) + EqualityComparer<Error>.Default.GetHashCode(Error);
-            hashCode = (hashCode * -1521134295) + typeof(T).GetHashCode();
-            hashCode = (hashCode * -1521134295) + IsFail.GetHashCode();
             return hashCode;
         }
 

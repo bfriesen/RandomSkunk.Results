@@ -5,6 +5,8 @@ namespace RandomSkunk.Results;
 /// </summary>
 public sealed class Error : IEquatable<Error>
 {
+    private static string _defaultMessage = "Error";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
     /// </summary>
@@ -15,12 +17,25 @@ public sealed class Error : IEquatable<Error>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="message"/> is <see langword="null"/>.
     /// </exception>
-    public Error(string message, string? stackTrace = null, int? errorCode = null, string? identifier = null)
+    public Error(string? message = null, string? stackTrace = null, int? errorCode = null, string? identifier = null)
     {
-        Message = message ?? throw new ArgumentNullException(nameof(message));
+        Message = message ?? DefaultMessage;
         StackTrace = stackTrace;
         ErrorCode = errorCode;
         Identifier = identifier;
+    }
+
+    /// <summary>
+    /// Gets or sets the default error message. This value is used when creating a <c>fail</c>
+    /// result and an error message is not specified.
+    /// </summary>
+    /// <exception cref="ArgumentNullException">
+    /// When setting the property, if the value is <see langword="null"/>.
+    /// </exception>
+    public static string DefaultMessage
+    {
+        get => _defaultMessage;
+        set => _defaultMessage = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     /// <summary>

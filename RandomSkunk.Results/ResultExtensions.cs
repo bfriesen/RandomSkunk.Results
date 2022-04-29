@@ -6,6 +6,230 @@ namespace RandomSkunk.Results;
 public static class ResultExtensions
 {
     /// <summary>
+    /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="otherValue">The value to compare.</param>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>success</c> result and its value equals
+    /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool Equals<T>(this Result<T> result, T otherValue) =>
+        result.Equals(otherValue, EqualityComparer<T>.Default);
+
+    /// <summary>
+    /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="otherValue">The value to compare.</param>
+    /// <param name="comparer">
+    /// The <see cref="IEqualityComparer{T}"/> used to determine equality of the values.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>success</c> result and its value equals
+    /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="comparer"/> is <see langword="null"/>.
+    /// </exception>
+    public static bool Equals<T>(this Result<T> result, T otherValue, IEqualityComparer<T> comparer)
+    {
+        if (comparer is null) throw new ArgumentNullException(nameof(comparer));
+
+        return result.IsSuccess && comparer.Equals(result.Value, otherValue);
+    }
+
+    /// <summary>
+    /// Determines whether the value of the result is equal to another value as defined by the
+    /// <paramref name="isSuccessValue"/> function.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="isSuccessValue">
+    /// A function that defines the equality of the result value.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>success</c> result and
+    /// <paramref name="isSuccessValue"/> evaluates to <see langword="true"/> when passed
+    /// its value; otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="isSuccessValue"/> is <see langword="null"/>.
+    /// </exception>
+    public static bool Equals<T>(this Result<T> result, Func<T, bool> isSuccessValue)
+    {
+        if (isSuccessValue is null) throw new ArgumentNullException(nameof(isSuccessValue));
+
+        return result.IsSuccess && isSuccessValue(result.Value);
+    }
+
+    /// <summary>
+    /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="otherValue">The value to compare.</param>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>some</c> result and its value equals
+    /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool Equals<T>(this MaybeResult<T> result, T otherValue) =>
+        result.Equals(otherValue, EqualityComparer<T>.Default);
+
+    /// <summary>
+    /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="otherValue">The value to compare.</param>
+    /// <param name="comparer">
+    /// The <see cref="IEqualityComparer{T}"/> used to determine equality of the values.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>some</c> result and its value equals
+    /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="comparer"/> is <see langword="null"/>.
+    /// </exception>
+    public static bool Equals<T>(this MaybeResult<T> result, T otherValue, IEqualityComparer<T> comparer)
+    {
+        if (comparer is null) throw new ArgumentNullException(nameof(comparer));
+
+        return result.IsSome && comparer.Equals(result.Value, otherValue);
+    }
+
+    /// <summary>
+    /// Determines whether the value of the result is equal to another value as defined by the
+    /// <paramref name="isSomeValue"/> function.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="isSomeValue">
+    /// A function that defines the equality of the result value.
+    /// </param>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>some</c> result and
+    /// <paramref name="isSomeValue"/> evaluates to <see langword="true"/> when passed
+    /// its value; otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="isSomeValue"/> is <see langword="null"/>.
+    /// </exception>
+    public static bool Equals<T>(this MaybeResult<T> result, Func<T, bool> isSomeValue)
+    {
+        if (isSomeValue is null) throw new ArgumentNullException(nameof(isSomeValue));
+
+        return result.IsSome && isSomeValue(result.Value);
+    }
+
+    /// <summary>
+    /// Gets the value of the <c>success</c> result, or the specified default value if
+    /// it is a <c>fail</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="fallbackValue">
+    /// The fallback value to return if this is not a <c>success</c> result.
+    /// </param>
+    /// <returns>
+    /// The value of this result if this is a <c>success</c> result; otherwise,
+    /// <paramref name="fallbackValue"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
+    /// </exception>
+    [return: NotNull]
+    public static T GetValueOr<T>(this Result<T> result, [DisallowNull] T fallbackValue)
+    {
+        if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
+
+        return result.IsSuccess ? result.Value : fallbackValue;
+    }
+
+    /// <summary>
+    /// Gets the value of the <c>success</c> result, or the specified default value if
+    /// it is a <c>fail</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="getFallbackValue">
+    /// A function that creates the fallback value to return if this is not a <c>success</c>
+    /// result.
+    /// </param>
+    /// <returns>
+    /// The value of this result if this is a <c>success</c> result; otherwise, the value returned
+    /// by the <paramref name="getFallbackValue"/> function.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
+    /// </exception>
+    [return: NotNull]
+    public static T GetValueOr<T>(this Result<T> result, Func<T> getFallbackValue)
+    {
+        if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
+
+        return result.IsSuccess ? result.Value : getFallbackValue() ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+    }
+
+    /// <summary>
+    /// Gets the value of the <c>success</c> result, or the specified default value if
+    /// it is a <c>fail</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="fallbackValue">
+    /// The fallback value to return if this is not a <c>success</c> result.
+    /// </param>
+    /// <returns>
+    /// The value of this result if this is a <c>success</c> result; otherwise,
+    /// <paramref name="fallbackValue"/>.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
+    /// </exception>
+    [return: NotNull]
+    public static T GetValueOr<T>(this MaybeResult<T> result, [DisallowNull] T fallbackValue)
+    {
+        if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
+
+        return result.IsSome ? result.Value : fallbackValue;
+    }
+
+    /// <summary>
+    /// Gets the value of the <c>success</c> result, or the specified default value if
+    /// it is a <c>fail</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <param name="result">The target result.</param>
+    /// <param name="getFallbackValue">
+    /// A function that creates the fallback value to return if this is not a <c>success</c>
+    /// result.
+    /// </param>
+    /// <returns>
+    /// The value of this result if this is a <c>success</c> result; otherwise, the value returned
+    /// by the <paramref name="getFallbackValue"/> function.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException">
+    /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
+    /// </exception>
+    [return: NotNull]
+    public static T GetValueOr<T>(this MaybeResult<T> result, Func<T> getFallbackValue)
+    {
+        if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
+
+        return result.IsSome ? result.Value : getFallbackValue() ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+    }
+
+    /// <summary>
     /// Returns <paramref name="result"/> if it is a <c>success</c> result, or a new <c>success</c>
     /// result with the specified fallback value.
     /// </summary>
@@ -22,10 +246,7 @@ public static class ResultExtensions
         if (result is null) throw new ArgumentNullException(nameof(result));
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        if (result.IsSuccess)
-            return result;
-
-        return Result.Success(fallbackValue);
+        return result.IsSuccess ? result : Result.Success(fallbackValue);
     }
 
     /// <summary>
@@ -76,10 +297,7 @@ public static class ResultExtensions
         if (result is null) throw new ArgumentNullException(nameof(result));
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        if (result.IsSome)
-            return result;
-
-        return MaybeResult.Some(fallbackValue);
+        return result.IsSome ? result : MaybeResult.Some(fallbackValue);
     }
 
     /// <summary>
@@ -130,10 +348,7 @@ public static class ResultExtensions
         if (result is null) throw new ArgumentNullException(nameof(result));
         if (fallbackResult is null) throw new ArgumentNullException(nameof(fallbackResult));
 
-        if (result.IsSuccess)
-            return result;
-
-        return fallbackResult;
+        return result.IsSuccess ? result : fallbackResult;
     }
 
     /// <summary>
@@ -187,10 +402,7 @@ public static class ResultExtensions
         if (result is null) throw new ArgumentNullException(nameof(result));
         if (fallbackResult is null) throw new ArgumentNullException(nameof(fallbackResult));
 
-        if (result.IsSome)
-            return result;
-
-        return fallbackResult;
+        return result.IsSome ? result : fallbackResult;
     }
 
     /// <summary>

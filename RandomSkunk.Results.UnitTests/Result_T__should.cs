@@ -12,8 +12,6 @@ public class Result_T__should
     {
         var result = Result<int>.Success(321);
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFail.Should().BeFalse();
         result.Type.Should().Be(ResultType.Success);
         result.Value.Should().Be(321);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
@@ -25,8 +23,6 @@ public class Result_T__should
     {
         var result = Result.Success(321);
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFail.Should().BeFalse();
         result.Type.Should().Be(ResultType.Success);
         result.Value.Should().Be(321);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
@@ -38,8 +34,6 @@ public class Result_T__should
     {
         var result = Result<int>.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(ResultType.Fail);
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
@@ -54,8 +48,6 @@ public class Result_T__should
     {
         var result = Result.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(ResultType.Fail);
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
@@ -70,10 +62,8 @@ public class Result_T__should
     {
         var result = Result.Fail<int>();
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Message.Should().Be(ResultBase.DefaultErrorMessage);
+        result.Error.Message.Should().Be(Error.DefaultMessage);
         result.Error.ErrorCode.Should().BeNull();
         result.Error.StackTrace.Should().BeNull();
         Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()

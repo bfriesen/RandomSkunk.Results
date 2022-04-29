@@ -3,17 +3,44 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// The result of an operation that does not have a return value.
 /// </summary>
-public abstract class Result : ResultBase, IEquatable<Result>
+public abstract class Result : IEquatable<Result>
 {
     private Result()
     {
     }
 
     /// <summary>
+    /// Gets the error from the failed operation, or throws an
+    /// <see cref="InvalidOperationException"/> if this is not a <c>fail</c> result.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// If this result is not a <c>fail</c> result.
+    /// </exception>
+    public virtual Error Error => throw Exceptions.CannotAccessErrorUnlessFail;
+
+    /// <summary>
     /// Gets the type of the result: <see cref="ResultType.Success"/> or
     /// <see cref="ResultType.Fail"/>.
     /// </summary>
     public abstract ResultType Type { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>success</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>success</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsSuccess => Type == ResultType.Success;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>fail</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>fail</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsFail => Type == ResultType.Fail;
 
     /// <summary>
     /// Creates a <c>success</c> result for an operation without a return value.
@@ -27,7 +54,7 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result Fail(Error? error = null) =>
-        new FailResult(error ?? new Error(DefaultErrorMessage));
+        new FailResult(error ?? new Error());
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
@@ -240,16 +267,18 @@ public abstract class Result : ResultBase, IEquatable<Result>
     {
         public override ResultType Type => ResultType.Success;
 
-        public override bool IsSuccess => true;
-
         public override bool Equals(Result? other) =>
             other != null && other.IsSuccess;
 
         public override bool Equals(object? obj) =>
             obj is Result other && Equals(other);
 
-        public override int GetHashCode() =>
-            2049151605 + Type.GetHashCode();
+        public override int GetHashCode()
+        {
+            int hashCode = -2070419312;
+            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
+            return hashCode;
+        }
 
         protected override TResult MatchCore<TResult>(Func<TResult> success, Func<Error, TResult> fail) => success();
 
@@ -266,8 +295,6 @@ public abstract class Result : ResultBase, IEquatable<Result>
 
         public override ResultType Type => ResultType.Fail;
 
-        public override bool IsFail => true;
-
         public override Error Error { get; }
 
         public override bool Equals(Result? other) =>
@@ -281,7 +308,7 @@ public abstract class Result : ResultBase, IEquatable<Result>
         public override int GetHashCode()
         {
             int hashCode = 1840328550;
-            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
             hashCode = (hashCode * -1521134295) + EqualityComparer<Error>.Default.GetHashCode(Error);
             return hashCode;
         }

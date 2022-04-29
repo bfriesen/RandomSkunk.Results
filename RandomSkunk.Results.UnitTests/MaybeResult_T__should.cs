@@ -12,8 +12,6 @@ public class MaybeResult_T__should
     {
         var result = MaybeResult<int>.Some(321);
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.Some);
         result.Value.Should().Be(321);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
@@ -25,8 +23,6 @@ public class MaybeResult_T__should
     {
         var result = MaybeResult.Some(321);
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.Some);
         result.Value.Should().Be(321);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
@@ -38,8 +34,6 @@ public class MaybeResult_T__should
     {
         var result = MaybeResult<int>.None();
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.None);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
@@ -52,8 +46,6 @@ public class MaybeResult_T__should
     {
         var result = MaybeResult.None<int>();
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.None);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
@@ -66,8 +58,6 @@ public class MaybeResult_T__should
     {
         var result = MaybeResult<int>.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(MaybeResultType.Fail);
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
@@ -82,8 +72,6 @@ public class MaybeResult_T__should
     {
         var result = MaybeResult.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(MaybeResultType.Fail);
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
@@ -98,10 +86,8 @@ public class MaybeResult_T__should
     {
         var result = MaybeResult.Fail<int>();
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(MaybeResultType.Fail);
-        result.Error.Message.Should().Be(ResultBase.DefaultErrorMessage);
+        result.Error.Message.Should().Be(Error.DefaultMessage);
         result.Error.ErrorCode.Should().BeNull();
         result.Error.StackTrace.Should().BeNull();
         Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()

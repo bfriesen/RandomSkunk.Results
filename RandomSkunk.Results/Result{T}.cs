@@ -4,17 +4,54 @@ namespace RandomSkunk.Results;
 /// The result of an operation that has a return value.
 /// </summary>
 /// <typeparam name="T">The type of the return value of the operation.</typeparam>
-public abstract class Result<T> : ResultBase<T>, IEquatable<Result<T>>
+public abstract class Result<T> : IEquatable<Result<T>>
 {
     private Result()
     {
     }
 
     /// <summary>
+    /// Gets the return value of the successful operation, or throws an
+    /// <see cref="InvalidOperationException"/> if this is not a <c>success</c> result.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// If this result is not a <c>success</c> result.
+    /// </exception>
+    [NotNull]
+    public virtual T Value => throw Exceptions.CannotAccessValueUnlessSuccess;
+
+    /// <summary>
+    /// Gets the error from the failed operation, or throws an
+    /// <see cref="InvalidOperationException"/> if this is not a <c>fail</c> result.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// If this result is not a <c>fail</c> result.
+    /// </exception>
+    public virtual Error Error => throw Exceptions.CannotAccessErrorUnlessFail;
+
+    /// <summary>
     /// Gets the type of the result: <see cref="ResultType.Success"/> or
     /// <see cref="ResultType.Fail"/>.
     /// </summary>
     public abstract ResultType Type { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>success</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>success</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsSuccess => Type == ResultType.Success;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>fail</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>fail</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsFail => Type == ResultType.Fail;
 
     /// <summary>
     /// Converts the specified value to a <c>success</c> result.
@@ -40,7 +77,7 @@ public abstract class Result<T> : ResultBase<T>, IEquatable<Result<T>>
     /// </summary>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
-    public static Result<T> Fail(Error? error = null) => new FailResult(error ?? new Error(DefaultErrorMessage));
+    public static Result<T> Fail(Error? error = null) => new FailResult(error ?? new Error());
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
@@ -211,8 +248,6 @@ public abstract class Result<T> : ResultBase<T>, IEquatable<Result<T>>
 
         public override ResultType Type => ResultType.Success;
 
-        public override bool IsSuccess => true;
-
         [NotNull]
         public override T Value { get; }
 
@@ -227,7 +262,7 @@ public abstract class Result<T> : ResultBase<T>, IEquatable<Result<T>>
         public override int GetHashCode()
         {
             int hashCode = 1265339359;
-            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
             hashCode = (hashCode * -1521134295) + EqualityComparer<T>.Default.GetHashCode(Value);
             return hashCode;
         }
@@ -247,8 +282,6 @@ public abstract class Result<T> : ResultBase<T>, IEquatable<Result<T>>
 
         public override ResultType Type => ResultType.Fail;
 
-        public override bool IsFail => true;
-
         public override Error Error { get; }
 
         public override bool Equals(Result<T>? other) =>
@@ -262,9 +295,8 @@ public abstract class Result<T> : ResultBase<T>, IEquatable<Result<T>>
         public override int GetHashCode()
         {
             int hashCode = 1840328550;
-            hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
             hashCode = (hashCode * -1521134295) + EqualityComparer<Error>.Default.GetHashCode(Error);
-            hashCode = (hashCode * -1521134295) + typeof(T).GetHashCode();
             return hashCode;
         }
 

@@ -12,8 +12,6 @@ public class Result_should
     {
         var result = Result.Success();
 
-        result.IsSuccess.Should().BeTrue();
-        result.IsFail.Should().BeFalse();
         result.Type.Should().Be(ResultType.Success);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
@@ -24,8 +22,6 @@ public class Result_should
     {
         var result = Result.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(ResultType.Fail);
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
@@ -38,10 +34,8 @@ public class Result_should
     {
         var result = Result.Fail();
 
-        result.IsSuccess.Should().BeFalse();
-        result.IsFail.Should().BeTrue();
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Message.Should().Be(ResultBase.DefaultErrorMessage);
+        result.Error.Message.Should().Be(Error.DefaultMessage);
         result.Error.ErrorCode.Should().BeNull();
         result.Error.StackTrace.Should().BeNull();
     }
