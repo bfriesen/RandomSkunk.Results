@@ -15,7 +15,6 @@ public class MaybeResult_T__should
         result.IsSuccess.Should().BeTrue();
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.Some);
-        result.CallSite.MemberName.Should().Be(nameof(Create_some_result));
         result.Value.Should().Be(321);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
@@ -29,7 +28,6 @@ public class MaybeResult_T__should
         result.IsSuccess.Should().BeTrue();
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.Some);
-        result.CallSite.MemberName.Should().Be(nameof(Create_some_result2));
         result.Value.Should().Be(321);
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
@@ -43,7 +41,6 @@ public class MaybeResult_T__should
         result.IsSuccess.Should().BeTrue();
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.None);
-        result.CallSite.MemberName.Should().Be(nameof(Create_none_result));
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
         Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
@@ -58,7 +55,6 @@ public class MaybeResult_T__should
         result.IsSuccess.Should().BeTrue();
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(MaybeResultType.None);
-        result.CallSite.MemberName.Should().Be(nameof(Create_none_result2));
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
         Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
@@ -73,7 +69,6 @@ public class MaybeResult_T__should
         result.IsSuccess.Should().BeFalse();
         result.IsFail.Should().BeTrue();
         result.Type.Should().Be(MaybeResultType.Fail);
-        result.CallSite.MemberName.Should().Be(nameof(Create_fail_result));
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
         result.Error.StackTrace.Should().Be(_stackTrace);
@@ -90,7 +85,6 @@ public class MaybeResult_T__should
         result.IsSuccess.Should().BeFalse();
         result.IsFail.Should().BeTrue();
         result.Type.Should().Be(MaybeResultType.Fail);
-        result.CallSite.MemberName.Should().Be(nameof(Create_fail_result2));
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
         result.Error.StackTrace.Should().Be(_stackTrace);
@@ -107,7 +101,6 @@ public class MaybeResult_T__should
         result.IsSuccess.Should().BeFalse();
         result.IsFail.Should().BeTrue();
         result.Type.Should().Be(MaybeResultType.Fail);
-        result.CallSite.MemberName.Should().Be(nameof(Create_fail_result3));
         result.Error.Message.Should().Be(ResultBase.DefaultErrorMessage);
         result.Error.ErrorCode.Should().BeNull();
         result.Error.StackTrace.Should().BeNull();

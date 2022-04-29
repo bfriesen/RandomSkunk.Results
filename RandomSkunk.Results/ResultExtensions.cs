@@ -7,8 +7,7 @@ public static class ResultExtensions
 {
     /// <summary>
     /// Returns <paramref name="result"/> if it is a <c>success</c> result, or a new <c>success</c>
-    /// result with the specified fallback value. The <see cref="ResultBase.CallSite"/> of the
-    /// returned result will always be the same as the target result.
+    /// result with the specified fallback value.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="result">The target result.</param>
@@ -26,13 +25,12 @@ public static class ResultExtensions
         if (result.IsSuccess)
             return result;
 
-        return Result.Success(fallbackValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+        return Result.Success(fallbackValue);
     }
 
     /// <summary>
     /// Returns <paramref name="result"/> if it is a <c>success</c> result, or a new <c>success</c>
-    /// result with the specified fallback value. The <see cref="ResultBase.CallSite"/> of the
-    /// returned result will always be the same as the target result.
+    /// result with the specified fallback value.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="result">The target result.</param>
@@ -58,13 +56,12 @@ public static class ResultExtensions
         var fallbackValue = getFallbackValue()
              ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
 
-        return Result.Success(fallbackValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+        return Result.Success(fallbackValue);
     }
 
     /// <summary>
     /// Returns <paramref name="result"/> if it is a <c>some</c> result, or a new <c>some</c>
-    /// result with the specified fallback value. The <see cref="ResultBase.CallSite"/> of the
-    /// returned result will always be the same as the target result.
+    /// result with the specified fallback value.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="result">The target result.</param>
@@ -82,14 +79,12 @@ public static class ResultExtensions
         if (result.IsSome)
             return result;
 
-        return MaybeResult.Some(fallbackValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+        return MaybeResult.Some(fallbackValue);
     }
 
     /// <summary>
     /// Returns <paramref name="result"/> if it is a <c>some</c> result, or a new <c>some</c>
     /// result with its value from evaluating the <paramref name="getFallbackValue"/> function.
-    /// The <see cref="ResultBase.CallSite"/> of the returned result will always be the same as the
-    /// target result.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="result">The target result.</param>
@@ -115,7 +110,7 @@ public static class ResultExtensions
         var fallbackValue = getFallbackValue()
              ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
 
-        return MaybeResult.Some(fallbackValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+        return MaybeResult.Some(fallbackValue);
     }
 
     /// <summary>
@@ -235,8 +230,8 @@ public static class ResultExtensions
     /// <summary>
     /// Maps <paramref name="result"/> to a new result using the specified <paramref name="map"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="Result{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
@@ -262,21 +257,17 @@ public static class ResultExtensions
             var mappedValue = map(result.Value)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map));
 
-            return Result.Success(mappedValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return Result.Success(mappedValue);
         }
 
-        return Result.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return Result.Fail<TResult>(result.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="result"/> to a new result using the specified <paramref name="mapAsync"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="Result{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
@@ -309,21 +300,17 @@ public static class ResultExtensions
             var mappedValue = await mapAsync(result.Value, cancellationToken)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync));
 
-            return Result.Success(mappedValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return Result.Success(mappedValue);
         }
 
-        return Result.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return Result.Fail<TResult>(result.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="result"/> to a new result using the specified <paramref name="mapAsync"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="Result{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="Result{T}.Type"/> the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
@@ -347,8 +334,8 @@ public static class ResultExtensions
     /// <summary>
     /// Maps <paramref name="result"/> to a new result using the specified <paramref name="map"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="Result{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
@@ -374,24 +361,20 @@ public static class ResultExtensions
             var mappedValue = map(result.Value)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map));
 
-            return MaybeResult.Some(mappedValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.Some(mappedValue);
         }
 
         if (result.IsNone)
-            return MaybeResult.None<TResult>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.None<TResult>();
 
-        return MaybeResult.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return MaybeResult.Fail<TResult>(result.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="result"/> to a new result using the specified <paramref name="mapAsync"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="MaybeResult{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
@@ -424,24 +407,20 @@ public static class ResultExtensions
             var mappedValue = await mapAsync(result.Value, cancellationToken)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync));
 
-            return MaybeResult.Some(mappedValue, result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.Some(mappedValue);
         }
 
         if (result.IsNone)
-            return MaybeResult.None<TResult>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.None<TResult>();
 
-        return MaybeResult.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return MaybeResult.Fail<TResult>(result.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="result"/> to a new result using the specified <paramref name="mapAsync"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="MaybeResult{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
@@ -495,11 +474,7 @@ public static class ResultExtensions
             return mappedValue;
         }
 
-        return Result.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return Result.Fail<TResult>(result.Error);
     }
 
     /// <summary>
@@ -542,11 +517,7 @@ public static class ResultExtensions
             return mappedValue;
         }
 
-        return Result.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return Result.Fail<TResult>(result.Error);
     }
 
     /// <summary>
@@ -609,13 +580,9 @@ public static class ResultExtensions
         }
 
         if (result.IsNone)
-            return MaybeResult.None<TResult>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.None<TResult>();
 
-        return MaybeResult.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return MaybeResult.Fail<TResult>(result.Error);
     }
 
     /// <summary>
@@ -660,13 +627,9 @@ public static class ResultExtensions
         }
 
         if (result.IsNone)
-            return MaybeResult.None<TResult>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.None<TResult>();
 
-        return MaybeResult.Fail<TResult>(
-            result.Error,
-            result.CallSite.MemberName,
-            result.CallSite.FilePath,
-            result.CallSite.LineNumber);
+        return MaybeResult.Fail<TResult>(result.Error);
     }
 
     /// <summary>
@@ -753,7 +716,7 @@ public static class ResultExtensions
             if (filter(result.Value))
                 return result;
 
-            return MaybeResult.None<T>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.None<T>();
         }
 
         return result;
@@ -792,7 +755,7 @@ public static class ResultExtensions
             if (await filterAsync(result.Value, cancellationToken))
                 return result;
 
-            return MaybeResult.None<T>(result.CallSite.MemberName, result.CallSite.FilePath, result.CallSite.LineNumber);
+            return MaybeResult.None<T>();
         }
 
         return result;

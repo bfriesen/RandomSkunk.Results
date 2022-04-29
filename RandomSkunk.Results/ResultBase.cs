@@ -8,12 +8,6 @@ public abstract class ResultBase
     private static string _defaultErrorMessage = "Error";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ResultBase"/> class.
-    /// </summary>
-    /// <param name="callSite">Information about the code that created this result.</param>
-    protected ResultBase(CallSite callSite) => CallSite = callSite;
-
-    /// <summary>
     /// Gets or sets the default error message. This value is used when creating a <c>fail</c>
     /// result and an error message is not specified.
     /// </summary>
@@ -45,9 +39,4 @@ public abstract class ResultBase
     /// If <see cref="IsFail"/> is not true.
     /// </exception>
     public virtual Error Error => throw Exceptions.CannotAccessErrorUnlessFail;
-
-    /// <summary>
-    /// Gets information about the code that created this result.
-    /// </summary>
-    public CallSite CallSite { get; }
 }

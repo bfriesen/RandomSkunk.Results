@@ -15,7 +15,6 @@ public class Result_should
         result.IsSuccess.Should().BeTrue();
         result.IsFail.Should().BeFalse();
         result.Type.Should().Be(ResultType.Success);
-        result.CallSite.MemberName.Should().Be(nameof(Create_success_result));
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
@@ -28,7 +27,6 @@ public class Result_should
         result.IsSuccess.Should().BeFalse();
         result.IsFail.Should().BeTrue();
         result.Type.Should().Be(ResultType.Fail);
-        result.CallSite.MemberName.Should().Be(nameof(Create_fail_result));
         result.Error.Message.Should().Be(_errorMessage);
         result.Error.ErrorCode.Should().Be(_errorCode);
         result.Error.StackTrace.Should().Be(_stackTrace);
@@ -43,7 +41,6 @@ public class Result_should
         result.IsSuccess.Should().BeFalse();
         result.IsFail.Should().BeTrue();
         result.Type.Should().Be(ResultType.Fail);
-        result.CallSite.MemberName.Should().Be(nameof(Create_fail_result2));
         result.Error.Message.Should().Be(ResultBase.DefaultErrorMessage);
         result.Error.ErrorCode.Should().BeNull();
         result.Error.StackTrace.Should().BeNull();

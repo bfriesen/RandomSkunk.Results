@@ -9,7 +9,6 @@ public class ResultBase_T__should
 
         result.IsSuccess.Should().BeFalse();
         result.IsFail.Should().BeFalse();
-        result.CallSite.Should().Be(default(CallSite));
         Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
         Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
@@ -18,9 +17,5 @@ public class ResultBase_T__should
 
     private class DefaultResultBase<T> : ResultBase<T>
     {
-        public DefaultResultBase()
-            : base(default)
-        {
-        }
     }
 }

@@ -5,8 +5,7 @@ namespace RandomSkunk.Results;
 /// </summary>
 public abstract class Result : ResultBase, IEquatable<Result>
 {
-    private Result(CallSite callSite)
-        : base(callSite)
+    private Result()
     {
     }
 
@@ -19,30 +18,16 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// <summary>
     /// Creates a <c>success</c> result for an operation without a return value.
     /// </summary>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>success</c> result.</returns>
-    public static Result Success(
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        new SuccessResult(new CallSite(memberName, filePath, lineNumber));
+    public static Result Success() => new SuccessResult();
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation without a return value.
     /// </summary>
     /// <param name="error">The optional error that describes the failure.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
-    public static Result Fail(
-        Error? error = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        new FailResult(error ?? new Error(DefaultErrorMessage), new CallSite(memberName, filePath, lineNumber));
+    public static Result Fail(Error? error = null) =>
+        new FailResult(error ?? new Error(DefaultErrorMessage));
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
@@ -51,19 +36,13 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// <param name="messagePrefix">An optional prefix for the exception message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result Fail(
         Exception exception,
         string? messagePrefix = null,
         int? errorCode = null,
-        string? identifier = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Fail(Error.FromException(exception, messagePrefix, errorCode, identifier), memberName, filePath, lineNumber);
+        string? identifier = null) =>
+        Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation without a return value.
@@ -72,51 +51,29 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result Fail(
         string errorMessage,
         string? stackTrace = null,
         int? errorCode = null,
-        string? identifier = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Fail(new Error(errorMessage, stackTrace, errorCode, identifier), memberName, filePath, lineNumber);
+        string? identifier = null) =>
+        Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
 
     /// <summary>
     /// Creates a <c>success</c> result for an operation <em>with</em> a return value.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="value">The value of the <c>success</c> result.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>success</c> result.</returns>
-    public static Result<T> Success<T>(
-        [DisallowNull] T value,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Result<T>.Success(value, memberName, filePath, lineNumber);
+    public static Result<T> Success<T>([DisallowNull] T value) => Result<T>.Success(value);
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
     /// </summary>
     /// <typeparam name="T">The type of the return value of the operation.</typeparam>
     /// <param name="error">The optional error that describes the failure.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
-    public static Result<T> Fail<T>(
-        Error? error = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Result<T>.Fail(error, memberName, filePath, lineNumber);
+    public static Result<T> Fail<T>(Error? error = null) => Result<T>.Fail(error);
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
@@ -126,19 +83,13 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// <param name="messagePrefix">An optional prefix for the exception message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail<T>(
         Exception exception,
         string? messagePrefix = null,
         int? errorCode = null,
-        string? identifier = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Result<T>.Fail(Error.FromException(exception, messagePrefix, errorCode, identifier), memberName, filePath, lineNumber);
+        string? identifier = null) =>
+        Result<T>.Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
@@ -148,19 +99,13 @@ public abstract class Result : ResultBase, IEquatable<Result>
     /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail<T>(
         string errorMessage,
         string? stackTrace = null,
         int? errorCode = null,
-        string? identifier = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Result<T>.Fail(errorMessage, stackTrace, errorCode, identifier, memberName, filePath, lineNumber);
+        string? identifier = null) =>
+        Result<T>.Fail(errorMessage, stackTrace, errorCode, identifier);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -293,11 +238,6 @@ public abstract class Result : ResultBase, IEquatable<Result>
 
     private sealed class SuccessResult : Result
     {
-        public SuccessResult(CallSite callSite)
-            : base(callSite)
-        {
-        }
-
         public override ResultType Type => ResultType.Success;
 
         public override bool IsSuccess => true;
@@ -322,11 +262,7 @@ public abstract class Result : ResultBase, IEquatable<Result>
 
     private sealed class FailResult : Result
     {
-        public FailResult(Error error, CallSite callSite)
-            : base(callSite)
-        {
-            Error = error;
-        }
+        public FailResult(Error error) => Error = error;
 
         public override ResultType Type => ResultType.Fail;
 

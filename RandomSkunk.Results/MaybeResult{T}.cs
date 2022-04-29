@@ -7,8 +7,7 @@ namespace RandomSkunk.Results;
 /// <typeparam name="T">The type of the return value of the operation.</typeparam>
 public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
 {
-    private MaybeResult(CallSite callSite)
-        : base(callSite)
+    private MaybeResult()
     {
     }
 
@@ -55,47 +54,27 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
     /// <param name="value">
     /// The value of the <c>some</c> result. Must not be <see langword="null"/>.
     /// </param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>some</c> result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="value"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<T> Some(
-        [DisallowNull] T value,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        new SomeResult(value, new CallSite(memberName, filePath, lineNumber));
+    public static MaybeResult<T> Some([DisallowNull] T value) =>
+        new SomeResult(value);
 
     /// <summary>
     /// Creates a <c>none</c> result for an operation with a return value.
     /// </summary>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>none</c> result.</returns>
-    public static MaybeResult<T> None(
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        new NoneResult(new CallSite(memberName, filePath, lineNumber));
+    public static MaybeResult<T> None() =>
+        new NoneResult();
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
     /// <param name="error">The optional error that describes the failure.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
-    public static MaybeResult<T> Fail(
-        Error? error = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        new FailResult(error ?? new Error(DefaultErrorMessage), new CallSite(memberName, filePath, lineNumber));
+    public static MaybeResult<T> Fail(Error? error = null) =>
+        new FailResult(error ?? new Error(DefaultErrorMessage));
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
@@ -104,19 +83,13 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
     /// <param name="messagePrefix">An optional prefix for the exception message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(
         Exception exception,
         string? messagePrefix = null,
         int? errorCode = null,
-        string? identifier = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Fail(Error.FromException(exception, messagePrefix, errorCode, identifier), memberName, filePath, lineNumber);
+        string? identifier = null) =>
+        Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
@@ -125,19 +98,13 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
     /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
     /// <param name="errorCode">The optional error code that describes the failure.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="memberName">The compiler-provided name of the member where the call originated.</param>
-    /// <param name="filePath">The compiler-provided path to the source file where the call originated.</param>
-    /// <param name="lineNumber">The compiler-provided line number where the call originated.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(
         string errorMessage,
         string? stackTrace = null,
         int? errorCode = null,
-        string? identifier = null,
-        [CallerMemberName] string memberName = null!,
-        [CallerFilePath] string filePath = null!,
-        [CallerLineNumber] int lineNumber = 0) =>
-        Fail(new Error(errorMessage, stackTrace, errorCode, identifier), memberName, filePath, lineNumber);
+        string? identifier = null) =>
+        Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
@@ -298,8 +265,7 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
 
     private sealed class SomeResult : MaybeResult<T>
     {
-        public SomeResult(T value, CallSite callSite)
-            : base(callSite) => Value = value ?? throw new ArgumentNullException(nameof(value));
+        public SomeResult(T value) => Value = value ?? throw new ArgumentNullException(nameof(value));
 
         public override MaybeResultType Type => MaybeResultType.Some;
 
@@ -338,11 +304,6 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
 
     private sealed class NoneResult : MaybeResult<T>
     {
-        public NoneResult(CallSite callSite)
-            : base(callSite)
-        {
-        }
-
         public override MaybeResultType Type => MaybeResultType.None;
 
         public override bool IsSuccess => true;
@@ -374,8 +335,7 @@ public abstract class MaybeResult<T> : ResultBase<T>, IEquatable<MaybeResult<T>>
 
     private sealed class FailResult : MaybeResult<T>
     {
-        public FailResult(Error error, CallSite callSite)
-            : base(callSite) => Error = error;
+        public FailResult(Error error) => Error = error;
 
         public override MaybeResultType Type => MaybeResultType.Fail;
 

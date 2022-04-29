@@ -7,15 +7,6 @@ namespace RandomSkunk.Results;
 public abstract class ResultBase<T> : ResultBase
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="ResultBase{T}"/> class.
-    /// </summary>
-    /// <param name="callSite">Information about the code that created this result.</param>
-    protected ResultBase(CallSite callSite)
-        : base(callSite)
-    {
-    }
-
-    /// <summary>
     /// Gets the value of the success result, or throws an
     /// <see cref="InvalidOperationException"/> if <see cref="ResultBase.IsSuccess"/> is false.
     /// </summary>

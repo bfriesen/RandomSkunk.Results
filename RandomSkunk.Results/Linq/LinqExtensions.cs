@@ -12,8 +12,8 @@ public static class LinqExtensions
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="Result{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
@@ -114,8 +114,8 @@ public static class LinqExtensions
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
     /// function. The map function is only evaluated if the target is a <c>some</c> result, and
-    /// the <see cref="Result{T}.Type"/> and <see cref="ResultBase.CallSite"/> of the new result
-    /// will always be the same as the target result.
+    /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
+    /// result.
     /// </summary>
     /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
