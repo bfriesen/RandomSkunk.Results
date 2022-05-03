@@ -9,7 +9,19 @@ and this project adheres to [Semantic Versioning].
 
 ### Changed
 
-- The `Error` class and the various `Fail` factory methods take a `message` parameter instead of a `messagePrefix` parameter.
+- RandomSkunk.Results:
+    - The `Error` class and the various `Fail` factory methods take a `message` parameter instead of a `messagePrefix` parameter.
+
+### Added
+
+- RandomSkunk.Result.Http project.
+    - Extension methods for getting a result object directly from an `HttpResponseMessage`:
+        - `HttpResponseMessage.ReadResultFromJsonAsync`
+        - `HttpResponseMessage.ReadResultFromJsonAsync<T>`
+        - `HttpResponseMessage.ReadMaybeResultFromJsonAsync<T>`
+- RandomSkunk.Result.AspNetCore project.
+    - Extension method for getting a `ProblemDetails` object directly from a result error:
+        - `Error.GetProblemDetails`
 
 ## [1.0.0-alpha02] - 2022-04-28
 

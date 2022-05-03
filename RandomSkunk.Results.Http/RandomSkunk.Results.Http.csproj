@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net461;net6.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
+
+		<PackageVersion>1.0.0-alpha02</PackageVersion>
+		<Title>RandomSkunk.Results.Http</Title>
+		<Description>Using RandomSkunk.Results with System.Net.Http and System.Net.Http.Json.</Description>
+		<Authors>Brian Friesen</Authors>
+		<Copyright>Copyright 2022 (c) Brian Friesen. All rights reserved.</Copyright>
+
+		<PackageId>RandomSkunk.Results.Http</PackageId>
+		<PackageProjectUrl>https://github.com/bfriesen/RandomSkunk.Results</PackageProjectUrl>
+		<PackageTags>result monad option some none maybe error http</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageReleaseNotes>https://github.com/bfriesen/RandomSkunk.Results/blob/main/CHANGELOG.md</PackageReleaseNotes>
+
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PublishRepositoryUrl>True</PublishRepositoryUrl>
+		<EmbedUntrackedSources>True</EmbedUntrackedSources>
+		<DebugType>Embedded</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\RandomSkunk.Results\RandomSkunk.Results.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='net461'">
+		<PackageReference Include="System.Net.Http" Version="4.3.4" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='net6.0'">
+		<PackageReference Include="System.Net.Http.Json" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
+		<None Include="..\icon.png" Pack="true" PackagePath="\" />
+		<None Include="..\CHANGELOG.md" Pack="false" />
+		<None Include="..\THIRD-PARTY-NOTICES.txt" Pack="false" />
+	</ItemGroup>
+
+</Project>
