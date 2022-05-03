@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning].
     - Extension method for getting a `ProblemDetails` object directly from a result error:
         - `Error.GetProblemDetails`
 
+### Removed
+
+- `CallSite` struct.
+- Abstract base classes, `ResultBase` and `ResultBase<T>`.
+
 *Note that version 1.0.0-alpha03 was burned due to publishing error.*
 
 ## [1.0.0-alpha02] - 2022-04-28
