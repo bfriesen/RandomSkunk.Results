@@ -26,11 +26,10 @@ public sealed class Error : IEquatable<Error>
     }
 
     /// <summary>
-    /// Gets or sets the default error message. This value is used when creating a <c>fail</c>
-    /// result and an error message is not specified.
+    /// Gets or sets the default error message, to be used when an error message is not specified.
     /// </summary>
     /// <exception cref="ArgumentNullException">
-    /// When setting the property, if the value is <see langword="null"/>.
+    /// If the property is to <see langword="null"/>.
     /// </exception>
     public static string DefaultMessage
     {
@@ -62,7 +61,7 @@ public sealed class Error : IEquatable<Error>
     /// Creates an <see cref="Error"/> object from the specified <see cref="Exception"/>.
     /// </summary>
     /// <param name="exception">The exception to create the error from.</param>
-    /// <param name="messagePrefix">An optional prefix for the exception message.</param>
+    /// <param name="message">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
@@ -71,14 +70,20 @@ public sealed class Error : IEquatable<Error>
     /// </exception>
     public static Error FromException(
         Exception exception,
-        string? messagePrefix = null,
+        string? message = null,
         int? errorCode = null,
         string? identifier = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
-        messagePrefix ??= $"{exception.GetType().Name}: ";
 
-        return new Error($"{messagePrefix}{exception.Message}", exception.StackTrace, errorCode, identifier);
+        var exceptionMessage = $"{exception.GetType().Name}: {exception.Message}";
+
+        if (string.IsNullOrWhiteSpace(message))
+            message = exceptionMessage;
+        else
+            message += Environment.NewLine + exceptionMessage;
+
+        return new Error(message, exception.StackTrace, errorCode, identifier);
     }
 
     /// <inheritdoc/>

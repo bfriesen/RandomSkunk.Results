@@ -4,7 +4,7 @@ namespace RandomSkunk.Results;
 /// The result of an operation that has a return value where that return value is allowed to be
 /// absent.
 /// </summary>
-/// <typeparam name="T">The type of the return value of the operation.</typeparam>
+/// <typeparam name="T">The return type of the operation.</typeparam>
 public abstract class MaybeResult<T> : IEquatable<MaybeResult<T>>
 {
     private MaybeResult()
@@ -64,7 +64,7 @@ public abstract class MaybeResult<T> : IEquatable<MaybeResult<T>>
     public bool IsFail => Type == MaybeResultType.Fail;
 
     /// <summary>
-    /// Converts the specified value to a <c>success</c> result.
+    /// Converts the specified value to a <c>some</c> result.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <exception cref="ArgumentNullException">
@@ -73,7 +73,7 @@ public abstract class MaybeResult<T> : IEquatable<MaybeResult<T>>
     public static implicit operator MaybeResult<T>([DisallowNull] T value) => Some(value);
 
     /// <summary>
-    /// Creates a <c>some</c> result for an operation with a return value.
+    /// Creates a <c>some</c> result for an operation with an optional return value.
     /// </summary>
     /// <param name="value">
     /// The value of the <c>some</c> result. Must not be <see langword="null"/>.
@@ -82,45 +82,42 @@ public abstract class MaybeResult<T> : IEquatable<MaybeResult<T>>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="value"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<T> Some([DisallowNull] T value) =>
-        new SomeResult(value);
+    public static MaybeResult<T> Some([DisallowNull] T value) => new SomeResult(value);
 
     /// <summary>
-    /// Creates a <c>none</c> result for an operation with a return value.
+    /// Creates a <c>none</c> result for an operation with an optional return value.
     /// </summary>
     /// <returns>A <c>none</c> result.</returns>
-    public static MaybeResult<T> None() =>
-        new NoneResult();
+    public static MaybeResult<T> None() => new NoneResult();
 
     /// <summary>
-    /// Creates a <c>fail</c> result for an operation with a return value.
+    /// Creates a <c>fail</c> result for an operation with an optional return value.
     /// </summary>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
-    public static MaybeResult<T> Fail(Error? error = null) =>
-        new FailResult(error ?? new Error());
+    public static MaybeResult<T> Fail(Error? error = null) => new FailResult(error ?? new Error());
 
     /// <summary>
-    /// Creates a <c>fail</c> result for an operation with a return value.
+    /// Creates a <c>fail</c> result for an operation with an optional return value.
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="messagePrefix">An optional prefix for the exception message.</param>
+    /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(
         Exception exception,
-        string? messagePrefix = null,
+        string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null) =>
-        Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
+        Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
 
     /// <summary>
-    /// Creates a <c>fail</c> result for an operation with a return value.
+    /// Creates a <c>fail</c> result for an operation with an optional return value.
     /// </summary>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail(

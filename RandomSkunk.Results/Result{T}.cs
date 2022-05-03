@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// The result of an operation that has a return value.
 /// </summary>
-/// <typeparam name="T">The type of the return value of the operation.</typeparam>
+/// <typeparam name="T">The return type of the operation.</typeparam>
 public abstract class Result<T> : IEquatable<Result<T>>
 {
     private Result()
@@ -83,23 +83,23 @@ public abstract class Result<T> : IEquatable<Result<T>>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="messagePrefix">An optional prefix for the exception message.</param>
+    /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail(
         Exception exception,
-        string? messagePrefix = null,
+        string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null) =>
-        Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
+        Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail(

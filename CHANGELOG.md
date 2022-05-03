@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Changed
+
+- The `Error` class and the various `Fail` factory methods take a `message` parameter instead of a `messagePrefix` parameter.
+
 ## [1.0.0-alpha02] - 2022-04-28
 
 ### Added

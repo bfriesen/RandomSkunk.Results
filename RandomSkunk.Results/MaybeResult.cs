@@ -8,7 +8,7 @@ public static class MaybeResult
     /// <summary>
     /// Creates a <c>some</c> result for an operation with a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
     /// <param name="value">
     /// The value of the <c>some</c> result. Must not be <see langword="null"/>.
     /// </param>
@@ -18,14 +18,14 @@ public static class MaybeResult
     /// <summary>
     /// Creates a <c>none</c> result for an operation with a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
     /// <returns>A <c>none</c> result.</returns>
     public static MaybeResult<T> None<T>() => MaybeResult<T>.None();
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail<T>(Error? error = null) => MaybeResult<T>.Fail(error);
@@ -33,26 +33,26 @@ public static class MaybeResult
     /// <summary>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="messagePrefix">An optional prefix for the exception message.</param>
+    /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail<T>(
         Exception exception,
-        string? messagePrefix = null,
+        string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null) =>
-        MaybeResult<T>.Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
+        MaybeResult<T>.Fail(exception, errorMessage, errorCode, identifier);
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static MaybeResult<T> Fail<T>(

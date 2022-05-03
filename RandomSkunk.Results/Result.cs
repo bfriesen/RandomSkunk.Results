@@ -53,30 +53,29 @@ public abstract class Result : IEquatable<Result>
     /// </summary>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
-    public static Result Fail(Error? error = null) =>
-        new FailResult(error ?? new Error());
+    public static Result Fail(Error? error = null) => new FailResult(error ?? new Error());
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="messagePrefix">An optional prefix for the exception message.</param>
+    /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result Fail(
         Exception exception,
-        string? messagePrefix = null,
+        string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null) =>
-        Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
+        Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation without a return value.
     /// </summary>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result Fail(
@@ -89,7 +88,7 @@ public abstract class Result : IEquatable<Result>
     /// <summary>
     /// Creates a <c>success</c> result for an operation <em>with</em> a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
     /// <param name="value">The value of the <c>success</c> result.</param>
     /// <returns>A <c>success</c> result.</returns>
     public static Result<T> Success<T>([DisallowNull] T value) => Result<T>.Success(value);
@@ -97,7 +96,7 @@ public abstract class Result : IEquatable<Result>
     /// <summary>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail<T>(Error? error = null) => Result<T>.Fail(error);
@@ -105,26 +104,26 @@ public abstract class Result : IEquatable<Result>
     /// <summary>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="messagePrefix">An optional prefix for the exception message.</param>
+    /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail<T>(
         Exception exception,
-        string? messagePrefix = null,
+        string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null) =>
-        Result<T>.Fail(Error.FromException(exception, messagePrefix, errorCode, identifier));
+        Result<T>.Fail(exception, errorMessage, errorCode, identifier);
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
     /// </summary>
-    /// <typeparam name="T">The type of the return value of the operation.</typeparam>
-    /// <param name="errorMessage">The error message that describes the failure.</param>
-    /// <param name="stackTrace">The optional stack trace that describes the failure.</param>
-    /// <param name="errorCode">The optional error code that describes the failure.</param>
+    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>fail</c> result.</returns>
     public static Result<T> Fail<T>(

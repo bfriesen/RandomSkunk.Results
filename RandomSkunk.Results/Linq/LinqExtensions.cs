@@ -15,7 +15,7 @@ public static class LinqExtensions
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
-    /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="TSource">The return type of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The target result.</param>
     /// <param name="selector">
@@ -40,14 +40,13 @@ public static class LinqExtensions
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a another result using the specified
-    /// <paramref name="selector"/> function. The flat map function is only evaluated if the target
-    /// is a <c>success</c> result. If the target is a <c>none</c> or <c>fail</c> result, the
-    /// callsite is propagated to the returned <c>none</c> or <c>fail</c> result. If the target is
-    /// a <c>fail</c> result, the error is propagated as well.
+    /// <paramref name="selector"/> function. The flat map function is only evaluated if the source
+    /// is a <c>success</c> result. If the source is a <c>fail</c> result, the error is propagated
+    /// to the returned <c>fail</c> result.
     /// </summary>
-    /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="TSource">The return type of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
-    /// <param name="source">The target result.</param>
+    /// <param name="source">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -68,7 +67,7 @@ public static class LinqExtensions
     /// Projects the value of a result to an intermediate result and invokes a result selector
     /// function on the values of the source and intermediate results.
     /// </summary>
-    /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="TSource">The return type of the operation.</typeparam>
     /// <typeparam name="TIntermediate">
     /// The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
     /// </typeparam>
@@ -103,8 +102,8 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return source.FlatMap(
-            x => (intermediateSelector(x) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(intermediateSelector))).FlatMap(
-                y => Result.Success(resultSelector(x!, y!) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
+            sourceValue => (intermediateSelector(sourceValue) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(intermediateSelector))).FlatMap(
+                intermediateValue => Result.Success(resultSelector(sourceValue!, intermediateValue!) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
     /// <summary>
@@ -117,7 +116,7 @@ public static class LinqExtensions
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
-    /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="TSource">The return type of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The target result.</param>
     /// <param name="selector">
@@ -142,14 +141,13 @@ public static class LinqExtensions
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a another result using the specified
-    /// <paramref name="selector"/> function. The flat map function is only evaluated if the target
-    /// is a <c>success</c> result. If the target is a <c>none</c> or <c>fail</c> result, the
-    /// callsite is propagated to the returned <c>none</c> or <c>fail</c> result. If the target is
-    /// a <c>fail</c> result, the error is propagated as well.
+    /// <paramref name="selector"/> function. The flat map function is only evaluated if the source
+    /// is a <c>success</c> result. If the source is a <c>fail</c> result, the error is propagated
+    /// to the returned <c>fail</c> result.
     /// </summary>
-    /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="TSource">The return type of the operation.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
-    /// <param name="source">The target result.</param>
+    /// <param name="source">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -170,7 +168,7 @@ public static class LinqExtensions
     /// Projects the value of a result to an intermediate result and invokes a result selector
     /// function on the values of the source and intermediate results.
     /// </summary>
-    /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
+    /// <typeparam name="TSource">The return type of the operation.</typeparam>
     /// <typeparam name="TIntermediate">
     /// The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
     /// </typeparam>
@@ -205,18 +203,17 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return source.FlatMap(
-            x => (intermediateSelector(x) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(intermediateSelector))).FlatMap(
-                y => MaybeResult.Some(resultSelector(x!, y!) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
+            sourceValue => (intermediateSelector(sourceValue) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(intermediateSelector))).FlatMap(
+                intermediateValue => MaybeResult.Some(resultSelector(sourceValue!, intermediateValue!) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
     /// <summary>
     /// <para>Alias for the <see cref="ResultExtensions.Filter"/> method.</para>
     /// Filter the specified result into a <c>none</c> result if it is a <c>some</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. The callsite is
-    /// always propagated to the returned result.
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
     /// </summary>
-    /// <typeparam name="TSource">The type of the return value of the operation.</typeparam>
-    /// <param name="source">The target result.</param>
+    /// <typeparam name="TSource">The return type of the operation.</typeparam>
+    /// <param name="source">The source result.</param>
     /// <param name="predicate">
     /// A function that filters a <c>some</c> result into a <c>none</c> result by returning
     /// <see langword="false"/>.
