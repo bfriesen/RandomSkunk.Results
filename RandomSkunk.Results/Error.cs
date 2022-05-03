@@ -5,9 +5,9 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines an error that occurred in an operation.
 /// </summary>
-public sealed class Error : IEquatable<Error>
+public class Error : IEquatable<Error>
 {
-    private static string _defaultMessage = "Error";
+    private static string _defaultMessage = "An error occurred.";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.

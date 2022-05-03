@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning].
 
 ### Changed
 
+- RandomSkunk.Results:
+    - The `Error` class is no longer `sealed`.
+    - Changed default value of `Error.DefaultMessage`.
 - RandomSkunk.Results.AspNetCore:
     - Each extension method maps the `Type` property to "errorType" extension property of `ProblemDetails` object.
 - RandomSkunk.Result.Http:
