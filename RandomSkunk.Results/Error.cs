@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -10,19 +12,33 @@ public sealed class Error : IEquatable<Error>
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
     /// </summary>
-    /// <param name="message">The error message.</param>
+    /// <param name="message">
+    /// The optional error message. If <see langword="null"/>, then the value of
+    /// <see cref="DefaultMessage"/> is used instead.
+    /// </param>
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="System.Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="message"/> is <see langword="null"/>.
     /// </exception>
-    public Error(string? message = null, string? stackTrace = null, int? errorCode = null, string? identifier = null)
+    public Error(
+        string? message = null,
+        string? stackTrace = null,
+        int? errorCode = null,
+        string? identifier = null,
+        string? type = null)
     {
         Message = message ?? DefaultMessage;
         StackTrace = stackTrace;
         ErrorCode = errorCode;
         Identifier = identifier;
+        Type = type ?? GetType().Name;
     }
 
     /// <summary>
@@ -58,6 +74,11 @@ public sealed class Error : IEquatable<Error>
     public string? Identifier { get; }
 
     /// <summary>
+    /// Gets the type of the error.
+    /// </summary>
+    public string Type { get; }
+
+    /// <summary>
     /// Creates an <see cref="Error"/> object from the specified <see cref="Exception"/>.
     /// </summary>
     /// <param name="exception">The exception to create the error from.</param>
@@ -89,11 +110,11 @@ public sealed class Error : IEquatable<Error>
     /// <inheritdoc/>
     public override string ToString()
     {
-        var sb = new StringBuilder(Message);
+        var sb = new StringBuilder(Type).Append(": ").Append(Message);
         if (Identifier != null)
-            sb.AppendLine().Append($"Identifier: {Identifier}");
+            sb.AppendLine().Append("Identifier: ").Append(Identifier);
         if (ErrorCode != null)
-            sb.AppendLine().Append($"Error code: {ErrorCode}");
+            sb.AppendLine().Append("Error code: ").Append(ErrorCode);
         if (StackTrace != null)
             sb.AppendLine().AppendLine("Stack trace:").Append(StackTrace);
         return sb.ToString();

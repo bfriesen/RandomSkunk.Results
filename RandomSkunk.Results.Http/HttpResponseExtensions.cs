@@ -145,13 +145,17 @@ public static class HttpResponseExtensions
             message.Append(Error.DefaultMessage);
 
         string? stackTrace = null;
-        if (problemDetails.Extensions.TryGetValue(nameof(Error.StackTrace), out var obj) && obj != null)
+        if (problemDetails.Extensions.TryGetValue("stackTrace", out var obj) && obj != null)
             stackTrace = obj as string;
 
         string? identifier = null;
-        if (problemDetails.Extensions.TryGetValue(nameof(Error.Identifier), out obj) && obj != null)
+        if (problemDetails.Extensions.TryGetValue("identifier", out obj) && obj != null)
             identifier = obj as string;
 
-        return new Error(message.ToString(), stackTrace, problemDetails.Status, identifier);
+        string? errorType = null;
+        if (problemDetails.Extensions.TryGetValue("errorType", out obj) && obj != null)
+            errorType = obj as string;
+
+        return new Error(message.ToString(), stackTrace, problemDetails.Status, identifier, errorType);
     }
 }

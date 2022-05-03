@@ -38,13 +38,14 @@ public static class ErrorExtensions
             Status = source.ErrorCode,
             Detail = source.Message,
             Instance = instance,
+            Extensions = { ["errorType"] = source.Type },
         };
 
         if (source.StackTrace != null)
-            problemDetails.Extensions[nameof(Error.StackTrace)] = source.StackTrace;
+            problemDetails.Extensions["stackTrace"] = source.StackTrace;
 
         if (source.Identifier != null)
-            problemDetails.Extensions[nameof(Error.Identifier)] = source.Identifier;
+            problemDetails.Extensions["identifier"] = source.Identifier;
 
         return problemDetails;
     }

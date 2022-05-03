@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `Type` property to the `Error` class.
+        - Initialized with the name of the error type (e.g. "Error" for the base `Error` class) by default.
+
+### Changed
+
+- RandomSkunk.Results.AspNetCore:
+    - Each extension method maps the `Type` property to "errorType" extension property of `ProblemDetails` object.
+- RandomSkunk.Result.Http:
+    - Extension method maps the "errorType" extension property of the problem details object to the `Type` of the `Error` object.
+
 ## [1.0.0-alpha04] - 2022-05-02
 
 ### Changed
@@ -16,19 +29,19 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
-- RandomSkunk.Result.Http project.
+- Add RandomSkunk.Result.Http project.
     - Extension methods for getting a result object directly from an `HttpResponseMessage`:
         - `HttpResponseMessage.ReadResultFromJsonAsync`
         - `HttpResponseMessage.ReadResultFromJsonAsync<T>`
         - `HttpResponseMessage.ReadMaybeResultFromJsonAsync<T>`
-- RandomSkunk.Result.AspNetCore project.
-    - Extension method for getting a `ProblemDetails` object directly from a result error:
+- Add RandomSkunk.Result.AspNetCore project.
+    - Extension method for getting a `ProblemDetails` object from a result error:
         - `Error.GetProblemDetails`
 
 ### Removed
 
-- `CallSite` struct.
-- Abstract base classes, `ResultBase` and `ResultBase<T>`.
+- Remove `CallSite` struct.
+- Remove abstract base classes, `ResultBase` and `ResultBase<T>`.
 
 *Note that version 1.0.0-alpha03 was burned due to publishing error.*
 
@@ -36,19 +49,19 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
-- Result extension methods: `Or`, `Else`, `Map`, `MapAsync`, `FlapMap`, `FlapMapAsync`, `Flatten`, `Filter`, and `FilterAsync`.
-- `Identifier` property to `Error` class,
-- Overloads of `Fail` result factory methods that take an `Error` parameter.
-- `FromException` factory method to `Error` class.
-- Overloads of `Fail` result factory methods that take an `Exception` parameter.
-- LINQ extension methods: `Select`, `SelectMany`, and `Where`.
+- Add result extension methods: `Or`, `Else`, `Map`, `MapAsync`, `FlapMap`, `FlapMapAsync`, `Flatten`, `Filter`, and `FilterAsync`.
+- Add `Identifier` property to `Error` class,
+- Add overloads of `Fail` result factory methods that take an `Error` parameter.
+- Add `FromException` factory method to `Error` class.
+- Add overloads of `Fail` result factory methods that take an `Exception` parameter.
+- Add LINQ extension methods: `Select`, `SelectMany`, and `Where`.
 
 ## [1.0.0-alpha01] - 2022-04-28
 
 ### Added
 
-- Initial project, solution, and package structures.
-- `Result`, `Result<T>`, and `MaybeResult<T>` classes.
+- Add initial project, solution, and package structures.
+- Add `Result`, `Result<T>`, and `MaybeResult<T>` classes.
 
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
