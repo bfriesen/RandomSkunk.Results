@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net5.0;netcoreapp3.1;</TargetFrameworks>
 
-		<PackageVersion>1.0.0-alpha04</PackageVersion>
+		<PackageVersion>1.0.0-alpha05</PackageVersion>
 		<Title>RandomSkunk.Results.AspNetCore</Title>
 		<Description>Using RandomSkunk.Results from AspNetCore apps.</Description>
 		<Authors>Brian Friesen</Authors>
