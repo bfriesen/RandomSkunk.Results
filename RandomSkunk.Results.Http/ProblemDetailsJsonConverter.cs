@@ -3,11 +3,13 @@ namespace RandomSkunk.Results.Http;
 // https://github.com/dotnet/aspnetcore/blob/cef52ffd679ff3a1966cce3f9782f13496fff672/src/Shared/ProblemDetailsJsonConverter.cs
 internal sealed class ProblemDetailsJsonConverter : JsonConverter<ProblemDetails>
 {
+#pragma warning disable IDE1006 // Naming Styles
     private static readonly JsonEncodedText Type = JsonEncodedText.Encode("type");
     private static readonly JsonEncodedText Title = JsonEncodedText.Encode("title");
     private static readonly JsonEncodedText Status = JsonEncodedText.Encode("status");
     private static readonly JsonEncodedText Detail = JsonEncodedText.Encode("detail");
     private static readonly JsonEncodedText Instance = JsonEncodedText.Encode("instance");
+#pragma warning restore IDE1006 // Naming Styles
 
     [UnconditionalSuppressMessage("Trimmer", "IL2026", Justification = "Trimmer does not allow annotating overriden methods with annotations different from the ones in base type.")]
     public override ProblemDetails Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

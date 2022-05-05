@@ -287,9 +287,10 @@ public struct Result<T> : IEquatable<Result<T>>
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        int hashCode = -807114177;
-        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : EqualityComparer<T?>.Default.GetHashCode(_value));
-        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error?>.Default.GetHashCode(_error));
+        int hashCode = 1697802621;
+        hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(GetType());
+        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : EqualityComparer<T>.Default.GetHashCode(_value));
+        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error>.Default.GetHashCode(_error));
         return hashCode;
     }
 }

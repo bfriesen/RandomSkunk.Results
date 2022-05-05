@@ -297,5 +297,11 @@ public struct Result : IEquatable<Result>
     public override bool Equals(object? obj) => obj is Result result && Equals(result);
 
     /// <inheritdoc/>
-    public override int GetHashCode() => 633584920 + (_error is null ? 0 : EqualityComparer<Error?>.Default.GetHashCode(_error));
+    public override int GetHashCode()
+    {
+        int hashCode = -2043725954;
+        hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(GetType());
+        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error?>.Default.GetHashCode(_error));
+        return hashCode;
+    }
 }
