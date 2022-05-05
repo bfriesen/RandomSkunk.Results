@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning].
 ### Changed
 
 - RandomSkunk.Results:
+    - Each of the result types is a `struct` instead of a `class`.
     - The `Error` class is no longer `sealed`.
     - Changed default value of `Error.DefaultMessage`.
 - RandomSkunk.Results.AspNetCore:

@@ -23,8 +23,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="selector"/> is
-    /// <see langword="null"/>.
+    /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
     /// If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
@@ -52,11 +51,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="selector"/> is
-    /// <see langword="null"/>.
-    /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     public static Result<TResult> SelectMany<TSource, TResult>(
         this Result<TSource> source,
@@ -85,13 +80,11 @@ public static class LinqExtensions
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> is <see langword="null"/>, or if
-    /// <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    /// If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     /// <paramref name="resultSelector"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="intermediateSelector"/> returns <see langword="null"/> when evaluated,
-    /// or if <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Result<TResult> SelectMany<TSource, TIntermediate, TResult>(
         this Result<TSource> source,
@@ -102,7 +95,7 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return source.FlatMap(
-            sourceValue => (intermediateSelector(sourceValue) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(intermediateSelector))).FlatMap(
+            sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue => Result.Success(resultSelector(sourceValue!, intermediateValue!) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
@@ -124,8 +117,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="selector"/> is
-    /// <see langword="null"/>.
+    /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
     /// If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
@@ -153,11 +145,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="selector"/> is
-    /// <see langword="null"/>.
-    /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     public static MaybeResult<TResult> SelectMany<TSource, TResult>(
         this MaybeResult<TSource> source,
@@ -186,13 +174,11 @@ public static class LinqExtensions
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> is <see langword="null"/>, or if
-    /// <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    /// If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     /// <paramref name="resultSelector"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="intermediateSelector"/> returns <see langword="null"/> when evaluated,
-    /// or if <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static MaybeResult<TResult> SelectMany<TSource, TIntermediate, TResult>(
         this MaybeResult<TSource> source,
@@ -203,7 +189,7 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return source.FlatMap(
-            sourceValue => (intermediateSelector(sourceValue) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(intermediateSelector))).FlatMap(
+            sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue => MaybeResult.Some(resultSelector(sourceValue!, intermediateValue!) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
@@ -220,8 +206,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="predicate"/> is
-    /// <see langword="null"/>.
+    /// If <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
     public static MaybeResult<TSource> Where<TSource>(this MaybeResult<TSource> source, Func<TSource, bool> predicate) =>
         source.Filter(predicate);

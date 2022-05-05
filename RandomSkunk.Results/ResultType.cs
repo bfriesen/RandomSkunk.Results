@@ -6,12 +6,12 @@ namespace RandomSkunk.Results;
 public enum ResultType
 {
     /// <summary>
+    /// The operation was not successful.
+    /// </summary>
+    Fail = 0,
+
+    /// <summary>
     /// The operation was successful.
     /// </summary>
     Success,
-
-    /// <summary>
-    /// The operation was not successful.
-    /// </summary>
-    Fail,
 }

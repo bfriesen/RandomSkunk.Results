@@ -41,11 +41,11 @@ public static class ErrorExtensions
             Extensions = { ["errorType"] = source.Type },
         };
 
-        if (source.StackTrace != null)
-            problemDetails.Extensions["stackTrace"] = source.StackTrace;
+        if (source.StackTrace is not null)
+            problemDetails.Extensions["errorStackTrace"] = source.StackTrace;
 
-        if (source.Identifier != null)
-            problemDetails.Extensions["identifier"] = source.Identifier;
+        if (source.Identifier is not null)
+            problemDetails.Extensions["errorIdentifier"] = source.Identifier;
 
         return problemDetails;
     }

@@ -82,7 +82,7 @@ public static class HttpResponseExtensions
         {
             var value = await content.ReadFromJsonAsync<T>();
 
-            if (value == null)
+            if (value is null)
                 return Result.Fail<T>("Response content was the literal string \"null\".");
 
             return Result.Success(value);
@@ -99,7 +99,7 @@ public static class HttpResponseExtensions
         {
             var value = await content.ReadFromJsonAsync<T>();
 
-            if (value == null)
+            if (value is null)
                 return MaybeResult.None<T>();
 
             return MaybeResult.Some(value);
@@ -116,7 +116,7 @@ public static class HttpResponseExtensions
         {
             var problemDetails = await content.ReadFromJsonAsync<ProblemDetails>();
 
-            if (problemDetails == null)
+            if (problemDetails is null)
                 return Result.Fail<ProblemDetails>("Response content was the literal string \"null\".");
 
             return Result.Success(problemDetails);
@@ -145,15 +145,15 @@ public static class HttpResponseExtensions
             message.Append(Error.DefaultMessage);
 
         string? stackTrace = null;
-        if (problemDetails.Extensions.TryGetValue("stackTrace", out var obj) && obj != null)
+        if (problemDetails.Extensions.TryGetValue("errorStackTrace", out var obj) && obj is not null)
             stackTrace = obj as string;
 
         string? identifier = null;
-        if (problemDetails.Extensions.TryGetValue("identifier", out obj) && obj != null)
+        if (problemDetails.Extensions.TryGetValue("errorIdentifier", out obj) && obj is not null)
             identifier = obj as string;
 
         string? errorType = null;
-        if (problemDetails.Extensions.TryGetValue("errorType", out obj) && obj != null)
+        if (problemDetails.Extensions.TryGetValue("errorType", out obj) && obj is not null)
             errorType = obj as string;
 
         return new Error(message.ToString(), stackTrace, problemDetails.Status, identifier, errorType);

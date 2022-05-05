@@ -4,10 +4,24 @@ namespace RandomSkunk.Results;
 /// The result of an operation that has a return value.
 /// </summary>
 /// <typeparam name="T">The return type of the operation.</typeparam>
-public abstract class Result<T> : IEquatable<Result<T>>
+public struct Result<T> : IEquatable<Result<T>>
 {
-    private Result()
+    private readonly T? _value;
+    private readonly Error? _error;
+    private readonly ResultType _type;
+
+    private Result([DisallowNull] T value)
     {
+        _value = value ?? throw new ArgumentNullException(nameof(value));
+        _error = null;
+        _type = ResultType.Success;
+    }
+
+    private Result(Error? error)
+    {
+        _value = default;
+        _error = error ?? new Error();
+        _type = ResultType.Fail;
     }
 
     /// <summary>
@@ -18,7 +32,10 @@ public abstract class Result<T> : IEquatable<Result<T>>
     /// If this result is not a <c>success</c> result.
     /// </exception>
     [NotNull]
-    public virtual T Value => throw Exceptions.CannotAccessValueUnlessSuccess;
+    public T Value =>
+        IsSuccess
+            ? _value!
+            : throw Exceptions.CannotAccessValueUnlessSuccess;
 
     /// <summary>
     /// Gets the error from the failed operation, or throws an
@@ -27,13 +44,16 @@ public abstract class Result<T> : IEquatable<Result<T>>
     /// <exception cref="InvalidOperationException">
     /// If this result is not a <c>fail</c> result.
     /// </exception>
-    public virtual Error Error => throw Exceptions.CannotAccessErrorUnlessFail;
+    public Error Error =>
+        IsFail
+            ? _error ?? Error.Default
+            : throw Exceptions.CannotAccessErrorUnlessFail;
 
     /// <summary>
     /// Gets the type of the result: <see cref="ResultType.Success"/> or
     /// <see cref="ResultType.Fail"/>.
     /// </summary>
-    public abstract ResultType Type { get; }
+    public ResultType Type => _type;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>success</c> result.
@@ -42,7 +62,7 @@ public abstract class Result<T> : IEquatable<Result<T>>
     /// <see langword="true"/> if this is a <c>success</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsSuccess => Type == ResultType.Success;
+    public bool IsSuccess => _type == ResultType.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>fail</c> result.
@@ -51,33 +71,59 @@ public abstract class Result<T> : IEquatable<Result<T>>
     /// <see langword="true"/> if this is a <c>fail</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsFail => Type == ResultType.Fail;
+    public bool IsFail => _type == ResultType.Fail;
 
     /// <summary>
     /// Converts the specified value to a <c>success</c> result.
     /// </summary>
-    /// <param name="value">The value.</param>
+    /// <param name="value">The value to convert.</param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="value"/> is <see langword="null"/>.
     /// </exception>
     public static implicit operator Result<T>([DisallowNull] T value) => Success(value);
 
     /// <summary>
+    /// Indicates whether the <paramref name="left"/> parameter is equal to the
+    /// <paramref name="right"/> parameter.
+    /// </summary>
+    /// <param name="left">The left side of the comparison.</param>
+    /// <param name="right">The right side of the comparison.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="left"/> parameter is equal to the
+    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(Result<T> left, Result<T> right) => left.Equals(right);
+
+    /// <summary>
+    /// Indicates whether the <paramref name="left"/> parameter is not equal to the
+    /// <paramref name="right"/> parameter.
+    /// </summary>
+    /// <param name="left">The left side of the comparison.</param>
+    /// <param name="right">The right side of the comparison.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="left"/> parameter is not equal to the
+    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(Result<T> left, Result<T> right) => !(left == right);
+
+    /// <summary>
     /// Creates a <c>success</c> result for an operation with a return value.
     /// </summary>
-    /// <param name="value">The value of the <c>success</c> result.</param>
+    /// <param name="value">
+    /// The value of the <c>success</c> result. Must not be <see langword="null"/>.
+    /// </param>
     /// <returns>A <c>success</c> result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="value"/> is <see langword="null"/>.
     /// </exception>
-    public static Result<T> Success([DisallowNull] T value) => new SuccessResult(value);
+    public static Result<T> Success([DisallowNull] T value) => new(value);
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
     /// </summary>
     /// <param name="error">The optional error that describes the failure.</param>
     /// <returns>A <c>fail</c> result.</returns>
-    public static Result<T> Fail(Error? error = null) => new FailResult(error ?? new Error());
+    public static Result<T> Fail(Error? error = null) => new(error);
 
     /// <summary>
     /// Creates a <c>fail</c> result for an operation with a return value.
@@ -131,10 +177,12 @@ public abstract class Result<T> : IEquatable<Result<T>>
         Func<T, TResult> success,
         Func<Error, TResult> fail)
     {
-        if (success == null) throw new ArgumentNullException(nameof(success));
-        if (fail == null) throw new ArgumentNullException(nameof(fail));
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchCore(success, fail);
+        return IsSuccess
+            ? success(_value!)
+            : fail(_error!);
     }
 
     /// <summary>
@@ -157,10 +205,13 @@ public abstract class Result<T> : IEquatable<Result<T>>
         Action<T> success,
         Action<Error> fail)
     {
-        if (success == null) throw new ArgumentNullException(nameof(success));
-        if (fail == null) throw new ArgumentNullException(nameof(fail));
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        MatchCore(success, fail);
+        if (IsSuccess)
+            success(_value!);
+        else
+            fail(_error!);
     }
 
     /// <summary>
@@ -188,10 +239,12 @@ public abstract class Result<T> : IEquatable<Result<T>>
         Func<T, Task<TResult>> success,
         Func<Error, Task<TResult>> fail)
     {
-        if (success == null) throw new ArgumentNullException(nameof(success));
-        if (fail == null) throw new ArgumentNullException(nameof(fail));
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchAsyncCore(success, fail);
+        return IsSuccess
+            ? success(_value!)
+            : fail(_error!);
     }
 
     /// <summary>
@@ -215,97 +268,28 @@ public abstract class Result<T> : IEquatable<Result<T>>
         Func<T, Task> success,
         Func<Error, Task> fail)
     {
-        if (success == null) throw new ArgumentNullException(nameof(success));
-        if (fail == null) throw new ArgumentNullException(nameof(fail));
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return MatchAsyncCore(success, fail);
+        return IsSuccess
+            ? success(_value!)
+            : fail(_error!);
     }
 
     /// <inheritdoc/>
-    public abstract bool Equals(Result<T>? other);
+    public bool Equals(Result<T> other) =>
+        EqualityComparer<T?>.Default.Equals(_value, other._value)
+        && EqualityComparer<Error?>.Default.Equals(_error, other._error);
 
     /// <inheritdoc/>
-    public override abstract bool Equals(object? other);
+    public override bool Equals(object? obj) => obj is Result<T> result && Equals(result);
 
     /// <inheritdoc/>
-    public override abstract int GetHashCode();
-
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-#pragma warning disable SA1600 // Elements should be documented
-    protected abstract TResult MatchCore<TResult>(Func<T, TResult> success, Func<Error, TResult> fail);
-
-    protected abstract void MatchCore(Action<T> success, Action<Error> fail);
-
-    protected abstract Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> success, Func<Error, Task<TResult>> fail);
-
-    protected abstract Task MatchAsyncCore(Func<T, Task> success, Func<Error, Task> fail);
-#pragma warning restore SA1600 // Elements should be documented
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
-
-    private sealed class SuccessResult : Result<T>
+    public override int GetHashCode()
     {
-        public SuccessResult(T value) => Value = value ?? throw new ArgumentNullException(nameof(value));
-
-        public override ResultType Type => ResultType.Success;
-
-        [NotNull]
-        public override T Value { get; }
-
-        public override bool Equals(Result<T>? other) =>
-            other != null
-                && other.IsSuccess
-                && EqualityComparer<T>.Default.Equals(Value, other.Value);
-
-        public override bool Equals(object? obj) =>
-            obj is Result<T> other && Equals(other);
-
-        public override int GetHashCode()
-        {
-            int hashCode = 1265339359;
-            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
-            hashCode = (hashCode * -1521134295) + EqualityComparer<T>.Default.GetHashCode(Value);
-            return hashCode;
-        }
-
-        protected override TResult MatchCore<TResult>(Func<T, TResult> success, Func<Error, TResult> fail) => success(Value);
-
-        protected override void MatchCore(Action<T> success, Action<Error> fail) => success(Value);
-
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> success, Func<Error, Task<TResult>> fail) => success(Value);
-
-        protected override Task MatchAsyncCore(Func<T, Task> success, Func<Error, Task> fail) => success(Value);
-    }
-
-    private sealed class FailResult : Result<T>
-    {
-        public FailResult(Error error) => Error = error;
-
-        public override ResultType Type => ResultType.Fail;
-
-        public override Error Error { get; }
-
-        public override bool Equals(Result<T>? other) =>
-            other != null
-                && other.IsFail
-                && Error.Equals(other.Error);
-
-        public override bool Equals(object? obj) =>
-            obj is Result<T> other && Equals(other);
-
-        public override int GetHashCode()
-        {
-            int hashCode = 1840328550;
-            hashCode = (hashCode * -1521134295) + GetType().GetHashCode();
-            hashCode = (hashCode * -1521134295) + EqualityComparer<Error>.Default.GetHashCode(Error);
-            return hashCode;
-        }
-
-        protected override TResult MatchCore<TResult>(Func<T, TResult> success, Func<Error, TResult> fail) => fail(Error);
-
-        protected override void MatchCore(Action<T> success, Action<Error> fail) => fail(Error);
-
-        protected override Task<TResult> MatchAsyncCore<TResult>(Func<T, Task<TResult>> success, Func<Error, Task<TResult>> fail) => fail(Error);
-
-        protected override Task MatchAsyncCore(Func<T, Task> success, Func<Error, Task> fail) => fail(Error);
+        int hashCode = -807114177;
+        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : EqualityComparer<T?>.Default.GetHashCode(_value));
+        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error?>.Default.GetHashCode(_error));
+        return hashCode;
     }
 }

@@ -7,6 +7,8 @@ namespace RandomSkunk.Results;
 /// </summary>
 public class Error : IEquatable<Error>
 {
+    private static readonly Lazy<Error> _default = new(() => new Error());
+
     private static string _defaultMessage = "An error occurred.";
 
     /// <summary>
@@ -78,6 +80,32 @@ public class Error : IEquatable<Error>
     /// </summary>
     public string Type { get; }
 
+    internal static Error Default => _default.Value;
+
+    /// <summary>
+    /// Indicates whether the <paramref name="left"/> parameter is equal to the
+    /// <paramref name="right"/> parameter.
+    /// </summary>
+    /// <param name="left">The left side of the comparison.</param>
+    /// <param name="right">The right side of the comparison.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="left"/> parameter is equal to the
+    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator ==(Error? left, Error? right) => ReferenceEquals(left, right) || (left is not null && left.Equals(right));
+
+    /// <summary>
+    /// Indicates whether the <paramref name="left"/> parameter is not equal to the
+    /// <paramref name="right"/> parameter.
+    /// </summary>
+    /// <param name="left">The left side of the comparison.</param>
+    /// <param name="right">The right side of the comparison.</param>
+    /// <returns>
+    /// <see langword="true"/> if the <paramref name="left"/> parameter is not equal to the
+    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
+    /// </returns>
+    public static bool operator !=(Error? left, Error? right) => !(left == right);
+
     /// <summary>
     /// Creates an <see cref="Error"/> object from the specified <see cref="Exception"/>.
     /// </summary>
@@ -111,18 +139,18 @@ public class Error : IEquatable<Error>
     public override string ToString()
     {
         var sb = new StringBuilder(Type).Append(": ").Append(Message);
-        if (Identifier != null)
+        if (Identifier is not null)
             sb.AppendLine().Append("Identifier: ").Append(Identifier);
-        if (ErrorCode != null)
+        if (ErrorCode is not null)
             sb.AppendLine().Append("Error code: ").Append(ErrorCode);
-        if (StackTrace != null)
+        if (StackTrace is not null)
             sb.AppendLine().AppendLine("Stack trace:").Append(StackTrace);
         return sb.ToString();
     }
 
     /// <inheritdoc/>
     public bool Equals(Error? other) =>
-        other != null
+        other is not null
             && Message == other.Message
             && StackTrace == other.StackTrace
             && ErrorCode == other.ErrorCode
