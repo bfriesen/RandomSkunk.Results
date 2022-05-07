@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result with a required value.
 /// </summary>
-/// <typeparam name="T">The type of the result value.</typeparam>
+/// <typeparam name="T">The type of the source result value.</typeparam>
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>

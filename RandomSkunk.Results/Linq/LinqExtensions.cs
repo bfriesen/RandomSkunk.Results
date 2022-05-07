@@ -15,8 +15,8 @@ public static class LinqExtensions
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The target result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
@@ -43,8 +43,8 @@ public static class LinqExtensions
     /// is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is propagated
     /// to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
@@ -62,12 +62,12 @@ public static class LinqExtensions
     /// Projects the value of a result to an intermediate result and invokes a result selector
     /// function on the values of the source and intermediate results.
     /// </summary>
-    /// <typeparam name="T">The type of the source result.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TIntermediate">
     /// The type of the intermediate result, as collected by
     /// <paramref name="intermediateSelector"/>.
     /// </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The target result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
@@ -110,8 +110,8 @@ public static class LinqExtensions
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The target result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
@@ -138,8 +138,8 @@ public static class LinqExtensions
     /// is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is propagated
     /// to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
@@ -157,11 +157,11 @@ public static class LinqExtensions
     /// Projects the value of a result to an intermediate result and invokes a result selector
     /// function on the values of the source and intermediate results.
     /// </summary>
-    /// <typeparam name="T">The type of the source result.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TIntermediate">
     /// The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
     /// </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The target result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
@@ -201,7 +201,7 @@ public static class LinqExtensions
     /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
     /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the source result.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="predicate">
     /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning

@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result with an optional value.
 /// </summary>
-/// <typeparam name="T">The type of the result value.</typeparam>
+/// <typeparam name="T">The type of the source result value.</typeparam>
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>
@@ -135,7 +135,7 @@ public struct Maybe<T> : IEquatable<Maybe<T>>
     /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
-    /// <typeparam name="TResult">The return type of the functions.</typeparam>
+    /// <typeparam name="TReturn">The return type of the functions.</typeparam>
     /// <param name="some">
     /// The function to evaluate if the result type is <c>Some</c>. The value of the
     /// <c>Some</c> result is passed to this function.
@@ -152,10 +152,10 @@ public struct Maybe<T> : IEquatable<Maybe<T>>
     /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
     /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
     /// </exception>
-    public TResult Match<TResult>(
-        Func<T, TResult> some,
-        Func<TResult> none,
-        Func<Error, TResult> fail)
+    public TReturn Match<TReturn>(
+        Func<T, TReturn> some,
+        Func<TReturn> none,
+        Func<Error, TReturn> fail)
     {
         if (some is null) throw new ArgumentNullException(nameof(some));
         if (none is null) throw new ArgumentNullException(nameof(none));
@@ -211,7 +211,7 @@ public struct Maybe<T> : IEquatable<Maybe<T>>
     /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
-    /// <typeparam name="TResult">The return type of the functions.</typeparam>
+    /// <typeparam name="TReturn">The return type of the functions.</typeparam>
     /// <param name="some">
     /// The function to evaluate if the result type is <c>Some</c>. The value of the
     /// <c>Some</c> result is passed to this function.
@@ -231,10 +231,10 @@ public struct Maybe<T> : IEquatable<Maybe<T>>
     /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
     /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
     /// </exception>
-    public Task<TResult> MatchAsync<TResult>(
-        Func<T, Task<TResult>> some,
-        Func<Task<TResult>> none,
-        Func<Error, Task<TResult>> fail)
+    public Task<TReturn> MatchAsync<TReturn>(
+        Func<T, Task<TReturn>> some,
+        Func<Task<TReturn>> none,
+        Func<Error, Task<TReturn>> fail)
     {
         if (some is null) throw new ArgumentNullException(nameof(some));
         if (none is null) throw new ArgumentNullException(nameof(none));

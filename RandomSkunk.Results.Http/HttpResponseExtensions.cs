@@ -31,7 +31,7 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Reads the HTTP response as a <see cref="Result{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
@@ -55,7 +55,7 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Reads the HTTP response as a <see cref="Maybe{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
