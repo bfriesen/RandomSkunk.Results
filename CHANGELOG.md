@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Removed
+
+- RandomSkunk.Results:
+    - Remove implicit conversion operator from `Maybe<T>`.
+
 ## [1.0.0-alpha06] - 2022-05-07
 
 ### Changed

@@ -97,7 +97,9 @@ public static class LinqExtensions
 
         return source.FlatMap(
             sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue => Result<TReturn>.Create.Success(resultSelector(sourceValue!, intermediateValue!) ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
+                intermediateValue => Result<TReturn>.Create.Success(
+                    resultSelector(sourceValue!, intermediateValue!)
+                    ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
     /// <summary>

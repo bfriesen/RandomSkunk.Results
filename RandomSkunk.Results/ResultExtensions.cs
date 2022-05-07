@@ -1,3 +1,6 @@
+using static RandomSkunk.Results.MaybeType;
+using static RandomSkunk.Results.ResultType;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -297,11 +300,12 @@ public static class ResultExtensions
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return source.IsSome
-            ? some(source.Value)
-            : source.IsNone
-                ? none()
-                : fail(source.Error);
+        return source.Type switch
+        {
+            Some => some(source.Value),
+            None => none(),
+            _ => fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -336,12 +340,12 @@ public static class ResultExtensions
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        if (source.IsSome)
-            some(source.Value);
-        else if (source.IsNone)
-            none();
-        else
-            fail(source.Error);
+        switch (source.Type)
+        {
+            case Some: some(source.Value); break;
+            case None: none(); break;
+            default: fail(source.Error); break;
+        }
     }
 
     /// <summary>
@@ -381,11 +385,12 @@ public static class ResultExtensions
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return source.IsSome
-            ? some(source.Value)
-            : source.IsNone
-                ? none()
-                : fail(source.Error);
+        return source.Type switch
+        {
+            Some => some(source.Value),
+            None => none(),
+            _ => fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -421,11 +426,12 @@ public static class ResultExtensions
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return source.IsSome
-            ? some(source.Value)
-            : source.IsNone
-                ? none()
-                : fail(source.Error);
+        return source.Type switch
+        {
+            Some => some(source.Value),
+            None => none(),
+            _ => fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -471,19 +477,6 @@ public static class ResultExtensions
 
         return source.IsSuccess && isSuccessValue(source.Value);
     }
-
-    /// <summary>
-    /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
-    /// <param name="otherValue">The value to compare.</param>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>Some</c> result and its value equals
-    /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
-    /// </returns>
-    public static bool Equals<T>(this Maybe<T> source, T otherValue) =>
-        source.Equals(otherValue, EqualityComparer<T>.Default);
 
     /// <summary>
     /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
@@ -579,7 +572,8 @@ public static class ResultExtensions
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return source.IsSuccess ? source.Value : getFallbackValue() ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+        return source.IsSuccess ? source.Value : getFallbackValue()
+            ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
     }
 
     /// <summary>
@@ -631,12 +625,13 @@ public static class ResultExtensions
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return source.IsSome ? source.Value : getFallbackValue() ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+        return source.IsSome ? source.Value : getFallbackValue()
+            ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>Success</c> result, or a new <c>Success</c>
-    /// result with the specified fallback value.
+    /// Returns <paramref name="source"/> if it is a <c>Success</c> result; otherwise, returns a
+    /// new <c>Success</c> result with the specified fallback value.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
@@ -653,8 +648,8 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>Success</c> result, or a new <c>Success</c>
-    /// result with the specified fallback value.
+    /// Returns <paramref name="source"/> if it is a <c>Success</c> result; otherwise, returns a
+    /// new <c>Success</c> result with the specified fallback value.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
@@ -682,8 +677,8 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>Some</c> result, or a new <c>Some</c>
-    /// result with the specified fallback value.
+    /// Returns <paramref name="source"/> if it is a <c>Some</c> result; otherwise, returns a new
+    /// <c>Some</c> result with the specified fallback value.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
@@ -700,8 +695,9 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>Some</c> result, or a new <c>Some</c>
-    /// result with its value from evaluating the <paramref name="getFallbackValue"/> function.
+    /// Returns <paramref name="source"/> if it is a <c>Some</c> result; otherwise, returns a new
+    /// <c>Some</c> result with its value from evaluating the <paramref name="getFallbackValue"/>
+    /// function.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
@@ -759,11 +755,7 @@ public static class ResultExtensions
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        if (source.IsSuccess)
-            return source;
-
-        var fallbackResult = getFallbackResult();
-        return fallbackResult;
+        return source.IsSuccess ? source : getFallbackResult();
     }
 
     /// <summary>
@@ -799,11 +791,7 @@ public static class ResultExtensions
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        if (source.IsSuccess)
-            return source;
-
-        var fallbackResult = getFallbackResult();
-        return fallbackResult;
+        return source.IsSuccess ? source : getFallbackResult();
     }
 
     /// <summary>
@@ -839,11 +827,7 @@ public static class ResultExtensions
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        if (source.IsSome)
-            return source;
-
-        var fallbackResult = getFallbackResult();
-        return fallbackResult;
+        return source.IsSome ? source : getFallbackResult();
     }
 
     /// <summary>
@@ -869,15 +853,12 @@ public static class ResultExtensions
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
 
-        if (source.IsSuccess)
+        return source.Type switch
         {
-            var mappedValue = map(source.Value)
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map));
-
-            return Result<TReturn>.Create.Success(mappedValue);
-        }
-
-        return Result<TReturn>.Create.Fail(source.Error);
+            Success => Result<TReturn>.Create.Success(map(source.Value)
+                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
+            _ => Result<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -910,15 +891,12 @@ public static class ResultExtensions
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
 
-        if (source.IsSuccess)
+        return source.Type switch
         {
-            var mappedValue = await mapAsync(source.Value, cancellationToken)
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync));
-
-            return Result<TReturn>.Create.Success(mappedValue);
-        }
-
-        return Result<TReturn>.Create.Fail(source.Error);
+            Success => Result<TReturn>.Create.Success((await mapAsync(source.Value, cancellationToken))
+                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
+            _ => Result<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -972,18 +950,13 @@ public static class ResultExtensions
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
 
-        if (source.IsSome)
+        return source.Type switch
         {
-            var mappedValue = map(source.Value)
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map));
-
-            return Maybe<TReturn>.Create.Some(mappedValue);
-        }
-
-        if (source.IsNone)
-            return Maybe<TReturn>.Create.None();
-
-        return Maybe<TReturn>.Create.Fail(source.Error);
+            Some => Maybe<TReturn>.Create.Some(map(source.Value)
+                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
+            None => Maybe<TReturn>.Create.None(),
+            _ => Maybe<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -1016,18 +989,13 @@ public static class ResultExtensions
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
 
-        if (source.IsSome)
+        return source.Type switch
         {
-            var mappedValue = await mapAsync(source.Value, cancellationToken)
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync));
-
-            return Maybe<TReturn>.Create.Some(mappedValue);
-        }
-
-        if (source.IsNone)
-            return Maybe<TReturn>.Create.None();
-
-        return Maybe<TReturn>.Create.Fail(source.Error);
+            Some => Maybe<TReturn>.Create.Some((await mapAsync(source.Value, cancellationToken))
+                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
+            None => Maybe<TReturn>.Create.None(),
+            _ => Maybe<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -1078,13 +1046,11 @@ public static class ResultExtensions
     {
         if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
 
-        if (source.IsSuccess)
+        return source.Type switch
         {
-            var mappedValue = flatMap(source.Value);
-            return mappedValue;
-        }
-
-        return Result<TReturn>.Create.Fail(source.Error);
+            Success => flatMap(source.Value),
+            _ => Result<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -1114,13 +1080,11 @@ public static class ResultExtensions
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
 
-        if (source.IsSuccess)
+        return source.Type switch
         {
-            var mappedValue = await flatMapAsync(source.Value, cancellationToken);
-            return mappedValue;
-        }
-
-        return Result<TReturn>.Create.Fail(source.Error);
+            Success => await flatMapAsync(source.Value, cancellationToken),
+            _ => Result<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -1168,16 +1132,12 @@ public static class ResultExtensions
     {
         if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
 
-        if (source.IsSome)
+        return source.Type switch
         {
-            var mappedValue = flatMap(source.Value);
-            return mappedValue;
-        }
-
-        if (source.IsNone)
-            return Maybe<TReturn>.Create.None();
-
-        return Maybe<TReturn>.Create.Fail(source.Error);
+            Some => flatMap(source.Value),
+            None => Maybe<TReturn>.Create.None(),
+            _ => Maybe<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -1207,16 +1167,12 @@ public static class ResultExtensions
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
 
-        if (source.IsSome)
+        return source.Type switch
         {
-            var mappedValue = await flatMapAsync(source.Value, cancellationToken);
-            return mappedValue;
-        }
-
-        if (source.IsNone)
-            return Maybe<TReturn>.Create.None();
-
-        return Maybe<TReturn>.Create.Fail(source.Error);
+            Some => await flatMapAsync(source.Value, cancellationToken),
+            None => Maybe<TReturn>.Create.None(),
+            _ => Maybe<TReturn>.Create.Fail(source.Error),
+        };
     }
 
     /// <summary>
@@ -1282,10 +1238,9 @@ public static class ResultExtensions
 
         if (source.IsSome)
         {
-            if (filter(source.Value))
-                return source;
-
-            return Maybe<T>.Create.None();
+            return filter(source.Value)
+                ? source
+                : Maybe<T>.Create.None();
         }
 
         return source;
@@ -1318,10 +1273,9 @@ public static class ResultExtensions
 
         if (source.IsSome)
         {
-            if (await filterAsync(source.Value, cancellationToken))
-                return source;
-
-            return Maybe<T>.Create.None();
+            return await filterAsync(source.Value, cancellationToken)
+                ? source
+                : Maybe<T>.Create.None();
         }
 
         return source;

@@ -161,6 +161,7 @@ public class Error : IEquatable<Error>
     public override bool Equals(object? obj) =>
         obj is Error other && Equals(other);
 
+    /// <inheritdoc/>
     public override int GetHashCode()
     {
         int hashCode = 910147539;

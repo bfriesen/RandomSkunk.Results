@@ -81,12 +81,6 @@ public struct Maybe<T> : IEquatable<Maybe<T>>
     internal Error Error => _error ?? Error.DefaultError;
 
     /// <summary>
-    /// Converts the specified value to a maybe.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    public static implicit operator Maybe<T>(T? value) => Create.FromValue(value);
-
-    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
     /// <paramref name="right"/> parameter.
     /// </summary>
