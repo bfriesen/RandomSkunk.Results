@@ -9,11 +9,18 @@ and this project adheres to [Semantic Versioning].
 
 ### Changed
 
-- Replace factory methods on result types with `Create` property of type `IResultFactory`, `IResultFactory<T>`, or `IMaybeResultFactory<T>`. These interfaces define the same base factory methods that they replace, and extension methods define `Fail` overloads.
+- RandomSkunk.Results:
+    - Replace factory methods on result types with `Create` property of type `IResultFactory`, `IResultFactory<T>`, or `IMaybeResultFactory<T>`. These interfaces define the same base factory methods that they replace, and extension methods define `Fail` overloads.
+    - Rename `MaybeResult` to just `Maybe`. Other types are similarly renamed.
+    - Move direct access to the value and error of a result to the `GetValue()` and `GetError()` extension methods under the `RandomSkunk.Results.Unsafe` namespace.
+- RandomSkunk.Results.AspNetCore:
+    - Add cancellation token to all async methods.
+    - Never return a `Fail` result about an issue getting the problem details.
 
 ### Added
 
-- Add `InvalidStateException`, which is thrown when accessing a result's `Error` or `Value` property and the result is in an invalid state to do so.
+- RandomSkunk.Results:
+    - Add `InvalidStateException`, which is thrown from the unsafe extension methods when the result an invalid state for directly reading its value or error.
 
 ## [1.0.0-alpha05] - 2022-05-05
 
