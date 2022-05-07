@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result with an optional value.
 /// </summary>
-/// <typeparam name="T">The type of the source result value.</typeparam>
+/// <typeparam name="T">The type of the result value.</typeparam>
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>
@@ -75,30 +75,10 @@ public struct Maybe<T> : IEquatable<Maybe<T>>
     /// </returns>
     public bool IsFail => _type == MaybeType.Fail;
 
-    /// <summary>
-    /// Gets the return value of the successful operation, or throws an
-    /// <see cref="InvalidStateException"/> if this is not a <c>Some</c> result.
-    /// </summary>
-    /// <exception cref="InvalidStateException">
-    /// If this result is not a <c>Some</c> result.
-    /// </exception>
     [NotNull]
-    public T Value =>
-        IsSome
-            ? _value!
-            : throw Exceptions.CannotAccessValueUnlessSome;
+    internal T Value => _value!;
 
-    /// <summary>
-    /// Gets the error from the failed operation, or throws an
-    /// <see cref="InvalidStateException"/> if this is not a <c>Fail</c> result.
-    /// </summary>
-    /// <exception cref="InvalidStateException">
-    /// If this result is not a <c>Fail</c> result.
-    /// </exception>
-    public Error Error =>
-        IsFail
-            ? _error ?? Error.DefaultError
-            : throw Exceptions.CannotAccessErrorUnlessFail;
+    internal Error Error => _error ?? Error.DefaultError;
 
     /// <summary>
     /// Converts the specified value to a maybe.

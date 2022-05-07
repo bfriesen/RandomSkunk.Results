@@ -17,7 +17,7 @@ public static class LinqExtensions
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The target result.</param>
+    /// <param name="source">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -68,7 +68,7 @@ public static class LinqExtensions
     /// <paramref name="intermediateSelector"/>.
     /// </typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The target result.</param>
+    /// <param name="source">The source result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
     /// </param>
@@ -112,7 +112,7 @@ public static class LinqExtensions
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The target result.</param>
+    /// <param name="source">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -162,7 +162,7 @@ public static class LinqExtensions
     /// The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
     /// </typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The target result.</param>
+    /// <param name="source">The source result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
     /// </param>

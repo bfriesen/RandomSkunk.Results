@@ -3,7 +3,7 @@ using System.Reflection;
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// Defines an error that occurred in an operation.
+/// Defines an error.
 /// </summary>
 public class Error : IEquatable<Error>
 {

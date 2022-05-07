@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result with a required value.
 /// </summary>
-/// <typeparam name="T">The type of the source result value.</typeparam>
+/// <typeparam name="T">The type of the result value.</typeparam>
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>
@@ -57,30 +57,10 @@ public struct Result<T> : IEquatable<Result<T>>
     /// </returns>
     public bool IsFail => _type == ResultType.Fail;
 
-    /// <summary>
-    /// Gets the return value of the successful operation, or throws an
-    /// <see cref="InvalidStateException"/> if this is not a <c>Success</c> result.
-    /// </summary>
-    /// <exception cref="InvalidStateException">
-    /// If this result is not a <c>Success</c> result.
-    /// </exception>
     [NotNull]
-    public T Value =>
-        IsSuccess
-            ? _value!
-            : throw Exceptions.CannotAccessValueUnlessSuccess;
+    internal T Value => _value!;
 
-    /// <summary>
-    /// Gets the error from the failed operation, or throws an
-    /// <see cref="InvalidStateException"/> if this is not a <c>Fail</c> result.
-    /// </summary>
-    /// <exception cref="InvalidStateException">
-    /// If this result is not a <c>Fail</c> result.
-    /// </exception>
-    public Error Error =>
-        IsFail
-            ? _error ?? Error.DefaultError
-            : throw Exceptions.CannotAccessErrorUnlessFail;
+    internal Error Error => _error ?? Error.DefaultError;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the

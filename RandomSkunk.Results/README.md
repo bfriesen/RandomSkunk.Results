@@ -1,6 +1,6 @@
 # RandomSkunk.Results [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.svg)](https://www.nuget.org/packages/RandomSkunk.Results)
 
-This library contains three result types: `Result<T>`, which represents the result of an operation that has a return value; `Maybe<T>`, which represents the result of an operation that has an optional return value; and `Result`, which represents the result of an operation that does not have a return value.
+This library contains three result types: `Result<T>`, which represents a result that has a required value; `Maybe<T>`, which represents a result that has an optional value; and `Result`, which represents a result that does not have a value.
 
 ## Usage
 
@@ -9,23 +9,23 @@ This library contains three result types: `Result<T>`, which represents the resu
 To create a result, use one of the static factory methods.
 
 ```c#
-// Results for operations that have a return value:
+// Results that have a required value:
 Result<int> result1 = Result<int>.Create.Success(123);
 Result<int> result2 = Result<int>.Create.Fail();
 
-// Results for operations that have an optional return value:
+// Results that have an optional value:
 Maybe<int> result3 = Maybe<int>.Create.Some(123);
 Maybe<int> result4 = Maybe<int>.Create.None();
 Maybe<int> result5 = Maybe<int>.Create.Fail();
 
-// Results for operations that do not have a return value:
+// Results that do not have a value:
 Result result6 = Result.Create.Success();
 Result result7 = Result.Create.Fail();
 ```
 
-### Handling
+### Handling Results
 
-There are two options for handling a result: by calling the `Match` or `MatchAsync` methods, which is safe but indirect; and by querying the properties of the result object, which is direct but potentially unsafe.
+There are two options for handling a result: by calling the `Match` or `MatchAsync` extension methods, which is safe but indirect; and `GetValue()` or `GetError()` extension methods, which is direct but unsafe.
 
 #### Match methods
 
@@ -65,33 +65,33 @@ string message = await userIdResult.MatchAsync(
     fail: error => Task.FromResult("Error"));
 ```
 
-#### Properties
+#### Unsafe Access
 
-Each of the result types exposes a number of properties that can be checked to determine that state of the result. Note that the `Error` and `Value` properties will throw an exception if not in the proper state. `IsFail` must be true in order to access the `Error` property in all result types. For `ResultType<T>`, `IsSuccess` must be true in order to access the `Value` property, but for `Maybe<T>`, `IsSome` must be true in order to access the `Value` property.
+To access the value and error of results directly, add `using RandomSkunk.Results.Unsafe;` to the using directives, then call the `GetValue()` and `GetError()` extension methods on the result. Note that calling these extension methods will throw an `InvalidStateException` if not in the proper state. For `ResultType<T>`, `IsSuccess` must be true in order to successfully call `GetValue()`, and for `Maybe<T>`, `IsSome` must be true in order to successfully call `GetValue()`. For all result types, `IsFail` must be true in order to successfully call `GetError()`.
 
 ```c#
 // Required return value:
 Result<int> result1 = ...
 if (result1.IsFail)
-    Console.WriteLine($"Error: {result1.Error}");
+    Console.WriteLine($"Error: {result1.GetError()}");
 else
-    Console.WriteLine($"Success: {result1.Value}");
+    Console.WriteLine($"Success: {result1.GetValue()}");
 
 // Optional return value:
 Maybe<int> result2 = ...
 if (result2.IsSome)
-    Console.WriteLine($"Some: {result2.Value}");
+    Console.WriteLine($"Some: {result2.GetValue()}");
 else if (result2.IsNone)
     Console.WriteLine("None");
 else
-    Console.WriteLine($"Error: {result2.Error}");
+    Console.WriteLine($"Error: {result2.GetError()}");
 
 // No return value:
 Result result3 = ...
 if (result3.IsSuccess)
     Console.WriteLine("Success");
 else
-    Console.WriteLine($"Error: {result3.Error}");
+    Console.WriteLine($"Error: {result3.GetError()}");
 ```
 
 Each result type also has an enum `Type` property that returns the kind of result: `Success`, `Fail`, `Some`, or `None`, depending on the result type.
@@ -101,13 +101,13 @@ Maybe<int> result = ...
 switch (result.Type)
 {
     case MaybeType.Some:
-        Console.WriteLine($"Some: {result.Value}");
+        Console.WriteLine($"Some: {result.GetValue()}");
         break;
     case MaybeType.None:
         Console.WriteLine("None");
         break;
     case MaybeType.Fail:
-        Console.WriteLine($"Fail: {result.Error}");
+        Console.WriteLine($"Fail: {result.GetError()}");
         break;
 }
 ```

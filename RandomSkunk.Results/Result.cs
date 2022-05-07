@@ -55,17 +55,7 @@ public struct Result : IEquatable<Result>
     /// </returns>
     public bool IsFail => _type == ResultType.Fail;
 
-    /// <summary>
-    /// Gets the error from the failed operation, or throws an
-    /// <see cref="InvalidStateException"/> if this is not a <c>Fail</c> result.
-    /// </summary>
-    /// <exception cref="InvalidStateException">
-    /// If this result is not a <c>Fail</c> result.
-    /// </exception>
-    public Error Error =>
-        IsFail
-            ? _error ?? Error.DefaultError
-            : throw Exceptions.CannotAccessErrorUnlessFail;
+    internal Error Error => _error ?? Error.DefaultError;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
