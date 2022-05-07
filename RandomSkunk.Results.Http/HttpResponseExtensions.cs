@@ -11,76 +11,78 @@ public static class HttpResponseExtensions
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A cancellation token that can be used by other objects or threads to receive notice of
+    /// cancellation.
+    /// </param>
     /// <returns>The result representing the response.</returns>
-    public static async Task<Result> ReadResultFromJsonAsync(this HttpResponseMessage source)
+    public static async Task<Result> ReadResultFromJsonAsync(
+        this HttpResponseMessage source,
+        CancellationToken cancellationToken = default)
     {
         if (source.IsSuccessStatusCode)
             return Result.Create.Success();
 
-        var problemDetails = await ReadProblemDetails(source.Content);
-
-        if (problemDetails.IsSuccess)
-        {
-            var error = GetErrorFromProblemDetails(problemDetails.Value);
-            return Result.Create.Fail(error);
-        }
-
-        return Result.Create.Fail(problemDetails.Error);
+        var problemDetails = await ReadProblemDetails(source, cancellationToken);
+        var error = GetErrorFromProblemDetails(problemDetails);
+        return Result.Create.Fail(error);
     }
 
     /// <summary>
     /// Reads the HTTP response as a <see cref="Result{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
+    /// <param name="cancellationToken">
+    /// A cancellation token that can be used by other objects or threads to receive notice of
+    /// cancellation.
+    /// </param>
     /// <returns>The result representing the response.</returns>
-    public static async Task<Result<T>> ReadResultFromJsonAsync<T>(this HttpResponseMessage source)
+    public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
+        this HttpResponseMessage source,
+        CancellationToken cancellationToken = default)
     {
         if (source.IsSuccessStatusCode)
-            return await ReadValue<T>(source.Content);
+            return await ReadValue<T>(source.Content, cancellationToken);
 
-        var problemDetails = await ReadProblemDetails(source.Content);
-
-        if (problemDetails.IsSuccess)
-        {
-            var error = GetErrorFromProblemDetails(problemDetails.Value);
-            return Result<T>.Create.Fail(error);
-        }
-
-        return Result<T>.Create.Fail(problemDetails.Error);
+        var problemDetails = await ReadProblemDetails(source, cancellationToken);
+        var error = GetErrorFromProblemDetails(problemDetails);
+        return Result<T>.Create.Fail(error);
     }
 
     /// <summary>
     /// Reads the HTTP response as a <see cref="Maybe{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
-    /// <returns>The result representing the response.</returns>
-    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(this HttpResponseMessage source)
+    /// <param name="cancellationToken">
+    /// A cancellation token that can be used by other objects or threads to receive notice of
+    /// cancellation.
+    /// </param>
+    /// <returns>The maybe result representing the response.</returns>
+    public static async Task<Maybe<T>> ReadMaybeResultFromJsonAsync<T>(
+        this HttpResponseMessage source,
+        CancellationToken cancellationToken = default)
     {
         if (source.IsSuccessStatusCode)
-            return await ReadMaybeValue<T>(source.Content);
+            return await ReadMaybeValue<T>(source.Content, cancellationToken);
 
-        var problemDetails = await ReadProblemDetails(source.Content);
-
-        if (problemDetails.IsSuccess)
-        {
-            var error = GetErrorFromProblemDetails(problemDetails.Value);
-            return Maybe<T>.Create.Fail(error);
-        }
-
-        return Maybe<T>.Create.Fail(problemDetails.Error);
+        var problemDetails = await ReadProblemDetails(source, cancellationToken);
+        var error = GetErrorFromProblemDetails(problemDetails);
+        return Maybe<T>.Create.Fail(error);
     }
 
-    private static async Task<Result<T>> ReadValue<T>(HttpContent content)
+    private static async Task<Result<T>> ReadValue<T>(
+        HttpContent content,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>();
+            var value = await content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
 
             if (value is null)
                 return Result<T>.Create.Fail("Response content was the literal string \"null\".");
@@ -89,15 +91,17 @@ public static class HttpResponseExtensions
         }
         catch (Exception ex)
         {
-            return Result<T>.Create.Fail(ex, "Error reading value from response content");
+            return Result<T>.Create.Fail(ex, "Error reading value from response content.");
         }
     }
 
-    private static async Task<Maybe<T>> ReadMaybeValue<T>(HttpContent content)
+    private static async Task<Maybe<T>> ReadMaybeValue<T>(
+        HttpContent content,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>();
+            var value = await content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
 
             if (value is null)
                 return Maybe<T>.Create.None();
@@ -106,25 +110,35 @@ public static class HttpResponseExtensions
         }
         catch (Exception ex)
         {
-            return Maybe<T>.Create.Fail(ex, "Error reading value from response content");
+            return Maybe<T>.Create.Fail(ex, "Error reading value from response content.");
         }
     }
 
-    private static async Task<Result<ProblemDetails>> ReadProblemDetails(HttpContent content)
+    private static async Task<ProblemDetails> ReadProblemDetails(
+        HttpResponseMessage response,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var problemDetails = await content.ReadFromJsonAsync<ProblemDetails>();
+            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(cancellationToken: cancellationToken);
 
-            if (problemDetails is null)
-                return Result<ProblemDetails>.Create.Fail("Response content was the literal string \"null\".");
-
-            return Result<ProblemDetails>.Create.Success(problemDetails);
+            if (problemDetails is not null)
+                return problemDetails;
         }
-        catch (Exception ex)
+        catch
         {
-            return Result<ProblemDetails>.Create.Fail(ex, "Error reading problem details from response content.");
         }
+
+        return new ProblemDetails
+        {
+            Status = (int)response.StatusCode,
+            Title =
+                !string.IsNullOrWhiteSpace(response.ReasonPhrase)
+                    ? response.ReasonPhrase
+                    : Enum.IsDefined(typeof(HttpStatusCode), response.StatusCode)
+                        ? response.StatusCode.ToString()
+                        : null,
+        };
     }
 
     private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails)
