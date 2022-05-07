@@ -434,19 +434,6 @@ public static class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="otherValue">The value to compare.</param>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>Success</c> result and its value equals
-    /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
-    /// </returns>
-    public static bool Equals<T>(this Result<T> source, T otherValue) =>
-        source.Equals(otherValue, EqualityComparer<T>.Default);
-
-    /// <summary>
-    /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
-    /// <param name="otherValue">The value to compare.</param>
     /// <param name="comparer">
     /// The <see cref="IEqualityComparer{T}"/> used to determine equality of the values.
     /// </param>
@@ -454,12 +441,9 @@ public static class ResultExtensions
     /// <see langword="true"/> if this is a <c>Success</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="comparer"/> is <see langword="null"/>.
-    /// </exception>
-    public static bool Equals<T>(this Result<T> source, T otherValue, IEqualityComparer<T> comparer)
+    public static bool Equals<T>(this Result<T> source, T otherValue, IEqualityComparer<T>? comparer = null)
     {
-        if (comparer is null) throw new ArgumentNullException(nameof(comparer));
+        comparer ??= EqualityComparer<T>.Default;
 
         return source.IsSuccess && comparer.Equals(source.Value, otherValue);
     }
@@ -508,18 +492,16 @@ public static class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="otherValue">The value to compare.</param>
     /// <param name="comparer">
-    /// The <see cref="IEqualityComparer{T}"/> used to determine equality of the values.
+    /// The <see cref="IEqualityComparer{T}"/> used to determine equality of the values. If
+    /// <see langword="null"/>, then <see cref="EqualityComparer{T}.Default"/> is used instead.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if this is a <c>Some</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="comparer"/> is <see langword="null"/>.
-    /// </exception>
-    public static bool Equals<T>(this Maybe<T> source, T otherValue, IEqualityComparer<T> comparer)
+    public static bool Equals<T>(this Maybe<T> source, T otherValue, IEqualityComparer<T>? comparer = null)
     {
-        if (comparer is null) throw new ArgumentNullException(nameof(comparer));
+        comparer ??= EqualityComparer<T>.Default;
 
         return source.IsSome && comparer.Equals(source.Value, otherValue);
     }
@@ -549,7 +531,7 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -573,7 +555,7 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -601,7 +583,7 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -625,7 +607,7 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>

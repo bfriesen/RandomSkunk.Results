@@ -157,3 +157,170 @@ public static class ResultFactoryExtensions
 // Create a fail result with our factory extension method.
 Result<T> result = Result<int>.Create.NotFound(123);
 ```
+
+## Result Extension Methods
+
+There are numerous extension methods for the result types, though most are only applicable to `Result<T>` and `Maybe<T>` (not `Result`).
+
+### Equals
+
+*Applicable to `Result<T>` and `Maybe<T>` only.*
+
+Compares a result to a value. true if the source result is `Success` or `Some` and its value equals the specified value.
+
+```c#
+Result<int>.Create.Success(123).Equals(123); // true
+Result<int>.Create.Success(123).Equals(456); // false
+Result<int>.Create.Fail().Equals(123); // false
+
+Maybe<int>.Create.Some(123).Equals(123); // true
+Maybe<int>.Create.Some(123).Equals(456); // false
+Maybe<int>.Create.None().Equals(123); // false
+Maybe<int>.Create.Fail().Equals(123); // false
+```
+
+### GetValueOr
+
+*Applicable to `Result<T>` and `Maybe<T>` only.*
+
+Gets the value of a result if it is `Success` or `Some`, otherwise returns the specified fallback value.
+
+```c#
+Result<int>.Create.Success(123).GetValueOr(456); // 123
+Result<int>.Create.Fail().GetValueOr(456); // 456
+
+Maybe<int>.Create.Some(123).GetValueOr(456); // 123
+Maybe<int>.Create.None().GetValueOr(456); // 456
+Maybe<int>.Create.Fail().GetValueOr(456); // 456
+```
+
+### Or
+
+*Applicable to `Result<T>` and `Maybe<T>` only.*
+
+the source result if it is `Success` or `Some`, otherwise returns a new `Success` or `Some` result with the specified fallback value.
+
+```c#
+Result<int>.Create.Success(123).Or(456); // Success(123)
+Result<int>.Create.Fail().Or(456); // Success(456)
+
+Maybe<int>.Create.Some(123).Or(456); // Some(123)
+Maybe<int>.Create.None().Or(456); // Some(456)
+Maybe<int>.Create.Fail().Or(456); // Some(456)
+```
+
+### Else
+
+*Applicable to all three result types.*
+
+the source result if it is `Success` or `Some`, else returns the specified fallback result.
+
+```c#
+Result<int>.Create.Success(123).Else(Result<int>.Create.Success(456)); // Success(123)
+Result<int>.Create.Success(123).Else(Result<int>.Create.Fail()); // Success(123)
+Result<int>.Create.Fail("A").Else(Result<int>.Create.Success(456)); // Success(456)
+Result<int>.Create.Fail("A").Else(Result<int>.Create.Fail("B")); // Fail("B")
+
+Maybe<int>.Create.Some(123).Else(Maybe<int>.Create.Some(456)); // Some(123)
+Maybe<int>.Create.Some(123).Else(Maybe<int>.Create.None()); // Some(123)
+Maybe<int>.Create.Some(123).Else(Maybe<int>.Create.Fail("B")); // Some(123)
+Maybe<int>.Create.None().Else(Maybe<int>.Create.Some(456)); // Some(456)
+Maybe<int>.Create.None().Else(Maybe<int>.Create.None()); // None
+Maybe<int>.Create.None().Else(Maybe<int>.Create.Fail("B")); // Fail("B")
+Maybe<int>.Create.Fail("A").Else(Maybe<int>.Create.Some(456)); // Some(456)
+Maybe<int>.Create.Fail("A").Else(Maybe<int>.Create.None()); // None
+Maybe<int>.Create.Fail("A").Else(Maybe<int>.Create.Fail("B")); // Fail("B")
+```
+
+### Map / MapAsync
+
+*Applicable to `Result<T>` and `Maybe<T>` only.*
+
+Transforms the source result into a new result. If the source result is `Success` or `Some`, return a new `Success` or `Some` result with its value obtained by evaluating the specified `map` or `mapAsync` function. If the source result is `Fail`, return a new `Fail` result with the same error as the source. If the source result is `None`, return `None`.
+
+```c#
+Result<int>.Create.Success(123).Map(value => value.ToString()); // Success("123")
+Result<int>.Create.Fail("A").Map(value => value.ToString()); // Fail("A")
+
+Maybe<int>.Create.Some(123).Map(value => value.ToString()); // Some("123")
+Maybe<int>.Create.None().Map(value => value.ToString()); // None
+Maybe<int>.Create.Fail("A").Map(value => value.ToString()); // Fail("A")
+```
+
+### FlatMap / FlatMapAsync
+
+*Applicable to `Result<T>` and `Maybe<T>` only.*
+
+Transforms the source result into a new result. If the source result is `Success` or `Some`, return  the result obtained by evaluating the specified `flatMap` or `flatMapAsync` function. If the source result is `Fail`, return a new `Fail` result with the same error as the source. If the source result is `None`, return `None`.
+
+```c#
+Result<int>.Create.Success(123).FlatMap(GetSuccessResult); // Success("123")
+Result<int>.Create.Success(123).FlatMap(GetFailResult); // Fail
+Result<int>.Create.Fail("A").FlatMap(GetSuccessResult); // Fail
+Result<int>.Create.Fail("A").FlatMap(GetFailResult); // Fail
+
+Maybe<bool>.Create.Some(true).FlatMap(GetSomeResult); // Some("true")
+Maybe<bool>.Create.Some(true).FlatMap(GetNoneResult); // None
+Maybe<bool>.Create.Some(true).FlatMap(GetFailResult); // Fail("B")
+Maybe<bool>.Create.None().FlatMap(GetSomeResult); // None
+Maybe<bool>.Create.None().FlatMap(GetNoneResult); // None
+Maybe<bool>.Create.None().FlatMap(GetFailResult); // None
+Maybe<bool>.Create.Fail("A").FlatMap(GetSomeResult); // Fail("A")
+Maybe<bool>.Create.Fail("A").FlatMap(GetNoneResult); // Fail("A")
+Maybe<bool>.Create.Fail("A").FlatMap(GetFailResult); // Fail("A")
+
+Result<string> GetSuccessResult(int value) => Result<string>.Create.Success(value.ToString());
+Result<string> GetFailResult(int value) => Result<string>.Create.Fail("B");
+
+Maybe<string> GetSomeResult(bool value) => Maybe<string>.Create.Some(value.ToString());
+Maybe<string> GetNoneResult(bool value) => Maybe<string>.Create.None();
+Maybe<string> GetFailResult(bool value) => Maybe<string>.Create.Fail("B");
+```
+
+### Flatten
+
+*Applicable to `Result<T>` and `Maybe<T>` only.*
+
+Flattens a `Result<Result<T>>` into a `Result<T>` or a `Maybe<Maybe<T>>` into a `Maybe<T>`.
+
+```c#
+Result<Result<int>> nestedResult;
+Result<int> flattenedResult = nestedResult.Flatten();
+
+Maybe<Maybe<int>> nestedMaybe;
+Maybe<int> flattenedMaybe = nestedMaybe.Flatten();
+```
+
+### Filter / FilterAsync
+
+*Applicable to `Maybe<T>` only.*
+
+Filters a `Some` result to `None` unless the specified filter function evaluates to true. `None` and `Fail` results are not affected.
+
+```c#
+Maybe<int>.Create.Some(123).Filter(value => value < 150); // Some(123)
+Maybe<int>.Create.Some(456).Filter(value => value < 150); // None
+Maybe<int>.Create.None().Filter(value => value < 150); // None
+Maybe<int>.Create.Fail("A").Filter(value => value < 150); // Fail("A")
+```
+
+## LINQ Extension Methods
+
+In the `RandomSkunk.Results.Linq` namespace, there are aliases for the `Map`, `FlatMap`, and `Filter` extension methods named `Select`, `SelectMany`, and `Where`. These methods allow you to use LINQ to transform results.
+
+```c#
+using RandomSkunk.Results.Linq;
+
+// Given methods with the following signatures:
+Maybe<Person> GetPerson(Guid id)
+Maybe<Department> GetDepartment(Guid id)
+
+Guid personId;
+
+// Chain the results together:
+Maybe<Department> result =
+    from person in GetPerson(personId)
+    where person.IsActive
+    from department in GetDepartment(person.DepartmentId)
+    select department;
+```
