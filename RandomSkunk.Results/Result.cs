@@ -1,10 +1,19 @@
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// The result of an operation that does not have a return value.
+/// Defines a result without a value.
 /// </summary>
+/// <remarks>
+/// Use <see cref="Create"/> to create instances of this type.
+/// </remarks>
 public struct Result : IEquatable<Result>
 {
+    /// <summary>
+    /// The factory object used to create instances of <see cref="Result"/>. This field is
+    /// read-only.
+    /// </summary>
+    public static readonly IResultFactory Create = new Factory();
+
     private readonly Error? _error;
     private readonly ResultType _type;
 
@@ -23,40 +32,40 @@ public struct Result : IEquatable<Result>
     }
 
     /// <summary>
-    /// Gets the error from the failed operation, or throws an
-    /// <see cref="InvalidOperationException"/> if this is not a <c>fail</c> result.
-    /// </summary>
-    /// <exception cref="InvalidOperationException">
-    /// If this result is not a <c>fail</c> result.
-    /// </exception>
-    public Error Error =>
-        IsFail
-            ? _error ?? Error.Default
-            : throw Exceptions.CannotAccessErrorUnlessFail;
-
-    /// <summary>
     /// Gets the type of the result: <see cref="ResultType.Success"/> or
     /// <see cref="ResultType.Fail"/>.
     /// </summary>
     public ResultType Type => _type;
 
     /// <summary>
-    /// Gets a value indicating whether this is a <c>success</c> result.
+    /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>success</c> result; otherwise,
+    /// <see langword="true"/> if this is a <c>Success</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
     public bool IsSuccess => _type == ResultType.Success;
 
     /// <summary>
-    /// Gets a value indicating whether this is a <c>fail</c> result.
+    /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>fail</c> result; otherwise,
+    /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
     public bool IsFail => _type == ResultType.Fail;
+
+    /// <summary>
+    /// Gets the error from the failed operation, or throws an
+    /// <see cref="InvalidStateException"/> if this is not a <c>Fail</c> result.
+    /// </summary>
+    /// <exception cref="InvalidStateException">
+    /// If this result is not a <c>Fail</c> result.
+    /// </exception>
+    public Error Error =>
+        IsFail
+            ? _error ?? Error.DefaultError
+            : throw Exceptions.CannotAccessErrorUnlessFail;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
@@ -83,116 +92,25 @@ public struct Result : IEquatable<Result>
     public static bool operator !=(Result left, Result right) => !(left == right);
 
     /// <summary>
-    /// Creates a <c>success</c> result for an operation without a return value.
-    /// </summary>
-    /// <returns>A <c>success</c> result.</returns>
-    public static Result Success() => new(success: true);
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation without a return value.
-    /// </summary>
-    /// <param name="error">The optional error that describes the failure.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static Result Fail(Error? error = null) => new(success: false, error);
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation with a return value.
-    /// </summary>
-    /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="errorMessage">The optional error message.</param>
-    /// <param name="errorCode">The optional error code.</param>
-    /// <param name="identifier">The optional identifier of the error.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static Result Fail(
-        Exception exception,
-        string? errorMessage = null,
-        int? errorCode = null,
-        string? identifier = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation without a return value.
-    /// </summary>
-    /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
-    /// <param name="errorCode">The optional error code.</param>
-    /// <param name="identifier">The optional identifier of the error.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static Result Fail(
-        string errorMessage,
-        string? stackTrace = null,
-        int? errorCode = null,
-        string? identifier = null) =>
-        Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
-
-    /// <summary>
-    /// Creates a <c>success</c> result for an operation <em>with</em> a return value.
-    /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
-    /// <param name="value">The value of the <c>success</c> result.</param>
-    /// <returns>A <c>success</c> result.</returns>
-    public static Result<T> Success<T>([DisallowNull] T value) => Result<T>.Success(value);
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
-    /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
-    /// <param name="error">The optional error that describes the failure.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static Result<T> Fail<T>(Error? error = null) => Result<T>.Fail(error);
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
-    /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
-    /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="errorMessage">The optional error message.</param>
-    /// <param name="errorCode">The optional error code.</param>
-    /// <param name="identifier">The optional identifier of the error.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static Result<T> Fail<T>(
-        Exception exception,
-        string? errorMessage = null,
-        int? errorCode = null,
-        string? identifier = null) =>
-        Result<T>.Fail(exception, errorMessage, errorCode, identifier);
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation <em>with</em> a return value.
-    /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
-    /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
-    /// <param name="errorCode">The optional error code.</param>
-    /// <param name="identifier">The optional identifier of the error.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static Result<T> Fail<T>(
-        string errorMessage,
-        string? stackTrace = null,
-        int? errorCode = null,
-        string? identifier = null) =>
-        Result<T>.Fail(errorMessage, stackTrace, errorCode, identifier);
-
-    /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
-    /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
-    /// <typeparam name="TResult">The return type of the functions.</typeparam>
+    /// <typeparam name="TReturn">The return type of the functions.</typeparam>
     /// <param name="success">
-    /// The function to evaluate if the result type is <c>success</c>.
+    /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
     /// <see langword="null"/>.
     /// </exception>
-    public TResult Match<TResult>(
-        Func<TResult> success,
-        Func<Error, TResult> fail)
+    public TReturn Match<TReturn>(
+        Func<TReturn> success,
+        Func<Error, TReturn> fail)
     {
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
@@ -204,14 +122,14 @@ public struct Result : IEquatable<Result>
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
-    /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <param name="success">
-    /// The function to evaluate if the result type is <c>success</c>.
+    /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
@@ -232,15 +150,15 @@ public struct Result : IEquatable<Result>
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
-    /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
-    /// <typeparam name="TResult">The return type of the functions.</typeparam>
+    /// <typeparam name="TReturn">The return type of the functions.</typeparam>
     /// <param name="success">
-    /// The function to evaluate if the result type is <c>success</c>.
+    /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <returns>
     /// A task that represents the asynchronous match operation, which wraps the result of the
@@ -250,9 +168,9 @@ public struct Result : IEquatable<Result>
     /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
     /// <see langword="null"/>.
     /// </exception>
-    public Task<TResult> MatchAsync<TResult>(
-        Func<Task<TResult>> success,
-        Func<Error, Task<TResult>> fail)
+    public Task<TReturn> MatchAsync<TReturn>(
+        Func<Task<TReturn>> success,
+        Func<Error, Task<TReturn>> fail)
     {
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
@@ -264,14 +182,14 @@ public struct Result : IEquatable<Result>
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
-    /// function depending on whether the result type is <c>success</c> or <c>fail</c>.
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <param name="success">
-    /// The function to evaluate if the result type is <c>success</c>.
+    /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
     /// <exception cref="ArgumentNullException">
@@ -303,5 +221,12 @@ public struct Result : IEquatable<Result>
         hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(GetType());
         hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error?>.Default.GetHashCode(_error));
         return hashCode;
+    }
+
+    private sealed class Factory : IResultFactory
+    {
+        public Result Success() => new(success: true);
+
+        public Result Fail(Error? error = null) => new(success: false, error);
     }
 }

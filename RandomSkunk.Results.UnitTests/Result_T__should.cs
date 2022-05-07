@@ -10,70 +10,41 @@ public class Result_T__should
     [Fact]
     public void Create_success_result()
     {
-        var result = Result<int>.Success(321);
+        var result = Result<int>.Create.Success(321);
 
         result.Type.Should().Be(ResultType.Success);
         result.Value.Should().Be(321);
-        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
-    }
-
-    [Fact]
-    public void Create_success_result2()
-    {
-        var result = Result.Success(321);
-
-        result.Type.Should().Be(ResultType.Success);
-        result.Value.Should().Be(321);
-        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
     public void Create_fail_result()
     {
-        var result = Result<int>.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var error = new Error(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result<int>.Create.Fail(error);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Message.Should().Be(_errorMessage);
-        result.Error.ErrorCode.Should().Be(_errorCode);
-        result.Error.StackTrace.Should().Be(_stackTrace);
-        result.Error.Identifier.Should().Be(_identifier);
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+        result.Error.Should().Be(error);
+        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 
     [Fact]
-    public void Create_fail_result2()
+    public void Create_default_result()
     {
-        var result = Result.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = default(Result<int>);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Message.Should().Be(_errorMessage);
-        result.Error.ErrorCode.Should().Be(_errorCode);
-        result.Error.StackTrace.Should().Be(_stackTrace);
-        result.Error.Identifier.Should().Be(_identifier);
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
-    }
-
-    [Fact]
-    public void Create_fail_result3()
-    {
-        var result = Result.Fail<int>();
-
-        result.Type.Should().Be(ResultType.Fail);
-        result.Error.Message.Should().Be(Error.DefaultMessage);
-        result.Error.ErrorCode.Should().BeNull();
-        result.Error.StackTrace.Should().BeNull();
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+        result.Error.Should().BeSameAs(Error.DefaultError);
+        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 
     [Fact]
     public void Match_func_correctly_on_success()
     {
-        var result = Result.Success(3);
+        var result = Result<int>.Create.Success(3);
 
         var actual = result.Match(
             value => value + 1,
@@ -85,7 +56,7 @@ public class Result_T__should
     [Fact]
     public void Match_func_correctly_on_fail()
     {
-        var result = Result.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = result.Match(
             value => value + 1,
@@ -97,7 +68,7 @@ public class Result_T__should
     [Fact]
     public void Match_action_correctly_on_success()
     {
-        var result = Result.Success(321);
+        var result = Result<int>.Create.Success(321);
 
         int? successValue = null;
         Error? failError = null;
@@ -113,7 +84,7 @@ public class Result_T__should
     [Fact]
     public void Match_action_correctly_on_fail()
     {
-        var result = Result.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         int? successValue = null;
         Error failError = null!;
@@ -133,7 +104,7 @@ public class Result_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_success()
     {
-        var result = Result.Success(3);
+        var result = Result<int>.Create.Success(3);
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -145,7 +116,7 @@ public class Result_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_fail()
     {
-        var result = Result.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -157,7 +128,7 @@ public class Result_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_success()
     {
-        var result = Result.Success(321);
+        var result = Result<int>.Create.Success(321);
 
         int? successValue = null;
         Error? failError = null;
@@ -181,7 +152,7 @@ public class Result_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_fail()
     {
-        var result = Result.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         int? successValue = null;
         Error failError = null!;

@@ -8,11 +8,11 @@ public static class ResultExtensions
     /// <summary>
     /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="otherValue">The value to compare.</param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>success</c> result and its value equals
+    /// <see langword="true"/> if this is a <c>Success</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool Equals<T>(this Result<T> source, T otherValue) =>
@@ -21,14 +21,14 @@ public static class ResultExtensions
     /// <summary>
     /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="otherValue">The value to compare.</param>
     /// <param name="comparer">
     /// The <see cref="IEqualityComparer{T}"/> used to determine equality of the values.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>success</c> result and its value equals
+    /// <see langword="true"/> if this is a <c>Success</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -45,13 +45,13 @@ public static class ResultExtensions
     /// Determines whether the value of the result is equal to another value as defined by the
     /// <paramref name="isSuccessValue"/> function.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="isSuccessValue">
     /// A function that defines the equality of the result value.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>success</c> result and
+    /// <see langword="true"/> if this is a <c>Success</c> result and
     /// <paramref name="isSuccessValue"/> evaluates to <see langword="true"/> when passed
     /// its value; otherwise, <see langword="false"/>.
     /// </returns>
@@ -68,11 +68,11 @@ public static class ResultExtensions
     /// <summary>
     /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="otherValue">The value to compare.</param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>some</c> result and its value equals
+    /// <see langword="true"/> if this is a <c>Some</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool Equals<T>(this MaybeResult<T> source, T otherValue) =>
@@ -81,14 +81,14 @@ public static class ResultExtensions
     /// <summary>
     /// Determines whether the value of the result equals the <paramref name="otherValue"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="otherValue">The value to compare.</param>
     /// <param name="comparer">
     /// The <see cref="IEqualityComparer{T}"/> used to determine equality of the values.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>some</c> result and its value equals
+    /// <see langword="true"/> if this is a <c>Some</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -105,13 +105,13 @@ public static class ResultExtensions
     /// Determines whether the value of the result is equal to another value as defined by the
     /// <paramref name="isSomeValue"/> function.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="isSomeValue">
     /// A function that defines the equality of the result value.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>some</c> result and
+    /// <see langword="true"/> if this is a <c>Some</c> result and
     /// <paramref name="isSomeValue"/> evaluates to <see langword="true"/> when passed
     /// its value; otherwise, <see langword="false"/>.
     /// </returns>
@@ -126,16 +126,16 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>success</c> result, or the specified default value if
-    /// it is a <c>fail</c> result.
+    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// it is a <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="fallbackValue">
-    /// The fallback value to return if this is not a <c>success</c> result.
+    /// The fallback value to return if this is not a <c>Success</c> result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>success</c> result; otherwise,
+    /// The value of this result if this is a <c>Success</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -150,17 +150,17 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>success</c> result, or the specified default value if
-    /// it is a <c>fail</c> result.
+    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// it is a <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="getFallbackValue">
-    /// A function that creates the fallback value to return if this is not a <c>success</c>
+    /// A function that creates the fallback value to return if this is not a <c>Success</c>
     /// result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>success</c> result; otherwise, the value returned
+    /// The value of this result if this is a <c>Success</c> result; otherwise, the value returned
     /// by the <paramref name="getFallbackValue"/> function.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -178,16 +178,16 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>success</c> result, or the specified default value if
-    /// it is a <c>fail</c> result.
+    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// it is a <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="fallbackValue">
-    /// The fallback value to return if this is not a <c>success</c> result.
+    /// The fallback value to return if this is not a <c>Success</c> result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>success</c> result; otherwise,
+    /// The value of this result if this is a <c>Success</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -202,17 +202,17 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>success</c> result, or the specified default value if
-    /// it is a <c>fail</c> result.
+    /// Gets the value of the <c>Success</c> result, or the specified default value if
+    /// it is a <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="getFallbackValue">
-    /// A function that creates the fallback value to return if this is not a <c>success</c>
+    /// A function that creates the fallback value to return if this is not a <c>Success</c>
     /// result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>success</c> result; otherwise, the value returned
+    /// The value of this result if this is a <c>Success</c> result; otherwise, the value returned
     /// by the <paramref name="getFallbackValue"/> function.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -230,13 +230,13 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>success</c> result, or a new <c>success</c>
+    /// Returns <paramref name="source"/> if it is a <c>Success</c> result, or a new <c>Success</c>
     /// result with the specified fallback value.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
-    /// <param name="fallbackValue">The fallback value if the result is not <c>success</c>.</param>
-    /// <returns>A <c>success</c> result.</returns>
+    /// <param name="fallbackValue">The fallback value if the result is not <c>Success</c>.</param>
+    /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
     /// </exception>
@@ -244,19 +244,19 @@ public static class ResultExtensions
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return source.IsSuccess ? source : Result.Success(fallbackValue);
+        return source.IsSuccess ? source : Result<T>.Create.Success(fallbackValue);
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>success</c> result, or a new <c>success</c>
+    /// Returns <paramref name="source"/> if it is a <c>Success</c> result, or a new <c>Success</c>
     /// result with the specified fallback value.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="getFallbackValue">
-    /// A function that returns the fallback value if the result is not <c>success</c>.
+    /// A function that returns the fallback value if the result is not <c>Success</c>.
     /// </param>
-    /// <returns>A <c>success</c> result.</returns>
+    /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
@@ -273,17 +273,17 @@ public static class ResultExtensions
         var fallbackValue = getFallbackValue()
              ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
 
-        return Result.Success(fallbackValue);
+        return Result<T>.Create.Success(fallbackValue);
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>some</c> result, or a new <c>some</c>
+    /// Returns <paramref name="source"/> if it is a <c>Some</c> result, or a new <c>Some</c>
     /// result with the specified fallback value.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
-    /// <param name="fallbackValue">The fallback value if the result is not <c>some</c>.</param>
-    /// <returns>A <c>some</c> result.</returns>
+    /// <param name="fallbackValue">The fallback value if the result is not <c>Some</c>.</param>
+    /// <returns>A <c>Some</c> result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
     /// </exception>
@@ -291,19 +291,19 @@ public static class ResultExtensions
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return source.IsSome ? source : MaybeResult.Some(fallbackValue);
+        return source.IsSome ? source : MaybeResult<T>.Create.Some(fallbackValue);
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>some</c> result, or a new <c>some</c>
+    /// Returns <paramref name="source"/> if it is a <c>Some</c> result, or a new <c>Some</c>
     /// result with its value from evaluating the <paramref name="getFallbackValue"/> function.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="getFallbackValue">
-    /// A function that returns the fallback value if the result is not <c>some</c>.
+    /// A function that returns the fallback value if the result is not <c>Some</c>.
     /// </param>
-    /// <returns>A <c>some</c> result.</returns>
+    /// <returns>A <c>Some</c> result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
@@ -320,16 +320,16 @@ public static class ResultExtensions
         var fallbackValue = getFallbackValue()
              ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
 
-        return MaybeResult.Some(fallbackValue);
+        return MaybeResult<T>.Create.Some(fallbackValue);
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>success</c> result, else returns the
+    /// Returns <paramref name="source"/> if it is a <c>Success</c> result, else returns the
     /// specified fallback result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>success</c>.</param>
+    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static Result<T> Else<T>(this Result<T> source, Result<T> fallbackResult)
     {
@@ -337,13 +337,13 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>success</c> result, else returns the result
+    /// Returns <paramref name="source"/> if it is a <c>Success</c> result, else returns the result
     /// from evaluating the <paramref name="getFallbackResult"/> function.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="getFallbackResult">
-    /// A function that returns the fallback result if the result is not <c>success</c>.
+    /// A function that returns the fallback result if the result is not <c>Success</c>.
     /// </param>
     /// <returns>
     /// Either <paramref name="source"/> or the value returned from
@@ -364,12 +364,12 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>some</c> result, else returns the
+    /// Returns <paramref name="source"/> if it is a <c>Some</c> result, else returns the
     /// specified fallback result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>some</c>.</param>
+    /// <param name="fallbackResult">The fallback result if the result is not <c>Some</c>.</param>
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static MaybeResult<T> Else<T>(this MaybeResult<T> source, MaybeResult<T> fallbackResult)
     {
@@ -377,13 +377,13 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Returns <paramref name="source"/> if it is a <c>some</c> result, else returns the result
+    /// Returns <paramref name="source"/> if it is a <c>Some</c> result, else returns the result
     /// from evaluating the <paramref name="getFallbackResult"/> function.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="getFallbackResult">
-    /// A function that returns the fallback result if the result is not <c>some</c>.
+    /// A function that returns the fallback result if the result is not <c>Some</c>.
     /// </param>
     /// <returns>
     /// Either <paramref name="source"/> or the value returned from
@@ -405,11 +405,11 @@ public static class ResultExtensions
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
-    /// function. The map function is only evaluated if the source is a <c>some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="map">
@@ -431,19 +431,19 @@ public static class ResultExtensions
             var mappedValue = map(source.Value)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map));
 
-            return Result.Success(mappedValue);
+            return Result<TResult>.Create.Success(mappedValue);
         }
 
-        return Result.Fail<TResult>(source.Error);
+        return Result<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="mapAsync">
@@ -472,19 +472,19 @@ public static class ResultExtensions
             var mappedValue = await mapAsync(source.Value, cancellationToken)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync));
 
-            return Result.Success(mappedValue);
+            return Result<TResult>.Create.Success(mappedValue);
         }
 
-        return Result.Fail<TResult>(source.Error);
+        return Result<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
     /// the <see cref="Result{T}.Type"/> the new result will always be the same as the source
     /// result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="mapAsync">
@@ -508,11 +508,11 @@ public static class ResultExtensions
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
-    /// function. The map function is only evaluated if the source is a <c>some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
     /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="map">
@@ -534,22 +534,22 @@ public static class ResultExtensions
             var mappedValue = map(source.Value)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map));
 
-            return MaybeResult.Some(mappedValue);
+            return MaybeResult<TResult>.Create.Some(mappedValue);
         }
 
         if (source.IsNone)
-            return MaybeResult.None<TResult>();
+            return MaybeResult<TResult>.Create.None();
 
-        return MaybeResult.Fail<TResult>(source.Error);
+        return MaybeResult<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
     /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="mapAsync">
@@ -578,22 +578,22 @@ public static class ResultExtensions
             var mappedValue = await mapAsync(source.Value, cancellationToken)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync));
 
-            return MaybeResult.Some(mappedValue);
+            return MaybeResult<TResult>.Create.Some(mappedValue);
         }
 
         if (source.IsNone)
-            return MaybeResult.None<TResult>();
+            return MaybeResult<TResult>.Create.None();
 
-        return MaybeResult.Fail<TResult>(source.Error);
+        return MaybeResult<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
     /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="mapAsync">
@@ -618,10 +618,10 @@ public static class ResultExtensions
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMap"/> function. The flat map function is only evaluated if the source
-    /// is a <c>success</c> result. If the source is a <c>fail</c> result, the error is propagated
-    /// to the returned <c>fail</c> result.
+    /// is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is propagated
+    /// to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="flatMap">
@@ -641,16 +641,16 @@ public static class ResultExtensions
             return mappedValue;
         }
 
-        return Result.Fail<TResult>(source.Error);
+        return Result<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMapAsync"/> function. The flat map function is only evaluated if the
-    /// source is a <c>success</c> result. If the source is a <c>fail</c> result, the error is
-    /// propagated to the returned <c>fail</c> result.
+    /// source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
+    /// propagated to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="flatMapAsync">
@@ -677,16 +677,16 @@ public static class ResultExtensions
             return mappedValue;
         }
 
-        return Result.Fail<TResult>(source.Error);
+        return Result<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMapAsync"/> function. The flat map function is only evaluated if the
-    /// source is a <c>success</c> result. If the source is a <c>fail</c> result, the error is
-    /// propagated to the returned <c>fail</c> result.
+    /// source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
+    /// propagated to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="flatMapAsync">
@@ -708,10 +708,10 @@ public static class ResultExtensions
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMap"/> function. The flat map function is only evaluated if the source
-    /// is a <c>success</c> result. If the source is a <c>fail</c> result, the error is propagated
-    /// to the returned <c>fail</c> result.
+    /// is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is propagated
+    /// to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="flatMap">
@@ -732,18 +732,18 @@ public static class ResultExtensions
         }
 
         if (source.IsNone)
-            return MaybeResult.None<TResult>();
+            return MaybeResult<TResult>.Create.None();
 
-        return MaybeResult.Fail<TResult>(source.Error);
+        return MaybeResult<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMapAsync"/> function. The flat map function is only evaluated if the
-    /// source is a <c>success</c> result. If the source is a <c>fail</c> result, the error is
-    /// propagated to the returned <c>fail</c> result.
+    /// source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
+    /// propagated to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="flatMapAsync">
@@ -771,18 +771,18 @@ public static class ResultExtensions
         }
 
         if (source.IsNone)
-            return MaybeResult.None<TResult>();
+            return MaybeResult<TResult>.Create.None();
 
-        return MaybeResult.Fail<TResult>(source.Error);
+        return MaybeResult<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMapAsync"/> function. The flat map function is only evaluated if the
-    /// source is a <c>success</c> result. If the source is a <c>fail</c> result, the error is
-    /// propagated to the returned <c>fail</c> result.
+    /// source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
+    /// propagated to the returned <c>Fail</c> result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <typeparam name="TResult">The type of the new result.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="flatMapAsync">
@@ -804,7 +804,7 @@ public static class ResultExtensions
     /// <summary>
     /// Flattens the nested result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static Result<T> Flatten<T>(this Result<Result<T>> source) =>
@@ -813,20 +813,20 @@ public static class ResultExtensions
     /// <summary>
     /// Flattens the nested result.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static MaybeResult<T> Flatten<T>(this MaybeResult<MaybeResult<T>> source) =>
         source.FlatMap(nestedResult => nestedResult);
 
     /// <summary>
-    /// Filter the specified result into a <c>none</c> result if it is a <c>some</c> result and the
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
     /// <paramref name="filter"/> function evaluates to <see langword="false"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="filter">
-    /// A function that filters a <c>some</c> result into a <c>none</c> result by returning
+    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
     /// </param>
     /// <returns>The filtered result.</returns>
@@ -842,20 +842,20 @@ public static class ResultExtensions
             if (filter(source.Value))
                 return source;
 
-            return MaybeResult.None<T>();
+            return MaybeResult<T>.Create.None();
         }
 
         return source;
     }
 
     /// <summary>
-    /// Filter the specified result into a <c>none</c> result if it is a <c>some</c> result and the
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
     /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="filterAsync">
-    /// A function that filters a <c>some</c> result into a <c>none</c> result by returning
+    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -878,20 +878,20 @@ public static class ResultExtensions
             if (await filterAsync(source.Value, cancellationToken))
                 return source;
 
-            return MaybeResult.None<T>();
+            return MaybeResult<T>.Create.None();
         }
 
         return source;
     }
 
     /// <summary>
-    /// Filter the specified result into a <c>none</c> result if it is a <c>some</c> result and the
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
     /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="filterAsync">
-    /// A function that filters a <c>some</c> result into a <c>none</c> result by returning
+    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
     /// </param>
     /// <returns>The filtered result.</returns>

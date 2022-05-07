@@ -47,7 +47,7 @@ public class Error : IEquatable<Error>
     /// Gets or sets the default error message, to be used when an error message is not specified.
     /// </summary>
     /// <exception cref="ArgumentNullException">
-    /// If the property is to <see langword="null"/>.
+    /// If the property is set to <see langword="null"/>.
     /// </exception>
     public static string DefaultMessage
     {
@@ -80,7 +80,7 @@ public class Error : IEquatable<Error>
     /// </summary>
     public string Type { get; }
 
-    internal static Error Default => _default.Value;
+    internal static Error DefaultError => _default.Value;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the

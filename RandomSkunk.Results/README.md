@@ -10,17 +10,17 @@ To create a result, use one of the static factory methods.
 
 ```c#
 // Results for operations that have a return value:
-Result<int> result1 = Result.Success(123);
-Result<int> result2 = Result.Fail<int>();
+Result<int> result1 = Result<int>.Create.Success(123);
+Result<int> result2 = Result<int>.Create.Fail();
 
 // Results for operations that have an optional return value:
-MaybeResult<int> result3 = MaybeResult.Some(123);
-MaybeResult<int> result4 = MaybeResult.None<int>();
-MaybeResult<int> result5 = MaybeResult.Fail<int>();
+MaybeResult<int> result3 = MaybeResult<int>.Create.Some(123);
+MaybeResult<int> result4 = MaybeResult<int>.Create.None();
+MaybeResult<int> result5 = MaybeResult<int>.Create.Fail();
 
 // Results for operations that do not have a return value:
-Result result6 = Result.Success();
-Result result7 = Result.Fail();
+Result result6 = Result.Create.Success();
+Result result7 = Result.Create.Fail();
 ```
 
 ### Handling
@@ -110,4 +110,50 @@ switch (result.Type)
         Console.WriteLine($"Fail: {result.Error}");
         break;
 }
+```
+
+## Custom Errors and Factory Methods
+
+Custom errors can be created by inheriting from the `Error` class, then passed to a `Fail` factory method.
+
+```c#
+public class NotFoundError : Error
+{
+    public NotFoundError(int id, string resourceType = "record")
+        : base(
+            message: $"A {resourceType} with the ID {id} could not be found.",
+            errorCode: 404)
+    {
+    }
+}
+
+// Create a fail result with our custom error.
+Result<T> result = Result<T>.Create.Fail(new NotFoundError(123));
+
+ // errorType: "NotFoundError"
+string errorType = result.Error.Type;
+
+// errorMessage: "A record with the ID 123 could not be found."
+string errorMessage = result.Error.Message;
+
+ // errorCode: 404
+string errorCode = result.Error.ErrorCode;
+```
+
+To make it easier to create specific fail results, extension methods targeting `IResultFactory`, `IResultFactory<T>`, or `MaybeResultFactory<T>` can be created.
+
+```c#
+public static class ResultFactoryExtensions
+{
+    public static Result<T> NotFound<T>(
+        this IResultFactory<T> resultFactory,
+        int id,
+        string resourceType = "record")
+    {
+        return resultFactory.Fail(new NotFoundError(id, resourceType));
+    }
+}
+
+// Create a fail result with our factory extension method.
+Result<T> result = Result<int>.Create.NotFound(123);
 ```

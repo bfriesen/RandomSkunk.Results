@@ -10,40 +10,36 @@ public class Result_should
     [Fact]
     public void Create_success_result()
     {
-        var result = Result.Success();
+        var result = Result.Create.Success();
 
         result.Type.Should().Be(ResultType.Success);
-        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
     public void Create_fail_result()
     {
-        var result = Result.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var error = new Error(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result.Create.Fail(error);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Message.Should().Be(_errorMessage);
-        result.Error.ErrorCode.Should().Be(_errorCode);
-        result.Error.StackTrace.Should().Be(_stackTrace);
-        result.Error.Identifier.Should().Be(_identifier);
+        result.Error.Should().Be(error);
     }
 
     [Fact]
-    public void Create_fail_result2()
+    public void Create_default_result()
     {
-        var result = Result.Fail();
+        var result = default(Result);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Message.Should().Be(Error.DefaultMessage);
-        result.Error.ErrorCode.Should().BeNull();
-        result.Error.StackTrace.Should().BeNull();
+        result.Error.Should().BeSameAs(Error.DefaultError);
     }
 
     [Fact]
     public void Match_func_correctly_on_success()
     {
-        var result = Result.Success();
+        var result = Result.Create.Success();
 
         var actual = result.Match(
             () => 1,
@@ -55,7 +51,7 @@ public class Result_should
     [Fact]
     public void Match_func_correctly_on_fail()
     {
-        var result = Result.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = result.Match(
             () => 1,
@@ -67,7 +63,7 @@ public class Result_should
     [Fact]
     public void Match_action_correctly_on_success()
     {
-        var result = Result.Success();
+        var result = Result.Create.Success();
 
         bool successMatched = false;
         Error? failError = null;
@@ -83,7 +79,7 @@ public class Result_should
     [Fact]
     public void Match_action_correctly_on_fail()
     {
-        var result = Result.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         bool successMatched = false;
         Error failError = null!;
@@ -103,7 +99,7 @@ public class Result_should
     [Fact]
     public async Task Match_async_func_correctly_on_success()
     {
-        var result = Result.Success();
+        var result = Result.Create.Success();
 
         var actual = await result.MatchAsync(
             () => Task.FromResult(1),
@@ -115,7 +111,7 @@ public class Result_should
     [Fact]
     public async Task Match_async_func_correctly_on_fail()
     {
-        var result = Result.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = await result.MatchAsync(
             () => Task.FromResult(1),
@@ -127,7 +123,7 @@ public class Result_should
     [Fact]
     public async Task Match_async_action_correctly_on_success()
     {
-        var result = Result.Success();
+        var result = Result.Create.Success();
 
         bool successMatched = false;
         Error? failError = null;
@@ -151,7 +147,7 @@ public class Result_should
     [Fact]
     public async Task Match_async_action_correctly_on_fail()
     {
-        var result = Result.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Result.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         bool successMatched = false;
         Error failError = null!;

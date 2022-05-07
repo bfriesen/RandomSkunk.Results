@@ -6,17 +6,17 @@ namespace RandomSkunk.Results;
 public enum MaybeResultType
 {
     /// <summary>
-    /// The operation was not successful.
+    /// An unsuccessful result. The default value.
     /// </summary>
     Fail = 0,
 
     /// <summary>
-    /// The operation was successful and has a value.
+    /// A successful result with a value.
     /// </summary>
     Some,
 
     /// <summary>
-    /// The operation was successful but has no value.
+    /// A successful result without a value.
     /// </summary>
     None,
 }

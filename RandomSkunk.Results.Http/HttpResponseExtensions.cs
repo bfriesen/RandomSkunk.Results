@@ -15,23 +15,23 @@ public static class HttpResponseExtensions
     public static async Task<Result> ReadResultFromJsonAsync(this HttpResponseMessage source)
     {
         if (source.IsSuccessStatusCode)
-            return Result.Success();
+            return Result.Create.Success();
 
         var problemDetails = await ReadProblemDetails(source.Content);
 
         if (problemDetails.IsSuccess)
         {
             var error = GetErrorFromProblemDetails(problemDetails.Value);
-            return Result.Fail(error);
+            return Result.Create.Fail(error);
         }
 
-        return Result.Fail(problemDetails.Error);
+        return Result.Create.Fail(problemDetails.Error);
     }
 
     /// <summary>
     /// Reads the HTTP response as a <see cref="Result{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
@@ -46,16 +46,16 @@ public static class HttpResponseExtensions
         if (problemDetails.IsSuccess)
         {
             var error = GetErrorFromProblemDetails(problemDetails.Value);
-            return Result.Fail<T>(error);
+            return Result<T>.Create.Fail(error);
         }
 
-        return Result.Fail<T>(problemDetails.Error);
+        return Result<T>.Create.Fail(problemDetails.Error);
     }
 
     /// <summary>
     /// Reads the HTTP response as a <see cref="MaybeResult{T}"/>.
     /// </summary>
-    /// <typeparam name="T">The return type of the operation.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="MaybeResult{T}"/>.
     /// </param>
@@ -70,10 +70,10 @@ public static class HttpResponseExtensions
         if (problemDetails.IsSuccess)
         {
             var error = GetErrorFromProblemDetails(problemDetails.Value);
-            return MaybeResult.Fail<T>(error);
+            return MaybeResult<T>.Create.Fail(error);
         }
 
-        return MaybeResult.Fail<T>(problemDetails.Error);
+        return MaybeResult<T>.Create.Fail(problemDetails.Error);
     }
 
     private static async Task<Result<T>> ReadValue<T>(HttpContent content)
@@ -83,13 +83,13 @@ public static class HttpResponseExtensions
             var value = await content.ReadFromJsonAsync<T>();
 
             if (value is null)
-                return Result.Fail<T>("Response content was the literal string \"null\".");
+                return Result<T>.Create.Fail("Response content was the literal string \"null\".");
 
-            return Result.Success(value);
+            return Result<T>.Create.Success(value);
         }
         catch (Exception ex)
         {
-            return Result.Fail<T>(ex, "Error reading value from response content");
+            return Result<T>.Create.Fail(ex, "Error reading value from response content");
         }
     }
 
@@ -100,13 +100,13 @@ public static class HttpResponseExtensions
             var value = await content.ReadFromJsonAsync<T>();
 
             if (value is null)
-                return MaybeResult.None<T>();
+                return MaybeResult<T>.Create.None();
 
-            return MaybeResult.Some(value);
+            return MaybeResult<T>.Create.Some(value);
         }
         catch (Exception ex)
         {
-            return MaybeResult.Fail<T>(ex, "Error reading value from response content");
+            return MaybeResult<T>.Create.Fail(ex, "Error reading value from response content");
         }
     }
 
@@ -117,13 +117,13 @@ public static class HttpResponseExtensions
             var problemDetails = await content.ReadFromJsonAsync<ProblemDetails>();
 
             if (problemDetails is null)
-                return Result.Fail<ProblemDetails>("Response content was the literal string \"null\".");
+                return Result<ProblemDetails>.Create.Fail("Response content was the literal string \"null\".");
 
-            return Result.Success(problemDetails);
+            return Result<ProblemDetails>.Create.Success(problemDetails);
         }
         catch (Exception ex)
         {
-            return Result.Fail<ProblemDetails>(ex, "Error reading problem details from response content.");
+            return Result<ProblemDetails>.Create.Fail(ex, "Error reading problem details from response content.");
         }
     }
 

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Changed
+
+- Replace factory methods on result types with `Create` property of type `IResultFactory`, `IResultFactory<T>`, or `IMaybeResultFactory<T>`. These interfaces define the same base factory methods that they replace, and extension methods define `Fail` overloads.
+
+### Added
+
+- Add `InvalidStateException`, which is thrown when accessing a result's `Error` or `Value` property and the result is in an invalid state to do so.
+
 ## [1.0.0-alpha05] - 2022-05-05
 
 ### Added

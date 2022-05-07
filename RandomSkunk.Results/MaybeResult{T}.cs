@@ -1,19 +1,27 @@
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// The result of an operation that has a return value where that return value is allowed to be
-/// absent.
+/// Defines a result with an optional value.
 /// </summary>
-/// <typeparam name="T">The return type of the operation.</typeparam>
+/// <typeparam name="T">The type of the result value.</typeparam>
+/// <remarks>
+/// Use <see cref="Create"/> to create instances of this type.
+/// </remarks>
 public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 {
+    /// <summary>
+    /// The factory object used to create instances of <see cref="MaybeResult{T}"/>. This field is
+    /// read-only.
+    /// </summary>
+    public static readonly IMaybeResultFactory<T> Create = new Factory();
+
     private readonly T? _value;
     private readonly Error? _error;
     private readonly MaybeResultType _type;
 
     private MaybeResult([DisallowNull] T value)
     {
-        _value = value;
+        _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
         _type = MaybeResultType.Some;
     }
@@ -35,11 +43,44 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
     }
 
     /// <summary>
-    /// Gets the return value of the successful operation, or throws an
-    /// <see cref="InvalidOperationException"/> if this is not a <c>some</c> result.
+    /// Gets the type of the result: <see cref="MaybeResultType.Some"/>,
+    /// <see cref="MaybeResultType.None"/>, or <see cref="MaybeResultType.Fail"/>.
     /// </summary>
-    /// <exception cref="InvalidOperationException">
-    /// If this result is not a <c>some</c> result.
+    public MaybeResultType Type => _type;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>Some</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>Some</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsSome => _type == MaybeResultType.Some;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>None</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>None</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsNone => _type == MaybeResultType.None;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>Fail</c> result.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
+    /// <see langword="false"/>.
+    /// </returns>
+    public bool IsFail => _type == MaybeResultType.Fail;
+
+    /// <summary>
+    /// Gets the return value of the successful operation, or throws an
+    /// <see cref="InvalidStateException"/> if this is not a <c>Some</c> result.
+    /// </summary>
+    /// <exception cref="InvalidStateException">
+    /// If this result is not a <c>Some</c> result.
     /// </exception>
     [NotNull]
     public T Value =>
@@ -49,57 +90,21 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 
     /// <summary>
     /// Gets the error from the failed operation, or throws an
-    /// <see cref="InvalidOperationException"/> if this is not a <c>fail</c> result.
+    /// <see cref="InvalidStateException"/> if this is not a <c>Fail</c> result.
     /// </summary>
-    /// <exception cref="InvalidOperationException">
-    /// If this result is not a <c>fail</c> result.
+    /// <exception cref="InvalidStateException">
+    /// If this result is not a <c>Fail</c> result.
     /// </exception>
     public Error Error =>
         IsFail
-            ? _error ?? Error.Default
+            ? _error ?? Error.DefaultError
             : throw Exceptions.CannotAccessErrorUnlessFail;
 
     /// <summary>
-    /// Gets the type of the result: <see cref="MaybeResultType.Some"/>,
-    /// <see cref="MaybeResultType.None"/>, or <see cref="MaybeResultType.Fail"/>.
-    /// </summary>
-    public MaybeResultType Type => _type;
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>some</c> result.
-    /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>some</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
-    public bool IsSome => _type == MaybeResultType.Some;
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>none</c> result.
-    /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>none</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
-    public bool IsNone => _type == MaybeResultType.None;
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>fail</c> result.
-    /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>fail</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
-    public bool IsFail => _type == MaybeResultType.Fail;
-
-    /// <summary>
-    /// Converts the specified value to a <c>some</c> result.
+    /// Converts the specified value to a maybe result.
     /// </summary>
     /// <param name="value">The value.</param>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="value"/> is <see langword="null"/>.
-    /// </exception>
-    public static implicit operator MaybeResult<T>([DisallowNull] T value) => Some(value);
+    public static implicit operator MaybeResult<T>(T? value) => Create.FromValue(value);
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
@@ -126,76 +131,21 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
     public static bool operator !=(MaybeResult<T> left, MaybeResult<T> right) => !(left == right);
 
     /// <summary>
-    /// Creates a <c>some</c> result for an operation with an optional return value.
-    /// </summary>
-    /// <param name="value">
-    /// The value of the <c>some</c> result. Must not be <see langword="null"/>.
-    /// </param>
-    /// <returns>A <c>some</c> result.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="value"/> is <see langword="null"/>.
-    /// </exception>
-    public static MaybeResult<T> Some([DisallowNull] T value) => new(value);
-
-    /// <summary>
-    /// Creates a <c>none</c> result for an operation with an optional return value.
-    /// </summary>
-    /// <returns>A <c>none</c> result.</returns>
-    public static MaybeResult<T> None() => new(none: true);
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation with an optional return value.
-    /// </summary>
-    /// <param name="error">The optional error that describes the failure.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static MaybeResult<T> Fail(Error? error = null) => new(none: false, error);
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation with an optional return value.
-    /// </summary>
-    /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="errorMessage">The optional error message.</param>
-    /// <param name="errorCode">The optional error code.</param>
-    /// <param name="identifier">The optional identifier of the error.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static MaybeResult<T> Fail(
-        Exception exception,
-        string? errorMessage = null,
-        int? errorCode = null,
-        string? identifier = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
-
-    /// <summary>
-    /// Creates a <c>fail</c> result for an operation with an optional return value.
-    /// </summary>
-    /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
-    /// <param name="errorCode">The optional error code.</param>
-    /// <param name="identifier">The optional identifier of the error.</param>
-    /// <returns>A <c>fail</c> result.</returns>
-    public static MaybeResult<T> Fail(
-        string errorMessage,
-        string? stackTrace = null,
-        int? errorCode = null,
-        string? identifier = null) =>
-        Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
-
-    /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
-    /// <c>none</c>, or <c>fail</c>.
+    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="TResult">The return type of the functions.</typeparam>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>some</c>. The value of the
-    /// <c>some</c> result is passed to this function.
+    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
-    /// The function to evaluate if the result type is <c>none</c>.
+    /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">
@@ -221,19 +171,19 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
-    /// <c>none</c>, or <c>fail</c>.
+    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>some</c>. The value of the
-    /// <c>some</c> result is passed to this function.
+    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
-    /// The function to evaluate if the result type is <c>none</c>.
+    /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
@@ -258,20 +208,20 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
-    /// <c>none</c>, or <c>fail</c>.
+    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="TResult">The return type of the functions.</typeparam>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>some</c>. The value of the
-    /// <c>some</c> result is passed to this function.
+    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
-    /// The function to evaluate if the result type is <c>none</c>.
+    /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <returns>
     /// A task that represents the asynchronous match operation, which wraps the result of the
@@ -300,19 +250,19 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>some</c>,
-    /// <c>none</c>, or <c>fail</c>.
+    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>some</c>. The value of the
-    /// <c>some</c> result is passed to this function.
+    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
-    /// The function to evaluate if the result type is <c>none</c>.
+    /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>fail</c>. The error message and error
-    /// code of the <c>fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
     /// <exception cref="ArgumentNullException">
@@ -352,5 +302,14 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
         hashCode = (hashCode * -1521134295) + (_value is null ? 0 : EqualityComparer<T>.Default.GetHashCode(_value));
         hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error>.Default.GetHashCode(_error));
         return hashCode;
+    }
+
+    private sealed class Factory : IMaybeResultFactory<T>
+    {
+        public MaybeResult<T> Some([DisallowNull] T value) => new(value);
+
+        public MaybeResult<T> None() => new(none: true);
+
+        public MaybeResult<T> Fail(Error? error = null) => new(none: false, error);
     }
 }

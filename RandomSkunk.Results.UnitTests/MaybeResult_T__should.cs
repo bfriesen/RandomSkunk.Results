@@ -10,94 +10,53 @@ public class MaybeResult_T__should
     [Fact]
     public void Create_some_result()
     {
-        var result = MaybeResult<int>.Some(321);
+        var result = MaybeResult<int>.Create.Some(321);
 
         result.Type.Should().Be(MaybeResultType.Some);
         result.Value.Should().Be(321);
-        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
-    }
-
-    [Fact]
-    public void Create_some_result2()
-    {
-        var result = MaybeResult.Some(321);
-
-        result.Type.Should().Be(MaybeResultType.Some);
-        result.Value.Should().Be(321);
-        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
     public void Create_none_result()
     {
-        var result = MaybeResult<int>.None();
+        var result = MaybeResult<int>.Create.None();
 
         result.Type.Should().Be(MaybeResultType.None);
-        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
+        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
-    }
-
-    [Fact]
-    public void Create_none_result2()
-    {
-        var result = MaybeResult.None<int>();
-
-        result.Type.Should().Be(MaybeResultType.None);
-        Accessing.Error(result).Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
     public void Create_fail_result()
     {
-        var result = MaybeResult<int>.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var error = new Error(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = MaybeResult<int>.Create.Fail(error);
 
         result.Type.Should().Be(MaybeResultType.Fail);
-        result.Error.Message.Should().Be(_errorMessage);
-        result.Error.ErrorCode.Should().Be(_errorCode);
-        result.Error.StackTrace.Should().Be(_stackTrace);
-        result.Error.Identifier.Should().Be(_identifier);
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+        result.Error.Should().Be(error);
+        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
-    public void Create_fail_result2()
+    public void Create_default_result()
     {
-        var result = MaybeResult.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = default(MaybeResult<int>);
 
         result.Type.Should().Be(MaybeResultType.Fail);
-        result.Error.Message.Should().Be(_errorMessage);
-        result.Error.ErrorCode.Should().Be(_errorCode);
-        result.Error.StackTrace.Should().Be(_stackTrace);
-        result.Error.Identifier.Should().Be(_identifier);
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
-    }
-
-    [Fact]
-    public void Create_fail_result3()
-    {
-        var result = MaybeResult.Fail<int>();
-
-        result.Type.Should().Be(MaybeResultType.Fail);
-        result.Error.Message.Should().Be(Error.DefaultMessage);
-        result.Error.ErrorCode.Should().BeNull();
-        result.Error.StackTrace.Should().BeNull();
-        Accessing.Value(result).Should().ThrowExactly<InvalidOperationException>()
+        result.Error.Should().BeSameAs(Error.DefaultError);
+        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
     public void Match_func_correctly_on_some()
     {
-        var result = MaybeResult.Some(3);
+        var result = MaybeResult<int>.Create.Some(3);
 
         var actual = result.Match(
             value => value + 1,
@@ -110,7 +69,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_func_correctly_on_none()
     {
-        var result = MaybeResult.None<int>();
+        var result = MaybeResult<int>.Create.None();
 
         var actual = result.Match(
             value => value + 1,
@@ -123,7 +82,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_func_correctly_on_fail()
     {
-        var result = MaybeResult.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = result.Match(
             value => value + 1,
@@ -136,7 +95,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_action_correctly_on_some()
     {
-        var result = MaybeResult.Some(321);
+        var result = MaybeResult<int>.Create.Some(321);
 
         int? someValue = null;
         bool noneMatched = false;
@@ -155,7 +114,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_action_correctly_on_none()
     {
-        var result = MaybeResult.None<int>();
+        var result = MaybeResult<int>.Create.None();
 
         int? someValue = null;
         bool noneMatched = false;
@@ -174,7 +133,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_action_correctly_on_fail()
     {
-        var result = MaybeResult.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         int? someValue = null;
         bool noneMatched = false;
@@ -197,7 +156,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_some()
     {
-        var result = MaybeResult.Some(3);
+        var result = MaybeResult<int>.Create.Some(3);
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -210,7 +169,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_none()
     {
-        var result = MaybeResult.None<int>();
+        var result = MaybeResult<int>.Create.None();
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -223,7 +182,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_fail()
     {
-        var result = MaybeResult.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -236,7 +195,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_some()
     {
-        var result = MaybeResult.Some(321);
+        var result = MaybeResult<int>.Create.Some(321);
 
         int? someValue = null;
         bool noneMatched = false;
@@ -267,7 +226,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_none()
     {
-        var result = MaybeResult.None<int>();
+        var result = MaybeResult<int>.Create.None();
 
         int? someValue = null;
         bool noneMatched = false;
@@ -298,7 +257,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_fail()
     {
-        var result = MaybeResult.Fail<int>(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         int? someValue = null;
         bool noneMatched = false;

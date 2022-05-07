@@ -1,3 +1,5 @@
+using System.Runtime.Serialization;
+
 namespace RandomSkunk.Results;
 
 internal static class Exceptions
@@ -7,11 +9,11 @@ internal static class Exceptions
     public const string CannotAccessValueUnlessSomeMessage = "Result Value cannot be accessed unless it is a Some result.";
     public const string FunctionMustNotReturnNullMessage = "Function must not return a null value.";
 
-    public static InvalidOperationException CannotAccessErrorUnlessFail => new(CannotAccessErrorUnlessFailMessage);
+    public static InvalidStateException CannotAccessErrorUnlessFail => new(CannotAccessErrorUnlessFailMessage);
 
-    public static InvalidOperationException CannotAccessValueUnlessSuccess => new(CannotAccessValueUnlessSuccessMessage);
+    public static InvalidStateException CannotAccessValueUnlessSuccess => new(CannotAccessValueUnlessSuccessMessage);
 
-    public static InvalidOperationException CannotAccessValueUnlessSome => new(CannotAccessValueUnlessSomeMessage);
+    public static InvalidStateException CannotAccessValueUnlessSome => new(CannotAccessValueUnlessSomeMessage);
 
     public static ArgumentException FunctionMustNotReturnNull(string paramName) => new(FunctionMustNotReturnNullMessage, paramName);
 }
