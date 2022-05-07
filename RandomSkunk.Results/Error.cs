@@ -151,25 +151,24 @@ public class Error : IEquatable<Error>
     /// <inheritdoc/>
     public virtual bool Equals(Error? other) =>
         other is not null
-            && GetType() == other.GetType()
             && Message == other.Message
             && StackTrace == other.StackTrace
             && ErrorCode == other.ErrorCode
-            && Identifier == other.Identifier;
+            && Identifier == other.Identifier
+            && Type == other.Type;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) =>
         obj is Error other && Equals(other);
 
-    /// <inheritdoc/>
     public override int GetHashCode()
     {
-        int hashCode = 1812228152;
-        hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(GetType());
-        hashCode = (hashCode * -1521134295) + EqualityComparer<string>.Default.GetHashCode(Message);
-        hashCode = (hashCode * -1521134295) + (StackTrace is null ? 0 : EqualityComparer<string>.Default.GetHashCode(StackTrace));
+        int hashCode = 910147539;
+        hashCode = (hashCode * -1521134295) + Message.GetHashCode();
+        hashCode = (hashCode * -1521134295) + (StackTrace is null ? 0 : StackTrace.GetHashCode());
         hashCode = (hashCode * -1521134295) + ErrorCode.GetHashCode();
-        hashCode = (hashCode * -1521134295) + (Identifier is null ? 0 : EqualityComparer<string>.Default.GetHashCode(Identifier));
+        hashCode = (hashCode * -1521134295) + (Identifier is null ? 0 : Identifier.GetHashCode());
+        hashCode = (hashCode * -1521134295) + Type.GetHashCode();
         return hashCode;
     }
 }

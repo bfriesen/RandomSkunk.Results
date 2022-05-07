@@ -75,7 +75,7 @@ public static class ResultExtensions
     /// <see langword="true"/> if this is a <c>Some</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool Equals<T>(this MaybeResult<T> source, T otherValue) =>
+    public static bool Equals<T>(this Maybe<T> source, T otherValue) =>
         source.Equals(otherValue, EqualityComparer<T>.Default);
 
     /// <summary>
@@ -94,7 +94,7 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="comparer"/> is <see langword="null"/>.
     /// </exception>
-    public static bool Equals<T>(this MaybeResult<T> source, T otherValue, IEqualityComparer<T> comparer)
+    public static bool Equals<T>(this Maybe<T> source, T otherValue, IEqualityComparer<T> comparer)
     {
         if (comparer is null) throw new ArgumentNullException(nameof(comparer));
 
@@ -118,7 +118,7 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="isSomeValue"/> is <see langword="null"/>.
     /// </exception>
-    public static bool Equals<T>(this MaybeResult<T> source, Func<T, bool> isSomeValue)
+    public static bool Equals<T>(this Maybe<T> source, Func<T, bool> isSomeValue)
     {
         if (isSomeValue is null) throw new ArgumentNullException(nameof(isSomeValue));
 
@@ -194,7 +194,7 @@ public static class ResultExtensions
     /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
     /// </exception>
     [return: NotNull]
-    public static T GetValueOr<T>(this MaybeResult<T> source, [DisallowNull] T fallbackValue)
+    public static T GetValueOr<T>(this Maybe<T> source, [DisallowNull] T fallbackValue)
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
@@ -222,7 +222,7 @@ public static class ResultExtensions
     /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     [return: NotNull]
-    public static T GetValueOr<T>(this MaybeResult<T> source, Func<T> getFallbackValue)
+    public static T GetValueOr<T>(this Maybe<T> source, Func<T> getFallbackValue)
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
@@ -287,11 +287,11 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<T> Or<T>(this MaybeResult<T> source, [DisallowNull] T fallbackValue)
+    public static Maybe<T> Or<T>(this Maybe<T> source, [DisallowNull] T fallbackValue)
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return source.IsSome ? source : MaybeResult<T>.Create.Some(fallbackValue);
+        return source.IsSome ? source : Maybe<T>.Create.Some(fallbackValue);
     }
 
     /// <summary>
@@ -310,7 +310,7 @@ public static class ResultExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static MaybeResult<T> Or<T>(this MaybeResult<T> source, Func<T> getFallbackValue)
+    public static Maybe<T> Or<T>(this Maybe<T> source, Func<T> getFallbackValue)
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
@@ -320,7 +320,7 @@ public static class ResultExtensions
         var fallbackValue = getFallbackValue()
              ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
 
-        return MaybeResult<T>.Create.Some(fallbackValue);
+        return Maybe<T>.Create.Some(fallbackValue);
     }
 
     /// <summary>
@@ -371,7 +371,7 @@ public static class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="fallbackResult">The fallback result if the result is not <c>Some</c>.</param>
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
-    public static MaybeResult<T> Else<T>(this MaybeResult<T> source, MaybeResult<T> fallbackResult)
+    public static Maybe<T> Else<T>(this Maybe<T> source, Maybe<T> fallbackResult)
     {
         return source.IsSome ? source : fallbackResult;
     }
@@ -392,7 +392,7 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackResult"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<T> Else<T>(this MaybeResult<T> source, Func<MaybeResult<T>> getFallbackResult)
+    public static Maybe<T> Else<T>(this Maybe<T> source, Func<Maybe<T>> getFallbackResult)
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
@@ -509,7 +509,7 @@ public static class ResultExtensions
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
     /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
-    /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the source
+    /// the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
@@ -525,7 +525,7 @@ public static class ResultExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="map"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static MaybeResult<TResult> Map<T, TResult>(this MaybeResult<T> source, Func<T, TResult> map)
+    public static Maybe<TResult> Map<T, TResult>(this Maybe<T> source, Func<T, TResult> map)
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
 
@@ -534,19 +534,19 @@ public static class ResultExtensions
             var mappedValue = map(source.Value)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map));
 
-            return MaybeResult<TResult>.Create.Some(mappedValue);
+            return Maybe<TResult>.Create.Some(mappedValue);
         }
 
         if (source.IsNone)
-            return MaybeResult<TResult>.Create.None();
+            return Maybe<TResult>.Create.None();
 
-        return MaybeResult<TResult>.Create.Fail(source.Error);
+        return Maybe<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
     /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
-    /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the source
+    /// the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
@@ -566,8 +566,8 @@ public static class ResultExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="mapAsync"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static async Task<MaybeResult<TResult>> MapAsync<T, TResult>(
-        this MaybeResult<T> source,
+    public static async Task<Maybe<TResult>> MapAsync<T, TResult>(
+        this Maybe<T> source,
         Func<T, CancellationToken, Task<TResult>> mapAsync,
         CancellationToken cancellationToken = default)
     {
@@ -578,19 +578,19 @@ public static class ResultExtensions
             var mappedValue = await mapAsync(source.Value, cancellationToken)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync));
 
-            return MaybeResult<TResult>.Create.Some(mappedValue);
+            return Maybe<TResult>.Create.Some(mappedValue);
         }
 
         if (source.IsNone)
-            return MaybeResult<TResult>.Create.None();
+            return Maybe<TResult>.Create.None();
 
-        return MaybeResult<TResult>.Create.Fail(source.Error);
+        return Maybe<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
     /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
-    /// the <see cref="MaybeResult{T}.Type"/> of the new result will always be the same as the source
+    /// the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
@@ -606,8 +606,8 @@ public static class ResultExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="mapAsync"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static Task<MaybeResult<TResult>> MapAsync<T, TResult>(
-        this MaybeResult<T> source,
+    public static Task<Maybe<TResult>> MapAsync<T, TResult>(
+        this Maybe<T> source,
         Func<T, Task<TResult>> mapAsync)
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
@@ -721,7 +721,7 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="flatMap"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<TResult> FlatMap<T, TResult>(this MaybeResult<T> source, Func<T, MaybeResult<TResult>> flatMap)
+    public static Maybe<TResult> FlatMap<T, TResult>(this Maybe<T> source, Func<T, Maybe<TResult>> flatMap)
     {
         if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
 
@@ -732,9 +732,9 @@ public static class ResultExtensions
         }
 
         if (source.IsNone)
-            return MaybeResult<TResult>.Create.None();
+            return Maybe<TResult>.Create.None();
 
-        return MaybeResult<TResult>.Create.Fail(source.Error);
+        return Maybe<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
@@ -757,9 +757,9 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="flatMapAsync"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<MaybeResult<TResult>> FlatMapAsync<T, TResult>(
-        this MaybeResult<T> source,
-        Func<T, CancellationToken, Task<MaybeResult<TResult>>> flatMapAsync,
+    public static async Task<Maybe<TResult>> FlatMapAsync<T, TResult>(
+        this Maybe<T> source,
+        Func<T, CancellationToken, Task<Maybe<TResult>>> flatMapAsync,
         CancellationToken cancellationToken)
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
@@ -771,9 +771,9 @@ public static class ResultExtensions
         }
 
         if (source.IsNone)
-            return MaybeResult<TResult>.Create.None();
+            return Maybe<TResult>.Create.None();
 
-        return MaybeResult<TResult>.Create.Fail(source.Error);
+        return Maybe<TResult>.Create.Fail(source.Error);
     }
 
     /// <summary>
@@ -792,9 +792,9 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="flatMapAsync"/> is <see langword="null"/>.
     /// </exception>
-    public static Task<MaybeResult<TResult>> FlatMapAsync<T, TResult>(
-        this MaybeResult<T> source,
-        Func<T, Task<MaybeResult<TResult>>> flatMapAsync)
+    public static Task<Maybe<TResult>> FlatMapAsync<T, TResult>(
+        this Maybe<T> source,
+        Func<T, Task<Maybe<TResult>>> flatMapAsync)
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
 
@@ -816,7 +816,7 @@ public static class ResultExtensions
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <returns>The flattened result.</returns>
-    public static MaybeResult<T> Flatten<T>(this MaybeResult<MaybeResult<T>> source) =>
+    public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> source) =>
         source.FlatMap(nestedResult => nestedResult);
 
     /// <summary>
@@ -833,7 +833,7 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="filter"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<T> Filter<T>(this MaybeResult<T> source, Func<T, bool> filter)
+    public static Maybe<T> Filter<T>(this Maybe<T> source, Func<T, bool> filter)
     {
         if (filter is null) throw new ArgumentNullException(nameof(filter));
 
@@ -842,7 +842,7 @@ public static class ResultExtensions
             if (filter(source.Value))
                 return source;
 
-            return MaybeResult<T>.Create.None();
+            return Maybe<T>.Create.None();
         }
 
         return source;
@@ -866,8 +866,8 @@ public static class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="filterAsync"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<MaybeResult<T>> FilterAsync<T>(
-        this MaybeResult<T> source,
+    public static async Task<Maybe<T>> FilterAsync<T>(
+        this Maybe<T> source,
         Func<T, CancellationToken, Task<bool>> filterAsync,
         CancellationToken cancellationToken)
     {
@@ -878,7 +878,7 @@ public static class ResultExtensions
             if (await filterAsync(source.Value, cancellationToken))
                 return source;
 
-            return MaybeResult<T>.Create.None();
+            return Maybe<T>.Create.None();
         }
 
         return source;
@@ -899,8 +899,8 @@ public static class ResultExtensions
     /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="filterAsync"/> is
     /// <see langword="null"/>.
     /// </exception>
-    public static Task<MaybeResult<T>> FilterAsync<T>(
-        this MaybeResult<T> source,
+    public static Task<Maybe<T>> FilterAsync<T>(
+        this Maybe<T> source,
         Func<T, Task<bool>> filterAsync)
     {
         if (filterAsync is null) throw new ArgumentNullException(nameof(filterAsync));

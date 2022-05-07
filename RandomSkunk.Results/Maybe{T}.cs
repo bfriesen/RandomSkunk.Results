@@ -7,46 +7,46 @@ namespace RandomSkunk.Results;
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>
-public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
+public struct Maybe<T> : IEquatable<Maybe<T>>
 {
     /// <summary>
-    /// The factory object used to create instances of <see cref="MaybeResult{T}"/>. This field is
+    /// The factory object used to create instances of <see cref="Maybe{T}"/>. This field is
     /// read-only.
     /// </summary>
-    public static readonly IMaybeResultFactory<T> Create = new Factory();
+    public static readonly IMaybeFactory<T> Create = new Factory();
 
+    private readonly MaybeType _type;
     private readonly T? _value;
     private readonly Error? _error;
-    private readonly MaybeResultType _type;
 
-    private MaybeResult([DisallowNull] T value)
+    private Maybe(T value)
     {
+        _type = MaybeType.Some;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
-        _type = MaybeResultType.Some;
     }
 
-    private MaybeResult(bool none, Error? error = null)
+    private Maybe(bool none, Error? error = null)
     {
         if (none)
         {
+            _type = MaybeType.None;
             _value = default;
             _error = null;
-            _type = MaybeResultType.None;
         }
         else
         {
+            _type = MaybeType.Fail;
             _value = default;
             _error = error ?? new Error();
-            _type = MaybeResultType.Fail;
         }
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="MaybeResultType.Some"/>,
-    /// <see cref="MaybeResultType.None"/>, or <see cref="MaybeResultType.Fail"/>.
+    /// Gets the type of the result: <see cref="MaybeType.Some"/>,
+    /// <see cref="MaybeType.None"/>, or <see cref="MaybeType.Fail"/>.
     /// </summary>
-    public MaybeResultType Type => _type;
+    public MaybeType Type => _type;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Some</c> result.
@@ -55,7 +55,7 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
     /// <see langword="true"/> if this is a <c>Some</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsSome => _type == MaybeResultType.Some;
+    public bool IsSome => _type == MaybeType.Some;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>None</c> result.
@@ -64,7 +64,7 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
     /// <see langword="true"/> if this is a <c>None</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsNone => _type == MaybeResultType.None;
+    public bool IsNone => _type == MaybeType.None;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
@@ -73,7 +73,7 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
     /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsFail => _type == MaybeResultType.Fail;
+    public bool IsFail => _type == MaybeType.Fail;
 
     /// <summary>
     /// Gets the return value of the successful operation, or throws an
@@ -101,10 +101,10 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
             : throw Exceptions.CannotAccessErrorUnlessFail;
 
     /// <summary>
-    /// Converts the specified value to a maybe result.
+    /// Converts the specified value to a maybe.
     /// </summary>
     /// <param name="value">The value.</param>
-    public static implicit operator MaybeResult<T>(T? value) => Create.FromValue(value);
+    public static implicit operator Maybe<T>(T? value) => Create.FromValue(value);
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
@@ -116,7 +116,7 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
     /// <see langword="true"/> if the <paramref name="left"/> parameter is equal to the
     /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator ==(MaybeResult<T> left, MaybeResult<T> right) => left.Equals(right);
+    public static bool operator ==(Maybe<T> left, Maybe<T> right) => left.Equals(right);
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is not equal to the
@@ -128,7 +128,7 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
     /// <see langword="true"/> if the <paramref name="left"/> parameter is not equal to the
     /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
     /// </returns>
-    public static bool operator !=(MaybeResult<T> left, MaybeResult<T> right) => !(left == right);
+    public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
@@ -163,8 +163,8 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 
         return _type switch
         {
-            MaybeResultType.Some => some(_value!),
-            MaybeResultType.None => none(),
+            MaybeType.Some => some(_value!),
+            MaybeType.None => none(),
             _ => fail(_error!),
         };
     }
@@ -198,9 +198,9 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        if (_type == MaybeResultType.Some)
+        if (_type == MaybeType.Some)
             some(_value!);
-        else if (_type == MaybeResultType.None)
+        else if (_type == MaybeType.None)
             none();
         else
             fail(_error!);
@@ -242,8 +242,8 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 
         return _type switch
         {
-            MaybeResultType.Some => some(_value!),
-            MaybeResultType.None => none(),
+            MaybeType.Some => some(_value!),
+            MaybeType.None => none(),
             _ => fail(_error!),
         };
     }
@@ -280,36 +280,37 @@ public struct MaybeResult<T> : IEquatable<MaybeResult<T>>
 
         return _type switch
         {
-            MaybeResultType.Some => some(_value!),
-            MaybeResultType.None => none(),
+            MaybeType.Some => some(_value!),
+            MaybeType.None => none(),
             _ => fail(_error!),
         };
     }
 
     /// <inheritdoc/>
-    public bool Equals(MaybeResult<T> other) =>
+    public bool Equals(Maybe<T> other) =>
         EqualityComparer<T?>.Default.Equals(_value, other._value)
         && EqualityComparer<Error?>.Default.Equals(_error, other._error);
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is MaybeResult<T> result && Equals(result);
+    public override bool Equals(object? obj) => obj is Maybe<T> result && Equals(result);
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        int hashCode = 1697802621;
-        hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(GetType());
-        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : EqualityComparer<T>.Default.GetHashCode(_value));
-        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error>.Default.GetHashCode(_error));
+        int hashCode = 1157318437;
+        hashCode = (hashCode * -1521134295) + _type.GetHashCode();
+        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : _error.GetHashCode());
+        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : _value.GetHashCode());
+        hashCode *= 31;
         return hashCode;
     }
 
-    private sealed class Factory : IMaybeResultFactory<T>
+    private sealed class Factory : IMaybeFactory<T>
     {
-        public MaybeResult<T> Some([DisallowNull] T value) => new(value);
+        public Maybe<T> Some(T value) => new(value);
 
-        public MaybeResult<T> None() => new(none: true);
+        public Maybe<T> None() => new(none: true);
 
-        public MaybeResult<T> Fail(Error? error = null) => new(none: false, error);
+        public Maybe<T> Fail(Error? error = null) => new(none: false, error);
     }
 }

@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class MaybeResult_T__should
+public class Maybe_T__should
 {
     private const string _errorMessage = "My error";
     private const int _errorCode = 123;
@@ -10,9 +10,9 @@ public class MaybeResult_T__should
     [Fact]
     public void Create_some_result()
     {
-        var result = MaybeResult<int>.Create.Some(321);
+        var result = Maybe<int>.Create.Some(321);
 
-        result.Type.Should().Be(MaybeResultType.Some);
+        result.Type.Should().Be(MaybeType.Some);
         result.Value.Should().Be(321);
         Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
@@ -21,9 +21,9 @@ public class MaybeResult_T__should
     [Fact]
     public void Create_none_result()
     {
-        var result = MaybeResult<int>.Create.None();
+        var result = Maybe<int>.Create.None();
 
-        result.Type.Should().Be(MaybeResultType.None);
+        result.Type.Should().Be(MaybeType.None);
         Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
         Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
@@ -34,9 +34,9 @@ public class MaybeResult_T__should
     public void Create_fail_result()
     {
         var error = new Error(_errorMessage, _stackTrace, _errorCode, _identifier);
-        var result = MaybeResult<int>.Create.Fail(error);
+        var result = Maybe<int>.Create.Fail(error);
 
-        result.Type.Should().Be(MaybeResultType.Fail);
+        result.Type.Should().Be(MaybeType.Fail);
         result.Error.Should().Be(error);
         Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
@@ -45,9 +45,9 @@ public class MaybeResult_T__should
     [Fact]
     public void Create_default_result()
     {
-        var result = default(MaybeResult<int>);
+        var result = default(Maybe<int>);
 
-        result.Type.Should().Be(MaybeResultType.Fail);
+        result.Type.Should().Be(MaybeType.Fail);
         result.Error.Should().BeSameAs(Error.DefaultError);
         Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
@@ -56,7 +56,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_func_correctly_on_some()
     {
-        var result = MaybeResult<int>.Create.Some(3);
+        var result = Maybe<int>.Create.Some(3);
 
         var actual = result.Match(
             value => value + 1,
@@ -69,7 +69,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_func_correctly_on_none()
     {
-        var result = MaybeResult<int>.Create.None();
+        var result = Maybe<int>.Create.None();
 
         var actual = result.Match(
             value => value + 1,
@@ -82,7 +82,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_func_correctly_on_fail()
     {
-        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Maybe<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = result.Match(
             value => value + 1,
@@ -95,7 +95,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_action_correctly_on_some()
     {
-        var result = MaybeResult<int>.Create.Some(321);
+        var result = Maybe<int>.Create.Some(321);
 
         int? someValue = null;
         bool noneMatched = false;
@@ -114,7 +114,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_action_correctly_on_none()
     {
-        var result = MaybeResult<int>.Create.None();
+        var result = Maybe<int>.Create.None();
 
         int? someValue = null;
         bool noneMatched = false;
@@ -133,7 +133,7 @@ public class MaybeResult_T__should
     [Fact]
     public void Match_action_correctly_on_fail()
     {
-        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Maybe<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         int? someValue = null;
         bool noneMatched = false;
@@ -156,7 +156,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_some()
     {
-        var result = MaybeResult<int>.Create.Some(3);
+        var result = Maybe<int>.Create.Some(3);
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -169,7 +169,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_none()
     {
-        var result = MaybeResult<int>.Create.None();
+        var result = Maybe<int>.Create.None();
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -182,7 +182,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_func_correctly_on_fail()
     {
-        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Maybe<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         var actual = await result.MatchAsync(
             value => Task.FromResult(value + 1),
@@ -195,7 +195,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_some()
     {
-        var result = MaybeResult<int>.Create.Some(321);
+        var result = Maybe<int>.Create.Some(321);
 
         int? someValue = null;
         bool noneMatched = false;
@@ -226,7 +226,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_none()
     {
-        var result = MaybeResult<int>.Create.None();
+        var result = Maybe<int>.Create.None();
 
         int? someValue = null;
         bool noneMatched = false;
@@ -257,7 +257,7 @@ public class MaybeResult_T__should
     [Fact]
     public async Task Match_async_action_correctly_on_fail()
     {
-        var result = MaybeResult<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
+        var result = Maybe<int>.Create.Fail(_errorMessage, _stackTrace, _errorCode, _identifier);
 
         int? someValue = null;
         bool noneMatched = false;

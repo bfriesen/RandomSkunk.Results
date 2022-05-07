@@ -53,14 +53,14 @@ public static class HttpResponseExtensions
     }
 
     /// <summary>
-    /// Reads the HTTP response as a <see cref="MaybeResult{T}"/>.
+    /// Reads the HTTP response as a <see cref="Maybe{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="source">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="MaybeResult{T}"/>.
+    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
-    /// <returns>The maybe result representing the response.</returns>
-    public static async Task<MaybeResult<T>> ReadMaybeResultFromJsonAsync<T>(this HttpResponseMessage source)
+    /// <returns>The result representing the response.</returns>
+    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(this HttpResponseMessage source)
     {
         if (source.IsSuccessStatusCode)
             return await ReadMaybeValue<T>(source.Content);
@@ -70,10 +70,10 @@ public static class HttpResponseExtensions
         if (problemDetails.IsSuccess)
         {
             var error = GetErrorFromProblemDetails(problemDetails.Value);
-            return MaybeResult<T>.Create.Fail(error);
+            return Maybe<T>.Create.Fail(error);
         }
 
-        return MaybeResult<T>.Create.Fail(problemDetails.Error);
+        return Maybe<T>.Create.Fail(problemDetails.Error);
     }
 
     private static async Task<Result<T>> ReadValue<T>(HttpContent content)
@@ -93,20 +93,20 @@ public static class HttpResponseExtensions
         }
     }
 
-    private static async Task<MaybeResult<T>> ReadMaybeValue<T>(HttpContent content)
+    private static async Task<Maybe<T>> ReadMaybeValue<T>(HttpContent content)
     {
         try
         {
             var value = await content.ReadFromJsonAsync<T>();
 
             if (value is null)
-                return MaybeResult<T>.Create.None();
+                return Maybe<T>.Create.None();
 
-            return MaybeResult<T>.Create.Some(value);
+            return Maybe<T>.Create.Some(value);
         }
         catch (Exception ex)
         {
-            return MaybeResult<T>.Create.Fail(ex, "Error reading value from response content");
+            return Maybe<T>.Create.Fail(ex, "Error reading value from response content");
         }
     }
 

@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines the types of maybe results.
 /// </summary>
-public enum MaybeResultType
+public enum MaybeType
 {
     /// <summary>
     /// An unsuccessful result. The default value.

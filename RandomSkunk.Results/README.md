@@ -1,6 +1,6 @@
 # RandomSkunk.Results [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.svg)](https://www.nuget.org/packages/RandomSkunk.Results)
 
-This library contains three result types: `Result<T>`, which represents the result of an operation that has a return value; `MaybeResult<T>`, which represents the result of an operation that has an optional return value; and `Result`, which represents the result of an operation that does not have a return value. `Result<T>`, and `MaybeResult<T>`.
+This library contains three result types: `Result<T>`, which represents the result of an operation that has a return value; `Maybe<T>`, which represents the result of an operation that has an optional return value; and `Result`, which represents the result of an operation that does not have a return value.
 
 ## Usage
 
@@ -14,9 +14,9 @@ Result<int> result1 = Result<int>.Create.Success(123);
 Result<int> result2 = Result<int>.Create.Fail();
 
 // Results for operations that have an optional return value:
-MaybeResult<int> result3 = MaybeResult<int>.Create.Some(123);
-MaybeResult<int> result4 = MaybeResult<int>.Create.None();
-MaybeResult<int> result5 = MaybeResult<int>.Create.Fail();
+Maybe<int> result3 = Maybe<int>.Create.Some(123);
+Maybe<int> result4 = Maybe<int>.Create.None();
+Maybe<int> result5 = Maybe<int>.Create.Fail();
 
 // Results for operations that do not have a return value:
 Result result6 = Result.Create.Success();
@@ -35,7 +35,7 @@ Note that calling the match methods will never throw an exception unless the pro
 
 ```c#
 // Synchronous functions with no return value (return void):
-MaybeResult<int> result = ...
+Maybe<int> result = ...
 result.Match(
     some: value => Console.WriteLine($"Some: {value}"),
     none: () => Console.WriteLine("None"),
@@ -54,7 +54,7 @@ string message = result.Match(
     fail: error => $"Fail: {error}");
 
 // Asynchronous functions with a return value:
-MaybeResult<Guid> userIdResult = result3;
+Maybe<Guid> userIdResult = result3;
 string message = await userIdResult.MatchAsync(
     some: async userId =>
     {
@@ -67,7 +67,7 @@ string message = await userIdResult.MatchAsync(
 
 #### Properties
 
-Each of the result types exposes a number of properties that can be checked to determine that state of the result. Note that the `Error` and `Value` properties will throw an exception if not in the proper state. `IsFail` must be true in order to access the `Error` property in all result types. For `ResultType<T>`, `IsSuccess` must be true in order to access the `Value` property, but for `MaybeResult<T>`, `IsSome` must be true in order to access the `Value` property.
+Each of the result types exposes a number of properties that can be checked to determine that state of the result. Note that the `Error` and `Value` properties will throw an exception if not in the proper state. `IsFail` must be true in order to access the `Error` property in all result types. For `ResultType<T>`, `IsSuccess` must be true in order to access the `Value` property, but for `Maybe<T>`, `IsSome` must be true in order to access the `Value` property.
 
 ```c#
 // Required return value:
@@ -78,7 +78,7 @@ else
     Console.WriteLine($"Success: {result1.Value}");
 
 // Optional return value:
-MaybeResult<int> result2 = ...
+Maybe<int> result2 = ...
 if (result2.IsSome)
     Console.WriteLine($"Some: {result2.Value}");
 else if (result2.IsNone)
@@ -97,16 +97,16 @@ else
 Each result type also has an enum `Type` property that returns the kind of result: `Success`, `Fail`, `Some`, or `None`, depending on the result type.
 
 ```c#
-MaybeResult<int> result = ...
+Maybe<int> result = ...
 switch (result.Type)
 {
-    case MaybeResultType.Some:
+    case MaybeType.Some:
         Console.WriteLine($"Some: {result.Value}");
         break;
-    case MaybeResultType.None:
+    case MaybeType.None:
         Console.WriteLine("None");
         break;
-    case MaybeResultType.Fail:
+    case MaybeType.Fail:
         Console.WriteLine($"Fail: {result.Error}");
         break;
 }
@@ -140,7 +140,7 @@ string errorMessage = result.Error.Message;
 string errorCode = result.Error.ErrorCode;
 ```
 
-To make it easier to create specific fail results, extension methods targeting `IResultFactory`, `IResultFactory<T>`, or `MaybeResultFactory<T>` can be created.
+To make it easier to create specific fail results, extension methods targeting `IResultFactory`, `IResultFactory<T>`, or `IMaybeFactory<T>` can be created.
 
 ```c#
 public static class ResultFactoryExtensions

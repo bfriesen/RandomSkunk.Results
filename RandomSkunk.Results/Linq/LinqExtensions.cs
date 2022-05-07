@@ -76,7 +76,7 @@ public static class LinqExtensions
     /// A transform function to apply to the value of the intermediate result.
     /// </param>
     /// <returns>
-    /// An <see cref="MaybeResult{T}"/> whose value is the result of invoking the transform
+    /// An <see cref="Maybe{T}"/> whose value is the result of invoking the transform
     /// function <paramref name="intermediateSelector"/> on the value of <paramref name="source"/>
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
@@ -102,7 +102,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(MaybeResult{T}, Func{T, TReturn})"/>
+    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Maybe{T}, Func{T, TReturn})"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
@@ -123,14 +123,14 @@ public static class LinqExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static MaybeResult<TReturn> Select<T, TReturn>(
-        this MaybeResult<T> source,
+    public static Maybe<TReturn> Select<T, TReturn>(
+        this Maybe<T> source,
         Func<T, TReturn> selector) =>
         source.Map(selector);
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(MaybeResult{T}, Func{T, MaybeResult{TReturn}})"/>
+    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Maybe{T}, Func{T, Maybe{TReturn}})"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -148,9 +148,9 @@ public static class LinqExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<TReturn> SelectMany<T, TReturn>(
-        this MaybeResult<T> source,
-        Func<T, MaybeResult<TReturn>> selector) =>
+    public static Maybe<TReturn> SelectMany<T, TReturn>(
+        this Maybe<T> source,
+        Func<T, Maybe<TReturn>> selector) =>
         source.FlatMap(selector);
 
     /// <summary>
@@ -170,7 +170,7 @@ public static class LinqExtensions
     /// A transform function to apply to the value of the intermediate result.
     /// </param>
     /// <returns>
-    /// An <see cref="MaybeResult{T}"/> whose value is the result of invoking the transform
+    /// An <see cref="Maybe{T}"/> whose value is the result of invoking the transform
     /// function <paramref name="intermediateSelector"/> on the value of <paramref name="source"/>
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
@@ -181,9 +181,9 @@ public static class LinqExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static MaybeResult<TReturn> SelectMany<T, TIntermediate, TReturn>(
-        this MaybeResult<T> source,
-        Func<T, MaybeResult<TIntermediate>> intermediateSelector,
+    public static Maybe<TReturn> SelectMany<T, TIntermediate, TReturn>(
+        this Maybe<T> source,
+        Func<T, Maybe<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> resultSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -191,7 +191,7 @@ public static class LinqExtensions
 
         return source.FlatMap(
             sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue => MaybeResult<TReturn>.Create.Some(
+                intermediateValue => Maybe<TReturn>.Create.Some(
                     resultSelector(sourceValue!, intermediateValue!)
                     ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
@@ -211,6 +211,6 @@ public static class LinqExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static MaybeResult<T> Where<T>(this MaybeResult<T> source, Func<T, bool> predicate) =>
+    public static Maybe<T> Where<T>(this Maybe<T> source, Func<T, bool> predicate) =>
         source.Filter(predicate);
 }

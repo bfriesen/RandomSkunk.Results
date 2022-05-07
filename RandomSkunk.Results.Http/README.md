@@ -1,6 +1,6 @@
 # RandomSkunk.Results.Http [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.Http.svg)](https://www.nuget.org/packages/RandomSkunk.Results.Http)
 
-This library contains three extension methods - `ReadResultFromJsonAsync`, `ReadResultFromJsonAsync<T>`, and `ReadMaybeResultFromJsonAsync<T>` - for creating result objects (`Result`, `Result<T>`, and `MaybeResult<T>` respectively) from an `HttpResponseMessage`.
+This library contains three extension methods - `ReadResultFromJsonAsync`, `ReadResultFromJsonAsync<T>`, and `ReadMaybeFromJsonAsync<T>` - for creating result objects (`Result`, `Result<T>`, and `Maybe<T>` respectively) from an `HttpResponseMessage`.
 
 ```c#
 public async Task<Result> ExampleResultMethod()
@@ -21,12 +21,12 @@ public async Task<Result<T>> ExampleResultMethod<T>()
     return result;
 }
 
-public async Task<MaybeResult<T>> ExampleMaybeResultMethod<T>()
+public async Task<Maybe<T>> ExampleMaybeMethod<T>()
 {
     HttpClient httpClient = new HttpClient();
     HttpResponseMessage response = await httpClient.GetAsync("https://example.com");
 
-    MaybeResult<T> result = await response.ReadMaybeResultFromJsonAsync<T>();
+    Maybe<T> result = await response.ReadMaybeFromJsonAsync<T>();
     return result;
 }
 ```

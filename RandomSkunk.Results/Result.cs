@@ -14,20 +14,20 @@ public struct Result : IEquatable<Result>
     /// </summary>
     public static readonly IResultFactory Create = new Factory();
 
-    private readonly Error? _error;
     private readonly ResultType _type;
+    private readonly Error? _error;
 
     private Result(bool success, Error? error = null)
     {
         if (success)
         {
-            _error = null;
             _type = ResultType.Success;
+            _error = null;
         }
         else
         {
-            _error = error ?? new Error();
             _type = ResultType.Fail;
+            _error = error ?? new Error();
         }
     }
 
@@ -209,7 +209,7 @@ public struct Result : IEquatable<Result>
     }
 
     /// <inheritdoc/>
-    public bool Equals(Result other) => EqualityComparer<Error?>.Default.Equals(_error, other._error);
+    public bool Equals(Result other) => _type == other._type && _error == other._error;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) => obj is Result result && Equals(result);
@@ -217,9 +217,9 @@ public struct Result : IEquatable<Result>
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        int hashCode = -2043725954;
-        hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(GetType());
-        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error?>.Default.GetHashCode(_error));
+        int hashCode = 1710757158;
+        hashCode = (hashCode * -1521134295) + _type.GetHashCode();
+        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : _error.GetHashCode());
         return hashCode;
     }
 

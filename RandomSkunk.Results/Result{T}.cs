@@ -15,22 +15,22 @@ public struct Result<T> : IEquatable<Result<T>>
     /// </summary>
     public static readonly IResultFactory<T> Create = new Factory();
 
+    private readonly ResultType _type;
     private readonly T? _value;
     private readonly Error? _error;
-    private readonly ResultType _type;
 
-    private Result([DisallowNull] T value)
+    private Result(T value)
     {
+        _type = ResultType.Success;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
-        _type = ResultType.Success;
     }
 
     private Result(Error? error)
     {
+        _type = ResultType.Fail;
         _value = default;
         _error = error ?? new Error();
-        _type = ResultType.Fail;
     }
 
     /// <summary>
@@ -238,16 +238,17 @@ public struct Result<T> : IEquatable<Result<T>>
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        int hashCode = 1697802621;
-        hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(GetType());
-        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : EqualityComparer<T>.Default.GetHashCode(_value));
-        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : EqualityComparer<Error>.Default.GetHashCode(_error));
+        int hashCode = 1157318437;
+        hashCode = (hashCode * -1521134295) + _type.GetHashCode();
+        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : _error.GetHashCode());
+        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : _value.GetHashCode());
+        hashCode *= 29;
         return hashCode;
     }
 
     private sealed class Factory : IResultFactory<T>
     {
-        public Result<T> Success([DisallowNull] T value) => new(value);
+        public Result<T> Success(T value) => new(value);
 
         public Result<T> Fail(Error? error = null) => new(error);
     }

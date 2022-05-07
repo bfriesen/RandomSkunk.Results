@@ -1,13 +1,13 @@
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// Defines methods for creating instances of <see cref="MaybeResult{T}"/>.
+/// Defines methods for creating instances of <see cref="Maybe{T}"/>.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
-public interface IMaybeResultFactory<T>
+public interface IMaybeFactory<T>
 {
     /// <summary>
-    /// Creates a <c>Some</c> result for an operation with an optional return value.
+    /// Creates a <c>Some</c> result with the specified value.
     /// </summary>
     /// <param name="value">
     /// The value of the <c>Some</c> result. Must not be <see langword="null"/>.
@@ -16,18 +16,21 @@ public interface IMaybeResultFactory<T>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="value"/> is <see langword="null"/>.
     /// </exception>
-    MaybeResult<T> Some([DisallowNull] T value);
+    Maybe<T> Some([DisallowNull] T value);
 
     /// <summary>
-    /// Creates a <c>None</c> result for an operation with an optional return value.
+    /// Creates a <c>None</c> result.
     /// </summary>
     /// <returns>A <c>None</c> result.</returns>
-    MaybeResult<T> None();
+    Maybe<T> None();
 
     /// <summary>
-    /// Creates a <c>Fail</c> result for an operation with an optional return value.
+    /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
-    /// <param name="error">The optional error that describes the failure.</param>
+    /// <param name="error">
+    /// An error that describes the failure. If <see langword="null"/>, a default error is
+    /// used.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
-    MaybeResult<T> Fail(Error? error = null);
+    Maybe<T> Fail(Error? error = null);
 }

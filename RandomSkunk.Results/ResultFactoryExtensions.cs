@@ -6,7 +6,7 @@ namespace RandomSkunk.Results;
 public static class ResultFactoryExtensions
 {
     /// <summary>
-    /// Creates a maybe result from the specified value.
+    /// Creates a maybe from the specified value.
     /// </summary>
     /// <typeparam name="T">The type of the result.</typeparam>
     /// <param name="source">The source factory.</param>
@@ -15,8 +15,8 @@ public static class ResultFactoryExtensions
     /// A <c>Some</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c>
     /// result.
     /// </returns>
-    public static MaybeResult<T> FromValue<T>(
-        this IMaybeResultFactory<T> source, T? value) =>
+    public static Maybe<T> FromValue<T>(
+        this IMaybeFactory<T> source, T? value) =>
         value is not null
             ? source.Some(value)
             : source.None();
@@ -57,7 +57,7 @@ public static class ResultFactoryExtensions
         source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
 
     /// <summary>
-    /// Creates a <c>Fail</c> maybe result.
+    /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the result.</typeparam>
     /// <param name="source">The source factory.</param>
@@ -66,8 +66,8 @@ public static class ResultFactoryExtensions
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static MaybeResult<T> Fail<T>(
-        this IMaybeResultFactory<T> source,
+    public static Maybe<T> Fail<T>(
+        this IMaybeFactory<T> source,
         Exception exception,
         string? errorMessage = null,
         int? errorCode = null,
@@ -110,7 +110,7 @@ public static class ResultFactoryExtensions
         source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
 
     /// <summary>
-    /// Creates a <c>Fail</c> maybe result.
+    /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the result.</typeparam>
     /// <param name="source">The source factory.</param>
@@ -119,8 +119,8 @@ public static class ResultFactoryExtensions
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static MaybeResult<T> Fail<T>(
-        this IMaybeResultFactory<T> source,
+    public static Maybe<T> Fail<T>(
+        this IMaybeFactory<T> source,
         string errorMessage,
         string? stackTrace = null,
         int? errorCode = null,
