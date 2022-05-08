@@ -123,6 +123,11 @@ public class Error : IEquatable<Error>
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="System.Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
@@ -135,6 +140,7 @@ public class Error : IEquatable<Error>
         string? message = null,
         int? errorCode = null,
         string? identifier = null,
+        string? type = null,
         Error? innerError = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
@@ -146,7 +152,7 @@ public class Error : IEquatable<Error>
         else
             message += Environment.NewLine + exceptionMessage;
 
-        return new Error(message, exception.StackTrace, errorCode, identifier, innerError: innerError);
+        return new Error(message, exception.StackTrace, errorCode, identifier, type, innerError);
     }
 
     /// <inheritdoc/>

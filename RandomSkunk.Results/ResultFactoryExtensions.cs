@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -29,6 +31,11 @@ public static class ResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
@@ -39,8 +46,9 @@ public static class ResultFactoryExtensions
         string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null,
+        string? type = null,
         Error? innerError = null) =>
-        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, innerError));
+        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, type, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -51,6 +59,11 @@ public static class ResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
@@ -61,8 +74,9 @@ public static class ResultFactoryExtensions
         string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null,
+        string? type = null,
         Error? innerError = null) =>
-        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, innerError));
+        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, type, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -73,6 +87,11 @@ public static class ResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
@@ -83,8 +102,9 @@ public static class ResultFactoryExtensions
         string? errorMessage = null,
         int? errorCode = null,
         string? identifier = null,
+        string? type = null,
         Error? innerError = null) =>
-        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, innerError));
+        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, type, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -94,6 +114,11 @@ public static class ResultFactoryExtensions
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
@@ -104,8 +129,9 @@ public static class ResultFactoryExtensions
         string? stackTrace = null,
         int? errorCode = null,
         string? identifier = null,
+        string? type = null,
         Error? innerError = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, innerError: innerError));
+        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, type, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -116,6 +142,11 @@ public static class ResultFactoryExtensions
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
@@ -126,8 +157,9 @@ public static class ResultFactoryExtensions
         string? stackTrace = null,
         int? errorCode = null,
         string? identifier = null,
+        string? type = null,
         Error? innerError = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, innerError: innerError));
+        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, type, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -138,6 +170,11 @@ public static class ResultFactoryExtensions
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="type">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
@@ -148,6 +185,7 @@ public static class ResultFactoryExtensions
         string? stackTrace = null,
         int? errorCode = null,
         string? identifier = null,
+        string? type = null,
         Error? innerError = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, innerError: innerError));
+        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, type, innerError));
 }
