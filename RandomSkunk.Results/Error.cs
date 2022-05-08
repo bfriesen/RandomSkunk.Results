@@ -26,6 +26,9 @@ public class Error : IEquatable<Error>
     /// <see cref="MemberInfo.Name"/> of the <see cref="System.Type"/> of the current instance
     /// is used instead.
     /// </param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="message"/> is <see langword="null"/>.
     /// </exception>
@@ -34,13 +37,15 @@ public class Error : IEquatable<Error>
         string? stackTrace = null,
         int? errorCode = null,
         string? identifier = null,
-        string? type = null)
+        string? type = null,
+        Error? innerError = null)
     {
         Message = message ?? DefaultMessage;
         StackTrace = stackTrace;
         ErrorCode = errorCode;
         Identifier = identifier;
         Type = type ?? GetType().Name;
+        InnerError = innerError;
     }
 
     /// <summary>
@@ -80,6 +85,11 @@ public class Error : IEquatable<Error>
     /// </summary>
     public string Type { get; }
 
+    /// <summary>
+    /// Gets the optional <see cref="Error"/> instance that caused the current error.
+    /// </summary>
+    public Error? InnerError { get; }
+
     internal static Error DefaultError => _default.Value;
 
     /// <summary>
@@ -113,6 +123,9 @@ public class Error : IEquatable<Error>
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="exception"/> is <see langword="null"/>.
@@ -121,7 +134,8 @@ public class Error : IEquatable<Error>
         Exception exception,
         string? message = null,
         int? errorCode = null,
-        string? identifier = null)
+        string? identifier = null,
+        Error? innerError = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
 
@@ -132,21 +146,11 @@ public class Error : IEquatable<Error>
         else
             message += Environment.NewLine + exceptionMessage;
 
-        return new Error(message, exception.StackTrace, errorCode, identifier);
+        return new Error(message, exception.StackTrace, errorCode, identifier, innerError: innerError);
     }
 
     /// <inheritdoc/>
-    public override string ToString()
-    {
-        var sb = new StringBuilder(Type).Append(": ").Append(Message);
-        if (Identifier is not null)
-            sb.AppendLine().Append("Identifier: ").Append(Identifier);
-        if (ErrorCode is not null)
-            sb.AppendLine().Append("Error code: ").Append(ErrorCode);
-        if (StackTrace is not null)
-            sb.AppendLine().AppendLine("Stack trace:").Append(StackTrace);
-        return sb.ToString();
-    }
+    public override string ToString() => ToString(string.Empty);
 
     /// <inheritdoc/>
     public virtual bool Equals(Error? other) =>
@@ -171,5 +175,38 @@ public class Error : IEquatable<Error>
         hashCode = (hashCode * -1521134295) + (Identifier is null ? 0 : Identifier.GetHashCode());
         hashCode = (hashCode * -1521134295) + Type.GetHashCode();
         return hashCode;
+    }
+
+    private static string Indent(string value, string indent)
+    {
+        if (indent is null)
+            return value;
+
+        var sb = new StringBuilder(value.Length + (value.Length / 10));
+        sb.Append(indent);
+
+        foreach (var c in value)
+        {
+            sb.Append(c);
+            if (c == '\n')
+                sb.Append(indent);
+        }
+
+        return sb.ToString();
+    }
+
+    private string ToString(string indention)
+    {
+        var sb = new StringBuilder();
+        sb.Append(indention).Append(Type).Append(": ").Append(Message);
+        if (Identifier is not null)
+            sb.AppendLine().Append(indention).Append("Identifier: ").Append(Identifier);
+        if (ErrorCode is not null)
+            sb.AppendLine().Append(indention).Append("Error code: ").Append(ErrorCode);
+        if (StackTrace is not null)
+            sb.AppendLine().Append(indention).Append("Stack trace:").AppendLine().Append(Indent(StackTrace, indention));
+        if (InnerError is not null)
+            sb.AppendLine().Append(indention).Append("Inner error:").AppendLine().Append(InnerError.ToString(indention + "   "));
+        return sb.ToString();
     }
 }

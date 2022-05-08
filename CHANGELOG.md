@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `InnerError` property to `Error` class.
+
 ### Removed
 
 - RandomSkunk.Results:

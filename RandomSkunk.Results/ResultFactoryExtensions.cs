@@ -29,14 +29,18 @@ public static class ResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(
         this IResultFactory source,
         Exception exception,
         string? errorMessage = null,
         int? errorCode = null,
-        string? identifier = null) =>
-        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
+        string? identifier = null,
+        Error? innerError = null) =>
+        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -47,14 +51,18 @@ public static class ResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Fail<T>(
         this IResultFactory<T> source,
         Exception exception,
         string? errorMessage = null,
         int? errorCode = null,
-        string? identifier = null) =>
-        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
+        string? identifier = null,
+        Error? innerError = null) =>
+        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -65,14 +73,18 @@ public static class ResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Fail<T>(
         this IMaybeFactory<T> source,
         Exception exception,
         string? errorMessage = null,
         int? errorCode = null,
-        string? identifier = null) =>
-        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier));
+        string? identifier = null,
+        Error? innerError = null) =>
+        source.Fail(Error.FromException(exception, errorMessage, errorCode, identifier, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -82,14 +94,18 @@ public static class ResultFactoryExtensions
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(
         this IResultFactory source,
         string errorMessage,
         string? stackTrace = null,
         int? errorCode = null,
-        string? identifier = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
+        string? identifier = null,
+        Error? innerError = null) =>
+        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, innerError: innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -100,14 +116,18 @@ public static class ResultFactoryExtensions
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Fail<T>(
         this IResultFactory<T> source,
         string errorMessage,
         string? stackTrace = null,
         int? errorCode = null,
-        string? identifier = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
+        string? identifier = null,
+        Error? innerError = null) =>
+        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, innerError: innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -118,12 +138,16 @@ public static class ResultFactoryExtensions
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Fail<T>(
         this IMaybeFactory<T> source,
         string errorMessage,
         string? stackTrace = null,
         int? errorCode = null,
-        string? identifier = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier));
+        string? identifier = null,
+        Error? innerError = null) =>
+        source.Fail(new Error(errorMessage, stackTrace, errorCode, identifier, innerError: innerError));
 }
