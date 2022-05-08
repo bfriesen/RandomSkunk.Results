@@ -82,6 +82,45 @@ public static class ResultExtensions
     /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
     /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests. The default value is
+    /// <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous match operation, which wraps the result of the
+    /// matching function evaluation.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
+    public static Task<T> MatchAsync<T>(
+        this Result source,
+        Func<CancellationToken, Task<T>> success,
+        Func<Error, CancellationToken, Task<T>> fail,
+        CancellationToken cancellationToken = default)
+    {
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
+
+        return source.IsSuccess
+            ? success(cancellationToken)
+            : fail(source.Error, cancellationToken);
+    }
+
+    /// <summary>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
+    /// </summary>
+    /// <typeparam name="T">The return type of the match method.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="success">
+    /// The function to evaluate if the result type is <c>Success</c>.
+    /// </param>
+    /// <param name="fail">
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
+    /// </param>
     /// <returns>
     /// A task that represents the asynchronous match operation, which wraps the result of the
     /// matching function evaluation.
@@ -98,9 +137,44 @@ public static class ResultExtensions
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
+        return source.MatchAsync(
+            _ => success(),
+            (error, _) => fail(error));
+    }
+
+    /// <summary>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
+    /// </summary>
+    /// <param name="source">The source result.</param>
+    /// <param name="success">
+    /// The function to evaluate if the result type is <c>Success</c>.
+    /// </param>
+    /// <param name="fail">
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests. The default value is
+    /// <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>A task representing the asynchronous match operation.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
+    public static Task MatchAsync(
+        this Result source,
+        Func<CancellationToken, Task> success,
+        Func<Error, CancellationToken, Task> fail,
+        CancellationToken cancellationToken = default)
+    {
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
+
         return source.IsSuccess
-            ? success()
-            : fail(source.Error);
+            ? success(cancellationToken)
+            : fail(source.Error, cancellationToken);
     }
 
     /// <summary>
@@ -128,9 +202,9 @@ public static class ResultExtensions
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return source.IsSuccess
-            ? success()
-            : fail(source.Error);
+        return source.MatchAsync(
+            _ => success(),
+            (error, _) => fail(error));
     }
 
     /// <summary>
@@ -213,6 +287,47 @@ public static class ResultExtensions
     /// The function to evaluate if the result type is <c>Fail</c>. The error message and error code
     /// of the <c>Fail</c> result are passed to this function.
     /// </param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests. The default value is
+    /// <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous match operation, which wraps the result of the
+    /// matching function evaluation.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
+    public static Task<TReturn> MatchAsync<T, TReturn>(
+        this Result<T> source,
+        Func<T, CancellationToken, Task<TReturn>> success,
+        Func<Error, CancellationToken, Task<TReturn>> fail,
+        CancellationToken cancellationToken = default)
+    {
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
+
+        return source.IsSuccess
+            ? success(source.Value, cancellationToken)
+            : fail(source.Error, cancellationToken);
+    }
+
+    /// <summary>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The return type of the match method.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="success">
+    /// The function to evaluate if the result type is <c>Success</c>. The value of the <c>Success</c> result
+    /// is passed to this function.
+    /// </param>
+    /// <param name="fail">
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error code
+    /// of the <c>Fail</c> result are passed to this function.
+    /// </param>
     /// <returns>
     /// A task that represents the asynchronous match operation, which wraps the result of the
     /// matching function evaluation.
@@ -229,9 +344,46 @@ public static class ResultExtensions
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
+        return source.MatchAsync(
+            (value, _) => success(value),
+            (error, _) => fail(error));
+    }
+
+    /// <summary>
+    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="success">
+    /// The function to evaluate if the result type is <c>Success</c>. The value of the <c>Success</c> result
+    /// is passed to this function.
+    /// </param>
+    /// <param name="fail">
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error code
+    /// of the <c>Fail</c> result are passed to this function.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests. The default value is
+    /// <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>A task representing the asynchronous match operation.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// <see langword="null"/>.
+    /// </exception>
+    public static Task MatchAsync<T>(
+        this Result<T> source,
+        Func<T, CancellationToken, Task> success,
+        Func<Error, CancellationToken, Task> fail,
+        CancellationToken cancellationToken = default)
+    {
+        if (success is null) throw new ArgumentNullException(nameof(success));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
+
         return source.IsSuccess
-            ? success(source.Value)
-            : fail(source.Error);
+            ? success(source.Value, cancellationToken)
+            : fail(source.Error, cancellationToken);
     }
 
     /// <summary>
@@ -261,9 +413,9 @@ public static class ResultExtensions
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return source.IsSuccess
-            ? success(source.Value)
-            : fail(source.Error);
+        return source.MatchAsync(
+            (value, _) => success(value),
+            (error, _) => fail(error));
     }
 
     /// <summary>
@@ -367,6 +519,56 @@ public static class ResultExtensions
     /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
     /// code of the <c>Fail</c> result are passed to this function.
     /// </param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests. The default value is
+    /// <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous match operation, which wraps the result of the
+    /// matching function evaluation.
+    /// </returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
+    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// </exception>
+    public static Task<TReturn> MatchAsync<T, TReturn>(
+        this Maybe<T> source,
+        Func<T, CancellationToken, Task<TReturn>> some,
+        Func<CancellationToken, Task<TReturn>> none,
+        Func<Error, CancellationToken, Task<TReturn>> fail,
+        CancellationToken cancellationToken = default)
+    {
+        if (some is null) throw new ArgumentNullException(nameof(some));
+        if (none is null) throw new ArgumentNullException(nameof(none));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
+
+        return source.Type switch
+        {
+            Some => some(source.Value, cancellationToken),
+            None => none(cancellationToken),
+            _ => fail(source.Error, cancellationToken),
+        };
+    }
+
+    /// <summary>
+    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
+    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// <c>None</c>, or <c>Fail</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The return type of the match method.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="some">
+    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// <c>Some</c> result is passed to this function.
+    /// </param>
+    /// <param name="none">
+    /// The function to evaluate if the result type is <c>None</c>.
+    /// </param>
+    /// <param name="fail">
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
+    /// </param>
     /// <returns>
     /// A task that represents the asynchronous match operation, which wraps the result of the
     /// matching function evaluation.
@@ -385,11 +587,55 @@ public static class ResultExtensions
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
+        return source.MatchAsync(
+            (value, _) => some(value),
+            _ => none(),
+            (error, _) => fail(error));
+    }
+
+    /// <summary>
+    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
+    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// <c>None</c>, or <c>Fail</c>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="some">
+    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// <c>Some</c> result is passed to this function.
+    /// </param>
+    /// <param name="none">
+    /// The function to evaluate if the result type is <c>None</c>.
+    /// </param>
+    /// <param name="fail">
+    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
+    /// code of the <c>Fail</c> result are passed to this function.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// The token to monitor for cancellation requests. The default value is
+    /// <see cref="CancellationToken.None"/>.
+    /// </param>
+    /// <returns>A task representing the asynchronous match operation.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
+    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// </exception>
+    public static Task MatchAsync<T>(
+        this Maybe<T> source,
+        Func<T, CancellationToken, Task> some,
+        Func<CancellationToken, Task> none,
+        Func<Error, CancellationToken, Task> fail,
+        CancellationToken cancellationToken = default)
+    {
+        if (some is null) throw new ArgumentNullException(nameof(some));
+        if (none is null) throw new ArgumentNullException(nameof(none));
+        if (fail is null) throw new ArgumentNullException(nameof(fail));
+
         return source.Type switch
         {
-            Some => some(source.Value),
-            None => none(),
-            _ => fail(source.Error),
+            Some => some(source.Value, cancellationToken),
+            None => none(cancellationToken),
+            _ => fail(source.Error, cancellationToken),
         };
     }
 
@@ -426,12 +672,10 @@ public static class ResultExtensions
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return source.Type switch
-        {
-            Some => some(source.Value),
-            None => none(),
-            _ => fail(source.Error),
-        };
+        return source.MatchAsync(
+            (value, _) => some(value),
+            _ => none(),
+            (error, _) => fail(error));
     }
 
     /// <summary>
@@ -577,16 +821,16 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
+    /// Gets the value of the <c>Some</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="fallbackValue">
-    /// The fallback value to return if this is not a <c>Success</c> result.
+    /// The fallback value to return if this is not a <c>Some</c> result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>Success</c> result; otherwise,
+    /// The value of this result if this is a <c>Some</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -601,17 +845,17 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
+    /// Gets the value of the <c>Some</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="getFallbackValue">
-    /// A function that creates the fallback value to return if this is not a <c>Success</c>
+    /// A function that creates the fallback value to return if this is not a <c>Some</c>
     /// result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>Success</c> result; otherwise, the value returned
+    /// The value of this result if this is a <c>Some</c> result; otherwise, the value returned
     /// by the <paramref name="getFallbackValue"/> function.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -832,7 +1076,7 @@ public static class ResultExtensions
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
-    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Success</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
@@ -863,7 +1107,7 @@ public static class ResultExtensions
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Success</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
@@ -901,7 +1145,7 @@ public static class ResultExtensions
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
+    /// function. The map function is only evaluated if the source is a <c>Success</c> result, and
     /// the <see cref="Result{T}.Type"/> the new result will always be the same as the source
     /// result.
     /// </summary>
@@ -924,7 +1168,7 @@ public static class ResultExtensions
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
 
-        return source.MapAsync((value, cancellationToken) => mapAsync(value), default);
+        return source.MapAsync((value, _) => mapAsync(value), default);
     }
 
     /// <summary>
@@ -1023,7 +1267,7 @@ public static class ResultExtensions
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
 
-        return source.MapAsync((value, cancellationToken) => mapAsync(value), default);
+        return source.MapAsync((value, _) => mapAsync(value), default);
     }
 
     /// <summary>
@@ -1109,13 +1353,13 @@ public static class ResultExtensions
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
 
-        return source.FlatMapAsync((value, cancellationToken) => flatMapAsync(value), default);
+        return source.FlatMapAsync((value, _) => flatMapAsync(value), default);
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMap"/> function. The flat map function is only evaluated if the source
-    /// is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is propagated
+    /// is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is propagated
     /// to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -1143,7 +1387,7 @@ public static class ResultExtensions
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMapAsync"/> function. The flat map function is only evaluated if the
-    /// source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
+    /// source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -1178,7 +1422,7 @@ public static class ResultExtensions
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
     /// <paramref name="flatMapAsync"/> function. The flat map function is only evaluated if the
-    /// source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
+    /// source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -1197,7 +1441,7 @@ public static class ResultExtensions
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
 
-        return source.FlatMapAsync((value, cancellationToken) => flatMapAsync(value), default);
+        return source.FlatMapAsync((value, _) => flatMapAsync(value), default);
     }
 
     /// <summary>
@@ -1302,6 +1546,6 @@ public static class ResultExtensions
     {
         if (filterAsync is null) throw new ArgumentNullException(nameof(filterAsync));
 
-        return source.FilterAsync((value, cancellationToken) => filterAsync(value), default);
+        return source.FilterAsync((value, _) => filterAsync(value), default);
     }
 }
