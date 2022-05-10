@@ -12,11 +12,17 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add `InnerError` property to `Error` class.
     - Add 'type' parameter to `FromException` and `Fail` factory methods.
+    - Add `Error` property to `InvalidStateException` class.
+
+### Changed
+- RandomSkunk.Results:
+    - Move `Match` and `MatchAsync` methods to result types (from extension methods).
 
 ### Removed
 
 - RandomSkunk.Results:
     - Remove implicit conversion operator from `Maybe<T>`.
+    - Remove unused constructors from `InvalidStateException` class.
 
 ## [1.0.0-alpha06] - 2022-05-07
 

@@ -13,8 +13,8 @@ public class Result_T__should
         var result = Result<int>.Create.Success(321);
 
         result.Type.Should().Be(ResultType.Success);
-        result.Value.Should().Be(321);
-        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
+        result.Value().Should().Be(321);
+        Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
@@ -25,8 +25,8 @@ public class Result_T__should
         var result = Result<int>.Create.Fail(error);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Should().Be(error);
-        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
+        result.Error().Should().Be(error);
+        Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 
@@ -36,8 +36,8 @@ public class Result_T__should
         var result = default(Result<int>);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Should().BeSameAs(Error.DefaultError);
-        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
+        result.Error().Should().BeSameAs(Error.DefaultError);
+        Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
 

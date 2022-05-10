@@ -13,7 +13,7 @@ public class Result_should
         var result = Result.Create.Success();
 
         result.Type.Should().Be(ResultType.Success);
-        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
+        Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
@@ -24,7 +24,7 @@ public class Result_should
         var result = Result.Create.Fail(error);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Should().Be(error);
+        result.Error().Should().Be(error);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class Result_should
         var result = default(Result);
 
         result.Type.Should().Be(ResultType.Fail);
-        result.Error.Should().BeSameAs(Error.DefaultError);
+        result.Error().Should().BeSameAs(Error.DefaultError);
     }
 
     [Fact]

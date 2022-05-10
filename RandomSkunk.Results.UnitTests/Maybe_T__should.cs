@@ -13,8 +13,8 @@ public class Maybe_T__should
         var result = Maybe<int>.Create.Some(321);
 
         result.Type.Should().Be(MaybeType.Some);
-        result.Value.Should().Be(321);
-        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
+        result.Value().Should().Be(321);
+        Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
 
@@ -24,9 +24,9 @@ public class Maybe_T__should
         var result = Maybe<int>.Create.None();
 
         result.Type.Should().Be(MaybeType.None);
-        Accessing.Error(result).Should().ThrowExactly<InvalidStateException>()
+        Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
-        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
+        Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
@@ -37,8 +37,8 @@ public class Maybe_T__should
         var result = Maybe<int>.Create.Fail(error);
 
         result.Type.Should().Be(MaybeType.Fail);
-        result.Error.Should().Be(error);
-        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
+        result.Error().Should().Be(error);
+        Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 
@@ -48,8 +48,8 @@ public class Maybe_T__should
         var result = default(Maybe<int>);
 
         result.Type.Should().Be(MaybeType.Fail);
-        result.Error.Should().BeSameAs(Error.DefaultError);
-        Accessing.Value(result).Should().ThrowExactly<InvalidStateException>()
+        result.Error().Should().BeSameAs(Error.DefaultError);
+        Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
 

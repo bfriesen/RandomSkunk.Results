@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.MaybeType;
+
 namespace RandomSkunk.Results.Unsafe;
 
 /// <summary>
@@ -19,8 +21,8 @@ public static class UnsafeResultExtensions
     /// </exception>
     public static Error GetError(this Result source) =>
         source.IsFail
-            ? source.Error
-            : throw Exceptions.CannotAccessErrorUnlessFail;
+            ? source.Error()
+            : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <summary>
     /// Gets the value from the <c>Success</c> result.
@@ -36,8 +38,8 @@ public static class UnsafeResultExtensions
     /// </exception>
     public static T GetValue<T>(this Result<T> source) =>
         source.IsSuccess
-            ? source.Value
-            : throw Exceptions.CannotAccessValueUnlessSuccess;
+            ? source.Value()
+            : throw Exceptions.CannotAccessValueUnlessSuccess(source.Error());
 
     /// <summary>
     /// Gets the error from the <c>Fail</c> result.
@@ -53,8 +55,8 @@ public static class UnsafeResultExtensions
     /// </exception>
     public static Error GetError<T>(this Result<T> source) =>
         source.IsFail
-            ? source.Error
-            : throw Exceptions.CannotAccessErrorUnlessFail;
+            ? source.Error()
+            : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <summary>
     /// Gets the value from the <c>Some</c> result.
@@ -69,9 +71,12 @@ public static class UnsafeResultExtensions
     /// If the result is not a <c>Some</c> result.
     /// </exception>
     public static T GetValue<T>(this Maybe<T> source) =>
-        source.IsSome
-            ? source.Value
-            : throw Exceptions.CannotAccessValueUnlessSome;
+        source.Type switch
+        {
+            Some => source.Value(),
+            None => throw Exceptions.CannotAccessValueUnlessSome(),
+            _ => throw Exceptions.CannotAccessValueUnlessSome(source.Error()),
+        };
 
     /// <summary>
     /// Gets the error from the <c>Fail</c> result.
@@ -87,6 +92,6 @@ public static class UnsafeResultExtensions
     /// </exception>
     public static Error GetError<T>(this Maybe<T> source) =>
         source.IsFail
-            ? source.Error
-            : throw Exceptions.CannotAccessErrorUnlessFail;
+            ? source.Error()
+            : throw Exceptions.CannotAccessErrorUnlessFail();
 }

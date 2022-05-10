@@ -26,7 +26,7 @@ public static partial class ResultExtensions
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return source.IsSuccess ? source.Value : fallbackValue;
+        return source.IsSuccess ? source.Value() : fallbackValue;
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ public static partial class ResultExtensions
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return source.IsSuccess ? source.Value : getFallbackValue()
+        return source.IsSuccess ? source.Value() : getFallbackValue()
             ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
     }
 
@@ -79,7 +79,7 @@ public static partial class ResultExtensions
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return source.IsSome ? source.Value : fallbackValue;
+        return source.IsSome ? source.Value() : fallbackValue;
     }
 
     /// <summary>
@@ -107,7 +107,7 @@ public static partial class ResultExtensions
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return source.IsSome ? source.Value : getFallbackValue()
+        return source.IsSome ? source.Value() : getFallbackValue()
             ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
     }
 }

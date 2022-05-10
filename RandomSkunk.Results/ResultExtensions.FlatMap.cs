@@ -30,8 +30,8 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Success => flatMap(source.Value),
-            _ => Result<TReturn>.Create.Fail(source.Error),
+            Success => flatMap(source.Value()),
+            _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
 
@@ -64,8 +64,8 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Success => await flatMapAsync(source.Value, cancellationToken),
-            _ => Result<TReturn>.Create.Fail(source.Error),
+            Success => await flatMapAsync(source.Value(), cancellationToken),
+            _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
 
@@ -116,9 +116,9 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Some => flatMap(source.Value),
+            Some => flatMap(source.Value()),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(source.Error),
+            _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };
     }
 
@@ -151,9 +151,9 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Some => await flatMapAsync(source.Value, cancellationToken),
+            Some => await flatMapAsync(source.Value(), cancellationToken),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(source.Error),
+            _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };
     }
 

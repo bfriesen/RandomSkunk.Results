@@ -33,9 +33,9 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Success => Result<TReturn>.Create.Success(map(source.Value)
+            Success => Result<TReturn>.Create.Success(map(source.Value())
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
-            _ => Result<TReturn>.Create.Fail(source.Error),
+            _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
 
@@ -71,9 +71,9 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Success => Result<TReturn>.Create.Success((await mapAsync(source.Value, cancellationToken))
+            Success => Result<TReturn>.Create.Success((await mapAsync(source.Value(), cancellationToken))
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
-            _ => Result<TReturn>.Create.Fail(source.Error),
+            _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
 
@@ -130,10 +130,10 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Some => Maybe<TReturn>.Create.Some(map(source.Value)
+            Some => Maybe<TReturn>.Create.Some(map(source.Value())
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(source.Error),
+            _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };
     }
 
@@ -169,10 +169,10 @@ public static partial class ResultExtensions
 
         return source.Type switch
         {
-            Some => Maybe<TReturn>.Create.Some((await mapAsync(source.Value, cancellationToken))
+            Some => Maybe<TReturn>.Create.Some((await mapAsync(source.Value(), cancellationToken))
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(source.Error),
+            _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };
     }
 

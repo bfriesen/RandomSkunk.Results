@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.Error;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -6,7 +8,7 @@ namespace RandomSkunk.Results;
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>
-public struct Result : IEquatable<Result>
+public partial struct Result : IEquatable<Result>
 {
     /// <summary>
     /// The factory object used to create instances of <see cref="Result"/>. This field is
@@ -55,8 +57,6 @@ public struct Result : IEquatable<Result>
     /// </returns>
     public bool IsFail => _type == ResultType.Fail;
 
-    internal Error Error => _error ?? Error.DefaultError;
-
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
     /// <paramref name="right"/> parameter.
@@ -95,6 +95,8 @@ public struct Result : IEquatable<Result>
         hashCode = (hashCode * -1521134295) + (_error is null ? 0 : _error.GetHashCode());
         return hashCode;
     }
+
+    internal Error Error() => _error ?? DefaultError;
 
     private sealed class Factory : IResultFactory
     {

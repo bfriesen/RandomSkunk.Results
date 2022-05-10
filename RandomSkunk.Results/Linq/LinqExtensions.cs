@@ -99,7 +99,7 @@ public static class LinqExtensions
             sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue => Result<TReturn>.Create.Success(
                     resultSelector(sourceValue!, intermediateValue!)
-                    ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
+                        ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
     /// <summary>
@@ -195,7 +195,7 @@ public static class LinqExtensions
             sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue => Maybe<TReturn>.Create.Some(
                     resultSelector(sourceValue!, intermediateValue!)
-                    ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
+                        ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
     /// <summary>
