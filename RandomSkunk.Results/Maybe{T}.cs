@@ -78,6 +78,12 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     public bool IsFail => _type == MaybeType.Fail;
 
     /// <summary>
+    /// Gets a value indicating whether this is a default instance of the <see cref="Maybe{T}"/>
+    /// struct.
+    /// </summary>
+    public bool IsDefault => IsFail && _error is null;
+
+    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
     /// <paramref name="right"/> parameter.
     /// </summary>

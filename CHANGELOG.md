@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning].
     - Add `InnerError` property to `Error` class.
     - Add 'type' parameter to `FromException` and `Fail` factory methods.
     - Add `Error` property to `InvalidStateException` class.
+    - Add `IsDefault` property to result types.
 
 ### Changed
 - RandomSkunk.Results:

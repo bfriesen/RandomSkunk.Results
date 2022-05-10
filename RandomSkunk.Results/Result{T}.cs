@@ -60,6 +60,12 @@ public partial struct Result<T> : IEquatable<Result<T>>
     public bool IsFail => _type == ResultType.Fail;
 
     /// <summary>
+    /// Gets a value indicating whether this is a default instance of the <see cref="Result{T}"/>
+    /// struct.
+    /// </summary>
+    public bool IsDefault => IsFail && _error is null;
+
+    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
     /// <paramref name="right"/> parameter.
     /// </summary>
