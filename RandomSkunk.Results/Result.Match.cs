@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.ResultType;
+
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -29,7 +31,7 @@ public partial struct Result
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return IsSuccess
+        return _type == Success
             ? success()
             : fail(Error());
     }
@@ -56,7 +58,7 @@ public partial struct Result
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        if (IsSuccess)
+        if (_type == Success)
             success();
         else
             fail(Error());
@@ -94,7 +96,7 @@ public partial struct Result
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return IsSuccess
+        return _type == Success
             ? success(cancellationToken)
             : fail(Error(), cancellationToken);
     }
@@ -159,7 +161,7 @@ public partial struct Result
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return IsSuccess
+        return _type == Success
             ? success(cancellationToken)
             : fail(Error(), cancellationToken);
     }

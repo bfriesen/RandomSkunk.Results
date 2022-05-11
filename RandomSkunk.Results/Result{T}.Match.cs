@@ -30,8 +30,8 @@ public partial struct Result<T>
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return IsSuccess
-            ? success(Value())
+        return _type == ResultType.Success
+            ? success(_value!)
             : fail(Error());
     }
 
@@ -58,8 +58,8 @@ public partial struct Result<T>
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        if (IsSuccess)
-            success(Value());
+        if (_type == ResultType.Success)
+            success(_value!);
         else
             fail(Error());
     }
@@ -97,8 +97,8 @@ public partial struct Result<T>
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return IsSuccess
-            ? success(Value(), cancellationToken)
+        return _type == ResultType.Success
+            ? success(_value!, cancellationToken)
             : fail(Error(), cancellationToken);
     }
 
@@ -164,8 +164,8 @@ public partial struct Result<T>
         if (success is null) throw new ArgumentNullException(nameof(success));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return IsSuccess
-            ? success(Value(), cancellationToken)
+        return _type == ResultType.Success
+            ? success(_value!, cancellationToken)
             : fail(Error(), cancellationToken);
     }
 

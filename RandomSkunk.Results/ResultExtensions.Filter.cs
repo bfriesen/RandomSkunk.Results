@@ -25,7 +25,7 @@ public static partial class ResultExtensions
 
         if (source.IsSome)
         {
-            return filter(source.Value())
+            return filter(source._value!)
                 ? source
                 : Maybe<T>.Create.None();
         }
@@ -60,7 +60,7 @@ public static partial class ResultExtensions
 
         if (source.IsSome)
         {
-            return await filterAsync(source.Value(), cancellationToken)
+            return await filterAsync(source._value!, cancellationToken)
                 ? source
                 : Maybe<T>.Create.None();
         }

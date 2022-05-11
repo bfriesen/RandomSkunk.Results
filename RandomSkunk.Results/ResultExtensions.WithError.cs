@@ -23,7 +23,7 @@ public static partial class ResultExtensions
     {
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
-        return source.IsFail
+        return source._type == ResultType.Fail
             ? Result.Create.Fail(getError(source.Error()))
             : source;
     }
@@ -47,7 +47,7 @@ public static partial class ResultExtensions
     {
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
-        return source.IsFail
+        return source._type == ResultType.Fail
             ? Result<T>.Create.Fail(getError(source.Error()))
             : source;
     }
@@ -71,7 +71,7 @@ public static partial class ResultExtensions
     {
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
-        return source.IsFail
+        return source._type == MaybeType.Fail
             ? Maybe<T>.Create.Fail(getError(source.Error()))
             : source;
     }

@@ -38,9 +38,9 @@ public partial struct Maybe<T>
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return Type switch
+        return _type switch
         {
-            Some => some(Value()),
+            Some => some(_value!),
             None => none(),
             _ => fail(Error()),
         };
@@ -75,9 +75,9 @@ public partial struct Maybe<T>
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        switch (Type)
+        switch (_type)
         {
-            case Some: some(Value()); break;
+            case Some: some(_value!); break;
             case None: none(); break;
             default: fail(Error()); break;
         }
@@ -122,9 +122,9 @@ public partial struct Maybe<T>
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return Type switch
+        return _type switch
         {
-            Some => some(Value(), cancellationToken),
+            Some => some(_value!, cancellationToken),
             None => none(cancellationToken),
             _ => fail(Error(), cancellationToken),
         };
@@ -205,9 +205,9 @@ public partial struct Maybe<T>
         if (none is null) throw new ArgumentNullException(nameof(none));
         if (fail is null) throw new ArgumentNullException(nameof(fail));
 
-        return Type switch
+        return _type switch
         {
-            Some => some(Value(), cancellationToken),
+            Some => some(_value!, cancellationToken),
             None => none(cancellationToken),
             _ => fail(Error(), cancellationToken),
         };

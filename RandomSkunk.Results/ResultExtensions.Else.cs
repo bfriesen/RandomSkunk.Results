@@ -1,3 +1,6 @@
+using static RandomSkunk.Results.MaybeType;
+using static RandomSkunk.Results.ResultType;
+
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -14,7 +17,7 @@ public static partial class ResultExtensions
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static Result Else(this Result source, Result fallbackResult)
     {
-        return source.IsSuccess ? source : fallbackResult;
+        return source._type == Success ? source : fallbackResult;
     }
 
     /// <summary>
@@ -36,7 +39,7 @@ public static partial class ResultExtensions
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return source.IsSuccess ? source : getFallbackResult();
+        return source._type == Success ? source : getFallbackResult();
     }
 
     /// <summary>
@@ -49,7 +52,7 @@ public static partial class ResultExtensions
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static Result<T> Else<T>(this Result<T> source, Result<T> fallbackResult)
     {
-        return source.IsSuccess ? source : fallbackResult;
+        return source._type == Success ? source : fallbackResult;
     }
 
     /// <summary>
@@ -72,7 +75,7 @@ public static partial class ResultExtensions
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return source.IsSuccess ? source : getFallbackResult();
+        return source._type == Success ? source : getFallbackResult();
     }
 
     /// <summary>
@@ -85,7 +88,7 @@ public static partial class ResultExtensions
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static Maybe<T> Else<T>(this Maybe<T> source, Maybe<T> fallbackResult)
     {
-        return source.IsSome ? source : fallbackResult;
+        return source._type == Some ? source : fallbackResult;
     }
 
     /// <summary>
@@ -108,6 +111,6 @@ public static partial class ResultExtensions
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return source.IsSome ? source : getFallbackResult();
+        return source._type == Some ? source : getFallbackResult();
     }
 }

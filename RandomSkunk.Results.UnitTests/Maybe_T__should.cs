@@ -1,3 +1,6 @@
+using RandomSkunk.Results.Unsafe;
+using static RandomSkunk.Results.MaybeType;
+
 namespace RandomSkunk.Results.UnitTests;
 
 public class Maybe_T__should
@@ -12,8 +15,8 @@ public class Maybe_T__should
     {
         var result = Maybe<int>.Create.Some(321);
 
-        result.Type.Should().Be(MaybeType.Some);
-        result.Value().Should().Be(321);
+        result.Type.Should().Be(Some);
+        result.GetValue().Should().Be(321);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
@@ -23,7 +26,7 @@ public class Maybe_T__should
     {
         var result = Maybe<int>.Create.None();
 
-        result.Type.Should().Be(MaybeType.None);
+        result.Type.Should().Be(None);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
@@ -36,8 +39,8 @@ public class Maybe_T__should
         var error = new Error(_errorMessage, _stackTrace, _errorCode, _identifier);
         var result = Maybe<int>.Create.Fail(error);
 
-        result.Type.Should().Be(MaybeType.Fail);
-        result.Error().Should().Be(error);
+        result.Type.Should().Be(Fail);
+        result.GetError().Should().Be(error);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }
@@ -47,8 +50,8 @@ public class Maybe_T__should
     {
         var result = default(Maybe<int>);
 
-        result.Type.Should().Be(MaybeType.Fail);
-        result.Error().Should().BeSameAs(Error.DefaultError);
+        result.Type.Should().Be(Fail);
+        result.GetError().Should().BeSameAs(Error.DefaultError);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
     }

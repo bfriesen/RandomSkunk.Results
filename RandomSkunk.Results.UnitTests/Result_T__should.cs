@@ -1,3 +1,6 @@
+using RandomSkunk.Results.Unsafe;
+using static RandomSkunk.Results.ResultType;
+
 namespace RandomSkunk.Results.UnitTests;
 
 public class Result_T__should
@@ -12,8 +15,8 @@ public class Result_T__should
     {
         var result = Result<int>.Create.Success(321);
 
-        result.Type.Should().Be(ResultType.Success);
-        result.Value().Should().Be(321);
+        result.Type.Should().Be(Success);
+        result.GetValue().Should().Be(321);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
@@ -24,8 +27,8 @@ public class Result_T__should
         var error = new Error(_errorMessage, _stackTrace, _errorCode, _identifier);
         var result = Result<int>.Create.Fail(error);
 
-        result.Type.Should().Be(ResultType.Fail);
-        result.Error().Should().Be(error);
+        result.Type.Should().Be(Fail);
+        result.GetError().Should().Be(error);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }
@@ -35,8 +38,8 @@ public class Result_T__should
     {
         var result = default(Result<int>);
 
-        result.Type.Should().Be(ResultType.Fail);
-        result.Error().Should().BeSameAs(Error.DefaultError);
+        result.Type.Should().Be(Fail);
+        result.GetError().Should().BeSameAs(Error.DefaultError);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
     }

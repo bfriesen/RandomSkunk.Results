@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.ResultType;
+
 namespace RandomSkunk.Results.UnitTests;
 
 public class Result_should
@@ -12,7 +14,7 @@ public class Result_should
     {
         var result = Result.Create.Success();
 
-        result.Type.Should().Be(ResultType.Success);
+        result.Type.Should().Be(Success);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
             .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
     }
@@ -23,7 +25,7 @@ public class Result_should
         var error = new Error(_errorMessage, _stackTrace, _errorCode, _identifier);
         var result = Result.Create.Fail(error);
 
-        result.Type.Should().Be(ResultType.Fail);
+        result.Type.Should().Be(Fail);
         result.Error().Should().Be(error);
     }
 
@@ -32,7 +34,7 @@ public class Result_should
     {
         var result = default(Result);
 
-        result.Type.Should().Be(ResultType.Fail);
+        result.Type.Should().Be(Fail);
         result.Error().Should().BeSameAs(Error.DefaultError);
     }
 

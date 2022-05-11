@@ -1,4 +1,5 @@
 using static RandomSkunk.Results.Error;
+using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results;
 
@@ -17,27 +18,26 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// </summary>
     public static readonly IResultFactory<T> Create = new Factory();
 
-    private readonly ResultType _type;
-    private readonly T? _value;
+    internal readonly ResultType _type;
+    internal readonly T? _value;
     private readonly Error? _error;
 
     private Result(T value)
     {
-        _type = ResultType.Success;
+        _type = Success;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
 
     private Result(Error? error)
     {
-        _type = ResultType.Fail;
+        _type = Fail;
         _value = default;
         _error = error ?? new Error();
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="ResultType.Success"/> or
-    /// <see cref="ResultType.Fail"/>.
+    /// Gets the type of the result: <see cref="Success"/> or <see cref="Fail"/>.
     /// </summary>
     public ResultType Type => _type;
 
@@ -48,7 +48,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// <see langword="true"/> if this is a <c>Success</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsSuccess => _type == ResultType.Success;
+    public bool IsSuccess => _type == Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
@@ -57,13 +57,13 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsFail => _type == ResultType.Fail;
+    public bool IsFail => _type == Fail;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Result{T}"/>
     /// struct.
     /// </summary>
-    public bool IsDefault => IsFail && _error is null;
+    public bool IsDefault => _type == Fail && _error is null;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
@@ -108,10 +108,8 @@ public partial struct Result<T> : IEquatable<Result<T>>
         return hashCode;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
-
-    [return: NotNull]
-    internal T Value() => _value!;
 
     private sealed class Factory : IResultFactory<T>
     {

@@ -28,9 +28,9 @@ public static partial class ResultExtensions
     {
         if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
 
-        return source.Type switch
+        return source._type switch
         {
-            Success => flatMap(source.Value()),
+            Success => flatMap(source._value!),
             _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
@@ -62,9 +62,9 @@ public static partial class ResultExtensions
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
 
-        return source.Type switch
+        return source._type switch
         {
-            Success => await flatMapAsync(source.Value(), cancellationToken),
+            Success => await flatMapAsync(source._value!, cancellationToken),
             _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
@@ -114,9 +114,9 @@ public static partial class ResultExtensions
     {
         if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
 
-        return source.Type switch
+        return source._type switch
         {
-            Some => flatMap(source.Value()),
+            Some => flatMap(source._value!),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };
@@ -149,9 +149,9 @@ public static partial class ResultExtensions
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
 
-        return source.Type switch
+        return source._type switch
         {
-            Some => await flatMapAsync(source.Value(), cancellationToken),
+            Some => await flatMapAsync(source._value!, cancellationToken),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };

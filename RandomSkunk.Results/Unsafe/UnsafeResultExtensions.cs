@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-
 namespace RandomSkunk.Results.Unsafe;
 
 /// <summary>
@@ -20,7 +18,7 @@ public static class UnsafeResultExtensions
     /// If the result is not a <c>Fail</c> result.
     /// </exception>
     public static Error GetError(this Result source) =>
-        source.IsFail
+        source._type == ResultType.Fail
             ? source.Error()
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
@@ -37,8 +35,8 @@ public static class UnsafeResultExtensions
     /// If the result is not a <c>Success</c> result.
     /// </exception>
     public static T GetValue<T>(this Result<T> source) =>
-        source.IsSuccess
-            ? source.Value()
+        source._type == ResultType.Success
+            ? source._value!
             : throw Exceptions.CannotAccessValueUnlessSuccess(source.Error());
 
     /// <summary>
@@ -54,7 +52,7 @@ public static class UnsafeResultExtensions
     /// If the result is not a <c>Fail</c> result.
     /// </exception>
     public static Error GetError<T>(this Result<T> source) =>
-        source.IsFail
+        source._type == ResultType.Fail
             ? source.Error()
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
@@ -71,10 +69,10 @@ public static class UnsafeResultExtensions
     /// If the result is not a <c>Some</c> result.
     /// </exception>
     public static T GetValue<T>(this Maybe<T> source) =>
-        source.Type switch
+        source._type switch
         {
-            Some => source.Value(),
-            None => throw Exceptions.CannotAccessValueUnlessSome(),
+            MaybeType.Some => source._value!,
+            MaybeType.None => throw Exceptions.CannotAccessValueUnlessSome(),
             _ => throw Exceptions.CannotAccessValueUnlessSome(source.Error()),
         };
 
@@ -91,7 +89,7 @@ public static class UnsafeResultExtensions
     /// If the result is not a <c>Fail</c> result.
     /// </exception>
     public static Error GetError<T>(this Maybe<T> source) =>
-        source.IsFail
+        source._type == MaybeType.Fail
             ? source.Error()
             : throw Exceptions.CannotAccessErrorUnlessFail();
 }

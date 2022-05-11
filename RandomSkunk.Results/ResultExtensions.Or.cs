@@ -1,3 +1,6 @@
+using static RandomSkunk.Results.MaybeType;
+using static RandomSkunk.Results.ResultType;
+
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -20,7 +23,7 @@ public static partial class ResultExtensions
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return source.IsSuccess ? source : Result<T>.Create.Success(fallbackValue);
+        return source._type == Success ? source : Result<T>.Create.Success(fallbackValue);
     }
 
     /// <summary>
@@ -43,7 +46,7 @@ public static partial class ResultExtensions
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        if (source.IsSuccess)
+        if (source._type == Success)
             return source;
 
         var fallbackValue = getFallbackValue()
@@ -67,7 +70,7 @@ public static partial class ResultExtensions
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return source.IsSome ? source : Maybe<T>.Create.Some(fallbackValue);
+        return source._type == Some ? source : Maybe<T>.Create.Some(fallbackValue);
     }
 
     /// <summary>
@@ -91,7 +94,7 @@ public static partial class ResultExtensions
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        if (source.IsSome)
+        if (source._type == Some)
             return source;
 
         var fallbackValue = getFallbackValue()

@@ -31,9 +31,9 @@ public static partial class ResultExtensions
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
 
-        return source.Type switch
+        return source._type switch
         {
-            Success => Result<TReturn>.Create.Success(map(source.Value())
+            Success => Result<TReturn>.Create.Success(map(source._value!)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
             _ => Result<TReturn>.Create.Fail(source.Error()),
         };
@@ -69,9 +69,9 @@ public static partial class ResultExtensions
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
 
-        return source.Type switch
+        return source._type switch
         {
-            Success => Result<TReturn>.Create.Success((await mapAsync(source.Value(), cancellationToken))
+            Success => Result<TReturn>.Create.Success((await mapAsync(source._value!, cancellationToken))
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
             _ => Result<TReturn>.Create.Fail(source.Error()),
         };
@@ -128,9 +128,9 @@ public static partial class ResultExtensions
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
 
-        return source.Type switch
+        return source._type switch
         {
-            Some => Maybe<TReturn>.Create.Some(map(source.Value())
+            Some => Maybe<TReturn>.Create.Some(map(source._value!)
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(source.Error()),
@@ -167,9 +167,9 @@ public static partial class ResultExtensions
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
 
-        return source.Type switch
+        return source._type switch
         {
-            Some => Maybe<TReturn>.Create.Some((await mapAsync(source.Value(), cancellationToken))
+            Some => Maybe<TReturn>.Create.Some((await mapAsync(source._value!, cancellationToken))
                 ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(source.Error()),

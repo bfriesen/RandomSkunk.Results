@@ -1,3 +1,6 @@
+using static RandomSkunk.Results.MaybeType;
+using static RandomSkunk.Results.ResultType;
+
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -22,7 +25,7 @@ public static partial class ResultExtensions
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        return source.IsSuccess && comparer.Equals(source.Value(), otherValue);
+        return source._type == Success && comparer.Equals(source._value!, otherValue);
     }
 
     /// <summary>
@@ -46,7 +49,7 @@ public static partial class ResultExtensions
     {
         if (isSuccessValue is null) throw new ArgumentNullException(nameof(isSuccessValue));
 
-        return source.IsSuccess && isSuccessValue(source.Value());
+        return source._type == Success && isSuccessValue(source._value!);
     }
 
     /// <summary>
@@ -67,7 +70,7 @@ public static partial class ResultExtensions
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        return source.IsSome && comparer.Equals(source.Value(), otherValue);
+        return source._type == Some && comparer.Equals(source._value!, otherValue);
     }
 
     /// <summary>
@@ -91,6 +94,6 @@ public static partial class ResultExtensions
     {
         if (isSomeValue is null) throw new ArgumentNullException(nameof(isSomeValue));
 
-        return source.IsSome && isSomeValue(source.Value());
+        return source._type == Some && isSomeValue(source._value!);
     }
 }
