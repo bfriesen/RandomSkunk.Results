@@ -5,6 +5,8 @@ namespace RandomSkunk.Results.Http;
 /// </summary>
 public static class HttpResponseExtensions
 {
+    private static readonly JsonSerializerOptions _options = new(JsonSerializerDefaults.Web);
+
     /// <summary>
     /// Reads the HTTP response as a <see cref="Result"/>.
     /// </summary>
@@ -170,6 +172,18 @@ public static class HttpResponseExtensions
         if (problemDetails.Extensions.TryGetValue("errorType", out obj) && obj is not null)
             errorType = obj as string;
 
-        return new Error(message.ToString(), stackTrace, problemDetails.Status, identifier, errorType);
+        Error? innerError = null;
+        if (problemDetails.Extensions.TryGetValue("errorInnerError", out obj) && obj is JsonElement element)
+        {
+            try
+            {
+                innerError = JsonSerializer.Deserialize<Error>(element, _options);
+            }
+            catch
+            {
+            }
+        }
+
+        return new Error(message.ToString(), stackTrace, problemDetails.Status, identifier, errorType, innerError);
     }
 }

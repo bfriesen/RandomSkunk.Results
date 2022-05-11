@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add `WithError` extension methods.
 
+### Changed
+
+- RandomSkunk.Results.AspNetCore:
+    - Include `Error.InnerError` in the problem details.
+- RandomSkunk.Results.Http:
+    - Set `Error.InnerError` from the problem details.
+
 ## [1.0.0-alpha07] - 2022-05-09
 
 ### Added

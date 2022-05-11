@@ -47,6 +47,9 @@ public static class ErrorExtensions
         if (source.Identifier is not null)
             problemDetails.Extensions["errorIdentifier"] = source.Identifier;
 
+        if (source.InnerError is not null)
+            problemDetails.Extensions["errorInnerError"] = source.InnerError;
+
         return problemDetails;
     }
 }
