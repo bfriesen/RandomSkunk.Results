@@ -18,7 +18,8 @@ public static class ResultFactoryExtensions
     /// result.
     /// </returns>
     public static Maybe<T> FromValue<T>(
-        this IMaybeFactory<T> source, T? value) =>
+        this IMaybeFactory<T> source,
+        T? value) =>
         value is not null
             ? source.Some(value)
             : source.None();

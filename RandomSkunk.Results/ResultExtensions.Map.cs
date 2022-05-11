@@ -3,9 +3,9 @@ using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results;
 
-/// <summary>
-/// Defines extension methods for result objects.
-/// </summary>
+/// <content>
+/// Defines the <c>Map</c> and <c>MapAsync</c> extension methods.
+/// </content>
 public static partial class ResultExtensions
 {
     /// <summary>

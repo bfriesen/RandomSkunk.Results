@@ -1,8 +1,8 @@
 namespace RandomSkunk.Results;
 
-/// <summary>
-/// Defines extension methods for result objects.
-/// </summary>
+/// <content>
+/// Defines the <c>Flatten</c> extension methods.
+/// </content>
 public static partial class ResultExtensions
 {
     /// <summary>
