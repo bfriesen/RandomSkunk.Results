@@ -1,3 +1,4 @@
+using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results.UnitTests;
@@ -16,7 +17,7 @@ public class Result_should
 
         result.Type.Should().Be(Success);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
+            .WithMessage(CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]

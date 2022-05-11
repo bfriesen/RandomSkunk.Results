@@ -1,3 +1,4 @@
+using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.MaybeType;
 using static RandomSkunk.Results.ResultType;
 
@@ -50,7 +51,7 @@ public static partial class ResultExtensions
             return source;
 
         var fallbackValue = getFallbackValue()
-             ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+             ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
 
         return Result<T>.Create.Success(fallbackValue);
     }
@@ -98,7 +99,7 @@ public static partial class ResultExtensions
             return source;
 
         var fallbackValue = getFallbackValue()
-             ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+             ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
 
         return Maybe<T>.Create.Some(fallbackValue);
     }

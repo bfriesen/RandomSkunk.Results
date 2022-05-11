@@ -1,3 +1,4 @@
+using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.MaybeType;
 using static RandomSkunk.Results.ResultType;
 
@@ -58,7 +59,7 @@ public static partial class ResultExtensions
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
         return source._type == Success ? source._value! : getFallbackValue()
-            ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+            ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
     }
 
     /// <summary>
@@ -111,6 +112,6 @@ public static partial class ResultExtensions
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
         return source._type == Some ? source._value! : getFallbackValue()
-            ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getFallbackValue));
+            ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
     }
 }

@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.Exceptions;
+
 namespace RandomSkunk.Results.Unsafe;
 
 /// <summary>
@@ -20,7 +22,7 @@ public static class UnsafeResultExtensions
     public static Error GetError(this Result source) =>
         source._type == ResultType.Fail
             ? source.Error()
-            : throw Exceptions.CannotAccessErrorUnlessFail();
+            : throw CannotAccessErrorUnlessFail();
 
     /// <summary>
     /// Gets the value from the <c>Success</c> result.
@@ -37,7 +39,7 @@ public static class UnsafeResultExtensions
     public static T GetValue<T>(this Result<T> source) =>
         source._type == ResultType.Success
             ? source._value!
-            : throw Exceptions.CannotAccessValueUnlessSuccess(source.Error());
+            : throw CannotAccessValueUnlessSuccess(source.Error());
 
     /// <summary>
     /// Gets the error from the <c>Fail</c> result.
@@ -54,7 +56,7 @@ public static class UnsafeResultExtensions
     public static Error GetError<T>(this Result<T> source) =>
         source._type == ResultType.Fail
             ? source.Error()
-            : throw Exceptions.CannotAccessErrorUnlessFail();
+            : throw CannotAccessErrorUnlessFail();
 
     /// <summary>
     /// Gets the value from the <c>Some</c> result.
@@ -72,8 +74,8 @@ public static class UnsafeResultExtensions
         source._type switch
         {
             MaybeType.Some => source._value!,
-            MaybeType.None => throw Exceptions.CannotAccessValueUnlessSome(),
-            _ => throw Exceptions.CannotAccessValueUnlessSome(source.Error()),
+            MaybeType.None => throw CannotAccessValueUnlessSome(),
+            _ => throw CannotAccessValueUnlessSome(source.Error()),
         };
 
     /// <summary>
@@ -91,5 +93,5 @@ public static class UnsafeResultExtensions
     public static Error GetError<T>(this Maybe<T> source) =>
         source._type == MaybeType.Fail
             ? source.Error()
-            : throw Exceptions.CannotAccessErrorUnlessFail();
+            : throw CannotAccessErrorUnlessFail();
 }

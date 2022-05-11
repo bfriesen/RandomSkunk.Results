@@ -1,4 +1,5 @@
 using RandomSkunk.Results.Unsafe;
+using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results.UnitTests;
@@ -18,7 +19,7 @@ public class Result_T__should
         result.Type.Should().Be(Success);
         result.GetValue().Should().Be(321);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
+            .WithMessage(CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
@@ -30,7 +31,7 @@ public class Result_T__should
         result.Type.Should().Be(Fail);
         result.GetError().Should().Be(error);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
+            .WithMessage(CannotAccessValueUnlessSuccessMessage);
     }
 
     [Fact]
@@ -41,7 +42,7 @@ public class Result_T__should
         result.Type.Should().Be(Fail);
         result.GetError().Should().BeSameAs(Error.DefaultError);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSuccessMessage);
+            .WithMessage(CannotAccessValueUnlessSuccessMessage);
     }
 
     [Fact]

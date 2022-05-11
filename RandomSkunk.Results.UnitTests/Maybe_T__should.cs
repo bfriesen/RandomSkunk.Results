@@ -1,4 +1,5 @@
 using RandomSkunk.Results.Unsafe;
+using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.MaybeType;
 
 namespace RandomSkunk.Results.UnitTests;
@@ -18,7 +19,7 @@ public class Maybe_T__should
         result.Type.Should().Be(Some);
         result.GetValue().Should().Be(321);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
+            .WithMessage(CannotAccessErrorUnlessFailMessage);
     }
 
     [Fact]
@@ -28,9 +29,9 @@ public class Maybe_T__should
 
         result.Type.Should().Be(None);
         Calling.GetError(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessErrorUnlessFailMessage);
+            .WithMessage(CannotAccessErrorUnlessFailMessage);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
+            .WithMessage(CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
@@ -42,7 +43,7 @@ public class Maybe_T__should
         result.Type.Should().Be(Fail);
         result.GetError().Should().Be(error);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
+            .WithMessage(CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]
@@ -53,7 +54,7 @@ public class Maybe_T__should
         result.Type.Should().Be(Fail);
         result.GetError().Should().BeSameAs(Error.DefaultError);
         Calling.GetValue(result).Should().ThrowExactly<InvalidStateException>()
-            .WithMessage(Exceptions.CannotAccessValueUnlessSomeMessage);
+            .WithMessage(CannotAccessValueUnlessSomeMessage);
     }
 
     [Fact]

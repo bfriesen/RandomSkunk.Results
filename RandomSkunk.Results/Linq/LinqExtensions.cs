@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.Exceptions;
+
 namespace RandomSkunk.Results.Linq;
 
 /// <summary>
@@ -99,7 +101,7 @@ public static class LinqExtensions
             sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue => Result<TReturn>.Create.Success(
                     resultSelector(sourceValue!, intermediateValue!)
-                        ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
+                        ?? throw FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
     /// <summary>
@@ -195,7 +197,7 @@ public static class LinqExtensions
             sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue => Maybe<TReturn>.Create.Some(
                     resultSelector(sourceValue!, intermediateValue!)
-                        ?? throw Exceptions.FunctionMustNotReturnNull(nameof(resultSelector)))));
+                        ?? throw FunctionMustNotReturnNull(nameof(resultSelector)))));
     }
 
     /// <summary>

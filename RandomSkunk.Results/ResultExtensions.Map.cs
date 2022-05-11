@@ -1,3 +1,4 @@
+using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.MaybeType;
 using static RandomSkunk.Results.ResultType;
 
@@ -34,7 +35,7 @@ public static partial class ResultExtensions
         return source._type switch
         {
             Success => Result<TReturn>.Create.Success(map(source._value!)
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
+                ?? throw FunctionMustNotReturnNull(nameof(map))),
             _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
@@ -72,7 +73,7 @@ public static partial class ResultExtensions
         return source._type switch
         {
             Success => Result<TReturn>.Create.Success((await mapAsync(source._value!, cancellationToken))
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
+                ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
             _ => Result<TReturn>.Create.Fail(source.Error()),
         };
     }
@@ -131,7 +132,7 @@ public static partial class ResultExtensions
         return source._type switch
         {
             Some => Maybe<TReturn>.Create.Some(map(source._value!)
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(map))),
+                ?? throw FunctionMustNotReturnNull(nameof(map))),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };
@@ -170,7 +171,7 @@ public static partial class ResultExtensions
         return source._type switch
         {
             Some => Maybe<TReturn>.Create.Some((await mapAsync(source._value!, cancellationToken))
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(mapAsync))),
+                ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(source.Error()),
         };
