@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning].
     - Set `Error.InnerError` from the problem details.
     - Map `ProblemDetails.Title` to `Error.Type` instead of being part of `Error.Message`.
 
+### Fixed
+
+- RandomSkunk.Results.Http:
+    - Fix bug when getting values of `errorStackTrace` and `errorIdentifier`. Their values would be null even when specified in the JSON.
+
 ## [1.0.0-alpha07] - 2022-05-09
 
 ### Added

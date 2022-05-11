@@ -147,11 +147,11 @@ public static class HttpResponseExtensions
     {
         string? stackTrace = null;
         if (problemDetails.Extensions.TryGetValue("errorStackTrace", out var obj) && obj is not null)
-            stackTrace = obj as string;
+            stackTrace = obj.ToString();
 
         string? identifier = null;
         if (problemDetails.Extensions.TryGetValue("errorIdentifier", out obj) && obj is not null)
-            identifier = obj as string;
+            identifier = obj.ToString();
 
         Error? innerError = null;
         if (problemDetails.Extensions.TryGetValue("errorInnerError", out obj) && obj is JsonElement element)
