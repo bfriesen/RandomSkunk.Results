@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `WithError` extension methods.
+
 ## [1.0.0-alpha07] - 2022-05-09
 
 ### Added

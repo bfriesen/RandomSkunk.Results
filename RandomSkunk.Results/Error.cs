@@ -183,36 +183,26 @@ public class Error : IEquatable<Error>
         return hashCode;
     }
 
-    private static string Indent(string value, string indent)
+    private static string Indent(string value, string indention, string? firstLineIndentation = null)
     {
-        if (indent is null)
+        if (indention is null)
             return value;
 
-        var sb = new StringBuilder(value.Length + (value.Length / 10));
-        sb.Append(indent);
-
-        foreach (var c in value)
-        {
-            sb.Append(c);
-            if (c == '\n')
-                sb.Append(indent);
-        }
-
-        return sb.ToString();
+        return firstLineIndentation + value.Replace("\n", "\n" + indention);
     }
 
     private string ToString(string indention)
     {
         var sb = new StringBuilder();
-        sb.Append(indention).Append(Type).Append(": ").Append(Message);
+        sb.Append(indention).Append(Type).Append(": ").Append(Indent(Message, indention));
         if (Identifier is not null)
             sb.AppendLine().Append(indention).Append("Identifier: ").Append(Identifier);
         if (ErrorCode is not null)
-            sb.AppendLine().Append(indention).Append("Error code: ").Append(ErrorCode);
+            sb.AppendLine().Append(indention).Append("Error Code: ").Append(ErrorCode);
         if (StackTrace is not null)
-            sb.AppendLine().Append(indention).Append("Stack trace:").AppendLine().Append(Indent(StackTrace, indention));
+            sb.AppendLine().Append(indention).Append("Stack Trace:").AppendLine().Append(Indent(StackTrace, indention, indention));
         if (InnerError is not null)
-            sb.AppendLine().Append(indention).Append("Inner error:").AppendLine().Append(InnerError.ToString(indention + "   "));
+            sb.AppendLine().Append(indention).Append("Inner Error:").AppendLine().Append(InnerError.ToString(indention + "   "));
         return sb.ToString();
     }
 }
