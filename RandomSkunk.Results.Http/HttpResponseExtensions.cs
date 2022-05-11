@@ -145,21 +145,6 @@ public static class HttpResponseExtensions
 
     private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails)
     {
-        var message = new StringBuilder();
-
-        if (!string.IsNullOrWhiteSpace(problemDetails.Title))
-            message.Append(problemDetails.Title);
-
-        if (!string.IsNullOrWhiteSpace(problemDetails.Detail))
-        {
-            if (message.Length > 0)
-                message.Append(": ");
-            message.Append(problemDetails.Detail);
-        }
-
-        if (message.Length == 0)
-            message.Append(Error.DefaultMessage);
-
         string? stackTrace = null;
         if (problemDetails.Extensions.TryGetValue("errorStackTrace", out var obj) && obj is not null)
             stackTrace = obj as string;
@@ -167,10 +152,6 @@ public static class HttpResponseExtensions
         string? identifier = null;
         if (problemDetails.Extensions.TryGetValue("errorIdentifier", out obj) && obj is not null)
             identifier = obj as string;
-
-        string? errorType = null;
-        if (problemDetails.Extensions.TryGetValue("errorType", out obj) && obj is not null)
-            errorType = obj as string;
 
         Error? innerError = null;
         if (problemDetails.Extensions.TryGetValue("errorInnerError", out obj) && obj is JsonElement element)
@@ -184,6 +165,6 @@ public static class HttpResponseExtensions
             }
         }
 
-        return new Error(message.ToString(), stackTrace, problemDetails.Status, identifier, errorType, innerError);
+        return new Error(problemDetails.Detail, stackTrace, problemDetails.Status, identifier, problemDetails.Title, innerError);
     }
 }

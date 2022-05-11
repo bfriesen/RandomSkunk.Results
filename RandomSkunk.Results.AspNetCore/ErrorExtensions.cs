@@ -11,11 +11,6 @@ public static class ErrorExtensions
     /// <param name="source">
     /// The <see cref="Error"/> to create a <see cref="ProblemDetails"/> from.
     /// </param>
-    /// <param name="title">
-    /// A short, human-readable summary of the problem type.It SHOULD NOT change from
-    /// occurrence to occurrence of the problem, except for purposes of localization (e.g.,
-    /// using proactive content negotiation; see[RFC7231], Section 3.4).
-    /// </param>
     /// <param name="type">
     /// A URI reference [RFC3986] that identifies the problem type. This specification
     /// encourages that, when dereferenced, it provide human-readable documentation for
@@ -27,18 +22,17 @@ public static class ErrorExtensions
     /// or may not yield further information if dereferenced.
     /// </param>
     /// <returns>The equivalent problem details object.</returns>
-    public static ProblemDetails GetProblemDetails(this Error source, string? title = null, string? type = null, string? instance = null)
+    public static ProblemDetails GetProblemDetails(this Error source, string? type = null, string? instance = null)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
 
         var problemDetails = new ProblemDetails
         {
             Type = type,
-            Title = title,
+            Title = source.Type,
             Status = source.ErrorCode,
             Detail = source.Message,
             Instance = instance,
-            Extensions = { ["errorType"] = source.Type },
         };
 
         if (source.StackTrace is not null)

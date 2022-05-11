@@ -16,8 +16,10 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results.AspNetCore:
     - Include `Error.InnerError` in the problem details.
+    - Map `Error.Type` to `ProblemDetails.Title` instead of `ProblemDetails.Extensions["errorType"]`.
 - RandomSkunk.Results.Http:
     - Set `Error.InnerError` from the problem details.
+    - Map `ProblemDetails.Title` to `Error.Type` instead of being part of `Error.Message`.
 
 ## [1.0.0-alpha07] - 2022-05-09
 
