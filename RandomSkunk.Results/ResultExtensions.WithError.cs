@@ -1,6 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-using static RandomSkunk.Results.ResultType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -22,19 +19,13 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getError"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="getError"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
     public static Result WithError(this Result source, Func<Error, Error> getError)
     {
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
-        return source.Type switch
-        {
-            Success => source,
-            _ => Result.Create.Fail(getError(source.Error())
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getError))),
-        };
+        return source.IsFail
+            ? Result.Create.Fail(getError(source.Error()))
+            : source;
     }
 
     /// <summary>
@@ -51,20 +42,14 @@ public static partial class ResultExtensions
     /// </returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getError"/> is <see langword="null"/>.
-    /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="getError"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Result<T> WithError<T>(this Result<T> source, Func<Error, Error> getError)
     {
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
-        return source.Type switch
-        {
-            Success => source,
-            _ => Result<T>.Create.Fail(getError(source.Error())
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getError))),
-        };
+        return source.IsFail
+            ? Result<T>.Create.Fail(getError(source.Error()))
+            : source;
     }
 
     /// <summary>
@@ -82,19 +67,12 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getError"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="getError"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
     public static Maybe<T> WithError<T>(this Maybe<T> source, Func<Error, Error> getError)
     {
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
-        return source.Type switch
-        {
-            Some => source,
-            None => source,
-            _ => Maybe<T>.Create.Fail(getError(source.Error())
-                ?? throw Exceptions.FunctionMustNotReturnNull(nameof(getError))),
-        };
+        return source.IsFail
+            ? Maybe<T>.Create.Fail(getError(source.Error()))
+            : source;
     }
 }
