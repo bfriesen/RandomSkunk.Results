@@ -1,5 +1,3 @@
-using RandomSkunk.Results.Unsafe;
-using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.MaybeType;
 
 namespace RandomSkunk.Results.UnitTests;

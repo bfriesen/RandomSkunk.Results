@@ -1,5 +1,3 @@
-using RandomSkunk.Results.Unsafe;
-
 namespace RandomSkunk.Results.UnitTests;
 
 public static class Calling

@@ -1,4 +1,3 @@
-using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results.UnitTests;
