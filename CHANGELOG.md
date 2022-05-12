@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [1.0.0-alpha08] - 2022-05-11
+
 ### Added
 
 - RandomSkunk.Results:
@@ -128,7 +130,8 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha07...HEAD
+[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha08...HEAD
+[1.0.0-alpha08]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha07...v1.0.0-alpha08
 [1.0.0-alpha07]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha06...v1.0.0-alpha07
 [1.0.0-alpha06]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha05...v1.0.0-alpha06
 [1.0.0-alpha05]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha04...v1.0.0-alpha05
