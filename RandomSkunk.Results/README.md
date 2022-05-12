@@ -18,9 +18,12 @@ Maybe<int> result3 = Maybe<int>.Create.Some(123);
 Maybe<int> result4 = Maybe<int>.Create.None();
 Maybe<int> result5 = Maybe<int>.Create.Fail();
 
+Maybe<string> result6 = Maybe<string>.Create.FromValue("abc"); // Some("abc")
+Maybe<string> result7 = Maybe<string>.Create.FromValue(null); // None
+
 // Results that do not have a value:
-Result result6 = Result.Create.Success();
-Result result7 = Result.Create.Fail();
+Result result8 = Result.Create.Success();
+Result result9 = Result.Create.Fail();
 ```
 
 ### Handling Results
@@ -302,6 +305,23 @@ Maybe<int>.Create.Some(123).Filter(value => value < 150); // Some(123)
 Maybe<int>.Create.Some(456).Filter(value => value < 150); // None
 Maybe<int>.Create.None().Filter(value => value < 150); // None
 Maybe<int>.Create.Fail("A").Filter(value => value < 150); // Fail("A")
+```
+
+### WithError
+
+*Applicable to all three result types.*
+
+Returns a new result with a different error if the source is a `Fail` result. `Success`, `Some`, and `None` result are not affected.
+
+```c#
+Result failResult = Result.Create.Fail("Inner error");
+Result successResult = Result.Create.Success();
+
+// Fail("Outer error"("Inner error"))
+failResult.WithError(error => new Error("Outer error", innerError: error));
+
+// Success
+successResult.WithError(error => new Error("Outer error", innerError: error));
 ```
 
 ## LINQ Extension Methods
