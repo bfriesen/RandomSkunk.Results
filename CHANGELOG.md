@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `[DebuggerDisplay]` to each of the result structs and the error class.
+
+### Fixed
+
+- RandomSkunk.Results:
+    - Fix bugs in `Equals(object)` and `GetHashCode()`.
+
 ## [1.0.0-alpha08] - 2022-05-11
 
 ### Added

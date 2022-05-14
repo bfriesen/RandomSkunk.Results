@@ -30,26 +30,26 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Determines whether the value of the result is equal to another value as defined by the
-    /// <paramref name="isSuccessValue"/> function.
+    /// <paramref name="isValueEqual"/> function.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
-    /// <param name="isSuccessValue">
+    /// <param name="isValueEqual">
     /// A function that defines the equality of the result value.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if this is a <c>Success</c> result and
-    /// <paramref name="isSuccessValue"/> evaluates to <see langword="true"/> when passed
+    /// <paramref name="isValueEqual"/> evaluates to <see langword="true"/> when passed
     /// its value; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="isSuccessValue"/> is <see langword="null"/>.
+    /// If <paramref name="isValueEqual"/> is <see langword="null"/>.
     /// </exception>
-    public static bool Equals<T>(this Result<T> source, Func<T, bool> isSuccessValue)
+    public static bool Equals<T>(this Result<T> source, Func<T, bool> isValueEqual)
     {
-        if (isSuccessValue is null) throw new ArgumentNullException(nameof(isSuccessValue));
+        if (isValueEqual is null) throw new ArgumentNullException(nameof(isValueEqual));
 
-        return source._type == Success && isSuccessValue(source._value!);
+        return source._type == Success && isValueEqual(source._value!);
     }
 
     /// <summary>
@@ -75,25 +75,25 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Determines whether the value of the result is equal to another value as defined by the
-    /// <paramref name="isSomeValue"/> function.
+    /// <paramref name="isValueEqual"/> function.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
-    /// <param name="isSomeValue">
+    /// <param name="isValueEqual">
     /// A function that defines the equality of the result value.
     /// </param>
     /// <returns>
     /// <see langword="true"/> if this is a <c>Some</c> result and
-    /// <paramref name="isSomeValue"/> evaluates to <see langword="true"/> when passed
+    /// <paramref name="isValueEqual"/> evaluates to <see langword="true"/> when passed
     /// its value; otherwise, <see langword="false"/>.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="isSomeValue"/> is <see langword="null"/>.
+    /// If <paramref name="isValueEqual"/> is <see langword="null"/>.
     /// </exception>
-    public static bool Equals<T>(this Maybe<T> source, Func<T, bool> isSomeValue)
+    public static bool Equals<T>(this Maybe<T> source, Func<T, bool> isValueEqual)
     {
-        if (isSomeValue is null) throw new ArgumentNullException(nameof(isSomeValue));
+        if (isValueEqual is null) throw new ArgumentNullException(nameof(isValueEqual));
 
-        return source._type == Some && isSomeValue(source._value!);
+        return source._type == Some && isValueEqual(source._value!);
     }
 }

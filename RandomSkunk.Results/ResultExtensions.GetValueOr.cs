@@ -21,14 +21,8 @@ public static partial class ResultExtensions
     /// The value of this result if this is a <c>Success</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
-    /// </exception>
-    [return: NotNull]
-    public static T GetValueOr<T>(this Result<T> source, [DisallowNull] T fallbackValue)
+    public static T GetValueOr<T>(this Result<T> source, T fallbackValue)
     {
-        if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
-
         return source._type == Success ? source._value! : fallbackValue;
     }
 
@@ -49,16 +43,11 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
-    [return: NotNull]
     public static T GetValueOr<T>(this Result<T> source, Func<T> getFallbackValue)
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return source._type == Success ? source._value! : getFallbackValue()
-            ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
+        return source._type == Success ? source._value! : getFallbackValue();
     }
 
     /// <summary>
@@ -74,14 +63,8 @@ public static partial class ResultExtensions
     /// The value of this result if this is a <c>Some</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
-    /// </exception>
-    [return: NotNull]
-    public static T GetValueOr<T>(this Maybe<T> source, [DisallowNull] T fallbackValue)
+    public static T GetValueOr<T>(this Maybe<T> source, T fallbackValue)
     {
-        if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
-
         return source._type == Some ? source._value! : fallbackValue;
     }
 
@@ -102,15 +85,10 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
-    /// <exception cref="ArgumentException">
-    /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
-    [return: NotNull]
     public static T GetValueOr<T>(this Maybe<T> source, Func<T> getFallbackValue)
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return source._type == Some ? source._value! : getFallbackValue()
-            ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
+        return source._type == Some ? source._value! : getFallbackValue();
     }
 }

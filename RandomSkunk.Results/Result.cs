@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results;
@@ -8,6 +9,7 @@ namespace RandomSkunk.Results;
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>
+[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public partial struct Result : IEquatable<Result>
 {
     /// <summary>
@@ -87,22 +89,31 @@ public partial struct Result : IEquatable<Result>
     public static bool operator !=(Result left, Result right) => !(left == right);
 
     /// <inheritdoc/>
-    public bool Equals(Result other) => _type == other._type && _error == other._error;
+    public bool Equals(Result other) =>
+        _type == other._type
+        && (IsSuccess
+            || (IsFail && EqualityComparer<Error?>.Default.Equals(_error, other._error)));
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is Result result && Equals(result);
+    public override bool Equals(object? obj) =>
+        obj is Result result && Equals(result);
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
         int hashCode = 1710757158;
         hashCode = (hashCode * -1521134295) + _type.GetHashCode();
-        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : _error.GetHashCode());
+        hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
         return hashCode;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
+
+    private string GetDebuggerDisplay() =>
+        Match(
+            () => "Success",
+            error => $"Fail({error.Type}: {error.Message})");
 
     private sealed class Factory : IResultFactory
     {

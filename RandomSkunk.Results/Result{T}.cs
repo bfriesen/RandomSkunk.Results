@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results;
@@ -9,6 +10,7 @@ namespace RandomSkunk.Results;
 /// <remarks>
 /// Use <see cref="Create"/> to create instances of this type.
 /// </remarks>
+[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public partial struct Result<T> : IEquatable<Result<T>>
 {
     /// <summary>
@@ -90,25 +92,34 @@ public partial struct Result<T> : IEquatable<Result<T>>
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>
-        EqualityComparer<T?>.Default.Equals(_value, other._value)
-        && EqualityComparer<Error?>.Default.Equals(_error, other._error);
+        _type == other._type
+        && ((IsSuccess && EqualityComparer<T?>.Default.Equals(_value, other._value))
+            || (IsFail && EqualityComparer<Error?>.Default.Equals(_error, other._error)));
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) => obj is Result<T> result && Equals(result);
+    public override bool Equals(object? obj) =>
+        (obj is Result<T> result && Equals(result))
+        || (obj is T value && this.Equals<T>(value));
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
         int hashCode = 1157318437;
+        hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(typeof(T));
         hashCode = (hashCode * -1521134295) + _type.GetHashCode();
-        hashCode = (hashCode * -1521134295) + (_error is null ? 0 : _error.GetHashCode());
-        hashCode = (hashCode * -1521134295) + (_value is null ? 0 : _value.GetHashCode());
+        hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
+        hashCode = (hashCode * -1521134295) + (IsSuccess ? _value!.GetHashCode() : 0);
         hashCode *= 29;
         return hashCode;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
+
+    private string GetDebuggerDisplay() =>
+        Match(
+            value => $"Success({value})",
+            error => $"Fail({error.Type}: {error.Message})");
 
     private sealed class Factory : IResultFactory<T>
     {

@@ -1,8 +1,11 @@
+using System.Diagnostics;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
 /// Defines an error.
 /// </summary>
+[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class Error : IEquatable<Error>
 {
     private static readonly Lazy<Error> _default = new(() => new Error());
@@ -163,7 +166,8 @@ public class Error : IEquatable<Error>
             && StackTrace == other.StackTrace
             && ErrorCode == other.ErrorCode
             && Identifier == other.Identifier
-            && Type == other.Type;
+            && Type == other.Type
+            && InnerError == other.InnerError;
 
     /// <inheritdoc/>
     public override bool Equals(object? obj) =>
@@ -178,6 +182,7 @@ public class Error : IEquatable<Error>
         hashCode = (hashCode * -1521134295) + ErrorCode.GetHashCode();
         hashCode = (hashCode * -1521134295) + (Identifier is null ? 0 : Identifier.GetHashCode());
         hashCode = (hashCode * -1521134295) + Type.GetHashCode();
+        hashCode = (hashCode * -1521134295) + (InnerError is null ? 0 : InnerError.GetHashCode());
         return hashCode;
     }
 
@@ -203,4 +208,6 @@ public class Error : IEquatable<Error>
             sb.AppendLine().Append(indention).Append("Inner Error:").AppendLine().Append(InnerError.ToString(indention + "   "));
         return sb.ToString();
     }
+
+    private string GetDebuggerDisplay() => $"{Type}: {Message}";
 }
