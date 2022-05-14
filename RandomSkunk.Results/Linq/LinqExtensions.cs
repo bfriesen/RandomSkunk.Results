@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.Exceptions;
-
 namespace RandomSkunk.Results.Linq;
 
 /// <summary>
