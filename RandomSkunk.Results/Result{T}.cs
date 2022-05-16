@@ -118,8 +118,8 @@ public partial struct Result<T> : IEquatable<Result<T>>
 
     private string GetDebuggerDisplay() =>
         Match(
-            value => $"Success({value})",
-            error => $"Fail({error.Type}: {error.Message})");
+            value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
+            error => $"Fail({error.Type}: \"{error.Message}\")");
 
     private sealed class Factory : IResultFactory<T>
     {

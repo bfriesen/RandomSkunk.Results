@@ -22,7 +22,8 @@ public class Unsafe_extensions_methods
 
             Action act = () => source.GetError();
 
-            act.Should().ThrowExactly<InvalidStateException>();
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessErrorUnlessFailMessage);
         }
     }
 
@@ -46,7 +47,8 @@ public class Unsafe_extensions_methods
 
             Action act = () => source.GetError();
 
-            act.Should().ThrowExactly<InvalidStateException>();
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessErrorUnlessFailMessage);
         }
 
         [Fact]
@@ -66,7 +68,8 @@ public class Unsafe_extensions_methods
 
             Action act = () => source.GetValue();
 
-            act.Should().ThrowExactly<InvalidStateException>();
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessValueUnlessSuccessMessage);
         }
     }
 
@@ -90,7 +93,8 @@ public class Unsafe_extensions_methods
 
             Action act = () => source.GetError();
 
-            act.Should().ThrowExactly<InvalidStateException>();
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessErrorUnlessFailMessage);
         }
 
         [Fact]
@@ -120,7 +124,8 @@ public class Unsafe_extensions_methods
 
             Action act = () => source.GetValue();
 
-            act.Should().ThrowExactly<InvalidStateException>();
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessValueUnlessSomeMessage);
         }
 
         [Fact]
@@ -130,7 +135,8 @@ public class Unsafe_extensions_methods
 
             Action act = () => source.GetValue();
 
-            act.Should().ThrowExactly<InvalidStateException>();
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessValueUnlessSomeMessage);
         }
     }
 }

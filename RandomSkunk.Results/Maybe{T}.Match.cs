@@ -14,15 +14,15 @@ public partial struct Maybe<T>
     /// </summary>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
-    /// code of the <c>Fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
+    /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">
@@ -52,15 +52,15 @@ public partial struct Maybe<T>
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
-    /// code of the <c>Fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
+    /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
@@ -90,15 +90,15 @@ public partial struct Maybe<T>
     /// </summary>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
-    /// code of the <c>Fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
+    /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <param name="cancellationToken">
     /// The token to monitor for cancellation requests. The default value is
@@ -137,15 +137,15 @@ public partial struct Maybe<T>
     /// </summary>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
-    /// code of the <c>Fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
+    /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>
     /// A task that represents the asynchronous match operation, which wraps the result of the
@@ -176,15 +176,15 @@ public partial struct Maybe<T>
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
-    /// code of the <c>Fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
+    /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <param name="cancellationToken">
     /// The token to monitor for cancellation requests. The default value is
@@ -219,15 +219,15 @@ public partial struct Maybe<T>
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <param name="some">
-    /// The function to evaluate if the result type is <c>Some</c>. The value of the
+    /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
     /// <param name="none">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
     /// <param name="fail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The error message and error
-    /// code of the <c>Fail</c> result are passed to this function.
+    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
+    /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
     /// <exception cref="ArgumentNullException">

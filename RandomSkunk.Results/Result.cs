@@ -113,7 +113,7 @@ public partial struct Result : IEquatable<Result>
     private string GetDebuggerDisplay() =>
         Match(
             () => "Success",
-            error => $"Fail({error.Type}: {error.Message})");
+            error => $"Fail({error.Type}: \"{error.Message}\")");
 
     private sealed class Factory : IResultFactory
     {

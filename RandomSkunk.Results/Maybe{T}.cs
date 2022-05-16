@@ -137,9 +137,9 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
 
     private string GetDebuggerDisplay() =>
         Match(
-            value => $"Some({value})",
+            value => $"Some({(value is string ? $"\"{value}\"" : $"{value}")})",
             () => "None",
-            error => $"Fail({error.Type}: {error.Message})");
+            error => $"Fail({error.Type}: \"{error.Message}\")");
 
     private sealed class Factory : IMaybeFactory<T>
     {

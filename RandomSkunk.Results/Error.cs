@@ -209,5 +209,5 @@ public class Error : IEquatable<Error>
         return sb.ToString();
     }
 
-    private string GetDebuggerDisplay() => $"{Type}: {Message}";
+    private string GetDebuggerDisplay() => $"{Type}: \"{Message}\"";
 }
