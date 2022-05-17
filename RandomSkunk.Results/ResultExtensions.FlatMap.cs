@@ -22,8 +22,8 @@ public static partial class ResultExtensions
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
@@ -58,8 +58,8 @@ public static partial class ResultExtensions
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
@@ -95,8 +95,8 @@ public static partial class ResultExtensions
     /// Evaluated only if the source is a <c>Some</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
@@ -133,8 +133,8 @@ public static partial class ResultExtensions
     /// Evaluated only if the source is a <c>Some</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>

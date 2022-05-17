@@ -21,8 +21,8 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
@@ -56,8 +56,8 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
@@ -92,8 +92,8 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
@@ -128,8 +128,8 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
@@ -165,13 +165,13 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Some</c> result.
     /// </param>
     /// <param name="getNoneError">
-    /// A function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned by evaluating <see cref="DefaultGetNoneError"/>
+    /// An optional function that maps a <c>None</c> result to the return result's error. If
+    /// <see langword="null"/>, the error returned from <see cref="DefaultGetNoneError"/>
     /// is used instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
@@ -209,13 +209,13 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Some</c> result.
     /// </param>
     /// <param name="getNoneError">
-    /// A function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned by evaluating <see cref="DefaultGetNoneError"/>
+    /// An optional function that maps a <c>None</c> result to the return result's error. If
+    /// <see langword="null"/>, the error returned from <see cref="DefaultGetNoneError"/>
     /// is used instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
@@ -254,13 +254,13 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Some</c> result.
     /// </param>
     /// <param name="getNoneError">
-    /// A function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned by evaluating <see cref="DefaultGetNoneError"/>
-    /// is used instead. Evaluated only if the source is a <c>None</c> result.
+    /// An optional function that maps a <c>None</c> result to the return result's error. If
+    /// <see langword="null"/>, the error returned from <see cref="DefaultGetNoneError"/> is used
+    /// instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
@@ -299,12 +299,13 @@ public static partial class ResultExtensions
     /// only if the source is a <c>Some</c> result.
     /// </param>
     /// <param name="getNoneError">
-    /// A function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned by evaluating <see cref="DefaultGetNoneError"/>
-    /// is used instead. Evaluated only if the source is a <c>None</c> result.
+    /// An optional function that maps a <c>None</c> result to the return result's error. If
+    /// <see langword="null"/>, the error returned from <see cref="DefaultGetNoneError"/> is used
+    /// instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="getError">
-    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If
     /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>

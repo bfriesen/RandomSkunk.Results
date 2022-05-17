@@ -7,7 +7,7 @@ public static class LinqExtensions
 {
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Result{T}, Func{T, TReturn})"/>
+    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Result{T}, Func{T, TReturn}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
@@ -35,7 +35,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Result{T}, Func{T, Result{TReturn}})"/>
+    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Result{T}, Func{T, Result{TReturn}}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -104,7 +104,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Maybe{T}, Func{T, TReturn})"/>
+    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Maybe{T}, Func{T, TReturn}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
@@ -132,7 +132,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Maybe{T}, Func{T, Maybe{TReturn}})"/>
+    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Maybe{T}, Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a another result using the specified

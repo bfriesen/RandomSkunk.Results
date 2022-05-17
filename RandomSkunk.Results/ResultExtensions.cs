@@ -8,7 +8,7 @@ public static partial class ResultExtensions
     private static Func<Error> _defaultGetNoneError = () => new Error("Not Found", errorCode: 404, type: "NotFoundError");
 
     /// <summary>
-    /// Gets or sets the default value for <c>getNonError</c> parameters.
+    /// Gets or sets the default value for <c>Func&lt;Error&gt; getNoneError</c> parameters.
     /// </summary>
     public static Func<Error> DefaultGetNoneError
     {
