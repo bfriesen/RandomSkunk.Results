@@ -19,10 +19,10 @@ public static partial class ResultExtensions
     private static Error Evaluate(this Func<Error, Error>? getError, Error error) =>
         getError is null
             ? error
-            : getError(error) ?? throw FunctionMustNotReturnNull(nameof(getError));
+            : getError(error);
 
     private static Error Evaluate(this Func<Error>? getNoneError) =>
         getNoneError is null
-            ? _defaultGetNoneError() ?? throw FunctionMustNotReturnNull(nameof(_defaultGetNoneError))
-            : getNoneError() ?? throw FunctionMustNotReturnNull(nameof(getNoneError));
+            ? _defaultGetNoneError()
+            : getNoneError();
 }
