@@ -43,52 +43,24 @@ public static partial class ResultExtensions
     /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
     /// </param>
-    /// <param name="cancellationToken">
-    /// The token to monitor for cancellation requests. The default value is
-    /// <see cref="CancellationToken.None"/>.
-    /// </param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="filterAsync"/> is <see langword="null"/>.
-    /// </exception>
-    public static async Task<Maybe<T>> FilterAsync<T>(
-        this Maybe<T> source,
-        Func<T, CancellationToken, Task<bool>> filterAsync,
-        CancellationToken cancellationToken)
-    {
-        if (filterAsync is null) throw new ArgumentNullException(nameof(filterAsync));
-
-        if (source.IsSome)
-        {
-            return await filterAsync(source._value!, cancellationToken)
-                ? source
-                : Maybe<T>.Create.None();
-        }
-
-        return source;
-    }
-
-    /// <summary>
-    /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
-    /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
-    /// <param name="filterAsync">
-    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
-    /// <see langword="false"/>.
-    /// </param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="filterAsync"/> is
     /// <see langword="null"/>.
     /// </exception>
-    public static Task<Maybe<T>> FilterAsync<T>(
+    public static async Task<Maybe<T>> FilterAsync<T>(
         this Maybe<T> source,
         Func<T, Task<bool>> filterAsync)
     {
         if (filterAsync is null) throw new ArgumentNullException(nameof(filterAsync));
 
-        return source.FilterAsync((value, _) => filterAsync(value), default);
+        if (source.IsSome)
+        {
+            return await filterAsync(source._value!)
+                ? source
+                : Maybe<T>.Create.None();
+        }
+
+        return source;
     }
 }

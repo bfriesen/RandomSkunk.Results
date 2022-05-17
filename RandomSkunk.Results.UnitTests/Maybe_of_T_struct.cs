@@ -162,146 +162,7 @@ public class Maybe_of_T_struct
     public class MatchAsync
     {
         [Fact]
-        public async Task Given_nonvoid_functions_and_cancellation_token_When_IsSome_Returns_some_function_evaluation()
-        {
-            var result = Maybe<int>.Create.Some(1);
-
-            var actual = await result.MatchAsync(
-                (value, cancellationToken) => Task.FromResult(value + 1),
-                cancellationToken => Task.FromResult(0),
-                (error, cancellationToken) => Task.FromResult(-1),
-                default);
-
-            actual.Should().Be(2);
-        }
-
-        [Fact]
-        public async Task Given_nonvoid_functions_and_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
-        {
-            var result = Maybe<int>.Create.Fail();
-
-            var actual = await result.MatchAsync(
-                (value, cancellationToken) => Task.FromResult(value + 1),
-                cancellationToken => Task.FromResult(0),
-                (error, cancellationToken) => Task.FromResult(-1),
-                default);
-
-            actual.Should().Be(-1);
-        }
-
-        [Fact]
-        public async Task Given_nonvoid_functions_and_cancellation_token_When_IsNone_Returns_none_function_evaluation()
-        {
-            var result = Maybe<int>.Create.None();
-
-            var actual = await result.MatchAsync(
-                (value, cancellationToken) => Task.FromResult(value + 1),
-                cancellationToken => Task.FromResult(0),
-                (error, cancellationToken) => Task.FromResult(-1),
-                default);
-
-            actual.Should().Be(0);
-        }
-
-        [Fact]
-        public async Task Given_void_functions_and_cancellation_token_When_IsSome_Returns_some_function_evaluation()
-        {
-            var result = Maybe<int>.Create.Some(1);
-
-            int? someValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            await result.MatchAsync(
-                (value, cancellationToken) =>
-                {
-                    someValue = value;
-                    return Task.CompletedTask;
-                },
-                cancellationToken =>
-                {
-                    none = new object();
-                    return Task.CompletedTask;
-                },
-                (error, cancellationToken) =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                },
-                default);
-
-            someValue.Should().Be(1);
-            failError.Should().BeNull();
-            none.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Given_void_functions_and_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
-        {
-            var error = new Error();
-            var result = Maybe<int>.Create.Fail(error);
-
-            int? someValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            await result.MatchAsync(
-                (value, cancellationToken) =>
-                {
-                    someValue = value;
-                    return Task.CompletedTask;
-                },
-                cancellationToken =>
-                {
-                    none = new object();
-                    return Task.CompletedTask;
-                },
-                (error, cancellationToken) =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                },
-                default);
-
-            someValue.Should().BeNull();
-            failError.Should().BeSameAs(error);
-            none.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Given_void_functions_and_cancellation_token_When_IsNone_Returns_none_function_evaluation()
-        {
-            var result = Maybe<int>.Create.None();
-
-            int? someValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            await result.MatchAsync(
-                (value, cancellationToken) =>
-                {
-                    someValue = value;
-                    return Task.CompletedTask;
-                },
-                cancellationToken =>
-                {
-                    none = new object();
-                    return Task.CompletedTask;
-                },
-                (error, cancellationToken) =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                },
-                default);
-
-            none.Should().NotBeNull();
-            someValue.Should().BeNull();
-            failError.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Given_nonvoid_functions_and_no_cancellation_token_When_IsSome_Returns_some_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsSome_Returns_some_function_evaluation()
         {
             var result = Maybe<int>.Create.Some(1);
 
@@ -314,7 +175,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_and_no_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
         {
             var result = Maybe<int>.Create.Fail();
 
@@ -327,7 +188,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_and_no_cancellation_token_When_IsNone_Returns_none_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsNone_Returns_none_function_evaluation()
         {
             var result = Maybe<int>.Create.None();
 
@@ -340,7 +201,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_void_functions_and_no_cancellation_token_When_IsSome_Returns_some_function_evaluation()
+        public async Task Given_void_functions_When_IsSome_Returns_some_function_evaluation()
         {
             var result = Maybe<int>.Create.Some(1);
 
@@ -371,7 +232,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_void_functions_and_no_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
+        public async Task Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
         {
             var error = new Error();
             var result = Maybe<int>.Create.Fail(error);
@@ -403,7 +264,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_void_functions_and_no_cancellation_token_When_IsNone_Returns_none_function_evaluation()
+        public async Task Given_void_functions_When_IsNone_Returns_none_function_evaluation()
         {
             var result = Maybe<int>.Create.None();
 

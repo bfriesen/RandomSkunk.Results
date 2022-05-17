@@ -107,84 +107,7 @@ public class Result_of_T_struct
     public class MatchAsync
     {
         [Fact]
-        public async Task Given_nonvoid_functions_and_cancellation_token_When_IsSuccess_Returns_success_function_evaluation()
-        {
-            var result = Result<int>.Create.Success(1);
-
-            var actual = await result.MatchAsync(
-                (value, cancellationToken) => Task.FromResult(value + 1),
-                (error, cancellationToken) => Task.FromResult(-1),
-                default);
-
-            actual.Should().Be(2);
-        }
-
-        [Fact]
-        public async Task Given_nonvoid_functions_and_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
-        {
-            var result = Result<int>.Create.Fail();
-
-            var actual = await result.MatchAsync(
-                (value, cancellationToken) => Task.FromResult(value + 1),
-                (error, cancellationToken) => Task.FromResult(-1),
-                default);
-
-            actual.Should().Be(-1);
-        }
-
-        [Fact]
-        public async Task Given_void_functions_and_cancellation_token_When_IsSuccess_Returns_success_function_evaluation()
-        {
-            var result = Result<int>.Create.Success(1);
-
-            int? successValue = null;
-            Error? failError = null;
-
-            await result.MatchAsync(
-                (value, cancellationToken) =>
-                {
-                    successValue = value;
-                    return Task.CompletedTask;
-                },
-                (error, cancellationToken) =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                },
-                default);
-
-            successValue.Should().Be(1);
-            failError.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Given_void_functions_and_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
-        {
-            var error = new Error();
-            var result = Result<int>.Create.Fail(error);
-
-            int? successValue = null;
-            Error? failError = null;
-
-            await result.MatchAsync(
-                (value, cancellationToken) =>
-                {
-                    successValue = value;
-                    return Task.CompletedTask;
-                },
-                (error, cancellationToken) =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                },
-                default);
-
-            successValue.Should().BeNull();
-            failError.Should().BeSameAs(error);
-        }
-
-        [Fact]
-        public async Task Given_nonvoid_functions_and_no_cancellation_token_When_IsSuccess_Returns_success_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsSuccess_Returns_success_function_evaluation()
         {
             var result = Result<int>.Create.Success(1);
 
@@ -196,7 +119,7 @@ public class Result_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_and_no_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
         {
             var result = Result<int>.Create.Fail();
 
@@ -208,7 +131,7 @@ public class Result_of_T_struct
         }
 
         [Fact]
-        public async Task Given_void_functions_and_no_cancellation_token_When_IsSuccess_Returns_success_function_evaluation()
+        public async Task Given_void_functions_When_IsSuccess_Returns_success_function_evaluation()
         {
             var result = Result<int>.Create.Success(1);
 
@@ -232,7 +155,7 @@ public class Result_of_T_struct
         }
 
         [Fact]
-        public async Task Given_void_functions_and_no_cancellation_token_When_IsFail_Returns_fail_function_evaluation()
+        public async Task Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
         {
             var error = new Error();
             var result = Result<int>.Create.Fail(error);

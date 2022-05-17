@@ -5,34 +5,34 @@ public class FlatMapAsync_extension_methods
     public class For_Result_of_T
     {
         [Fact]
-        public async Task Given_cancellation_token_When_IsSuccess_Returns_function_evaluation()
+        public async Task When_IsSuccess_Returns_function_evaluation()
         {
             var source = Result<int>.Create.Success(1);
 
-            var actual = await source.FlatMapAsync((value, token) => Task.FromResult(Result<string>.Create.Success(value.ToString())), default);
+            var actual = await source.FlatMapAsync(value => Task.FromResult(Result<string>.Create.Success(value.ToString())));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
         }
 
         [Fact]
-        public async Task Given_cancellation_token_When_IsFail_Returns_Fail()
+        public async Task When_IsFail_Returns_Fail()
         {
             var error = new Error();
             var source = Result<int>.Create.Fail(error);
 
-            var actual = await source.FlatMapAsync((value, token) => Task.FromResult(Result<string>.Create.Success(value.ToString())), default);
+            var actual = await source.FlatMapAsync(value => Task.FromResult(Result<string>.Create.Success(value.ToString())));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
         }
 
         [Fact]
-        public async Task Given_cancellation_token_and_null_filter_function_Throws_ArgumentNullException()
+        public async Task Given_null_filter_function_Throws_ArgumentNullException()
         {
             var source = Result<int>.Create.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync<int, string>(null!, default);
+            Func<Task> act = () => source.FlatMapAsync<int, string>(null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -74,7 +74,7 @@ public class FlatMapAsync_extension_methods
         }
 
         [Fact]
-        public async Task Given_cancellation_token_and_null_filter_function_Throws_ArgumentNullException()
+        public async Task When_null_filter_function_Throws_ArgumentNullException()
         {
             var source = Maybe<int>.Create.Fail();
 
