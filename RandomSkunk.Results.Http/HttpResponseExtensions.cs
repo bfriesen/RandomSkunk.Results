@@ -66,7 +66,7 @@ public static class HttpResponseExtensions
     /// cancellation.
     /// </param>
     /// <returns>The maybe result representing the response.</returns>
-    public static async Task<Maybe<T>> ReadMaybeResultFromJsonAsync<T>(
+    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this HttpResponseMessage source,
         CancellationToken cancellationToken = default)
     {
