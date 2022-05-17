@@ -103,6 +103,82 @@ public class Result_struct
         }
     }
 
+    public class MatchAsync
+    {
+        [Fact]
+        public async Task Given_nonvoid_functions_When_IsSuccess_Returns_success_function_evaluation()
+        {
+            var result = Result.Create.Success();
+
+            var actual = await result.MatchAsync(
+                () => Task.FromResult(1),
+                error => Task.FromResult(-1));
+
+            actual.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
+        {
+            var result = Result.Create.Fail();
+
+            var actual = await result.MatchAsync(
+                () => Task.FromResult(1),
+                error => Task.FromResult(-1));
+
+            actual.Should().Be(-1);
+        }
+
+        [Fact]
+        public async Task Given_void_functions_When_IsSuccess_Returns_success_function_evaluation()
+        {
+            var result = Result.Create.Success();
+
+            int? successValue = null;
+            Error? failError = null;
+
+            await result.MatchAsync(
+                () =>
+                {
+                    successValue = 1;
+                    return Task.CompletedTask;
+                },
+                error =>
+                {
+                    failError = error;
+                    return Task.CompletedTask;
+                });
+
+            successValue.Should().Be(1);
+            failError.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
+        {
+            var error = new Error();
+            var result = Result.Create.Fail(error);
+
+            int? successValue = null;
+            Error? failError = null;
+
+            await result.MatchAsync(
+                () =>
+                {
+                    successValue = 1;
+                    return Task.CompletedTask;
+                },
+                error =>
+                {
+                    failError = error;
+                    return Task.CompletedTask;
+                });
+
+            successValue.Should().BeNull();
+            failError.Should().BeSameAs(error);
+        }
+    }
+
     public new class Equals
     {
         [Fact]

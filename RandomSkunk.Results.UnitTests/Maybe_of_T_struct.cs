@@ -109,9 +109,9 @@ public class Maybe_of_T_struct
             object? none = null;
 
             result.Match(
-                value => someValue = value,
-                () => none = new object(),
-                error => failError = error);
+                value => { someValue = value; },
+                () => { none = new object(); },
+                error => { failError = error; });
 
             someValue.Should().Be(1);
             failError.Should().BeNull();
@@ -129,9 +129,9 @@ public class Maybe_of_T_struct
             object? none = null;
 
             result.Match(
-                value => someValue = value,
-                () => none = new object(),
-                error => failError = error);
+                value => { someValue = value; },
+                () => { none = new object(); },
+                error => { failError = error; });
 
             someValue.Should().BeNull();
             failError.Should().BeSameAs(error);
@@ -149,9 +149,9 @@ public class Maybe_of_T_struct
             object? none = null;
 
             result.Match(
-                value => someValue = value,
-                () => none = new object(),
-                error => failError = error);
+                value => { someValue = value; },
+                () => { none = new object(); },
+                error => { failError = error; });
 
             none.Should().NotBeNull();
             someValue.Should().BeNull();
