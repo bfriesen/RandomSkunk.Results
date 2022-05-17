@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Fix bugs in `Equals(object)` and `GetHashCode()`.
 
+### Changed
+
+- RandomSkunk.Results:
+    - Add optional `getError` parameter to all `Map` and `FlapMap` extension methods.
+
 ## [1.0.0-alpha08] - 2022-05-11
 
 ### Added

@@ -10,15 +10,21 @@ public static partial class ResultExtensions
 {
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
-    /// function. The map function is only evaluated if the source is a <c>Success</c> result, and
-    /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the source
-    /// result.
+    /// function. The map function is evaluated if and only if the source is a <c>Success</c>
+    /// result, and the <see cref="Result{T}.Type"/> of the new result will always be the same as
+    /// the source result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="map">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
+    /// Evaluated only if the source is a <c>Success</c> result.
+    /// </param>
+    /// <param name="getError">
+    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
+    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
@@ -27,29 +33,39 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="map"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static Result<TReturn> Map<T, TReturn>(this Result<T> source, Func<T, TReturn> map)
+    public static Result<TReturn> Map<T, TReturn>(
+        this Result<T> source,
+        Func<T, TReturn> map,
+        Func<Error, Error>? getError = null)
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
+        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Success => Result<TReturn>.Create.Success(map(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(map))),
-            _ => Result<TReturn>.Create.Fail(source.Error()),
+            _ => Result<TReturn>.Create.Fail(getError(source.Error())),
         };
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>Success</c> result, and
-    /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the source
-    /// result.
+    /// function. The map function is evaluated if and only if the source is a <c>Success</c>
+    /// result, and the <see cref="Result{T}.Type"/> of the new result will always be the same as
+    /// the source result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="mapAsync">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
+    /// Evaluated only if the source is a <c>Success</c> result.
+    /// </param>
+    /// <param name="getError">
+    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
+    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
@@ -60,22 +76,24 @@ public static partial class ResultExtensions
     /// </exception>
     public static async Task<Result<TReturn>> MapAsync<T, TReturn>(
         this Result<T> source,
-        Func<T, Task<TReturn>> mapAsync)
+        Func<T, Task<TReturn>> mapAsync,
+        Func<Error, Error>? getError = null)
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
+        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Success => Result<TReturn>.Create.Success(await mapAsync(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
-            _ => Result<TReturn>.Create.Fail(source.Error()),
+            _ => Result<TReturn>.Create.Fail(getError(source.Error())),
         };
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
-    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
-    /// the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
+    /// function. The map function is evaluated if and only if the source is a <c>Some</c> result,
+    /// and the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -83,6 +101,12 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="map">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
+    /// Evaluated only if the source is a <c>Some</c> result.
+    /// </param>
+    /// <param name="getError">
+    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
+    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
@@ -91,23 +115,27 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentException">
     /// If <paramref name="map"/> returns <see langword="null"/> when evaluated.
     /// </exception>
-    public static Maybe<TReturn> Map<T, TReturn>(this Maybe<T> source, Func<T, TReturn> map)
+    public static Maybe<TReturn> Map<T, TReturn>(
+        this Maybe<T> source,
+        Func<T, TReturn> map,
+        Func<Error, Error>? getError = null)
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
+        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Some => Maybe<TReturn>.Create.Some(map(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(map))),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(source.Error()),
+            _ => Maybe<TReturn>.Create.Fail(getError(source.Error())),
         };
     }
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
-    /// function. The map function is only evaluated if the source is a <c>Some</c> result, and
-    /// the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
+    /// function. The map function is evaluated if and only if the source is a <c>Some</c> result,
+    /// and the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -115,6 +143,12 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="mapAsync">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
+    /// Evaluated only if the source is a <c>Some</c> result.
+    /// </param>
+    /// <param name="getError">
+    /// A function that maps a <c>Fail</c> result's error to the returned result's error. If
+    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
@@ -125,16 +159,18 @@ public static partial class ResultExtensions
     /// </exception>
     public static async Task<Maybe<TReturn>> MapAsync<T, TReturn>(
         this Maybe<T> source,
-        Func<T, Task<TReturn>> mapAsync)
+        Func<T, Task<TReturn>> mapAsync,
+        Func<Error, Error>? getError = null)
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
+        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Some => Maybe<TReturn>.Create.Some(await mapAsync(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(source.Error()),
+            _ => Maybe<TReturn>.Create.Fail(getError(source.Error())),
         };
     }
 }
