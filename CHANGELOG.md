@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Add `[DebuggerDisplay]` to each of the result structs and the error class.
+    - Add `CrossMap` extension methods to convert from one type of result to another.
 
 ### Fixed
 
