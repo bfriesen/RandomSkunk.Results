@@ -36,12 +36,11 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Success => flatMap(source._value!),
-            _ => Result<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Result<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 
@@ -73,12 +72,11 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Success => await flatMapAsync(source._value!),
-            _ => Result<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Result<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 
@@ -111,13 +109,12 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Some => flatMap(source._value!),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 
@@ -150,13 +147,12 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Some => await flatMapAsync(source._value!),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 }

@@ -39,13 +39,12 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Success => Result<TReturn>.Create.Success(map(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(map))),
-            _ => Result<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Result<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 
@@ -80,13 +79,12 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Success => Result<TReturn>.Create.Success(await mapAsync(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
-            _ => Result<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Result<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 
@@ -121,14 +119,13 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (map is null) throw new ArgumentNullException(nameof(map));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Some => Maybe<TReturn>.Create.Some(map(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(map))),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 
@@ -163,14 +160,13 @@ public static partial class ResultExtensions
         Func<Error, Error>? getError = null)
     {
         if (mapAsync is null) throw new ArgumentNullException(nameof(mapAsync));
-        getError ??= _identityErrorFunction;
 
         return source._type switch
         {
             Some => Maybe<TReturn>.Create.Some(await mapAsync(source._value!)
                 ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
             None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(getError(source.Error())),
+            _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(source.Error())),
         };
     }
 }

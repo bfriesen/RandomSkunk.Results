@@ -5,5 +5,8 @@ namespace RandomSkunk.Results;
 /// </summary>
 public static partial class ResultExtensions
 {
-    private static readonly Func<Error, Error> _identityErrorFunction = error => error;
+    private static Error Evaluate(this Func<Error, Error>? getError, Error error) =>
+        getError is null
+            ? error
+            : getError(error) ?? throw FunctionMustNotReturnNull(nameof(getError));
 }
