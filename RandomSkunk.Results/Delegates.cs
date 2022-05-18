@@ -27,7 +27,7 @@ public static class Delegates
     public static Func<T> Func<T>(Func<T> func)
     {
         if (typeof(Task).IsAssignableFrom(typeof(T)))
-            throw new ArgumentException("Generic argument T cannot be a Task. Call the AsyncAction or AsyncFunc<T> instead.");
+            throw new ArgumentOutOfRangeException(nameof(T), "Generic argument T cannot be a Task. Call the AsyncAction or AsyncFunc<T> method instead.");
 
         return func ?? throw new ArgumentNullException(nameof(func));
     }
