@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning].
     - Add `[DebuggerDisplay]` to each of the result structs and the error class.
     - Add `CrossMap` extension methods to convert from one type of result to another.
     - Add `ToResult`, `ToResult<T>`, `ToMaybe<T>`, `ToResultAsync`, `ToResultAsync<T>`, and `ToMaybeAsync<T>` extension methods to convert delegates into results.
+    - Add `OnSuccess` and `OnSome` extension methods to conditionally invoke a callback and return the same result.
 - RandomSkunk.Results.Http:
     - Add extension methods for `HttpClient` to convert HTTP operations into results.
 
