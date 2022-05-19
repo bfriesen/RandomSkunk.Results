@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add optional `getError` parameter to all `Map` and `FlapMap` extension methods.
 - RandomSkunk.Results.Http:
-    - Rename `ReadResultFromJsonAsync` extension method to `ToResultAsync`.
+    - Rename `ReadResultFromJsonAsync` extension method to `GetResultAsync`.
 
 ## [1.0.0-alpha08] - 2022-05-11
 

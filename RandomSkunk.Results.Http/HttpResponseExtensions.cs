@@ -8,7 +8,7 @@ public static class HttpResponseExtensions
     private static readonly JsonSerializerOptions _defaultOptions = new(JsonSerializerDefaults.Web);
 
     /// <summary>
-    /// Reads the HTTP response as a <see cref="Result"/>.
+    /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
@@ -22,7 +22,7 @@ public static class HttpResponseExtensions
     /// cancellation.
     /// </param>
     /// <returns>The result representing the response.</returns>
-    public static async Task<Result> ToResultAsync(
+    public static async Task<Result> GetResultAsync(
         this HttpResponseMessage source,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
@@ -39,7 +39,7 @@ public static class HttpResponseExtensions
     }
 
     /// <summary>
-    /// Reads the HTTP response as a <see cref="Result"/>.
+    /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
     /// <param name="source">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
@@ -49,10 +49,10 @@ public static class HttpResponseExtensions
     /// cancellation.
     /// </param>
     /// <returns>The result representing the response.</returns>
-    public static Task<Result> ToResultAsync(
+    public static Task<Result> GetResultAsync(
         this HttpResponseMessage source,
         CancellationToken cancellationToken = default) =>
-        source.ToResultAsync(null, cancellationToken);
+        source.GetResultAsync(null, cancellationToken);
 
     /// <summary>
     /// Reads the HTTP response as a <see cref="Result{T}"/>.

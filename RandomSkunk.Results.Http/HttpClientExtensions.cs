@@ -61,7 +61,7 @@ public static class HttpClientExtensions
 
         try
         {
-            return await responseResult.CrossMapAsync(response => response.ToResultAsync(cancellationToken));
+            return await responseResult.CrossMapAsync(response => response.GetResultAsync(cancellationToken));
         }
         finally
         {
@@ -188,7 +188,7 @@ public static class HttpClientExtensions
 
         try
         {
-            return await responseResult.CrossMapAsync(response => response.ToResultAsync(options, cancellationToken));
+            return await responseResult.CrossMapAsync(response => response.GetResultAsync(options, cancellationToken));
         }
         finally
         {
@@ -257,7 +257,7 @@ public static class HttpClientExtensions
 
         try
         {
-            return await responseResult.CrossMapAsync(response => response.ToResultAsync(options, cancellationToken));
+            return await responseResult.CrossMapAsync(response => response.GetResultAsync(options, cancellationToken));
         }
         finally
         {
@@ -324,7 +324,7 @@ public static class HttpClientExtensions
 
         try
         {
-            return await responseResult.CrossMapAsync(response => response.ToResultAsync(options, cancellationToken));
+            return await responseResult.CrossMapAsync(response => response.GetResultAsync(options, cancellationToken));
         }
         finally
         {
