@@ -5,7 +5,38 @@ namespace RandomSkunk.Results.Http;
 /// </summary>
 public static class HttpResponseExtensions
 {
-    private static readonly JsonSerializerOptions _options = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions _defaultOptions = new(JsonSerializerDefaults.Web);
+
+    /// <summary>
+    /// Reads the HTTP response as a <see cref="Result"/>.
+    /// </summary>
+    /// <param name="source">
+    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
+    /// </param>
+    /// <param name="options">
+    /// Options to control the behavior during deserialization. The default options are those specified by
+    /// <see cref="JsonSerializerDefaults.Web"/>.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A cancellation token that can be used by other objects or threads to receive notice of
+    /// cancellation.
+    /// </param>
+    /// <returns>The result representing the response.</returns>
+    public static async Task<Result> ToResultAsync(
+        this HttpResponseMessage source,
+        JsonSerializerOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (source is null) throw new ArgumentNullException(nameof(source));
+        options ??= _defaultOptions;
+
+        if (source.IsSuccessStatusCode)
+            return Result.Create.Success();
+
+        var problemDetails = await ReadProblemDetails(source, options, cancellationToken);
+        var error = GetErrorFromProblemDetails(problemDetails, options);
+        return Result.Create.Fail(error);
+    }
 
     /// <summary>
     /// Reads the HTTP response as a <see cref="Result"/>.
@@ -18,16 +49,41 @@ public static class HttpResponseExtensions
     /// cancellation.
     /// </param>
     /// <returns>The result representing the response.</returns>
-    public static async Task<Result> ReadResultFromJsonAsync(
+    public static Task<Result> ToResultAsync(
         this HttpResponseMessage source,
+        CancellationToken cancellationToken = default) =>
+        source.ToResultAsync(null, cancellationToken);
+
+    /// <summary>
+    /// Reads the HTTP response as a <see cref="Result{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the returned result value.</typeparam>
+    /// <param name="source">
+    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
+    /// </param>
+    /// <param name="options">
+    /// Options to control the behavior during deserialization. The default options are those specified by
+    /// <see cref="JsonSerializerDefaults.Web"/>.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A cancellation token that can be used by other objects or threads to receive notice of
+    /// cancellation.
+    /// </param>
+    /// <returns>The result representing the response.</returns>
+    public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
+        this HttpResponseMessage source,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        if (source.IsSuccessStatusCode)
-            return Result.Create.Success();
+        if (source is null) throw new ArgumentNullException(nameof(source));
+        options ??= _defaultOptions;
 
-        var problemDetails = await ReadProblemDetails(source, cancellationToken);
-        var error = GetErrorFromProblemDetails(problemDetails);
-        return Result.Create.Fail(error);
+        if (source.IsSuccessStatusCode)
+            return await ReadValue<T>(source.Content, options, cancellationToken);
+
+        var problemDetails = await ReadProblemDetails(source, options, cancellationToken);
+        var error = GetErrorFromProblemDetails(problemDetails, options);
+        return Result<T>.Create.Fail(error);
     }
 
     /// <summary>
@@ -42,16 +98,41 @@ public static class HttpResponseExtensions
     /// cancellation.
     /// </param>
     /// <returns>The result representing the response.</returns>
-    public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
+    public static Task<Result<T>> ReadResultFromJsonAsync<T>(
         this HttpResponseMessage source,
+        CancellationToken cancellationToken = default) =>
+        source.ReadResultFromJsonAsync<T>(null, cancellationToken);
+
+    /// <summary>
+    /// Reads the HTTP response as a <see cref="Maybe{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the returned result value.</typeparam>
+    /// <param name="source">
+    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
+    /// </param>
+    /// <param name="options">
+    /// Options to control the behavior during deserialization. The default options are those specified by
+    /// <see cref="JsonSerializerDefaults.Web"/>.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// A cancellation token that can be used by other objects or threads to receive notice of
+    /// cancellation.
+    /// </param>
+    /// <returns>The maybe result representing the response.</returns>
+    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
+        this HttpResponseMessage source,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        if (source.IsSuccessStatusCode)
-            return await ReadValue<T>(source.Content, cancellationToken);
+        if (source is null) throw new ArgumentNullException(nameof(source));
+        options ??= _defaultOptions;
 
-        var problemDetails = await ReadProblemDetails(source, cancellationToken);
-        var error = GetErrorFromProblemDetails(problemDetails);
-        return Result<T>.Create.Fail(error);
+        if (source.IsSuccessStatusCode)
+            return await ReadMaybeValue<T>(source.Content, options, cancellationToken);
+
+        var problemDetails = await ReadProblemDetails(source, options, cancellationToken);
+        var error = GetErrorFromProblemDetails(problemDetails, options);
+        return Maybe<T>.Create.Fail(error);
     }
 
     /// <summary>
@@ -66,25 +147,19 @@ public static class HttpResponseExtensions
     /// cancellation.
     /// </param>
     /// <returns>The maybe result representing the response.</returns>
-    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
+    public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this HttpResponseMessage source,
-        CancellationToken cancellationToken = default)
-    {
-        if (source.IsSuccessStatusCode)
-            return await ReadMaybeValue<T>(source.Content, cancellationToken);
-
-        var problemDetails = await ReadProblemDetails(source, cancellationToken);
-        var error = GetErrorFromProblemDetails(problemDetails);
-        return Maybe<T>.Create.Fail(error);
-    }
+        CancellationToken cancellationToken = default) =>
+        source.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
 
     private static async Task<Result<T>> ReadValue<T>(
         HttpContent content,
+        JsonSerializerOptions options,
         CancellationToken cancellationToken)
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
+            var value = await content.ReadFromJsonAsync<T>(options,  cancellationToken);
 
             if (value is null)
                 return Result<T>.Create.Fail("Response content was the literal string \"null\".");
@@ -99,11 +174,12 @@ public static class HttpResponseExtensions
 
     private static async Task<Maybe<T>> ReadMaybeValue<T>(
         HttpContent content,
+        JsonSerializerOptions options,
         CancellationToken cancellationToken)
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>(cancellationToken: cancellationToken);
+            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken);
 
             if (value is null)
                 return Maybe<T>.Create.None();
@@ -118,11 +194,12 @@ public static class HttpResponseExtensions
 
     private static async Task<ProblemDetails> ReadProblemDetails(
         HttpResponseMessage response,
+        JsonSerializerOptions options,
         CancellationToken cancellationToken)
     {
         try
         {
-            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(cancellationToken: cancellationToken);
+            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(options, cancellationToken);
 
             if (problemDetails is not null)
                 return problemDetails;
@@ -143,7 +220,7 @@ public static class HttpResponseExtensions
         };
     }
 
-    private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails)
+    private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails, JsonSerializerOptions options)
     {
         string? stackTrace = null;
         if (problemDetails.Extensions.TryGetValue("errorStackTrace", out var obj) && obj is not null)
@@ -158,7 +235,7 @@ public static class HttpResponseExtensions
         {
             try
             {
-                innerError = JsonSerializer.Deserialize<Error>(element, _options);
+                innerError = JsonSerializer.Deserialize<Error>(element, options);
             }
             catch
             {

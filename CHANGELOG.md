@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning].
     - Add `OnSuccess` and `OnSome` extension methods to conditionally invoke a callback and return the same result.
 - RandomSkunk.Results.Http:
     - Add extension methods for `HttpClient` to convert HTTP operations into results.
+    - Add `JsonSerializerOptions` parameter to `HttpResponseMessage` extension methods.
 
 ### Fixed
 
@@ -26,6 +27,8 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Add optional `getError` parameter to all `Map` and `FlapMap` extension methods.
+- RandomSkunk.Results.Http:
+    - Rename `ReadResultFromJsonAsync` extension method to `ToResultAsync`.
 
 ## [1.0.0-alpha08] - 2022-05-11
 
