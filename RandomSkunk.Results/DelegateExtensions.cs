@@ -6,7 +6,11 @@ namespace RandomSkunk.Results;
 public static class DelegateExtensions
 {
     /// <summary>
-    /// Converts the specified <see cref="Action"/> to a <see cref="Result"/>.
+    /// Converts the specified <see cref="Action"/> delegate to a <see cref="Result"/> by evaluating it inside a try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, a <c>Success</c> result is returned. If the function throws an exception, the
+    /// exception is used to construct the error of the returned <c>Fail</c> result.
+    /// </para>
     /// </summary>
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
@@ -37,7 +41,12 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Func{TResult}"/> to a <see cref="Result{T}"/>.
+    /// Converts the specified <see cref="Func{TResult}"/> delegate to a <see cref="Result{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, its return value is the value of the returned <c>Success</c> result. If the
+    /// function throws an exception, the exception is used to construct the error of the returned <c>Fail</c> result.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="source">The delegate to convert.</param>
@@ -75,7 +84,13 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Func{TResult}"/> to a <see cref="Maybe{T}"/>.
+    /// Converts the specified <see cref="Func{TResult}"/> delegate to a <see cref="Maybe{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
+    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// If the function throws an exception, the exception is used to construct the error of the returned <c>Fail</c> result.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="source">The delegate to convert.</param>
@@ -110,7 +125,12 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncAction"/> to a <see cref="Result"/>.
+    /// Converts the specified <see cref="AsyncAction"/> delegate to a <see cref="Result"/> by evaluating it inside a try/catch
+    /// block.
+    /// <para>
+    /// If the function doesn't throw an exception, a <c>Success</c> result is returned. If the function throws an exception, the
+    /// exception is used to construct the error of the returned <c>Fail</c> result.
+    /// </para>
     /// </summary>
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
@@ -139,7 +159,12 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncFunc{T}"/> to a <see cref="Result{T}"/>.
+    /// Converts the specified <see cref="AsyncFunc{T}"/> delegate to a <see cref="Result{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, its return value is the value of the returned <c>Success</c> result. If the
+    /// function throws an exception, the exception is used to construct the error of the returned <c>Fail</c> result.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="source">The delegate to convert.</param>
@@ -175,7 +200,13 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncFunc{T}"/> to a <see cref="Maybe{T}"/>.
+    /// Converts the specified <see cref="AsyncFunc{T}"/> delegate to a <see cref="Maybe{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
+    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// If the function throws an exception, the exception is used to construct the error of the returned <c>Fail</c> result.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="source">The delegate to convert.</param>
@@ -210,7 +241,12 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Action"/> to a <see cref="Result"/>.
+    /// Converts the specified <see cref="Action"/> delegate to a <see cref="Result"/> by evaluating it inside a try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, a <c>Success</c> result is returned. If the function throws an exception of
+    /// type <typeparamref name="TException"/>, the exception is used to construct the error of the returned <c>Fail</c> result.
+    /// If the function throws some other type of exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="source">The delegate to convert.</param>
@@ -241,7 +277,13 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Func{TResult}"/> to a <see cref="Result{T}"/>.
+    /// Converts the specified <see cref="Func{TResult}"/> delegate to a <see cref="Result{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, its return value is the value of the returned <c>Success</c> result. If the
+    /// function throws an exception of type <typeparamref name="TException"/>, the exception is used to construct the error of
+    /// the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
@@ -279,7 +321,15 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Func{TResult}"/> to a <see cref="Maybe{T}"/>.
+    /// Converts the specified <see cref="Func{TResult}"/> delegate to a <see cref="Maybe{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
+    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// If the function throws an exception of type <typeparamref name="TException"/>, the exception is used to construct the
+    /// error of the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not
+    /// caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
@@ -316,7 +366,13 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncAction"/> to a <see cref="Result"/>.
+    /// Converts the specified <see cref="AsyncAction"/> delegate to a <see cref="Result"/> by evaluating it inside a try/catch
+    /// block.
+    /// <para>
+    /// If the function doesn't throw an exception, a <c>Success</c> result is returned. If the function throws an exception of
+    /// type <typeparamref name="TException"/>, the exception is used to construct the error of the returned <c>Fail</c> result.
+    /// If the function throws some other type of exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="source">The delegate to convert.</param>
@@ -347,7 +403,13 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncFunc{T}"/> to a <see cref="Result{T}"/>.
+    /// Converts the specified <see cref="AsyncFunc{T}"/> delegate to a <see cref="Result{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, its return value is the value of the returned <c>Success</c> result. If the
+    /// function throws an exception of type <typeparamref name="TException"/>, the exception is used to construct the error of
+    /// the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
@@ -385,7 +447,15 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncFunc{T}"/> to a <see cref="Maybe{T}"/>.
+    /// Converts the specified <see cref="AsyncFunc{T}"/> delegate to a <see cref="Maybe{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
+    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// If the function throws an exception of type <typeparamref name="TException"/>, the exception is used to construct the
+    /// error of the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not
+    /// caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
@@ -422,7 +492,13 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Action"/> to a <see cref="Result"/>.
+    /// Converts the specified <see cref="Action"/> delegate to a <see cref="Result"/> by evaluating it inside a try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, a <c>Success</c> result is returned. If the function throws an exception of
+    /// type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the exception is used to construct the
+    /// error of the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not
+    /// caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
@@ -468,7 +544,14 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Func{TResult}"/> to a <see cref="Result{T}"/>.
+    /// Converts the specified <see cref="Func{TResult}"/> delegate to a <see cref="Result{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, its return value is the value of the returned <c>Success</c> result. If the
+    /// function throws an exception of type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the
+    /// exception is used to construct the error of the returned <c>Fail</c> result. If the function throws some other type of
+    /// exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
@@ -521,7 +604,15 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="Func{TResult}"/> to a <see cref="Maybe{T}"/>.
+    /// Converts the specified <see cref="Func{TResult}"/> delegate to a <see cref="Maybe{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
+    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// If the function throws an exception of type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the
+    /// exception is used to construct the error of the returned <c>Fail</c> result. If the function throws some other type of
+    /// exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
@@ -573,7 +664,14 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncAction"/> to a <see cref="Result"/>.
+    /// Converts the specified <see cref="AsyncAction"/> delegate to a <see cref="Result"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, a <c>Success</c> result is returned. If the function throws an exception of
+    /// type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the exception is used to construct the
+    /// error of the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not
+    /// caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
@@ -619,7 +717,14 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncFunc{T}"/> to a <see cref="Result{T}"/>.
+    /// Converts the specified <see cref="AsyncFunc{T}"/> delegate to a <see cref="Result{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception, its return value is the value of the returned <c>Success</c> result. If the
+    /// function throws an exception of type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the
+    /// exception is used to construct the error of the returned <c>Fail</c> result. If the function throws some other type of
+    /// exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
@@ -672,7 +777,15 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncFunc{T}"/> to a <see cref="Maybe{T}"/>.
+    /// Converts the specified <see cref="AsyncFunc{T}"/> delegate to a <see cref="Maybe{T}"/> by evaluating it inside a
+    /// try/catch block.
+    /// <para>
+    /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
+    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// If the function throws an exception of type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the
+    /// exception is used to construct the error of the returned <c>Fail</c> result. If the function throws some other type of
+    /// exception, the exception is not caught.
+    /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
