@@ -4,14 +4,14 @@ public class Delegates_helper_methods
 {
     public class For_Action
     {
+        private static readonly Action _action = () => { };
+
         [Fact]
         public void Returns_action_parameter()
         {
-            Action action = () => { };
+            var actual = Delegates.Action(_action);
 
-            var actual = Delegates.Action(action);
-
-            actual.Should().BeSameAs(action);
+            actual.Should().BeSameAs(_action);
         }
 
         [Fact]
@@ -25,22 +25,20 @@ public class Delegates_helper_methods
 
     public class For_Func_of_T
     {
+        private static readonly Func<int> _func = () => 1;
+
         [Fact]
         public void Returns_func_parameter()
         {
-            Func<int> func = () => 1;
+            var actual = Delegates.Func(_func);
 
-            var actual = Delegates.Func(func);
-
-            actual.Should().BeSameAs(func);
+            actual.Should().BeSameAs(_func);
         }
 
         [Fact]
         public void When_generic_argument_is_Task_Throws_ArgumentOutOfRangeException()
         {
-            Func<Task> func = () => Task.CompletedTask;
-
-            Action act = () => Delegates.Func(func);
+            Action act = () => Delegates.Func(() => Task.CompletedTask);
 
             act.Should().ThrowExactly<ArgumentOutOfRangeException>();
         }
@@ -48,9 +46,7 @@ public class Delegates_helper_methods
         [Fact]
         public void When_generic_argument_is_Task_of_T_Throws_ArgumentOutOfRangeException()
         {
-            Func<Task<int>> func = () => Task.FromResult(1);
-
-            Action act = () => Delegates.Func(func);
+            Action act = () => Delegates.Func(() => Task.FromResult(1));
 
             act.Should().ThrowExactly<ArgumentOutOfRangeException>();
         }
