@@ -250,11 +250,13 @@ Maybe<int>.Create.None().Map(value => value.ToString()); // None
 Maybe<int>.Create.Fail("A").Map(value => value.ToString()); // Fail("A")
 ```
 
+Each of the `Map` and `MapAsync` overloads has an optional `Func<Error, Error> getError` parameter, which allows the caller to replace the error of the returned `Fail` result. This function is evaluated only if the source result is a `Fail` result.
+
 ### FlatMap / FlatMapAsync
 
 *Applicable to `Result<T>` and `Maybe<T>` only.*
 
-Transforms the source result into a new result. If the source result is `Success` or `Some`, return  the result obtained by evaluating the specified `flatMap` or `flatMapAsync` function. If the source result is `Fail`, return a new `Fail` result with the same error as the source. If the source result is `None`, return `None`.
+Transforms the source result into a new result. If the source result is `Success` or `Some`, returns the result obtained by evaluating the specified `flatMap` or `flatMapAsync` function. If the source result is `Fail`, returns a new `Fail` result with the same error as the source. If the source result is `None`, returns `None`.
 
 ```c#
 Result<int>.Create.Success(123).FlatMap(GetSuccessResult); // Success("123")
@@ -279,6 +281,60 @@ Maybe<string> GetSomeResult(bool value) => Maybe<string>.Create.Some(value.ToStr
 Maybe<string> GetNoneResult(bool value) => Maybe<string>.Create.None();
 Maybe<string> GetFailResult(bool value) => Maybe<string>.Create.Fail("B");
 ```
+
+Each of the `FlatMap` and `FlatMapAsync` overloads has an optional `Func<Error, Error> getError` parameter, which allows the caller to replace the error of the returned `Fail` result. This function is evaluated only if the source result is a `Fail` result.
+
+### CrossMap / CrossMapAsync
+
+*Applicable to `Result<T>` and `Maybe<T>` only.*
+
+Transforms the source result into a different type of result.
+
+```c#
+// Result<T> to Result
+Result<int>.Create.Success(123).CrossMap(GetSuccessResult); // Success
+Result<int>.Create.Success(123).CrossMap(GetFailResult); // Fail
+Result<int>.Create.Fail("A").CrossMap(GetSuccessResult); // Fail("A")
+Result<int>.Create.Fail("A").CrossMap(GetFailResult); // Fail("A")
+
+// Result<T> to Maybe<T>
+Result<int>.Create.Success(123).CrossMap(GetSomeMaybeOfString); // Some("123")
+Result<int>.Create.Success(123).CrossMap(GetNoneMaybeOfString); // None
+Result<int>.Create.Success(123).CrossMap(GetFailMaybeOfString); // Fail("B")
+Result<int>.Create.Fail("A").CrossMap(GetSomeMaybeOfString); // Fail("A")
+Result<int>.Create.Fail("A").CrossMap(GetNoneMaybeOfString); // Fail("A")
+Result<int>.Create.Fail("A").CrossMap(GetFailMaybeOfString); // Fail("A")
+
+// Maybe<T> to Result
+Maybe<int>.Create.Some(123).CrossMap(GetSuccessResult); // Success
+Maybe<int>.Create.Some(123).CrossMap(GetFailResult); // Fail("B")
+Maybe<int>.Create.None().CrossMap(GetSuccessResult); // Fail(none)
+Maybe<int>.Create.None().CrossMap(GetFailResult); // Fail(none)
+Maybe<int>.Create.Fail("A").CrossMap(GetSuccessResult); // Fail("A")
+Maybe<int>.Create.Fail("A").CrossMap(GetFailResult); // Fail("A")
+
+// Maybe<T> to Result<T>
+Maybe<int>.Create.Some(123).CrossMap(GetSuccessResultOfString); // Success("123")
+Maybe<int>.Create.Some(123).CrossMap(GetFailResultOfString); // Fail("B")
+Maybe<int>.Create.None().CrossMap(GetSuccessResultOfString); // Fail(none)
+Maybe<int>.Create.None().CrossMap(GetFailResultOfString); // Fail(none)
+Maybe<int>.Create.Fail("A").CrossMap(GetSuccessResultOfString); // Fail("A")
+Maybe<int>.Create.Fail("A").CrossMap(GetFailResultOfString); // Fail("A")
+
+Result GetSuccessResult(int value) => Result.Create.Success();
+Result GetFailResult(int value) => Result.Create.Fail("B");
+
+Result<string> GetSuccessResultOfString(int value) => Result<string>.Create.Success(value.ToString());
+Result<string> GetFailResultOfString(int value) => Result<string>.Create.Fail("B");
+
+Maybe<string> GetSomeMaybeOfString(int value) => Maybe<string>.Create.Some(value.ToString());
+Maybe<string> GetNoneMaybeOfString(int value) => Maybe<string>.Create.None();
+Maybe<string> GetFailMaybeOfString(int value) => Maybe<string>.Create.Fail("B");
+```
+
+Each of the `CrossMap` and `CrossMapAsync` overloads has an optional `Func<Error, Error> getError` parameter, which allows the caller to replace the error of the returned `Fail` result when the source result is a `Fail` result.
+
+The cross-map methods for `Maybe<T>` also have an optional `Func<Error> getNoneError` parameter, which allows the caller to specify the error of the returned `Fail` result when the source result is a `None` result.
 
 ### Flatten
 
