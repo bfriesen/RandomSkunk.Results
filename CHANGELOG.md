@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- RandomSkunk.Results.Http:
+    - Fix ambiguous overloads in `HttpResponseMessage` extension methods.
+
 ## [1.0.0-alpha09] - 2022-05-19
 
 ### Added

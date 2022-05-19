@@ -24,7 +24,7 @@ public static class HttpResponseExtensions
     /// <returns>The result representing the response.</returns>
     public static async Task<Result> GetResultAsync(
         this HttpResponseMessage source,
-        JsonSerializerOptions? options = null,
+        JsonSerializerOptions? options,
         CancellationToken cancellationToken = default)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -72,7 +72,7 @@ public static class HttpResponseExtensions
     /// <returns>The result representing the response.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this HttpResponseMessage source,
-        JsonSerializerOptions? options = null,
+        JsonSerializerOptions? options,
         CancellationToken cancellationToken = default)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
@@ -121,7 +121,7 @@ public static class HttpResponseExtensions
     /// <returns>The maybe result representing the response.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this HttpResponseMessage source,
-        JsonSerializerOptions? options = null,
+        JsonSerializerOptions? options,
         CancellationToken cancellationToken = default)
     {
         if (source is null) throw new ArgumentNullException(nameof(source));
