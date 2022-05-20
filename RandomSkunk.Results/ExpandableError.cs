@@ -43,7 +43,7 @@ public sealed class ExpandableError : Error
         string? identifier = null,
         string? type = "Error",
         Error? innerError = null,
-        IDictionary<string, object>? extensions = null)
+        IReadOnlyDictionary<string, object>? extensions = null)
         : base(message, stackTrace, errorCode, identifier, type, innerError) =>
         Extensions = GetExtensions(extensions);
 
@@ -121,8 +121,8 @@ public sealed class ExpandableError : Error
     public bool TryGet<T>(string key, [NotNullWhen(true)] out T? value) =>
         TryGet(key, null, out value);
 
-    private static IReadOnlyDictionary<string, object> GetExtensions(IDictionary<string, object>? extensions) =>
-        extensions is null
-            ? (_emptyExtensions ??= new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()))
-            : new ReadOnlyDictionary<string, object>(extensions);
+    private static IReadOnlyDictionary<string, object> GetExtensions(IReadOnlyDictionary<string, object>? extensions) =>
+        extensions is IDictionary<string, object> dictionary
+            ? dictionary as ReadOnlyDictionary<string, object> ?? new ReadOnlyDictionary<string, object>(dictionary)
+            : extensions ?? (_emptyExtensions ??= new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
 }

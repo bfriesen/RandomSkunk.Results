@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add JSON serialization support for `Error` class.
     - Add `ExpandableError` class, designed to losslessly capture additional properties when deserialized.
+    - Add `WithIdentifier` extension methods for `Error` and `ExpandableError`.
 
 ## [1.0.0-alpha09] - 2022-05-19
 

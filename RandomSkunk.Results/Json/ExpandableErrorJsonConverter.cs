@@ -125,6 +125,8 @@ internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableErr
 
     private class ExpandableErrorBuilder
     {
+        private Dictionary<string, object>? _extensions;
+
         public string? Message { get; set; }
 
         public string? StackTrace { get; set; }
@@ -137,9 +139,9 @@ internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableErr
 
         public Error? InnerError { get; set; }
 
-        public Dictionary<string, object> Extensions { get; } = new Dictionary<string, object>(StringComparer.Ordinal);
+        public Dictionary<string, object> Extensions => _extensions ??= new Dictionary<string, object>(StringComparer.Ordinal);
 
         public ExpandableError Build() =>
-            new(Message, StackTrace, ErrorCode, Identifier, Type, InnerError, Extensions);
+            new(Message, StackTrace, ErrorCode, Identifier, Type, InnerError, _extensions);
     }
 }
