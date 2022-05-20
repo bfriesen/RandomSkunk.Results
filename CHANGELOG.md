@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results.Http:
     - Fix ambiguous overloads in `HttpResponseMessage` extension methods.
 
+### Added
+
+- RandomSkunk.Results:
+    - Add JSON serialization support for `Error` class.
+    - Add `ExpandableError` class, designed to losslessly capture additional properties when deserialized.
+
 ## [1.0.0-alpha09] - 2022-05-19
 
 ### Added

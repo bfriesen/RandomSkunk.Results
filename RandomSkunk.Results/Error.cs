@@ -1,4 +1,6 @@
+using RandomSkunk.Results.Json;
 using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace RandomSkunk.Results;
 
@@ -89,6 +91,7 @@ public class Error : IEquatable<Error>
     /// <summary>
     /// Gets the optional <see cref="Error"/> instance that caused the current error.
     /// </summary>
+    [JsonConverter(typeof(InnerErrorJsonConverter))]
     public Error? InnerError { get; }
 
     internal static Error DefaultError => _default.Value;
