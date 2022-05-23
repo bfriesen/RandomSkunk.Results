@@ -63,4 +63,44 @@ public static partial class ResultExtensions
 
         return source;
     }
+
+    /// <summary>
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
+    /// <paramref name="filter"/> function evaluates to <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="filter">
+    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
+    /// <see langword="false"/>.
+    /// </param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="filter"/> is
+    /// <see langword="null"/>.
+    /// </exception>
+    public static async Task<Maybe<T>> Filter<T>(
+        this Task<Maybe<T>> source,
+        Func<T, bool> filter) =>
+        (await source).Filter(filter);
+
+    /// <summary>
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
+    /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="filterAsync">
+    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
+    /// <see langword="false"/>.
+    /// </param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="source"/> is <see langword="null"/> or if <paramref name="filterAsync"/> is
+    /// <see langword="null"/>.
+    /// </exception>
+    public static async Task<Maybe<T>> FilterAsync<T>(
+        this Task<Maybe<T>> source,
+        Func<T, Task<bool>> filterAsync) =>
+        await (await source).FilterAsync(filterAsync);
 }
