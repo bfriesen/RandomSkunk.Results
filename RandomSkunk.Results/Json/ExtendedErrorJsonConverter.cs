@@ -1,9 +1,6 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 namespace RandomSkunk.Results.Json;
 
-internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExtendedError>
+internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
 {
 #pragma warning disable IDE1006 // Naming Styles
     private static readonly JsonEncodedText Message = JsonEncodedText.Encode("Message");

@@ -6,7 +6,7 @@ namespace RandomSkunk.Results;
 /// property and are available from the <see cref="TryGet{T}(string, out T)"/> and
 /// <see cref="TryGet{T}(string, JsonSerializerOptions, out T)"/> methods.
 /// </summary>
-[JsonConverter(typeof(ExpandableErrorJsonConverter))]
+[JsonConverter(typeof(ExtendedErrorJsonConverter))]
 public sealed class ExtendedError : Error
 {
     private static IReadOnlyDictionary<string, object>? _emptyExtensions;
