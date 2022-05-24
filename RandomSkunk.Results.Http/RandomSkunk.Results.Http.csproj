@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net461;net6.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
 
-		<PackageVersion>1.0.0-alpha09</PackageVersion>
+		<PackageVersion>1.0.0-alpha10</PackageVersion>
 		<Title>RandomSkunk.Results.Http</Title>
 		<Description>Using RandomSkunk.Results with System.Net.Http and System.Net.Http.Json.</Description>
 		<Authors>Brian Friesen</Authors>
