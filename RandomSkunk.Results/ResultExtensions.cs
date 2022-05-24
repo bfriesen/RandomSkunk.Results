@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// </summary>
 public static partial class ResultExtensions
 {
-    private static Func<Error> _defaultGetNoneError = () => new Error("Not Found", errorCode: 404, type: "NotFoundError");
+    private static Func<Error> _defaultGetNoneError = () => new Error("Not Found", "NotFoundError") { ErrorCode = 404 };
 
     /// <summary>
     /// Gets or sets the default value for <c>Func&lt;Error&gt; getNoneError</c> parameters.

@@ -10,7 +10,7 @@ public class WithError_extension_methods
             var error = new Error();
             var source = Result.Create.Fail(error);
 
-            var actual = source.WithError(e => new Error(innerError: e));
+            var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.IsFail.Should().BeTrue();
             actual.Error().InnerError.Should().BeSameAs(error);
@@ -21,7 +21,7 @@ public class WithError_extension_methods
         {
             var source = Result.Create.Success();
 
-            var actual = source.WithError(e => new Error(innerError: e));
+            var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.Should().Be(source);
         }
@@ -35,7 +35,7 @@ public class WithError_extension_methods
             var error = new Error();
             var source = Result<int>.Create.Fail(error);
 
-            var actual = source.WithError(e => new Error(innerError: e));
+            var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.IsFail.Should().BeTrue();
             actual.Error().InnerError.Should().BeSameAs(error);
@@ -46,7 +46,7 @@ public class WithError_extension_methods
         {
             var source = Result<int>.Create.Success(1);
 
-            var actual = source.WithError(e => new Error(innerError: e));
+            var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.Should().Be(source);
         }
@@ -60,7 +60,7 @@ public class WithError_extension_methods
             var error = new Error();
             var source = Maybe<int>.Create.Fail(error);
 
-            var actual = source.WithError(e => new Error(innerError: e));
+            var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.IsFail.Should().BeTrue();
             actual.Error().InnerError.Should().BeSameAs(error);
@@ -71,7 +71,7 @@ public class WithError_extension_methods
         {
             var source = Maybe<int>.Create.Some(1);
 
-            var actual = source.WithError(e => new Error(innerError: e));
+            var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.Should().Be(source);
         }
@@ -81,7 +81,7 @@ public class WithError_extension_methods
         {
             var source = Maybe<int>.Create.None();
 
-            var actual = source.WithError(e => new Error(innerError: e));
+            var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.Should().Be(source);
         }

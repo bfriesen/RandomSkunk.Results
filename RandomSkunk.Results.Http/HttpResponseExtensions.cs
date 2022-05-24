@@ -388,14 +388,13 @@ public static class HttpResponseExtensions
             extensions["problemDetailsInstance"] = problemDetails.Instance;
         }
 
-        return new ExtendedError(
-            problemDetails.Detail,
-            stackTrace,
-            problemDetails.Status,
-            identifier,
-            problemDetails.Title ?? "Error",
-            innerError,
-            extensions);
+        return new ExtendedError(problemDetails.Detail, problemDetails.Title, extensions)
+        {
+            StackTrace = stackTrace,
+            ErrorCode = problemDetails.Status,
+            Identifier = identifier,
+            InnerError = innerError,
+        };
     }
 
     private static ExtendedError? TryDeserializeError(JsonElement element, JsonSerializerOptions options)

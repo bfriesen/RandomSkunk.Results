@@ -3,6 +3,7 @@
 namespace System.Diagnostics.CodeAnalysis;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter | AttributeTargets.ReturnValue, Inherited = false)]
+[EditorBrowsable(EditorBrowsableState.Never)]
 internal sealed class NotNullAttribute : Attribute
 {
 }

@@ -196,9 +196,9 @@ public class Result_of_T_struct
         [Fact]
         public void Given_IsFail_When_other_IsFail_with_equal_error_Returns_true()
         {
-            var error = new Error("a", "b", 1, "c", "d");
+            var error = new Error("a", "d") { StackTrace = "b", ErrorCode = 1, Identifier = "c" };
             var result = Result<int>.Create.Fail(error);
-            var otherError = new Error("a", "b", 1, "c", "d");
+            var otherError = new Error("a", "d") { StackTrace = "b", ErrorCode = 1, Identifier = "c" };
             object other = Result<int>.Create.Fail(otherError);
 
             var actual = result.Equals(other);
@@ -264,9 +264,9 @@ public class Result_of_T_struct
         [Fact]
         public void Given_IsFail_When_other_IsFail_with_unequal_error_Returns_false()
         {
-            var error = new Error("a", "b", 1, "c", "d");
+            var error = new Error("a", "d") { StackTrace = "b", ErrorCode = 1, Identifier = "c" };
             var result = Result<int>.Create.Fail(error);
-            var otherError = new Error("w", "x", 2, "y", "z");
+            var otherError = new Error("w", "z") { StackTrace = "x", ErrorCode = 2, Identifier = "y" };
             object other = Result<int>.Create.Fail(otherError);
 
             var actual = result.Equals(other);

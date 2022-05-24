@@ -7,45 +7,36 @@ namespace RandomSkunk.Results;
 /// <see cref="TryGet{T}(string, JsonSerializerOptions, out T)"/> methods.
 /// </summary>
 [JsonConverter(typeof(ExtendedErrorJsonConverter))]
-public sealed class ExtendedError : Error
+public sealed record class ExtendedError : Error
 {
     private static IReadOnlyDictionary<string, object>? _emptyExtensions;
+
+    private readonly IReadOnlyDictionary<string, object> _extensions;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExtendedError"/> class.
     /// </summary>
     /// <param name="message">
-    /// The optional error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/> is used
-    /// instead.
+    /// The error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/> is used instead.
     /// </param>
-    /// <param name="stackTrace">The optional stack trace.</param>
-    /// <param name="errorCode">The optional error code.</param>
-    /// <param name="identifier">The optional identifier of the error.</param>
     /// <param name="type">
-    /// The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/> of the
-    /// <see cref="Type"/> of the current instance is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
+    /// The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
     /// </param>
     /// <param name="extensions">
-    /// Any additional properties not found in the <see cref="Error"/> class.
+    /// Additional properties not found in the <see cref="Error"/> class.
     /// </param>
-    public ExtendedError(
-        string? message = null,
-        string? stackTrace = null,
-        int? errorCode = null,
-        string? identifier = null,
-        string? type = "Error",
-        Error? innerError = null,
-        IReadOnlyDictionary<string, object>? extensions = null)
-        : base(message, stackTrace, errorCode, identifier, type, innerError) =>
-        Extensions = GetExtensions(extensions);
+    public ExtendedError(string? message = null, string? type = null, IReadOnlyDictionary<string, object>? extensions = null)
+        : base(message, type ?? "Error") =>
+        _extensions = extensions ?? (_emptyExtensions ??= new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
 
     /// <summary>
     /// Gets additional properties not found in the <see cref="Error"/> class.
     /// </summary>
-    public IReadOnlyDictionary<string, object> Extensions { get; }
+    public IReadOnlyDictionary<string, object> Extensions
+    {
+        get => _extensions;
+        init => _extensions = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
     /// <summary>
     /// Gets the extension property with the specified key.
@@ -122,9 +113,4 @@ public sealed class ExtendedError : Error
         foreach (var extension in Extensions)
             sb.AppendLine().Append(indention).Append(extension.Key).Append(": ").Append(extension.Value);
     }
-
-    private static IReadOnlyDictionary<string, object> GetExtensions(IReadOnlyDictionary<string, object>? extensions) =>
-        extensions is IDictionary<string, object> dictionary
-            ? dictionary as ReadOnlyDictionary<string, object> ?? new ReadOnlyDictionary<string, object>(dictionary)
-            : extensions ?? (_emptyExtensions ??= new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
 }

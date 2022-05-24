@@ -17,9 +17,13 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add JSON serialization support for `Error` class.
     - Add `ExtendedError` class, designed to losslessly capture additional properties when deserialized.
-    - Add `WithIdentifier` extension methods for `Error` and `ExtendedError`.
     - Add `OnFail` extension methods for all result types and `OnNone` extension methods for `Maybe<T>`.
     - Add overloads of almost all result extension methods that extend a `Task<Result>`, `Task<Result<T>>` or `Task<Maybe<T>>`. This allows easier method chaining for users.
+
+### Changed
+
+- RandomSkunk.Results
+    - `Error` is now a record class instead of a regular class.
 
 ## [1.0.0-alpha09] - 2022-05-19
 

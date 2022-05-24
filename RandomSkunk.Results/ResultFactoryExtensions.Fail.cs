@@ -113,7 +113,13 @@ public static partial class ResultFactoryExtensions
         string? errorIdentifier = null,
         string? errorType = null,
         Error? innerError = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, errorIdentifier, errorType, innerError));
+        source.Fail(new Error(errorMessage, errorType)
+        {
+            StackTrace = stackTrace,
+            ErrorCode = errorCode,
+            Identifier = errorIdentifier,
+            InnerError = innerError,
+        });
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -141,7 +147,13 @@ public static partial class ResultFactoryExtensions
         string? errorIdentifier = null,
         string? errorType = null,
         Error? innerError = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, errorIdentifier, errorType, innerError));
+        source.Fail(new Error(errorMessage, errorType)
+        {
+            StackTrace = stackTrace,
+            ErrorCode = errorCode,
+            Identifier = errorIdentifier,
+            InnerError = innerError,
+        });
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -169,5 +181,11 @@ public static partial class ResultFactoryExtensions
         string? errorIdentifier = null,
         string? errorType = null,
         Error? innerError = null) =>
-        source.Fail(new Error(errorMessage, stackTrace, errorCode, errorIdentifier, errorType, innerError));
+        source.Fail(new Error(errorMessage, errorType)
+        {
+            StackTrace = stackTrace,
+            ErrorCode = errorCode,
+            Identifier = errorIdentifier,
+            InnerError = innerError,
+        });
 }
