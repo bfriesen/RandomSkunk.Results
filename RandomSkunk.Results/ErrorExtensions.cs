@@ -17,13 +17,13 @@ public static class ErrorExtensions
     }
 
     /// <summary>
-    /// Returns a new <see cref="ExpandableError"/> identical to <paramref name="source"/>, except with the specified identifier.
+    /// Returns a new <see cref="ExtendedError"/> identical to <paramref name="source"/>, except with the specified identifier.
     /// </summary>
     /// <param name="source">The source error.</param>
     /// <param name="identifier">The identifier of the returned error.</param>
-    /// <returns>A new <see cref="ExpandableError"/> with its identifier set to <paramref name="identifier"/>.</returns>
-    public static ExpandableError WithIdentifier(this ExpandableError source, string? identifier)
+    /// <returns>A new <see cref="ExtendedError"/> with its identifier set to <paramref name="identifier"/>.</returns>
+    public static ExtendedError WithIdentifier(this ExtendedError source, string? identifier)
     {
-        return new ExpandableError(source.Message, source.StackTrace, source.ErrorCode, identifier, source.Type, source.InnerError, source.Extensions);
+        return new ExtendedError(source.Message, source.StackTrace, source.ErrorCode, identifier, source.Type, source.InnerError, source.Extensions);
     }
 }

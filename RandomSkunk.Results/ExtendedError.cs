@@ -7,18 +7,18 @@ using System.Text.Json.Serialization;
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// Defines an error that can have extension properties. This type is useful for JSON deserializing an error that could represent
-/// an unknown custom error type - any unknown properties are deserialized into the <see cref="Extensions"/> property and
-/// available from the <see cref="TryGet{T}(string, out T)"/> and <see cref="TryGet{T}(string, JsonSerializerOptions, out T)"/>
-/// methods.
+/// Defines an error that can have extension properties. This error is useful for JSON deserializing an error that could
+/// represent an unknown custom error type - any unknown JSON properties are deserialized into the <see cref="Extensions"/>
+/// property and are available from the <see cref="TryGet{T}(string, out T)"/> and
+/// <see cref="TryGet{T}(string, JsonSerializerOptions, out T)"/> methods.
 /// </summary>
 [JsonConverter(typeof(ExpandableErrorJsonConverter))]
-public sealed class ExpandableError : Error
+public sealed class ExtendedError : Error
 {
     private static IReadOnlyDictionary<string, object>? _emptyExtensions;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ExpandableError"/> class.
+    /// Initializes a new instance of the <see cref="ExtendedError"/> class.
     /// </summary>
     /// <param name="message">
     /// The optional error message. If <see langword="null"/>, then the value of <see cref="DefaultMessage"/> is used instead.
@@ -36,7 +36,7 @@ public sealed class ExpandableError : Error
     /// <param name="extensions">
     /// Any additional properties not found in the <see cref="Error"/> class.
     /// </param>
-    public ExpandableError(
+    public ExtendedError(
         string? message = null,
         string? stackTrace = null,
         int? errorCode = null,
@@ -65,7 +65,7 @@ public sealed class ExpandableError : Error
     /// type; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the <see cref="ExpandableError"/> contains an extension property with the specified key that is
+    /// <see langword="true"/> if the <see cref="ExtendedError"/> contains an extension property with the specified key that is
     /// of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
     /// </returns>
     public bool TryGet<T>(string key, JsonSerializerOptions? options, [NotNullWhen(true)] out T? value)
@@ -115,7 +115,7 @@ public sealed class ExpandableError : Error
     /// type; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if the <see cref="ExpandableError"/> contains an extension property with the specified key that is
+    /// <see langword="true"/> if the <see cref="ExtendedError"/> contains an extension property with the specified key that is
     /// of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
     /// </returns>
     public bool TryGet<T>(string key, [NotNullWhen(true)] out T? value) =>

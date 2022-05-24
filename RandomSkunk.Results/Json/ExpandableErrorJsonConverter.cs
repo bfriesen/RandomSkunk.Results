@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace RandomSkunk.Results.Json;
 
-internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableError>
+internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExtendedError>
 {
 #pragma warning disable IDE1006 // Naming Styles
     private static readonly JsonEncodedText Message = JsonEncodedText.Encode("Message");
@@ -14,7 +14,7 @@ internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableErr
     private static readonly JsonEncodedText InnerError = JsonEncodedText.Encode("InnerError");
 #pragma warning restore IDE1006 // Naming Styles
 
-    public override ExpandableError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ExtendedError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var builder = new ExpandableErrorBuilder();
 
@@ -30,7 +30,7 @@ internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableErr
         return builder.Build();
     }
 
-    public override void Write(Utf8JsonWriter writer, ExpandableError value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ExtendedError value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
         WriteExpandableError(writer, value, options);
@@ -65,7 +65,7 @@ internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableErr
         {
             if (reader.ValueTextEquals(InnerError.EncodedUtf8Bytes))
             {
-                builder.InnerError = JsonSerializer.Deserialize<ExpandableError>(ref reader, options);
+                builder.InnerError = JsonSerializer.Deserialize<ExtendedError>(ref reader, options);
             }
             else
             {
@@ -79,7 +79,7 @@ internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableErr
         }
     }
 
-    private static void WriteExpandableError(Utf8JsonWriter writer, ExpandableError value, JsonSerializerOptions options)
+    private static void WriteExpandableError(Utf8JsonWriter writer, ExtendedError value, JsonSerializerOptions options)
     {
         if (value.Message != null)
             writer.WriteString(Message, value.Message);
@@ -141,7 +141,7 @@ internal sealed class ExpandableErrorJsonConverter : JsonConverter<ExpandableErr
 
         public Dictionary<string, object> Extensions => _extensions ??= new Dictionary<string, object>(StringComparer.Ordinal);
 
-        public ExpandableError Build() =>
+        public ExtendedError Build() =>
             new(Message, StackTrace, ErrorCode, Identifier, Type, InnerError, _extensions);
     }
 }

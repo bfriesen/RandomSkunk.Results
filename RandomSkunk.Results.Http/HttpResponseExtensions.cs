@@ -345,11 +345,11 @@ public static class HttpResponseExtensions
         };
     }
 
-    private static ExpandableError GetErrorFromProblemDetails(ProblemDetails problemDetails, JsonSerializerOptions options)
+    private static ExtendedError GetErrorFromProblemDetails(ProblemDetails problemDetails, JsonSerializerOptions options)
     {
         string? stackTrace = null;
         string? identifier = null;
-        ExpandableError? innerError = null;
+        ExtendedError? innerError = null;
         Dictionary<string, object>? extensions = null;
 
         foreach (var extension in problemDetails.Extensions)
@@ -388,7 +388,7 @@ public static class HttpResponseExtensions
             extensions["problemDetailsInstance"] = problemDetails.Instance;
         }
 
-        return new ExpandableError(
+        return new ExtendedError(
             problemDetails.Detail,
             stackTrace,
             problemDetails.Status,
@@ -398,11 +398,11 @@ public static class HttpResponseExtensions
             extensions);
     }
 
-    private static ExpandableError? TryDeserializeError(JsonElement element, JsonSerializerOptions options)
+    private static ExtendedError? TryDeserializeError(JsonElement element, JsonSerializerOptions options)
     {
         try
         {
-            return JsonSerializer.Deserialize<ExpandableError>(element, options);
+            return JsonSerializer.Deserialize<ExtendedError>(element, options);
         }
         catch
         {
