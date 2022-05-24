@@ -1,9 +1,3 @@
-using RandomSkunk.Results.Json;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -21,7 +15,8 @@ public sealed class ExtendedError : Error
     /// Initializes a new instance of the <see cref="ExtendedError"/> class.
     /// </summary>
     /// <param name="message">
-    /// The optional error message. If <see langword="null"/>, then the value of <see cref="DefaultMessage"/> is used instead.
+    /// The optional error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/> is used
+    /// instead.
     /// </param>
     /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>

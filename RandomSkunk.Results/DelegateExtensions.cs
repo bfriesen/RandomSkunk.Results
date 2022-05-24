@@ -1,7 +1,9 @@
+using static RandomSkunk.Results.Exceptions;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// Defines extension methods for converting delegates into result values.
+/// Defines extension methods for converting delegates into result values by evaluating them inside try/catch blocks.
 /// </summary>
 public static class DelegateExtensions
 {
@@ -15,7 +17,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -52,7 +54,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -96,7 +98,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -135,7 +137,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -170,7 +172,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -212,7 +214,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -252,7 +254,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -290,7 +292,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -336,7 +338,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -378,7 +380,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -416,7 +418,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -462,7 +464,7 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError">
     /// An optional function that maps an exception to a <c>Fail</c> result's error. If <see langword="null"/>, the error is
-    /// created by calling <see cref="FromException"/>.
+    /// created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exceptionPredicate">
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
@@ -505,11 +507,11 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError1">
     /// An optional function that maps the first exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="getError2">
     /// An optional function that maps the second exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exception1Predicate">
     /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
@@ -559,11 +561,11 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError1">
     /// An optional function that maps the first exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="getError2">
     /// An optional function that maps the second exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exception1Predicate">
     /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
@@ -620,11 +622,11 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError1">
     /// An optional function that maps the first exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="getError2">
     /// An optional function that maps the second exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exception1Predicate">
     /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
@@ -678,11 +680,11 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError1">
     /// An optional function that maps the first exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="getError2">
     /// An optional function that maps the second exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exception1Predicate">
     /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
@@ -732,11 +734,11 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError1">
     /// An optional function that maps the first exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="getError2">
     /// An optional function that maps the second exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exception1Predicate">
     /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
@@ -793,11 +795,11 @@ public static class DelegateExtensions
     /// <param name="source">The delegate to convert.</param>
     /// <param name="getError1">
     /// An optional function that maps the first exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="getError2">
     /// An optional function that maps the second exception type to a <c>Fail</c> result's error. If <see langword="null"/>, the
-    /// error is created by calling <see cref="FromException"/>.
+    /// error is created by calling <see cref="Error.FromException"/>.
     /// </param>
     /// <param name="exception1Predicate">
     /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
@@ -839,7 +841,7 @@ public static class DelegateExtensions
     private static Error Evaluate<TException>(this Func<TException, Error>? getError, TException exception)
         where TException : Exception =>
         getError is null
-            ? FromException(exception)
+            ? Error.FromException(exception)
             : getError(exception);
 
     private static bool Evaluate<TException>(this Func<TException, bool>? exceptionPredicate, TException exception)

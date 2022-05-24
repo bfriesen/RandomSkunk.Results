@@ -99,15 +99,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result> OnFail(this Task<Result> source, Action<Error> onFail)
-    {
-        var result = await source;
-
-        if (result.IsFail)
-            onFail(result.Error());
-
-        return result;
-    }
+    public static async Task<Result> OnFail(this Task<Result> source, Action<Error> onFail) =>
+        (await source).OnFail(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -115,15 +108,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result> OnFailAsync(this Task<Result> source, Func<Error, Task> onFail)
-    {
-        var result = await source;
-
-        if (result.IsFail)
-            await onFail(result.Error());
-
-        return result;
-    }
+    public static async Task<Result> OnFailAsync(this Task<Result> source, Func<Error, Task> onFail) =>
+        await (await source).OnFailAsync(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -132,15 +118,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> source, Action<Error> onFail)
-    {
-        var result = await source;
-
-        if (result.IsFail)
-            onFail(result.Error());
-
-        return result;
-    }
+    public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> source, Action<Error> onFail) =>
+        (await source).OnFail(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -149,15 +128,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result<T>> OnFailAsync<T>(this Task<Result<T>> source, Func<Error, Task> onFail)
-    {
-        var result = await source;
-
-        if (result.IsFail)
-            await onFail(result.Error());
-
-        return result;
-    }
+    public static async Task<Result<T>> OnFailAsync<T>(this Task<Result<T>> source, Func<Error, Task> onFail) =>
+        await (await source).OnFailAsync(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -166,15 +138,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Maybe<T>> OnFail<T>(this Task<Maybe<T>> source, Action<Error> onFail)
-    {
-        var maybe = await source;
-
-        if (maybe.IsFail)
-            onFail(maybe.Error());
-
-        return maybe;
-    }
+    public static async Task<Maybe<T>> OnFail<T>(this Task<Maybe<T>> source, Action<Error> onFail) =>
+        (await source).OnFail(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -183,13 +148,6 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Maybe<T>> OnFailAsync<T>(this Task<Maybe<T>> source, Func<Error, Task> onFail)
-    {
-        var maybe = await source;
-
-        if (maybe.IsFail)
-            await onFail(maybe.Error());
-
-        return maybe;
-    }
+    public static async Task<Maybe<T>> OnFailAsync<T>(this Task<Maybe<T>> source, Func<Error, Task> onFail) =>
+        await (await source).OnFailAsync(onFail);
 }

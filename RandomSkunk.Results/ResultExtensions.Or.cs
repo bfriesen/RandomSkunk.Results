@@ -1,3 +1,4 @@
+using static RandomSkunk.Results.Exceptions;
 using static RandomSkunk.Results.MaybeType;
 using static RandomSkunk.Results.ResultType;
 

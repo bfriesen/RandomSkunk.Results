@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.Exceptions;
+
 namespace RandomSkunk.Results.Linq;
 
 /// <summary>
@@ -199,7 +201,7 @@ public static class LinqExtensions
     }
 
     /// <summary>
-    /// <para>Alias for the <see cref="ResultExtensions.Filter"/> method.</para>
+    /// <para>Alias for the <see cref="ResultExtensions.Filter{T}(Maybe{T}, Func{T, bool})"/> method.</para>
     /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
     /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
     /// </summary>

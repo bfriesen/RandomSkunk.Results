@@ -42,15 +42,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onSome">A callback function to invoke if the source is a <c>Some</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Maybe<T>> OnSomeAsync<T>(this Task<Maybe<T>> source, Action<T> onSome)
-    {
-        var maybe = await source;
-
-        if (maybe.IsSome)
-            onSome(maybe._value!);
-
-        return maybe;
-    }
+    public static async Task<Maybe<T>> OnSome<T>(this Task<Maybe<T>> source, Action<T> onSome) =>
+        (await source).OnSome(onSome);
 
     /// <summary>
     /// Invokes the <paramref name="onSome"/> function if <paramref name="source"/> is a <c>Some</c> result.
@@ -59,13 +52,6 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onSome">A callback function to invoke if the source is a <c>Some</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Maybe<T>> OnSomeAsync<T>(this Task<Maybe<T>> source, Func<T, Task> onSome)
-    {
-        var maybe = await source;
-
-        if (maybe.IsSome)
-            await onSome(maybe._value!);
-
-        return maybe;
-    }
+    public static async Task<Maybe<T>> OnSomeAsync<T>(this Task<Maybe<T>> source, Func<T, Task> onSome) =>
+        await (await source).OnSomeAsync(onSome);
 }

@@ -42,15 +42,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onNone">A callback function to invoke if the source is a <c>None</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Maybe<T>> OnNone<T>(this Task<Maybe<T>> source, Action onNone)
-    {
-        var maybe = await source;
-
-        if (maybe.IsNone)
-            onNone();
-
-        return maybe;
-    }
+    public static async Task<Maybe<T>> OnNone<T>(this Task<Maybe<T>> source, Action onNone) =>
+        (await source).OnNone(onNone);
 
     /// <summary>
     /// Invokes the <paramref name="onNone"/> function if <paramref name="source"/> is a <c>None</c> result.
@@ -59,13 +52,6 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onNone">A callback function to invoke if the source is a <c>None</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Maybe<T>> OnNoneAsync<T>(this Task<Maybe<T>> source, Func<Task> onNone)
-    {
-        var maybe = await source;
-
-        if (maybe.IsNone)
-            await onNone();
-
-        return maybe;
-    }
+    public static async Task<Maybe<T>> OnNoneAsync<T>(this Task<Maybe<T>> source, Func<Task> onNone) =>
+        await (await source).OnNoneAsync(onNone);
 }

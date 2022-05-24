@@ -8,7 +8,6 @@ public static partial class ResultExtensions
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
@@ -23,7 +22,6 @@ public static partial class ResultExtensions
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
@@ -68,19 +66,20 @@ public static partial class ResultExtensions
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result> OnSuccess(this Task<Result> source, Action onSuccess)
-    {
-        var result = await source;
+    public static async Task<Result> OnSuccess(this Task<Result> source, Action onSuccess) =>
+        (await source).OnSuccess(onSuccess);
 
-        if (result.IsSuccess)
-            onSuccess();
-
-        return result;
-    }
+    /// <summary>
+    /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
+    /// </summary>
+    /// <param name="source">The source result.</param>
+    /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
+    /// <returns>The <paramref name="source"/> result.</returns>
+    public static async Task<Result> OnSuccessAsync(this Task<Result> source, Func<Task> onSuccess) =>
+        await (await source).OnSuccessAsync(onSuccess);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
@@ -89,15 +88,8 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result> OnSuccessAsync(this Task<Result> source, Func<Task> onSuccess)
-    {
-        var result = await source;
-
-        if (result.IsSuccess)
-            await onSuccess();
-
-        return result;
-    }
+    public static async Task<Result<T>> OnSuccess<T>(this Task<Result<T>> source, Action<T> onSuccess) =>
+        (await source).OnSuccess(onSuccess);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
@@ -106,30 +98,6 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result<T>> OnSuccessAsync<T>(this Task<Result<T>> source, Action<T> onSuccess)
-    {
-        var result = await source;
-
-        if (result.IsSuccess)
-            onSuccess(result._value!);
-
-        return result;
-    }
-
-    /// <summary>
-    /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
-    /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
-    /// <returns>The <paramref name="source"/> result.</returns>
-    public static async Task<Result<T>> OnSuccessAsync<T>(this Task<Result<T>> source, Func<T, Task> onSuccess)
-    {
-        var result = await source;
-
-        if (result.IsSuccess)
-            await onSuccess(result._value!);
-
-        return result;
-    }
+    public static async Task<Result<T>> OnSuccessAsync<T>(this Task<Result<T>> source, Func<T, Task> onSuccess) =>
+        await (await source).OnSuccessAsync(onSuccess);
 }
