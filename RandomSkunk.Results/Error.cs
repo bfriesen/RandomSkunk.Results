@@ -185,6 +185,16 @@ public class Error : IEquatable<Error>
         return hashCode;
     }
 
+    /// <summary>
+    /// When overridden in an inherited class, appends additional properties of the derived error class to the
+    /// <see cref="StringBuilder"/>.
+    /// </summary>
+    /// <param name="sb">The <see cref="StringBuilder"/> to append to.</param>
+    /// <param name="indention">The leading spaces for the beginning of each line.</param>
+    protected virtual void ToStringAppendAdditionalProperties(StringBuilder sb, string indention)
+    {
+    }
+
     private static string Indent(string value, string indention, string? firstLineIndentation = null)
     {
         if (indention is null)
@@ -201,6 +211,7 @@ public class Error : IEquatable<Error>
             sb.AppendLine().Append(indention).Append("Identifier: ").Append(Identifier);
         if (ErrorCode is not null)
             sb.AppendLine().Append(indention).Append("Error Code: ").Append(ErrorCode);
+        ToStringAppendAdditionalProperties(sb, indention);
         if (StackTrace is not null)
             sb.AppendLine().Append(indention).Append("Stack Trace:").AppendLine().Append(Indent(StackTrace, indention, indention));
         if (InnerError is not null)

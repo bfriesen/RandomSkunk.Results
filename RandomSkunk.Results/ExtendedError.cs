@@ -116,6 +116,13 @@ public sealed class ExtendedError : Error
     public bool TryGet<T>(string key, [NotNullWhen(true)] out T? value) =>
         TryGet(key, null, out value);
 
+    /// <inheritdoc/>
+    protected override void ToStringAppendAdditionalProperties(StringBuilder sb, string indention)
+    {
+        foreach (var extension in Extensions)
+            sb.AppendLine().Append(indention).Append(extension.Key).Append(": ").Append(extension.Value);
+    }
+
     private static IReadOnlyDictionary<string, object> GetExtensions(IReadOnlyDictionary<string, object>? extensions) =>
         extensions is IDictionary<string, object> dictionary
             ? dictionary as ReadOnlyDictionary<string, object> ?? new ReadOnlyDictionary<string, object>(dictionary)
