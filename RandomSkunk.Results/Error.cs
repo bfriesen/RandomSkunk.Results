@@ -127,19 +127,19 @@ public record class Error
     }
 
     /// <inheritdoc/>
-    public override string ToString() => ToString(string.Empty);
+    public sealed override string ToString() => ToString(null);
 
     /// <summary>
     /// When overridden in an inherited class, appends additional properties of the derived error class to the
     /// <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="sb">The <see cref="StringBuilder"/> to append to.</param>
-    /// <param name="indention">The leading spaces for the beginning of each line.</param>
-    protected virtual void ToStringAppendAdditionalProperties(StringBuilder sb, string indention)
+    /// <param name="indention">Leading whitespace for the beginning of each line.</param>
+    protected virtual void PrintAdditionalProperties(StringBuilder sb, string? indention)
     {
     }
 
-    private static string Indent(string value, string indention, string? firstLineIndentation = null)
+    private static string Indent(string value, string? indention, string? firstLineIndentation = null)
     {
         if (indention is null)
             return value;
@@ -147,7 +147,7 @@ public record class Error
         return firstLineIndentation + value.Replace("\n", "\n" + indention);
     }
 
-    private string ToString(string indention)
+    private string ToString(string? indention)
     {
         var sb = new StringBuilder();
         sb.Append(indention).Append(Type).Append(": ").Append(Indent(Message, indention));
@@ -155,7 +155,7 @@ public record class Error
             sb.AppendLine().Append(indention).Append("Identifier: ").Append(Identifier);
         if (ErrorCode is not null)
             sb.AppendLine().Append(indention).Append("Error Code: ").Append(ErrorCode);
-        ToStringAppendAdditionalProperties(sb, indention);
+        PrintAdditionalProperties(sb, indention);
         if (StackTrace is not null)
             sb.AppendLine().Append(indention).Append("Stack Trace:").AppendLine().Append(Indent(StackTrace, indention, indention));
         if (InnerError is not null)

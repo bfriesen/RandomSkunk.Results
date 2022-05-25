@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- RandomSkunk.Results:
+    - Fix `Error.ToString()` formatting for derived types.
+
 ## [1.0.0-alpha10] - 2022-05-24
 
 ### Fixed

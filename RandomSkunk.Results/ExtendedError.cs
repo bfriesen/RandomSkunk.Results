@@ -108,7 +108,7 @@ public sealed record class ExtendedError : Error
         TryGet(key, null, out value);
 
     /// <inheritdoc/>
-    protected override void ToStringAppendAdditionalProperties(StringBuilder sb, string indention)
+    protected override void PrintAdditionalProperties(StringBuilder sb, string? indention)
     {
         foreach (var extension in Extensions)
             sb.AppendLine().Append(indention).Append(extension.Key).Append(": ").Append(extension.Value);
