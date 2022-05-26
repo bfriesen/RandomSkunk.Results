@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning].
     - Change result extension methods to instance methods wherever possible.
     - Move `InvalidStateException` to `RandomSkunk.Results.Unsafe` namespace.
 
+### Added
+
+- RandomSkunk.Results.Http:
+    - Add extension methods for `Task<HttpResponseMessage>` and `Task<Result<HttpResponseMessage>>`.
+
 ## [1.0.0-alpha10] - 2022-05-24
 
 ### Fixed
