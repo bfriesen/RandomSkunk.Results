@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results.Http:
     - Add extension methods for `Task<HttpResponseMessage>` and `Task<Result<HttpResponseMessage>>`.
+- RandomSkunk.Result.AspNetCore:
+    - Add `ToActionResult` extension methods for results.
 
 ## [1.0.0-alpha10] - 2022-05-24
 
