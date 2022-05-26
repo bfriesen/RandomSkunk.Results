@@ -1,4 +1,4 @@
-namespace RandomSkunk.Results;
+namespace RandomSkunk.Results.Unsafe;
 
 /// <summary>
 /// The exception that is thrown when accessing a result's <c>Error</c> or <c>Value</c> property

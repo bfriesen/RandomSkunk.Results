@@ -1,3 +1,5 @@
+using RandomSkunk.Results.Unsafe;
+
 namespace RandomSkunk.Results;
 
 internal static class Exceptions

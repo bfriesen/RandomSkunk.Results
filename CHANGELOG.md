@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Change result extension methods to instance methods wherever possible.
+    - Move `InvalidStateException` to `RandomSkunk.Results.Unsafe` namespace.
 
 ## [1.0.0-alpha10] - 2022-05-24
 
