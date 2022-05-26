@@ -114,8 +114,8 @@ public static class HttpClientExtensions
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        var responseResult = await source.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken);
-        var returnResult = await responseResult.ReadMaybeFromJsonAsync<TValue>(options, cancellationToken);
+        var responseResult = await source.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken).ConfigureAwait(false);
+        var returnResult = await responseResult.ReadMaybeFromJsonAsync<TValue>(options, cancellationToken).ConfigureAwait(false);
         responseResult.OnSuccess(response => response.Dispose());
         return returnResult;
     }

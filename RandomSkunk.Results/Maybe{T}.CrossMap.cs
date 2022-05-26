@@ -83,7 +83,7 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => await crossMapAsync(_value!),
+            Some => await crossMapAsync(_value!).ConfigureAwait(false),
             None => Result.Create.Fail(getNoneError.Evaluate()),
             _ => Result.Create.Fail(getError.Evaluate(Error())),
         };
@@ -168,7 +168,7 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => await crossMapAsync(_value!),
+            Some => await crossMapAsync(_value!).ConfigureAwait(false),
             None => Result<TReturn>.Create.Fail(getNoneError.Evaluate()),
             _ => Result<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };

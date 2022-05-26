@@ -49,7 +49,7 @@ public partial struct Maybe<T>
 
         if (IsSome)
         {
-            return await filterAsync(_value!)
+            return await filterAsync(_value!).ConfigureAwait(false)
                 ? this
                 : Maybe<T>.Create.None();
         }

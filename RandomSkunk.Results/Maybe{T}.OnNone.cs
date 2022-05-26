@@ -26,7 +26,7 @@ public partial struct Maybe<T>
     public async Task<Maybe<T>> OnNoneAsync(Func<Task> onNone)
     {
         if (IsNone)
-            await onNone();
+            await onNone().ConfigureAwait(false);
 
         return this;
     }

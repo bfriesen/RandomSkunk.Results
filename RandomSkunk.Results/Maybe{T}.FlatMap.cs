@@ -71,7 +71,7 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => await flatMapAsync(_value!),
+            Some => await flatMapAsync(_value!).ConfigureAwait(false),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };

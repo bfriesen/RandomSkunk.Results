@@ -26,7 +26,7 @@ public partial struct Result<T>
     public async Task<Result<T>> OnFailAsync(Func<Error, Task> onFail)
     {
         if (IsFail)
-            await onFail(Error());
+            await onFail(Error()).ConfigureAwait(false);
 
         return this;
     }

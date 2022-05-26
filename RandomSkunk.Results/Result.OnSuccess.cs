@@ -26,7 +26,7 @@ public partial struct Result
     public async Task<Result> OnSuccessAsync(Func<Task> onSuccess)
     {
         if (IsSuccess)
-            await onSuccess();
+            await onSuccess().ConfigureAwait(false);
 
         return this;
     }

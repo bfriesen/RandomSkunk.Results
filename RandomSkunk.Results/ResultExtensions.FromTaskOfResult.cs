@@ -30,7 +30,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Result> crossMap,
         Func<Error, Error>? getError = null) =>
-        (await source).CrossMap(crossMap, getError);
+        (await source.ConfigureAwait(false)).CrossMap(crossMap, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
@@ -57,7 +57,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Task<Result>> crossMapAsync,
         Func<Error, Error>? getError = null) =>
-        await (await source).CrossMapAsync(crossMapAsync, getError);
+        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Maybe{T}"/> using the specified
@@ -85,7 +85,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Maybe<TReturn>> crossMap,
         Func<Error, Error>? getError = null) =>
-        (await source).CrossMap(crossMap, getError);
+        (await source.ConfigureAwait(false)).CrossMap(crossMap, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Maybe{T}"/> using the specified
@@ -113,7 +113,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Task<Maybe<TReturn>>> crossMapAsync,
         Func<Error, Error>? getError = null) =>
-        await (await source).CrossMapAsync(crossMapAsync, getError);
+        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
@@ -148,7 +148,7 @@ public static partial class ResultExtensions
         Func<T, Result> crossMap,
         Func<Error>? getNoneError = null,
         Func<Error, Error>? getError = null) =>
-        (await source).CrossMap(crossMap, getNoneError, getError);
+        (await source.ConfigureAwait(false)).CrossMap(crossMap, getNoneError, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
@@ -183,7 +183,7 @@ public static partial class ResultExtensions
         Func<T, Task<Result>> crossMapAsync,
         Func<Error>? getNoneError = null,
         Func<Error, Error>? getError = null) =>
-        await (await source).CrossMapAsync(crossMapAsync, getNoneError, getError);
+        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getNoneError, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result{T}"/> using the specified
@@ -220,7 +220,7 @@ public static partial class ResultExtensions
         Func<T, Result<TReturn>> crossMap,
         Func<Error>? getNoneError = null,
         Func<Error, Error>? getError = null) =>
-        (await source).CrossMap(crossMap, getNoneError, getError);
+        (await source.ConfigureAwait(false)).CrossMap(crossMap, getNoneError, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result{T}"/> using the specified
@@ -257,7 +257,7 @@ public static partial class ResultExtensions
         Func<T, Task<Result<TReturn>>> crossMapAsync,
         Func<Error>? getNoneError = null,
         Func<Error, Error>? getError = null) =>
-        await (await source).CrossMapAsync(crossMapAsync, getNoneError, getError);
+        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getNoneError, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result, else returns the
@@ -267,7 +267,7 @@ public static partial class ResultExtensions
     /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static async Task<Result> Else(this Task<Result> source, Result fallbackResult) =>
-        (await source).Else(fallbackResult);
+        (await source.ConfigureAwait(false)).Else(fallbackResult);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result, else returns the result
@@ -285,7 +285,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getFallbackResult"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result> Else(this Task<Result> source, Func<Result> getFallbackResult) =>
-        (await source).Else(getFallbackResult);
+        (await source.ConfigureAwait(false)).Else(getFallbackResult);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result, else returns the
@@ -296,7 +296,7 @@ public static partial class ResultExtensions
     /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static async Task<Result<T>> Else<T>(this Task<Result<T>> source, Result<T> fallbackResult) =>
-        (await source).Else(fallbackResult);
+        (await source.ConfigureAwait(false)).Else(fallbackResult);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result, else returns the result
@@ -315,7 +315,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getFallbackResult"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result<T>> Else<T>(this Task<Result<T>> source, Func<Result<T>> getFallbackResult) =>
-        (await source).Else(getFallbackResult);
+        (await source.ConfigureAwait(false)).Else(getFallbackResult);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Some</c> result, else returns the
@@ -326,7 +326,7 @@ public static partial class ResultExtensions
     /// <param name="fallbackResult">The fallback result if the result is not <c>Some</c>.</param>
     /// <returns>Either <paramref name="source"/> or <paramref name="fallbackResult"/>.</returns>
     public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> source, Maybe<T> fallbackResult) =>
-        (await source).Else(fallbackResult);
+        (await source.ConfigureAwait(false)).Else(fallbackResult);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Some</c> result, else returns the result
@@ -345,7 +345,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getFallbackResult"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> source, Func<Maybe<T>> getFallbackResult) =>
-        (await source).Else(getFallbackResult);
+        (await source.ConfigureAwait(false)).Else(getFallbackResult);
 
     /// <summary>
     /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
@@ -365,7 +365,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<T>> Filter<T>(
         this Task<Maybe<T>> source,
         Func<T, bool> filter) =>
-        (await source).Filter(filter);
+        (await source.ConfigureAwait(false)).Filter(filter);
 
     /// <summary>
     /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
@@ -385,7 +385,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<T>> FilterAsync<T>(
         this Task<Maybe<T>> source,
         Func<T, Task<bool>> filterAsync) =>
-        await (await source).FilterAsync(filterAsync);
+        await (await source.ConfigureAwait(false)).FilterAsync(filterAsync).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -413,7 +413,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Result<TReturn>> flatMap,
         Func<Error, Error>? getError = null) =>
-        (await source).FlatMap(flatMap, getError);
+        (await source.ConfigureAwait(false)).FlatMap(flatMap, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -441,7 +441,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Task<Result<TReturn>>> flatMapAsync,
         Func<Error, Error>? getError = null) =>
-        await (await source).FlatMapAsync(flatMapAsync, getError);
+        await (await source.ConfigureAwait(false)).FlatMapAsync(flatMapAsync, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -470,7 +470,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> source,
         Func<T, Maybe<TReturn>> flatMap,
         Func<Error, Error>? getError = null) =>
-        (await source).FlatMap(flatMap, getError);
+        (await source.ConfigureAwait(false)).FlatMap(flatMap, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -499,7 +499,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> source,
         Func<T, Task<Maybe<TReturn>>> flatMapAsync,
         Func<Error, Error>? getError = null) =>
-        await (await source).FlatMapAsync(flatMapAsync, getError);
+        await (await source.ConfigureAwait(false)).FlatMapAsync(flatMapAsync, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Flattens the nested result.
@@ -508,7 +508,7 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Result<T>> Flatten<T>(this Task<Result<Result<T>>> source) =>
-        (await source).Flatten();
+        (await source.ConfigureAwait(false)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
@@ -517,7 +517,7 @@ public static partial class ResultExtensions
     /// <param name="source">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Maybe<T>> Flatten<T>(this Task<Maybe<Maybe<T>>> source) =>
-        (await source).Flatten();
+        (await source.ConfigureAwait(false)).Flatten();
 
     /// <summary>
     /// Gets the value of the <c>Success</c> result, or the specified fallback value if
@@ -533,7 +533,7 @@ public static partial class ResultExtensions
     /// <paramref name="fallbackValue"/>.
     /// </returns>
     public static async Task<T> GetValueOr<T>(this Task<Result<T>> source, T fallbackValue) =>
-        (await source).GetValueOr(fallbackValue);
+        (await source.ConfigureAwait(false)).GetValueOr(fallbackValue);
 
     /// <summary>
     /// Gets the value of the <c>Success</c> result, or the specified fallback value if
@@ -553,7 +553,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<T> GetValueOr<T>(this Task<Result<T>> source, Func<T> getFallbackValue) =>
-        (await source).GetValueOr(getFallbackValue);
+        (await source.ConfigureAwait(false)).GetValueOr(getFallbackValue);
 
     /// <summary>
     /// Gets the value of the <c>Some</c> result, or the specified fallback value if
@@ -569,7 +569,7 @@ public static partial class ResultExtensions
     /// <paramref name="fallbackValue"/>.
     /// </returns>
     public static async Task<T> GetValueOr<T>(this Task<Maybe<T>> source, T fallbackValue) =>
-        (await source).GetValueOr(fallbackValue);
+        (await source.ConfigureAwait(false)).GetValueOr(fallbackValue);
 
     /// <summary>
     /// Gets the value of the <c>Some</c> result, or the specified fallback value if
@@ -589,7 +589,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<T> GetValueOr<T>(this Task<Maybe<T>> source, Func<T> getFallbackValue) =>
-        (await source).GetValueOr(getFallbackValue);
+        (await source.ConfigureAwait(false)).GetValueOr(getFallbackValue);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
@@ -620,7 +620,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, TReturn> map,
         Func<Error, Error>? getError = null) =>
-        (await source).Map(map, getError);
+        (await source.ConfigureAwait(false)).Map(map, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
@@ -651,7 +651,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Task<TReturn>> mapAsync,
         Func<Error, Error>? getError = null) =>
-        await (await source).MapAsync(mapAsync, getError);
+        await (await source.ConfigureAwait(false)).MapAsync(mapAsync, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
@@ -682,7 +682,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> source,
         Func<T, TReturn> map,
         Func<Error, Error>? getError = null) =>
-        (await source).Map(map, getError);
+        (await source.ConfigureAwait(false)).Map(map, getError);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
@@ -713,7 +713,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> source,
         Func<T, Task<TReturn>> mapAsync,
         Func<Error, Error>? getError = null) =>
-        await (await source).MapAsync(mapAsync, getError);
+        await (await source.ConfigureAwait(false)).MapAsync(mapAsync, getError).ConfigureAwait(false);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -737,7 +737,7 @@ public static partial class ResultExtensions
         this Task<Result> source,
         Func<T> success,
         Func<Error, T> fail) =>
-        (await source).Match(success, fail);
+        (await source.ConfigureAwait(false)).Match(success, fail);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -760,7 +760,7 @@ public static partial class ResultExtensions
         this Task<Result> source,
         Action success,
         Action<Error> fail) =>
-        (await source).Match(success, fail);
+        (await source.ConfigureAwait(false)).Match(success, fail);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -787,7 +787,7 @@ public static partial class ResultExtensions
         this Task<Result> source,
         Func<Task<T>> success,
         Func<Error, Task<T>> fail) =>
-        await (await source).MatchAsync(success, fail);
+        await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -810,7 +810,7 @@ public static partial class ResultExtensions
         this Task<Result> source,
         Func<Task> success,
         Func<Error, Task> fail) =>
-        await (await source).MatchAsync(success, fail);
+        await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -836,7 +836,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, TReturn> success,
         Func<Error, TReturn> fail) =>
-            (await source).Match(success, fail);
+            (await source.ConfigureAwait(false)).Match(success, fail);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -861,7 +861,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Action<T> success,
         Action<Error> fail) =>
-            (await source).Match(success, fail);
+            (await source.ConfigureAwait(false)).Match(success, fail);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -890,7 +890,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Task<TReturn>> success,
         Func<Error, Task<TReturn>> fail) =>
-            await (await source).MatchAsync(success, fail);
+            await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
 
     /// <summary>
     /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
@@ -915,7 +915,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> source,
         Func<T, Task> success,
         Func<Error, Task> fail) =>
-            await (await source).MatchAsync(success, fail);
+            await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
@@ -946,7 +946,7 @@ public static partial class ResultExtensions
         Func<T, TReturn> some,
         Func<TReturn> none,
         Func<Error, TReturn> fail) =>
-        (await source).Match(some, none, fail);
+        (await source.ConfigureAwait(false)).Match(some, none, fail);
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
@@ -976,7 +976,7 @@ public static partial class ResultExtensions
         Action<T> some,
         Action none,
         Action<Error> fail) =>
-        (await source).Match(some, none, fail);
+        (await source.ConfigureAwait(false)).Match(some, none, fail);
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
@@ -1010,7 +1010,7 @@ public static partial class ResultExtensions
         Func<T, Task<TReturn>> some,
         Func<Task<TReturn>> none,
         Func<Error, Task<TReturn>> fail) =>
-        await (await source).MatchAsync(some, none, fail);
+        await (await source.ConfigureAwait(false)).MatchAsync(some, none, fail).ConfigureAwait(false);
 
     /// <summary>
     /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
@@ -1040,7 +1040,7 @@ public static partial class ResultExtensions
         Func<T, Task> some,
         Func<Task> none,
         Func<Error, Task> fail) =>
-        await (await source).MatchAsync(some, none, fail);
+        await (await source.ConfigureAwait(false)).MatchAsync(some, none, fail).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -1049,7 +1049,7 @@ public static partial class ResultExtensions
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result> OnFail(this Task<Result> source, Action<Error> onFail) =>
-        (await source).OnFail(onFail);
+        (await source.ConfigureAwait(false)).OnFail(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -1058,7 +1058,7 @@ public static partial class ResultExtensions
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result> OnFailAsync(this Task<Result> source, Func<Error, Task> onFail) =>
-        await (await source).OnFailAsync(onFail);
+        await (await source.ConfigureAwait(false)).OnFailAsync(onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -1068,7 +1068,7 @@ public static partial class ResultExtensions
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> source, Action<Error> onFail) =>
-        (await source).OnFail(onFail);
+        (await source.ConfigureAwait(false)).OnFail(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -1078,7 +1078,7 @@ public static partial class ResultExtensions
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result<T>> OnFailAsync<T>(this Task<Result<T>> source, Func<Error, Task> onFail) =>
-        await (await source).OnFailAsync(onFail);
+        await (await source.ConfigureAwait(false)).OnFailAsync(onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -1088,7 +1088,7 @@ public static partial class ResultExtensions
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Maybe<T>> OnFail<T>(this Task<Maybe<T>> source, Action<Error> onFail) =>
-        (await source).OnFail(onFail);
+        (await source.ConfigureAwait(false)).OnFail(onFail);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
@@ -1098,7 +1098,7 @@ public static partial class ResultExtensions
     /// <param name="onFail">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Maybe<T>> OnFailAsync<T>(this Task<Maybe<T>> source, Func<Error, Task> onFail) =>
-        await (await source).OnFailAsync(onFail);
+        await (await source.ConfigureAwait(false)).OnFailAsync(onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onNone"/> function if <paramref name="source"/> is a <c>None</c> result.
@@ -1108,7 +1108,7 @@ public static partial class ResultExtensions
     /// <param name="onNone">A callback function to invoke if the source is a <c>None</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Maybe<T>> OnNone<T>(this Task<Maybe<T>> source, Action onNone) =>
-        (await source).OnNone(onNone);
+        (await source.ConfigureAwait(false)).OnNone(onNone);
 
     /// <summary>
     /// Invokes the <paramref name="onNone"/> function if <paramref name="source"/> is a <c>None</c> result.
@@ -1118,7 +1118,7 @@ public static partial class ResultExtensions
     /// <param name="onNone">A callback function to invoke if the source is a <c>None</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Maybe<T>> OnNoneAsync<T>(this Task<Maybe<T>> source, Func<Task> onNone) =>
-        await (await source).OnNoneAsync(onNone);
+        await (await source.ConfigureAwait(false)).OnNoneAsync(onNone).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onSome"/> function if <paramref name="source"/> is a <c>Some</c> result.
@@ -1128,7 +1128,7 @@ public static partial class ResultExtensions
     /// <param name="onSome">A callback function to invoke if the source is a <c>Some</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Maybe<T>> OnSome<T>(this Task<Maybe<T>> source, Action<T> onSome) =>
-        (await source).OnSome(onSome);
+        (await source.ConfigureAwait(false)).OnSome(onSome);
 
     /// <summary>
     /// Invokes the <paramref name="onSome"/> function if <paramref name="source"/> is a <c>Some</c> result.
@@ -1138,7 +1138,7 @@ public static partial class ResultExtensions
     /// <param name="onSome">A callback function to invoke if the source is a <c>Some</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Maybe<T>> OnSomeAsync<T>(this Task<Maybe<T>> source, Func<T, Task> onSome) =>
-        await (await source).OnSomeAsync(onSome);
+        await (await source.ConfigureAwait(false)).OnSomeAsync(onSome).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
@@ -1147,7 +1147,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result> OnSuccess(this Task<Result> source, Action onSuccess) =>
-        (await source).OnSuccess(onSuccess);
+        (await source.ConfigureAwait(false)).OnSuccess(onSuccess);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
@@ -1156,7 +1156,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result> OnSuccessAsync(this Task<Result> source, Func<Task> onSuccess) =>
-        await (await source).OnSuccessAsync(onSuccess);
+        await (await source.ConfigureAwait(false)).OnSuccessAsync(onSuccess).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
@@ -1166,7 +1166,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result<T>> OnSuccess<T>(this Task<Result<T>> source, Action<T> onSuccess) =>
-        (await source).OnSuccess(onSuccess);
+        (await source.ConfigureAwait(false)).OnSuccess(onSuccess);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccess"/> function if <paramref name="source"/> is a <c>Success</c> result.
@@ -1176,7 +1176,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccess">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="source"/> result.</returns>
     public static async Task<Result<T>> OnSuccessAsync<T>(this Task<Result<T>> source, Func<T, Task> onSuccess) =>
-        await (await source).OnSuccessAsync(onSuccess);
+        await (await source.ConfigureAwait(false)).OnSuccessAsync(onSuccess).ConfigureAwait(false);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result; otherwise, returns a
@@ -1190,7 +1190,7 @@ public static partial class ResultExtensions
     /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result<T>> Or<T>(this Task<Result<T>> source, [DisallowNull] T fallbackValue) =>
-        (await source).Or(fallbackValue);
+        (await source.ConfigureAwait(false)).Or(fallbackValue);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result; otherwise, returns a
@@ -1209,7 +1209,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static async Task<Result<T>> Or<T>(this Task<Result<T>> source, Func<T> getFallbackValue) =>
-        (await source).Or(getFallbackValue);
+        (await source.ConfigureAwait(false)).Or(getFallbackValue);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Some</c> result; otherwise, returns a new
@@ -1223,7 +1223,7 @@ public static partial class ResultExtensions
     /// If <paramref name="fallbackValue"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Maybe<T>> Or<T>(this Task<Maybe<T>> source, [DisallowNull] T fallbackValue) =>
-        (await source).Or(fallbackValue);
+        (await source.ConfigureAwait(false)).Or(fallbackValue);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Some</c> result; otherwise, returns a new
@@ -1243,7 +1243,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static async Task<Maybe<T>> Or<T>(this Task<Maybe<T>> source, Func<T> getFallbackValue) =>
-        (await source).Or(getFallbackValue);
+        (await source.ConfigureAwait(false)).Or(getFallbackValue);
 
     /// <summary>
     /// Replaces the error of a <c>Fail</c> result, otherwise does nothing.
@@ -1260,7 +1260,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getError"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result> WithError(this Task<Result> source, Func<Error, Error> getError) =>
-        (await source).WithError(getError);
+        (await source.ConfigureAwait(false)).WithError(getError);
 
     /// <summary>
     /// Replaces the error of a <c>Fail</c> result, otherwise does nothing.
@@ -1278,7 +1278,7 @@ public static partial class ResultExtensions
     /// If <paramref name="getError"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result<T>> WithError<T>(this Task<Result<T>> source, Func<Error, Error> getError) =>
-        (await source).WithError(getError);
+        (await source.ConfigureAwait(false)).WithError(getError);
 
     /// <summary>
     /// Replaces the error of a <c>Fail</c> result, otherwise does nothing.
@@ -1296,5 +1296,5 @@ public static partial class ResultExtensions
     /// If <paramref name="getError"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Maybe<T>> WithError<T>(this Task<Maybe<T>> source, Func<Error, Error> getError) =>
-        (await source).WithError(getError);
+        (await source.ConfigureAwait(false)).WithError(getError);
 }

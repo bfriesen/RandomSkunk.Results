@@ -26,7 +26,7 @@ public partial struct Result<T>
     public async Task<Result<T>> OnSuccessAsync(Func<T, Task> onSuccess)
     {
         if (IsSuccess)
-            await onSuccess(_value!);
+            await onSuccess(_value!).ConfigureAwait(false);
 
         return this;
     }

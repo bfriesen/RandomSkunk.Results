@@ -66,7 +66,7 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => await crossMapAsync(_value!),
+            Success => await crossMapAsync(_value!).ConfigureAwait(false),
             _ => Result.Create.Fail(getError.Evaluate(Error())),
         };
     }
@@ -132,7 +132,7 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => await crossMapAsync(_value!),
+            Success => await crossMapAsync(_value!).ConfigureAwait(false),
             _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };
     }

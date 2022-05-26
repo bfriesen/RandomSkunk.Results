@@ -77,7 +77,7 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => Maybe<TReturn>.Create.Some(await mapAsync(_value!)
+            Some => Maybe<TReturn>.Create.Some(await mapAsync(_value!).ConfigureAwait(false)
                 ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(Error())),

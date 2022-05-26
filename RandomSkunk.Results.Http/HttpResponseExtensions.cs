@@ -33,7 +33,7 @@ public static class HttpResponseExtensions
             return Result.Create.Success();
 
         options ??= _defaultOptions;
-        var problemDetails = await ReadProblemDetails(source, options, cancellationToken);
+        var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Result.Create.Fail(error);
     }
@@ -80,9 +80,9 @@ public static class HttpResponseExtensions
         options ??= _defaultOptions;
 
         if (source.IsSuccessStatusCode)
-            return await ReadValue<T>(source.Content, options, cancellationToken);
+            return await ReadValue<T>(source.Content, options, cancellationToken).ConfigureAwait(false);
 
-        var problemDetails = await ReadProblemDetails(source, options, cancellationToken);
+        var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Result<T>.Create.Fail(error);
     }
@@ -131,9 +131,9 @@ public static class HttpResponseExtensions
         options ??= _defaultOptions;
 
         if (source.IsSuccessStatusCode)
-            return await ReadMaybeValue<T>(source.Content, options, cancellationToken);
+            return await ReadMaybeValue<T>(source.Content, options, cancellationToken).ConfigureAwait(false);
 
-        var problemDetails = await ReadProblemDetails(source, options, cancellationToken);
+        var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Maybe<T>.Create.Fail(error);
     }
@@ -284,7 +284,7 @@ public static class HttpResponseExtensions
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>(options,  cancellationToken);
+            var value = await content.ReadFromJsonAsync<T>(options,  cancellationToken).ConfigureAwait(false);
 
             if (value is null)
                 return Result<T>.Create.Fail("Response content was the literal string \"null\".");
@@ -304,7 +304,7 @@ public static class HttpResponseExtensions
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken);
+            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
 
             if (value is null)
                 return Maybe<T>.Create.None();
@@ -324,7 +324,7 @@ public static class HttpResponseExtensions
     {
         try
         {
-            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(options, cancellationToken);
+            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(options, cancellationToken).ConfigureAwait(false);
 
             if (problemDetails is not null)
                 return problemDetails;

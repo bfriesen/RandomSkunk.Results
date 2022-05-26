@@ -26,7 +26,7 @@ public partial struct Maybe<T>
     public async Task<Maybe<T>> OnFailAsync(Func<Error, Task> onFail)
     {
         if (IsFail)
-            await onFail(Error());
+            await onFail(Error()).ConfigureAwait(false);
 
         return this;
     }

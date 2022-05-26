@@ -151,7 +151,7 @@ public static class DelegateExtensions
     {
         try
         {
-            await source();
+            await source().ConfigureAwait(false);
             return Result.Create.Success();
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
@@ -188,7 +188,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source();
+            value = await source().ConfigureAwait(false);
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -229,7 +229,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source();
+            value = await source().ConfigureAwait(false);
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -395,7 +395,7 @@ public static class DelegateExtensions
     {
         try
         {
-            await source();
+            await source().ConfigureAwait(false);
             return Result.Create.Success();
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
@@ -435,7 +435,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source();
+            value = await source().ConfigureAwait(false);
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -480,7 +480,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source();
+            value = await source().ConfigureAwait(false);
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -705,7 +705,7 @@ public static class DelegateExtensions
     {
         try
         {
-            await source();
+            await source().ConfigureAwait(false);
             return Result.Create.Success();
         }
         catch (TException1 ex) when (exception1Predicate.Evaluate(ex))
@@ -761,7 +761,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source();
+            value = await source().ConfigureAwait(false);
         }
         catch (TException1 ex) when (exception1Predicate.Evaluate(ex))
         {
@@ -821,7 +821,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source();
+            value = await source().ConfigureAwait(false);
         }
         catch (TException1 ex) when (exception1Predicate.Evaluate(ex))
         {

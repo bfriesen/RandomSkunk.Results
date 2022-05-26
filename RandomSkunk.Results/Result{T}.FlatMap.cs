@@ -68,7 +68,7 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => await flatMapAsync(_value!),
+            Success => await flatMapAsync(_value!).ConfigureAwait(false),
             _ => Result<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };
     }

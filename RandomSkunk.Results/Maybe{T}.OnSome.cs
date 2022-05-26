@@ -26,7 +26,7 @@ public partial struct Maybe<T>
     public async Task<Maybe<T>> OnSomeAsync(Func<T, Task> onSome)
     {
         if (IsSome)
-            await onSome(_value!);
+            await onSome(_value!).ConfigureAwait(false);
 
         return this;
     }

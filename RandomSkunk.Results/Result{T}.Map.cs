@@ -76,7 +76,7 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => Result<TReturn>.Create.Success(await mapAsync(_value!)
+            Success => Result<TReturn>.Create.Success(await mapAsync(_value!).ConfigureAwait(false)
                 ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
             _ => Result<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };
