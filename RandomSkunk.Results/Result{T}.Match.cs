@@ -3,7 +3,7 @@ using static RandomSkunk.Results.ResultType;
 namespace RandomSkunk.Results;
 
 /// <content>
-/// Defines the <c>Match</c> methods.
+/// Defines the <c>Match</c> and <c>MatchAsync</c> methods.
 /// </content>
 public partial struct Result<T>
 {

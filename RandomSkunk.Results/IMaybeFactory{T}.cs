@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines methods for creating instances of <see cref="Maybe{T}"/>.
 /// </summary>
-/// <typeparam name="T">The type of the source result value.</typeparam>
+/// <typeparam name="T">The type of the result value.</typeparam>
 public interface IMaybeFactory<T>
 {
     /// <summary>

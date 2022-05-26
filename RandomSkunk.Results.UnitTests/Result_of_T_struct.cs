@@ -207,17 +207,6 @@ public class Result_of_T_struct
         }
 
         [Fact]
-        public void Given_IsSuccess_When_other_is_same_as_value_Returns_true()
-        {
-            var result = Result<int>.Create.Success(1);
-            object other = 1;
-
-            var actual = result.Equals(other);
-
-            actual.Should().BeTrue();
-        }
-
-        [Fact]
         public void When_other_is_null_Returns_false()
         {
             var result = Result<int>.Create.Success(1);

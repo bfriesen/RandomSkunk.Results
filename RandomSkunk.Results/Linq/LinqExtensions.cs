@@ -9,7 +9,7 @@ public static class LinqExtensions
 {
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Result{T}, Func{T, TReturn}, Func{Error, Error}?)"/>
+    /// Alias for the <see cref="Result{T}.Map{TReturn}(Func{T, TReturn}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
@@ -37,7 +37,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Result{T}, Func{T, Result{TReturn}}, Func{Error, Error}?)"/>
+    /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Result{TReturn}}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -106,7 +106,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Maybe{T}, Func{T, TReturn}, Func{Error, Error}?)"/>
+    /// Alias for the <see cref="Maybe{T}.Map{TReturn}(Func{T, TReturn}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
@@ -134,7 +134,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Maybe{T}, Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/>
+    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/>
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a another result using the specified
@@ -201,7 +201,7 @@ public static class LinqExtensions
     }
 
     /// <summary>
-    /// <para>Alias for the <see cref="ResultExtensions.Filter{T}(Maybe{T}, Func{T, bool})"/> method.</para>
+    /// <para>Alias for the <see cref="Maybe{T}.Filter(Func{T, bool})"/> method.</para>
     /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
     /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
     /// </summary>

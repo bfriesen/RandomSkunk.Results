@@ -97,9 +97,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
             || (IsFail && EqualityComparer<Error?>.Default.Equals(_error, other._error)));
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) =>
-        (obj is Result<T> result && Equals(result))
-        || (obj is T value && this.Equals<T>(value));
+    public override bool Equals(object? obj) => obj is Result<T> result && Equals(result);
 
     /// <inheritdoc/>
     public override int GetHashCode()

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net461;net6.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
@@ -27,6 +27,24 @@
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
 		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Update="Result.*.cs">
+			<DependentUpon>Result.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Result{T}.*.cs">
+			<DependentUpon>Result{T}.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Maybe{T}.*.cs">
+			<DependentUpon>Maybe{T}.cs</DependentUpon>
+		</Compile>
+		<Compile Update="ResultExtensions.*.cs">
+			<DependentUpon>ResultExtensions.cs</DependentUpon>
+		</Compile>
+		<Compile Update="ResultFactoryExtensions.*.cs">
+			<DependentUpon>ResultFactoryExtensions.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />

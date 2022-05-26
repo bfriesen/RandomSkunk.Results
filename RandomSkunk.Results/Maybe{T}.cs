@@ -116,9 +116,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
             || IsNone);
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj) =>
-        (obj is Maybe<T> result && Equals(result))
-        || (obj is T value && this.Equals<T>(value));
+    public override bool Equals(object? obj) => obj is Maybe<T> result && Equals(result);
 
     /// <inheritdoc/>
     public override int GetHashCode()

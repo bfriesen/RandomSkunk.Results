@@ -333,17 +333,6 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_IsSome_When_other_is_same_as_value_Returns_true()
-        {
-            var result = Maybe<int>.Create.Some(1);
-            object other = 1;
-
-            var actual = result.Equals(other);
-
-            actual.Should().BeTrue();
-        }
-
-        [Fact]
         public void When_other_is_null_Returns_false()
         {
             var result = Maybe<int>.Create.Some(1);
