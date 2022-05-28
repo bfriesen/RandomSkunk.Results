@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -116,6 +118,9 @@ public record class Error
             message = exceptionMessage;
         else
             message += Environment.NewLine + exceptionMessage;
+
+        if (errorCode is null && exception is ExternalException externalException)
+            errorCode = externalException.ErrorCode;
 
         return new Error(message, type)
         {
