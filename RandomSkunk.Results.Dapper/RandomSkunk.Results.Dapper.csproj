@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net461;net5.0;net6.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
+
+		<PackageVersion>1.0.0-alpha11</PackageVersion>
+		<Title>RandomSkunk.Results.Dapper</Title>
+		<Description>Using RandomSkunk.Results with Dapper.</Description>
+		<Authors>Brian Friesen</Authors>
+		<Copyright>Copyright 2022 (c) Brian Friesen. All rights reserved.</Copyright>
+
+		<PackageId>RandomSkunk.Results.Dapper</PackageId>
+		<PackageProjectUrl>https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.Dapper</PackageProjectUrl>
+		<PackageTags>result monad option some none maybe error dapper</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+		<PackageReleaseNotes>https://github.com/bfriesen/RandomSkunk.Results/blob/main/CHANGELOG.md</PackageReleaseNotes>
+
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PublishRepositoryUrl>True</PublishRepositoryUrl>
+		<EmbedUntrackedSources>True</EmbedUntrackedSources>
+		<DebugType>Embedded</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RandomSkunk.Results\RandomSkunk.Results.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.123" />
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
+		<None Include="..\icon.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+</Project>

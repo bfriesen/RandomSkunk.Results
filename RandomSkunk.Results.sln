@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.Http", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.AspNetCore", "RandomSkunk.Results.AspNetCore\RandomSkunk.Results.AspNetCore.csproj", "{97BB8713-1D1B-4EC6-A6D1-3084AA0F169A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.Dapper", "RandomSkunk.Results.Dapper\RandomSkunk.Results.Dapper.csproj", "{8209291B-6514-4219-8A62-AC101F8C1F95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{97BB8713-1D1B-4EC6-A6D1-3084AA0F169A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97BB8713-1D1B-4EC6-A6D1-3084AA0F169A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97BB8713-1D1B-4EC6-A6D1-3084AA0F169A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8209291B-6514-4219-8A62-AC101F8C1F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8209291B-6514-4219-8A62-AC101F8C1F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8209291B-6514-4219-8A62-AC101F8C1F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8209291B-6514-4219-8A62-AC101F8C1F95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

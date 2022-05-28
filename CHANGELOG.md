@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- Add RandomSkunk.Result.Dapper project.
+    - Extension methods mirroring Dapper's extension methods that start with `Try` and return result values.
+
 ## [1.0.0-alpha11] - 2022-05-26
 
 ### Fixed
