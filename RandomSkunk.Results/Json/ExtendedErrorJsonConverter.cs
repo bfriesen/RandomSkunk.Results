@@ -13,7 +13,7 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
 
     public override ExtendedError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var builder = new ExpandableErrorBuilder();
+        var builder = new ExtendedErrorBuilder();
 
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException("Unexcepted end when reading JSON.");
@@ -30,11 +30,11 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
     public override void Write(Utf8JsonWriter writer, ExtendedError value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        WriteExpandableError(writer, value, options);
+        WriteExtendedError(writer, value, options);
         writer.WriteEndObject();
     }
 
-    private static void ReadValue(ref Utf8JsonReader reader, ExpandableErrorBuilder builder, JsonSerializerOptions options)
+    private static void ReadValue(ref Utf8JsonReader reader, ExtendedErrorBuilder builder, JsonSerializerOptions options)
     {
         if (TryReadStringProperty(ref reader, Message, out var propertyValue))
         {
@@ -76,7 +76,7 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
         }
     }
 
-    private static void WriteExpandableError(Utf8JsonWriter writer, ExtendedError value, JsonSerializerOptions options)
+    private static void WriteExtendedError(Utf8JsonWriter writer, ExtendedError value, JsonSerializerOptions options)
     {
         if (value.Message != null)
             writer.WriteString(Message, value.Message);
@@ -120,7 +120,7 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
         return true;
     }
 
-    private class ExpandableErrorBuilder
+    private class ExtendedErrorBuilder
     {
         private Dictionary<string, object>? _extensions;
 
