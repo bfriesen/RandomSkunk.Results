@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add `ToResult<T>()` and `ToMaybe<T>()` extension methods under the `RandomSkunk.Results.FactoryExtensions` namespace.
     - Add `Result<T>.AsMaybe()` and `Maybe<T>.AsResult()` methods.
+- RandomSkunk.Results.AspNetCore:
+    - In `ToActionResult()` extension methods, add ability to provide custom status code for success results.
 
 ### Changed
 
