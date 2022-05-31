@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning].
     - Extension methods mirroring Dapper's extension methods that start with `Try` and return result values.
 - RandomSkunk.Results:
     - Add `ToResult<T>()` and `ToMaybe<T>()` extension methods under the `RandomSkunk.Results.FactoryExtensions` namespace.
+    - Add `Result<T>.AsMaybe()` and `Maybe<T>.AsResult()` methods.
 
 ### Changed
 
