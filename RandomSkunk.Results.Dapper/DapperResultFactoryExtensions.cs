@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines extension methods for result factories.
 /// </summary>
-public static class ResultFactoryExtensions
+public static class DapperResultFactoryExtensions
 {
     /// <summary>
     /// Creates a <c>Fail</c> result with a <see cref="DbError"/>.
