@@ -21,7 +21,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void Some_Returns_some_result_with_specified_value()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
 
             result.Type.Should().Be(Some);
             result.IsSome.Should().BeTrue();
@@ -63,7 +63,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_nonvoid_functions_When_IsSome_Returns_some_function_evaluation()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
 
             var actual = result.Match(
                 value => value + 1,
@@ -102,7 +102,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_void_functions_When_IsSome_Returns_some_function_evaluation()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
 
             int? someValue = null;
             Error? failError = null;
@@ -164,7 +164,7 @@ public class Maybe_of_T_struct
         [Fact]
         public async Task Given_nonvoid_functions_When_IsSome_Returns_some_function_evaluation()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
 
             var actual = await result.MatchAsync(
                 value => Task.FromResult(value + 1),
@@ -203,7 +203,7 @@ public class Maybe_of_T_struct
         [Fact]
         public async Task Given_void_functions_When_IsSome_Returns_some_function_evaluation()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
 
             int? someValue = null;
             Error? failError = null;
@@ -300,8 +300,8 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsSome_When_other_IsSome_with_same_value_Returns_true()
         {
-            var result = Maybe<int>.Create.Some(1);
-            object other = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
+            object other = 1.ToMaybe();
 
             var actual = result.Equals(other);
 
@@ -335,7 +335,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void When_other_is_null_Returns_false()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
             object? other = null;
 
             var actual = result.Equals(other);
@@ -346,8 +346,8 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsSome_When_other_IsSome_with_different_value_Returns_false()
         {
-            var result = Maybe<int>.Create.Some(1);
-            object other = Maybe<int>.Create.Some(2);
+            var result = 1.ToMaybe();
+            object other = 2.ToMaybe();
 
             var actual = result.Equals(other);
 
@@ -357,7 +357,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsSome_When_other_IsFail_Returns_false()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
             object other = Maybe<int>.Create.Fail();
 
             var actual = result.Equals(other);
@@ -368,7 +368,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsSome_When_other_IsNone_Returns_false()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
             object other = Maybe<int>.Create.None();
 
             var actual = result.Equals(other);
@@ -380,7 +380,7 @@ public class Maybe_of_T_struct
         public void Given_IsFail_When_other_IsSome_Returns_false()
         {
             var result = Maybe<int>.Create.Fail();
-            object other = Maybe<int>.Create.Some(1);
+            object other = 1.ToMaybe();
 
             var actual = result.Equals(other);
 
@@ -414,7 +414,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsSome_When_other_is_different_value_Returns_false()
         {
-            var result = Maybe<int>.Create.Some(1);
+            var result = 1.ToMaybe();
             object other = 2;
 
             var actual = result.Equals(other);
@@ -428,8 +428,8 @@ public class Maybe_of_T_struct
         [Fact]
         public void Different_results_return_different_values()
         {
-            var some1 = Maybe<int>.Create.Some(1).GetHashCode();
-            var someA = Maybe<string>.Create.Some("1").GetHashCode();
+            var some1 = 1.ToMaybe().GetHashCode();
+            var someA = "1".ToMaybe().GetHashCode();
             var fail1 = Maybe<int>.Create.Fail("X").GetHashCode();
             var fail2 = Maybe<int>.Create.Fail("Y").GetHashCode();
             var failA = Maybe<string>.Create.Fail("X").GetHashCode();

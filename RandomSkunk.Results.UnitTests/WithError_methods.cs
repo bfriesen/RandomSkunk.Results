@@ -44,7 +44,7 @@ public class WithError_methods
         [Fact]
         public void When_IsSuccess_Returns_source()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.WithError(e => new Error { InnerError = e });
 
@@ -69,7 +69,7 @@ public class WithError_methods
         [Fact]
         public void When_IsSome_Returns_source()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.WithError(e => new Error { InnerError = e });
 

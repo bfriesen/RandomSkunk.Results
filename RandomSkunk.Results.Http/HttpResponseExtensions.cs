@@ -529,7 +529,7 @@ public static class HttpResponseExtensions
             if (value is null)
                 return Result<T>.Create.Fail("Response content was the literal string \"null\".");
 
-            return Result<T>.Create.Success(value);
+            return value.ToResult();
         }
         catch (Exception ex)
         {
@@ -549,7 +549,7 @@ public static class HttpResponseExtensions
             if (value is null)
                 return Maybe<T>.Create.None();
 
-            return Maybe<T>.Create.Some(value);
+            return value.ToMaybe();
         }
         catch (Exception ex)
         {

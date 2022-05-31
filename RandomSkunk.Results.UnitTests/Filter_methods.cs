@@ -5,7 +5,7 @@ public class Filter_methods
     [Fact]
     public void When_IsSome_and_function_returns_true_Returns_source()
     {
-        var source = Maybe<int>.Create.Some(1);
+        var source = 1.ToMaybe();
 
         var actual = source.Filter(value => value == 1);
 
@@ -15,7 +15,7 @@ public class Filter_methods
     [Fact]
     public void When_IsSome_and_function_returns_false_Returns_None()
     {
-        var source = Maybe<int>.Create.Some(1);
+        var source = 1.ToMaybe();
 
         var actual = source.Filter(value => value == 2);
 

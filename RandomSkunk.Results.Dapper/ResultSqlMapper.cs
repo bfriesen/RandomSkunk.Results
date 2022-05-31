@@ -32,7 +32,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Execute(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute parameterized SQL that selects a single value.
@@ -58,7 +58,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.ExecuteScalar<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute parameterized SQL and return an <see cref="IDataReader"/>.
@@ -87,7 +87,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.ExecuteReader(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Executes a query, returning the data typed as <typeparamref name="T"/>.
@@ -118,7 +118,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query<T>(sql, param, transaction, buffered, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -147,7 +147,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.QueryFirst<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -177,7 +177,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : struct =>
         Delegates.Func(() => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -207,7 +207,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : class =>
         Delegates.Func(() => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToMaybe(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsMaybe(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -236,7 +236,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.QuerySingle<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -266,7 +266,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : struct =>
         Delegates.Func(() => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -296,7 +296,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : class =>
         Delegates.Func(() => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToMaybe(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsMaybe(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a command that returns multiple result sets, and access each in turn.
@@ -321,7 +321,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.QueryMultiple(sql, param, transaction, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform a multi-mapping query with 2 input types.
@@ -356,7 +356,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform a multi-mapping query with 3 input types.
@@ -392,7 +392,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform a multi-mapping query with 4 input types.
@@ -429,7 +429,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform a multi-mapping query with 5 input types.
@@ -467,7 +467,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform a multi-mapping query with 6 input types.
@@ -506,7 +506,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform a multi-mapping query with 7 input types. If you need more types -> use Query with Type[] parameter.
@@ -546,7 +546,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform a multi-mapping query with an arbitrary number of input types.
@@ -581,7 +581,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.Func(() => cnn.Query<TReturn>(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResult(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResult(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a query asynchronously using Task.
@@ -611,7 +611,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -637,7 +637,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryFirstAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -664,7 +664,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : struct =>
         Delegates.AsyncFunc(() => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -691,7 +691,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : class =>
         Delegates.AsyncFunc(() => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToMaybeAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsMaybeAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -717,7 +717,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QuerySingleAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -744,7 +744,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : struct =>
         Delegates.AsyncFunc(() => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -771,7 +771,7 @@ public static class ResultSqlMapper
         Func<DbException, DbError>? getDbError = null)
         where T : class =>
         Delegates.AsyncFunc(() => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToMaybeAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsMaybeAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a command asynchronously using Task.
@@ -796,7 +796,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.ExecuteAsync(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 2 input types.
@@ -831,7 +831,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 3 input types.
@@ -867,7 +867,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 4 input types.
@@ -904,7 +904,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 5 input types.
@@ -942,7 +942,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 6 input types.
@@ -981,7 +981,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 7 input types.
@@ -1021,7 +1021,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with an arbitrary number of input types.
@@ -1056,7 +1056,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryAsync(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute a command that returns multiple result sets, and access each in turn.
@@ -1081,7 +1081,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute parameterized SQL and return an <see cref="IDataReader"/>.
@@ -1110,7 +1110,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute parameterized SQL and return a <see cref="DbDataReader"/>.
@@ -1135,7 +1135,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 
     /// <summary>
     /// Execute parameterized SQL that selects a single value.
@@ -1161,5 +1161,5 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, DbError>? getDbError = null) =>
         Delegates.AsyncFunc(() => cnn.ExecuteScalarAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .ToResultAsync(getDbError ?? _defaultGetDbError);
+            .TryInvokeAsResultAsync(getDbError ?? _defaultGetDbError);
 }

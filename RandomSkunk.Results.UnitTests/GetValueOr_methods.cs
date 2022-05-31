@@ -7,7 +7,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_When_IsSuccess_Returns_value()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.GetValueOr(2);
 
@@ -27,7 +27,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_function_When_IsSuccess_Returns_value()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.GetValueOr(() => 2);
 
@@ -60,7 +60,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_When_IsSome_Returns_value()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.GetValueOr(2);
 
@@ -90,7 +90,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_function_When_IsSome_Returns_value()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.GetValueOr(() => 2);
 

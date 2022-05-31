@@ -7,9 +7,9 @@ public class FlatMap_methods
         [Fact]
         public void When_IsSuccess_Returns_function_evaluation()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
-            var actual = source.FlatMap(value => Result<string>.Create.Success(value.ToString()));
+            var actual = source.FlatMap(value => value.ToString().ToResult());
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -21,7 +21,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Result<int>.Create.Fail(error);
 
-            var actual = source.FlatMap(value => Result<string>.Create.Success(value.ToString()));
+            var actual = source.FlatMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -43,9 +43,9 @@ public class FlatMap_methods
         [Fact]
         public void When_IsSome_Returns_function_evaluation()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
-            var actual = source.FlatMap(value => Maybe<string>.Create.Some(value.ToString()));
+            var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
             actual.IsSome.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -57,7 +57,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Maybe<int>.Create.Fail(error);
 
-            var actual = source.FlatMap(value => Maybe<string>.Create.Some(value.ToString()));
+            var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -68,7 +68,7 @@ public class FlatMap_methods
         {
             var source = Maybe<int>.Create.None();
 
-            var actual = source.FlatMap(value => Maybe<string>.Create.Some(value.ToString()));
+            var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
             actual.IsNone.Should().BeTrue();
         }

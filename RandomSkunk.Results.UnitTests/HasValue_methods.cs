@@ -7,7 +7,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsSuccess_and_equal_Returns_true()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.HasValue(1);
 
@@ -17,7 +17,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsSuccess_and_not_equal_Returns_false()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.HasValue(2);
 
@@ -37,7 +37,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsSuccess_and_function_returns_true_Returns_true()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.HasValue(value => value == 1);
 
@@ -47,7 +47,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsSuccess_and_false_returned_Returns_false()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.HasValue(value => value == 2);
 
@@ -80,7 +80,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsSome_and_equal_Returns_true()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.HasValue(1);
 
@@ -90,7 +90,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsSome_and_not_equal_Returns_false()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.HasValue(2);
 
@@ -120,7 +120,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsSome_and_function_returns_true_Returns_true()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.HasValue(value => value == 1);
 
@@ -130,7 +130,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsSome_and_false_returned_Returns_false()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.HasValue(value => value == 2);
 

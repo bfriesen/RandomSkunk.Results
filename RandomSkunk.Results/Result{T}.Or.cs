@@ -21,7 +21,7 @@ public partial struct Result<T>
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return _type == Success ? this : Result<T>.Create.Success(fallbackValue);
+        return _type == Success ? this : fallbackValue.ToResult();
     }
 
     /// <summary>
@@ -48,6 +48,6 @@ public partial struct Result<T>
         var fallbackValue = getFallbackValue()
              ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
 
-        return Result<T>.Create.Success(fallbackValue);
+        return fallbackValue.ToResult();
     }
 }

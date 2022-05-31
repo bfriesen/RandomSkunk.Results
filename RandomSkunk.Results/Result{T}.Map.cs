@@ -39,8 +39,7 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => Result<TReturn>.Create.Success(map(_value!)
-                ?? throw FunctionMustNotReturnNull(nameof(map))),
+            Success => (map(_value!) ?? throw FunctionMustNotReturnNull(nameof(map))).ToResult(),
             _ => Result<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };
     }
@@ -76,8 +75,7 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => Result<TReturn>.Create.Success(await mapAsync(_value!).ConfigureAwait(false)
-                ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
+            Success => (await mapAsync(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(mapAsync))).ToResult(),
             _ => Result<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };
     }

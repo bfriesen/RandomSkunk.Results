@@ -7,8 +7,8 @@ public class Flatten_extension_methods
         [Fact]
         public void When_IsSuccess_Returns_inner_result()
         {
-            var innerResult = Result<int>.Create.Success(1);
-            var source = Result<Result<int>>.Create.Success(innerResult);
+            var innerResult = 1.ToResult();
+            var source = innerResult.ToResult();
 
             var actual = source.Flatten();
 
@@ -33,8 +33,8 @@ public class Flatten_extension_methods
         [Fact]
         public void When_IsSome_Returns_inner_result()
         {
-            var innerResult = Maybe<int>.Create.Some(1);
-            var source = Maybe<Maybe<int>>.Create.Some(innerResult);
+            var innerResult = 1.ToMaybe();
+            var source = innerResult.ToMaybe();
 
             var actual = source.Flatten();
 

@@ -7,7 +7,7 @@ public class CrossMap_methods
         [Fact]
         public void Given_target_is_Result_When_source_is_Success_Returns_crossMap_function_evaluation()
         {
-            var source = Result<string>.Create.Success("a");
+            var source = "a".ToResult();
 
             var actual = source.CrossMap(value => Result.Create.Fail(value));
 
@@ -30,7 +30,7 @@ public class CrossMap_methods
         [Fact]
         public void Given_target_is_Maybe_of_T_When_source_is_Success_Returns_crossMap_function_evaluation()
         {
-            var source = Result<string>.Create.Success("a");
+            var source = "a".ToResult();
 
             var actual = source.CrossMap(value => Maybe<int>.Create.Fail(value));
 
@@ -44,7 +44,7 @@ public class CrossMap_methods
             var error = new Error();
             var source = Result<int>.Create.Fail(error);
 
-            var actual = source.CrossMap(value => Maybe<string>.Create.Some(value.ToString()));
+            var actual = source.CrossMap(value => value.ToString().ToMaybe());
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Should().BeSameAs(error);
@@ -56,7 +56,7 @@ public class CrossMap_methods
         [Fact]
         public void Given_target_is_Result_When_source_is_Some_Returns_crossMap_function_evaluation()
         {
-            var source = Maybe<string>.Create.Some("a");
+            var source = "a".ToMaybe();
 
             var actual = source.CrossMap(value => Result.Create.Fail(value));
 
@@ -90,7 +90,7 @@ public class CrossMap_methods
         [Fact]
         public void Given_target_is_Result_of_T_When_source_is_Some_Returns_crossMap_function_evaluation()
         {
-            var source = Maybe<string>.Create.Some("a");
+            var source = "a".ToMaybe();
 
             var actual = source.CrossMap(value => Result<int>.Create.Fail(value));
 
@@ -103,7 +103,7 @@ public class CrossMap_methods
         {
             var source = Maybe<int>.Create.None();
 
-            var actual = source.CrossMap(value => Result<string>.Create.Success(value.ToString()));
+            var actual = source.CrossMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Should().Be(ResultExtensions.DefaultGetNoneError());
@@ -115,7 +115,7 @@ public class CrossMap_methods
             var error = new Error();
             var source = Maybe<int>.Create.Fail(error);
 
-            var actual = source.CrossMap(value => Result<string>.Create.Success(value.ToString()));
+            var actual = source.CrossMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Should().BeSameAs(error);

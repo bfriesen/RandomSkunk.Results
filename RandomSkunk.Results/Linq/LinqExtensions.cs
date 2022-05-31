@@ -99,9 +99,9 @@ public static class LinqExtensions
 
         return source.FlatMap(
             sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue => Result<TReturn>.Create.Success(
-                    resultSelector(sourceValue!, intermediateValue!)
-                        ?? throw FunctionMustNotReturnNull(nameof(resultSelector)))));
+                intermediateValue =>
+                    (resultSelector(sourceValue!, intermediateValue!)
+                        ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToResult()));
     }
 
     /// <summary>
@@ -195,9 +195,8 @@ public static class LinqExtensions
 
         return source.FlatMap(
             sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue => Maybe<TReturn>.Create.Some(
-                    resultSelector(sourceValue!, intermediateValue!)
-                        ?? throw FunctionMustNotReturnNull(nameof(resultSelector)))));
+                intermediateValue =>
+                    (resultSelector(sourceValue!, intermediateValue!) ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToMaybe()));
     }
 
     /// <summary>

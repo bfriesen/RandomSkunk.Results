@@ -7,7 +7,7 @@ public class Map_methods
         [Fact]
         public void When_IsSuccess_Returns_success_result_from_function_evaluation()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.Map(value => value.ToString());
 
@@ -40,7 +40,7 @@ public class Map_methods
         [Fact]
         public void Given_IsSuccess_and_map_function_returning_null_Throws_ArgumentException()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             Action act = () => source.Map<string>(value => null!);
 
@@ -53,7 +53,7 @@ public class Map_methods
         [Fact]
         public void When_IsSome_Returns_some_result_from_function_evaluation()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.Map(value => value.ToString());
 
@@ -96,7 +96,7 @@ public class Map_methods
         [Fact]
         public void Given_IsSome_and_map_function_returning_null_Throws_ArgumentException()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             Action act = () => source.Map<string>(value => null!);
 

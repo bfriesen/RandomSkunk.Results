@@ -7,7 +7,7 @@ public class MapAsync_methods
         [Fact]
         public async Task When_IsSuccess_Returns_success_result_from_function_evaluation()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = await source.MapAsync(value => Task.FromResult(value.ToString()));
 
@@ -40,9 +40,9 @@ public class MapAsync_methods
         [Fact]
         public async Task Given_IsSuccess_and_map_function_returning_null_Throws_ArgumentException()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
-            Func<Task> act = () => source.MapAsync<string>(value => Task.FromResult<string>(null!));
+            Func<Task> act = () => source.MapAsync(value => Task.FromResult<string>(null!));
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
@@ -53,7 +53,7 @@ public class MapAsync_methods
         [Fact]
         public async Task When_IsSome_Returns_some_result_from_function_evaluation()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = await source.MapAsync(value => Task.FromResult(value.ToString()));
 
@@ -96,7 +96,7 @@ public class MapAsync_methods
         [Fact]
         public async Task Given_IsSome_and_map_function_returning_null_Throws_ArgumentException()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             Func<Task> act = () => source.MapAsync(cancellationToken => Task.FromResult<string>(null!));
 

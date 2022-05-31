@@ -54,7 +54,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         Delegates.AsyncFunc(() => source.DeleteAsync(requestUri, cancellationToken))
-            .ToResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
+            .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
@@ -81,7 +81,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         Delegates.AsyncFunc(() => source.GetAsync(requestUri, cancellationToken))
-            .ToResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
+            .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
@@ -149,7 +149,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         Delegates.AsyncFunc(() => source.PatchAsync(requestUri, content, cancellationToken))
-            .ToResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
+            .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
     /// Sends a PATCH request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -217,7 +217,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         Delegates.AsyncFunc(() => source.PostAsync(requestUri, content, cancellationToken))
-            .ToResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
+            .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
     /// Sends a POST request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -283,7 +283,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         Delegates.AsyncFunc(() => source.PutAsync(requestUri, content, cancellationToken))
-            .ToResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
+            .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
     /// Sends a PUT request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -347,5 +347,5 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         Delegates.AsyncFunc(() => source.SendAsync(request, cancellationToken))
-            .ToResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
+            .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 }

@@ -24,7 +24,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Result ToResult(
+    public static Result TryInvokeAsResult(
         this Action source,
         Func<Exception, Error>? getError = null,
         Func<Exception, bool>? exceptionPredicate = null)
@@ -62,7 +62,7 @@ public static class DelegateExtensions
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
-    public static Result<T> ToResult<T>(
+    public static Result<T> TryInvokeAsResult<T>(
         this Func<T> source,
         Func<Exception, Error>? getError = null,
         Func<Exception, bool>? exceptionPredicate = null)
@@ -82,7 +82,7 @@ public static class DelegateExtensions
         if (value is null)
             throw FunctionMustNotReturnNull(nameof(source));
 
-        return Result<T>.Create.Success(value);
+        return value.ToResult();
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Maybe<T> ToMaybe<T>(
+    public static Maybe<T> TryInvokeAsMaybe<T>(
         this Func<T> source,
         Func<Exception, Error>? getError = null,
         Func<Exception, bool>? exceptionPredicate = null)
@@ -123,7 +123,7 @@ public static class DelegateExtensions
         if (value is null)
             return Maybe<T>.Create.None();
 
-        return Maybe<T>.Create.Some(value);
+        return value.ToMaybe();
     }
 
     /// <summary>
@@ -144,7 +144,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> ToResultAsync(
+    public static async Task<Result> TryInvokeAsResultAsync(
         this AsyncAction source,
         Func<Exception, Error>? getError = null,
         Func<Exception, bool>? exceptionPredicate = null)
@@ -180,7 +180,7 @@ public static class DelegateExtensions
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
-    public static async Task<Result<T>> ToResultAsync<T>(
+    public static async Task<Result<T>> TryInvokeAsResultAsync<T>(
         this AsyncFunc<T> source,
         Func<Exception, Error>? getError = null,
         Func<Exception, bool>? exceptionPredicate = null)
@@ -198,7 +198,7 @@ public static class DelegateExtensions
         if (value is null)
             throw FunctionMustNotReturnNull(nameof(source));
 
-        return Result<T>.Create.Success(value);
+        return value.ToResult();
     }
 
     /// <summary>
@@ -221,7 +221,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> ToMaybeAsync<T>(
+    public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T>(
         this AsyncFunc<T> source,
         Func<Exception, Error>? getError = null,
         Func<Exception, bool>? exceptionPredicate = null)
@@ -239,7 +239,7 @@ public static class DelegateExtensions
         if (value is null)
             return Maybe<T>.Create.None();
 
-        return Maybe<T>.Create.Some(value);
+        return value.ToMaybe();
     }
 
     /// <summary>
@@ -261,7 +261,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Result ToResult<TException>(
+    public static Result TryInvokeAsResult<TException>(
         this Action source,
         Func<TException, Error>? getError = null,
         Func<TException, bool>? exceptionPredicate = null)
@@ -300,7 +300,7 @@ public static class DelegateExtensions
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
-    public static Result<T> ToResult<T, TException>(
+    public static Result<T> TryInvokeAsResult<T, TException>(
         this Func<T> source,
         Func<TException, Error>? getError = null,
         Func<TException, bool>? exceptionPredicate = null)
@@ -319,7 +319,7 @@ public static class DelegateExtensions
         if (value is null)
             throw FunctionMustNotReturnNull(nameof(source));
 
-        return Result<T>.Create.Success(value);
+        return value.ToResult();
     }
 
     /// <summary>
@@ -345,7 +345,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Maybe<T> ToMaybe<T, TException>(
+    public static Maybe<T> TryInvokeAsMaybe<T, TException>(
         this Func<T> source,
         Func<TException, Error>? getError = null,
         Func<TException, bool>? exceptionPredicate = null)
@@ -364,7 +364,7 @@ public static class DelegateExtensions
         if (value is null)
             return Maybe<T>.Create.None();
 
-        return Maybe<T>.Create.Some(value);
+        return value.ToMaybe();
     }
 
     /// <summary>
@@ -387,7 +387,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> ToResultAsync<TException>(
+    public static async Task<Result> TryInvokeAsResultAsync<TException>(
         this AsyncAction source,
         Func<TException, Error>? getError = null,
         Func<TException, bool>? exceptionPredicate = null)
@@ -426,7 +426,7 @@ public static class DelegateExtensions
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
-    public static async Task<Result<T>> ToResultAsync<T, TException>(
+    public static async Task<Result<T>> TryInvokeAsResultAsync<T, TException>(
         this AsyncFunc<T> source,
         Func<TException, Error>? getError = null,
         Func<TException, bool>? exceptionPredicate = null)
@@ -445,7 +445,7 @@ public static class DelegateExtensions
         if (value is null)
             throw FunctionMustNotReturnNull(nameof(source));
 
-        return Result<T>.Create.Success(value);
+        return value.ToResult();
     }
 
     /// <summary>
@@ -471,7 +471,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> ToMaybeAsync<T, TException>(
+    public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T, TException>(
         this AsyncFunc<T> source,
         Func<TException, Error>? getError = null,
         Func<TException, bool>? exceptionPredicate = null)
@@ -490,7 +490,7 @@ public static class DelegateExtensions
         if (value is null)
             return Maybe<T>.Create.None();
 
-        return Maybe<T>.Create.Some(value);
+        return value.ToMaybe();
     }
 
     /// <summary>
@@ -521,7 +521,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Result ToResult<TException1, TException2>(
+    public static Result TryInvokeAsResult<TException1, TException2>(
         this Action source,
         Func<TException1, Error>? getError1 = null,
         Func<TException2, Error>? getError2 = null,
@@ -576,7 +576,7 @@ public static class DelegateExtensions
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
-    public static Result<T> ToResult<T, TException1, TException2>(
+    public static Result<T> TryInvokeAsResult<T, TException1, TException2>(
         this Func<T> source,
         Func<TException1, Error>? getError1 = null,
         Func<TException2, Error>? getError2 = null,
@@ -602,7 +602,7 @@ public static class DelegateExtensions
         if (value is null)
             throw FunctionMustNotReturnNull(nameof(source));
 
-        return Result<T>.Create.Success(value);
+        return value.ToResult();
     }
 
     /// <summary>
@@ -636,7 +636,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Maybe<T> ToMaybe<T, TException1, TException2>(
+    public static Maybe<T> TryInvokeAsMaybe<T, TException1, TException2>(
         this Func<T> source,
         Func<TException1, Error>? getError1 = null,
         Func<TException2, Error>? getError2 = null,
@@ -662,7 +662,7 @@ public static class DelegateExtensions
         if (value is null)
             return Maybe<T>.Create.None();
 
-        return Maybe<T>.Create.Some(value);
+        return value.ToMaybe();
     }
 
     /// <summary>
@@ -694,7 +694,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> ToResultAsync<TException1, TException2>(
+    public static async Task<Result> TryInvokeAsResultAsync<TException1, TException2>(
         this AsyncAction source,
         Func<TException1, Error>? getError1 = null,
         Func<TException2, Error>? getError2 = null,
@@ -749,7 +749,7 @@ public static class DelegateExtensions
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
-    public static async Task<Result<T>> ToResultAsync<T, TException1, TException2>(
+    public static async Task<Result<T>> TryInvokeAsResultAsync<T, TException1, TException2>(
         this AsyncFunc<T> source,
         Func<TException1, Error>? getError1 = null,
         Func<TException2, Error>? getError2 = null,
@@ -775,7 +775,7 @@ public static class DelegateExtensions
         if (value is null)
             throw FunctionMustNotReturnNull(nameof(source));
 
-        return Result<T>.Create.Success(value);
+        return value.ToResult();
     }
 
     /// <summary>
@@ -809,7 +809,7 @@ public static class DelegateExtensions
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> ToMaybeAsync<T, TException1, TException2>(
+    public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T, TException1, TException2>(
         this AsyncFunc<T> source,
         Func<TException1, Error>? getError1 = null,
         Func<TException2, Error>? getError2 = null,
@@ -835,7 +835,7 @@ public static class DelegateExtensions
         if (value is null)
             return Maybe<T>.Create.None();
 
-        return Maybe<T>.Create.Some(value);
+        return value.ToMaybe();
     }
 
     private static Error Evaluate<TException>(this Func<TException, Error>? getError, TException exception)

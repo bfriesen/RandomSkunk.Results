@@ -39,8 +39,7 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => Maybe<TReturn>.Create.Some(map(_value!)
-                ?? throw FunctionMustNotReturnNull(nameof(map))),
+            Some => (map(_value!) ?? throw FunctionMustNotReturnNull(nameof(map))).ToMaybe(),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };
@@ -77,8 +76,7 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => Maybe<TReturn>.Create.Some(await mapAsync(_value!).ConfigureAwait(false)
-                ?? throw FunctionMustNotReturnNull(nameof(mapAsync))),
+            Some => (await mapAsync(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(mapAsync))).ToMaybe(),
             None => Maybe<TReturn>.Create.None(),
             _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(Error())),
         };

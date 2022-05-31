@@ -43,7 +43,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetError_When_IsSuccess_Throws_InvalidStateException()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             Action act = () => source.GetError();
 
@@ -54,7 +54,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetValue_When_IsSuccess_Returns_value()
         {
-            var source = Result<int>.Create.Success(1);
+            var source = 1.ToResult();
 
             var actual = source.GetValue();
 
@@ -89,7 +89,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetError_When_IsSome_Throws_InvalidStateException()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             Action act = () => source.GetError();
 
@@ -110,7 +110,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetValue_When_IsSome_Returns_value()
         {
-            var source = Maybe<int>.Create.Some(1);
+            var source = 1.ToMaybe();
 
             var actual = source.GetValue();
 

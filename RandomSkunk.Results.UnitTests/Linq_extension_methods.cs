@@ -9,9 +9,9 @@ public class Linq_extension_methods
         [Fact]
         public void Given_all_success_results_Returns_success_result()
         {
-            var result = from n in Result<int>.Create.Success(1)
+            var result = from n in 1.ToResult()
                          let n2 = n * 2
-                         from s in Result<string>.Create.Success($"n2: {n2}")
+                         from s in $"n2: {n2}".ToResult()
                          select s;
 
             result.IsSuccess.Should().BeTrue();
@@ -23,7 +23,7 @@ public class Linq_extension_methods
         {
             var result = from n in Result<int>.Create.Fail("A")
                          let n2 = n * 2
-                         from s in Result<string>.Create.Success($"n2: {n2}")
+                         from s in $"n2: {n2}".ToResult()
                          select s;
 
             result.IsFail.Should().BeTrue();
@@ -33,7 +33,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_late_fail_result_Returns_fail_result()
         {
-            var result = from n in Result<int>.Create.Success(1)
+            var result = from n in 1.ToResult()
                          let n2 = n * 2
                          from s in Result<string>.Create.Fail("B")
                          select s;
@@ -60,10 +60,10 @@ public class Linq_extension_methods
         [Fact]
         public void Given_all_success_results_and_successful_where_filter_Returns_success_result()
         {
-            var result = from n in Maybe<int>.Create.Some(1)
+            var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 3
-                         from s in Maybe<string>.Create.Some($"n2: {n2}")
+                         from s in $"n2: {n2}".ToMaybe()
                          select s;
 
             result.IsSome.Should().BeTrue();
@@ -76,7 +76,7 @@ public class Linq_extension_methods
             var result = from n in Maybe<int>.Create.Fail("A")
                          let n2 = n * 2
                          where n2 < 3
-                         from s in Maybe<string>.Create.Some($"n2: {n2}")
+                         from s in $"n2: {n2}".ToMaybe()
                          select s;
 
             result.IsFail.Should().BeTrue();
@@ -89,7 +89,7 @@ public class Linq_extension_methods
             var result = from n in Maybe<int>.Create.None()
                          let n2 = n * 2
                          where n2 < 3
-                         from s in Maybe<string>.Create.Some($"n2: {n2}")
+                         from s in $"n2: {n2}".ToMaybe()
                          select s;
 
             result.IsNone.Should().BeTrue();
@@ -98,7 +98,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_late_fail_result_Returns_fail_result()
         {
-            var result = from n in Maybe<int>.Create.Some(1)
+            var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 3
                          from s in Maybe<string>.Create.Fail("B")
@@ -111,7 +111,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_late_none_result_Returns_none_result()
         {
-            var result = from n in Maybe<int>.Create.Some(1)
+            var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 3
                          from s in Maybe<string>.Create.None()
@@ -123,10 +123,10 @@ public class Linq_extension_methods
         [Fact]
         public void Given_where_filter_returns_false_Returns_none_result()
         {
-            var result = from n in Maybe<int>.Create.Some(1)
+            var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 1
-                         from s in Maybe<string>.Create.Some($"n2: {n2}")
+                         from s in $"n2: {n2}".ToMaybe()
                          select s;
 
             result.IsNone.Should().BeTrue();
@@ -138,7 +138,7 @@ public class Linq_extension_methods
             var result = from n in Maybe<int>.Create.Fail("A")
                          let n2 = n * 2
                          where n2 < 1
-                         from s in Maybe<string>.Create.Some($"n2: {n2}")
+                         from s in $"n2: {n2}".ToMaybe()
                          select s;
 
             result.IsFail.Should().BeTrue();
@@ -148,7 +148,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_late_fail_result_and_where_filter_returns_false_Returns_none_result()
         {
-            var result = from n in Maybe<int>.Create.Some(1)
+            var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 1
                          from s in Maybe<string>.Create.Fail("B")

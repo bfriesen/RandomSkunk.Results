@@ -9,8 +9,18 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
-- Add RandomSkunk.Result.Dapper project.
+- Add RandomSkunk.Results.Dapper project.
     - Extension methods mirroring Dapper's extension methods that start with `Try` and return result values.
+- RandomSkunk.Results:
+    - Add `ToResult<T>()` and `ToMaybe<T>()` extension methods under the `RandomSkunk.Results.FactoryExtensions` namespace.
+
+### Changed
+
+- RandomSkunk.Results:
+    - Rename delegate extension methods to differentiate between new factory extension methods.
+        - `ToResult()` -> `TryInvokeAsResult()`
+        - `ToResult<T>()` -> `TryInvokeAsResult<T>()`
+        - `ToMaybe<T>()` -> `TryInvokeAsMaybe<T>()`
 
 ## [1.0.0-alpha11] - 2022-05-26
 

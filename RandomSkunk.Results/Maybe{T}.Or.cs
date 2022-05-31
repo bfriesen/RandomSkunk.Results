@@ -21,7 +21,7 @@ public partial struct Maybe<T>
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return _type == Some ? this : Maybe<T>.Create.Some(fallbackValue);
+        return _type == Some ? this : fallbackValue.ToMaybe();
     }
 
     /// <summary>
@@ -49,6 +49,6 @@ public partial struct Maybe<T>
         var fallbackValue = getFallbackValue()
              ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
 
-        return Maybe<T>.Create.Some(fallbackValue);
+        return fallbackValue.ToMaybe();
     }
 }
