@@ -5,7 +5,7 @@ namespace RandomSkunk.Results.AspNetCore;
 /// <summary>
 /// Defines extension methods for converting result objects to action result objects.
 /// </summary>
-public static class ResultExtensions
+public static class ActionResultExtensions
 {
     /// <summary>
     /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result"/>.
