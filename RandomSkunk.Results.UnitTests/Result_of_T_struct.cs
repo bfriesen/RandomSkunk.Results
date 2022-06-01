@@ -9,7 +9,7 @@ public class Result_of_T_struct
     {
         var result = default(Result<int>);
 
-        result.Type.Should().Be(Fail);
+        result._type.Should().Be(Fail);
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
         result.IsDefault.Should().BeTrue();
@@ -23,7 +23,7 @@ public class Result_of_T_struct
         {
             var result = 1.ToResult();
 
-            result.Type.Should().Be(Success);
+            result._type.Should().Be(Success);
             result.IsSuccess.Should().BeTrue();
             result.IsFail.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
@@ -36,7 +36,7 @@ public class Result_of_T_struct
             var error = new Error();
             var result = Result<int>.Create.Fail(error);
 
-            result.Type.Should().Be(Fail);
+            result._type.Should().Be(Fail);
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsDefault.Should().BeFalse();

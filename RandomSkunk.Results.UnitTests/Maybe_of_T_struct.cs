@@ -9,7 +9,7 @@ public class Maybe_of_T_struct
     {
         var result = default(Maybe<int>);
 
-        result.Type.Should().Be(Fail);
+        result._type.Should().Be(Fail);
         result.IsFail.Should().BeTrue();
         result.IsSome.Should().BeFalse();
         result.IsDefault.Should().BeTrue();
@@ -23,7 +23,7 @@ public class Maybe_of_T_struct
         {
             var result = 1.ToMaybe();
 
-            result.Type.Should().Be(Some);
+            result._type.Should().Be(Some);
             result.IsSome.Should().BeTrue();
             result.IsFail.Should().BeFalse();
             result.IsNone.Should().BeFalse();
@@ -37,7 +37,7 @@ public class Maybe_of_T_struct
             var error = new Error();
             var result = Maybe<int>.Create.Fail(error);
 
-            result.Type.Should().Be(Fail);
+            result._type.Should().Be(Fail);
             result.IsFail.Should().BeTrue();
             result.IsSome.Should().BeFalse();
             result.IsNone.Should().BeFalse();
@@ -50,7 +50,7 @@ public class Maybe_of_T_struct
         {
             var result = Maybe<int>.Create.None();
 
-            result.Type.Should().Be(None);
+            result._type.Should().Be(None);
             result.IsNone.Should().BeTrue();
             result.IsSome.Should().BeFalse();
             result.IsFail.Should().BeFalse();
