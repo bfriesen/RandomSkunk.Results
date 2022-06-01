@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning].
 ### Added
 
 - RandomSkunk.Results:
-    - `Result<T>` and `Maybe<T>` now implement `IDisposable` and `IAsyncDisposable`. This makes it easier to dispose of the value of a `Success` or `Some` result. However, when the value is *not* disposable, nothing happens.
+    - Add `AsDisposable()` and `AsAsyncDisposable()` extension methods for `Result<T>` and `Maybe<T>`.
 
 ## [1.0.0-alpha12] - 2022-05-31
 
