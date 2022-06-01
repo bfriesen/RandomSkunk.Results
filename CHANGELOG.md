@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
+- RandomSkunk.Results:
+    - `Result<T>` and `Maybe<T>` now implement `IDisposable` and `IAsyncDisposable`. This makes it easier to dispose of the value of a `Success` or `Some` result. However, when the value is *not* disposable, nothing happens.
+
+## [1.0.0-alpha12] - 2022-05-31
+
+### Added
+
 - Add RandomSkunk.Results.Dapper project.
     - Extension methods mirroring Dapper's extension methods that start with `Try` and return result objects.
 - RandomSkunk.Results:
@@ -213,7 +220,8 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha11...HEAD
+[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha12...HEAD
+[1.0.0-alpha12]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha11...v1.0.0-alpha12
 [1.0.0-alpha11]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha10...v1.0.0-alpha11
 [1.0.0-alpha10]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha09...v1.0.0-alpha10
 [1.0.0-alpha09]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha08...v1.0.0-alpha09
