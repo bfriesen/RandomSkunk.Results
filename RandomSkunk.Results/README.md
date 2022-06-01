@@ -11,10 +11,12 @@ To create a result, use one of the static factory methods.
 ```c#
 // Results that have a required value:
 Result<int> result1 = Result<int>.Create.Success(123);
+Result<int> result1a = 123.ToResult(); // using RandomSkunk.Result.FactoryExtensions;
 Result<int> result2 = Result<int>.Create.Fail();
 
 // Results that have an optional value:
 Maybe<int> result3 = Maybe<int>.Create.Some(123);
+Maybe<int> result3a = 123.ToMaybe(); // using RandomSkunk.Result.FactoryExtensions;
 Maybe<int> result4 = Maybe<int>.Create.None();
 Maybe<int> result5 = Maybe<int>.Create.Fail();
 

@@ -2,7 +2,7 @@
 
 ## HttpClient extension methods
 
-To make it easier to get a result value representing an HTTP operation, several extension methods for `HttpClient` are provided.
+To make it easier to get a result object representing an HTTP operation, several extension methods for `HttpClient` are provided.
 
 ```c#
 public async Task<Maybe<T>> ExampleTryGetFromJsonAsync<T>()
