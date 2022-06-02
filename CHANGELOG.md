@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Add `AsDisposable()` and `AsAsyncDisposable()` extension methods for `Result<T>` and `Maybe<T>`.
+    - Add additional overloads of `Flatten` where the source is a mixed nested results. For example, `Result<Maybe<T>>` flattens to `Maybe<T>`.
 
 ## [1.0.0-alpha12] - 2022-05-31
 
