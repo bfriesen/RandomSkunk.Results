@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -42,9 +40,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => onSome(_value!),
-            None => Result.Create.Fail(onNone.Evaluate()),
-            _ => Result.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => onSome(_value!),
+            MaybeType.None => Result.Fail(onNone.Evaluate()),
+            _ => Result.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -83,9 +81,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => await onSomeAsync(_value!).ConfigureAwait(false),
-            None => Result.Create.Fail(onNone.Evaluate()),
-            _ => Result.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => await onSomeAsync(_value!).ConfigureAwait(false),
+            MaybeType.None => Result.Fail(onNone.Evaluate()),
+            _ => Result.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -125,9 +123,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => onSome(_value!),
-            None => Result<TReturn>.Create.Fail(onNone.Evaluate()),
-            _ => Result<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => onSome(_value!),
+            MaybeType.None => Result<TReturn>.Fail(onNone.Evaluate()),
+            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -168,9 +166,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => await onSomeAsync(_value!).ConfigureAwait(false),
-            None => Result<TReturn>.Create.Fail(onNone.Evaluate()),
-            _ => Result<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => await onSomeAsync(_value!).ConfigureAwait(false),
+            MaybeType.None => Result<TReturn>.Fail(onNone.Evaluate()),
+            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 }

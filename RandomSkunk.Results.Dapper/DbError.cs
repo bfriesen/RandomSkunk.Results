@@ -67,7 +67,7 @@ public record class DbError : Error
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="exception"/> is <see langword="null"/>.
     /// </exception>
-    public static DbError FromException(
+    public static DbError FromDbException(
         DbException exception,
         string? message = null,
         int? errorCode = null,

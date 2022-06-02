@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning].
     - Add `AsDisposable()` and `AsAsyncDisposable()` extension methods for `Result<T>` and `Maybe<T>`.
     - Add additional overloads of `Flatten` where the source is a mixed nested results. For example, `Result<Maybe<T>>` flattens to `Maybe<T>`.
 
+### Changed
+
+- RandomSkunk.Results:
+    - Remove `Create` factory field. Pull result factory methods up to the result types themselves. Add back `FailWith` factory field that only creates `Fail` results.
+
 ## [1.0.0-alpha12] - 2022-05-31
 
 ### Added

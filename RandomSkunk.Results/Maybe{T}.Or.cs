@@ -1,5 +1,4 @@
 using static RandomSkunk.Results.Exceptions;
-using static RandomSkunk.Results.MaybeType;
 
 namespace RandomSkunk.Results;
 
@@ -21,7 +20,7 @@ public partial struct Maybe<T>
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return _type == Some ? this : fallbackValue.ToMaybe();
+        return _type == MaybeType.Some ? this : fallbackValue.ToMaybe();
     }
 
     /// <summary>
@@ -43,7 +42,7 @@ public partial struct Maybe<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        if (_type == Some)
+        if (_type == MaybeType.Some)
             return this;
 
         var fallbackValue = getFallbackValue()

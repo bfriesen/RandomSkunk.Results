@@ -7,8 +7,8 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_When_IsSuccess_Returns_source()
         {
-            var source = Result.Create.Success();
-            var fallbackResult = Result.Create.Fail();
+            var source = Result.Success();
+            var fallbackResult = Result.Fail();
 
             var actual = source.Else(fallbackResult);
 
@@ -18,8 +18,8 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_When_IsFail_Returns_fallback_result()
         {
-            var source = Result.Create.Fail();
-            var fallbackResult = Result.Create.Success();
+            var source = Result.Fail();
+            var fallbackResult = Result.Success();
 
             var actual = source.Else(fallbackResult);
 
@@ -29,8 +29,8 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_function_When_IsSuccess_Returns_source()
         {
-            var source = Result.Create.Success();
-            var fallbackResult = Result.Create.Fail();
+            var source = Result.Success();
+            var fallbackResult = Result.Fail();
             Result GetFallbackResult() => fallbackResult;
 
             var actual = source.Else(GetFallbackResult);
@@ -41,8 +41,8 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_function_When_IsFail_Returns_fallback_result()
         {
-            var source = Result.Create.Fail();
-            var fallbackResult = Result.Create.Success();
+            var source = Result.Fail();
+            var fallbackResult = Result.Success();
             Result GetFallbackResult() => fallbackResult;
 
             var actual = source.Else(GetFallbackResult);
@@ -67,7 +67,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_When_IsFail_Returns_fallback_result()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
             var fallbackResult = 1.ToResult();
 
             var actual = source.Else(fallbackResult);
@@ -90,7 +90,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_function_When_IsFail_Returns_function_evaluation()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
             var fallbackResult = 1.ToResult();
             Result<int> GetFallbackResult() => fallbackResult;
 
@@ -102,7 +102,7 @@ public class Else_methods
         [Fact]
         public void Given_null_fallback_result_function_Throws_ArgumentNullException()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             Action act = () => source.Else(null!);
 
@@ -126,7 +126,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_When_IsFail_Returns_fallback_result()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
             var fallbackResult = 1.ToMaybe();
 
             var actual = source.Else(fallbackResult);
@@ -137,7 +137,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_When_IsNone_Returns_fallback_result()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
             var fallbackResult = 1.ToMaybe();
 
             var actual = source.Else(fallbackResult);
@@ -160,7 +160,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_function_When_IsFail_Returns_function_evaluation()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
             var fallbackResult = 1.ToMaybe();
             Maybe<int> GetFallbackMaybe() => fallbackResult;
 
@@ -172,7 +172,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_function_When_IsNone_Returns_function_evaluation()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
             var fallbackResult = 1.ToMaybe();
             Maybe<int> GetFallbackMaybe() => fallbackResult;
 
@@ -184,7 +184,7 @@ public class Else_methods
         [Fact]
         public void Given_null_fallback_result_function_Throws_ArgumentNullException()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             Action act = () => source.Else(null!);
 

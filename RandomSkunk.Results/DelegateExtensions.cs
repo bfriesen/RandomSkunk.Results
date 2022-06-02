@@ -34,11 +34,11 @@ public static class DelegateExtensions
         try
         {
             source();
-            return Result.Create.Success();
+            return Result.Success();
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result.Fail(exceptionHandler.Evaluate(ex));
         }
     }
 
@@ -76,7 +76,7 @@ public static class DelegateExtensions
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
@@ -117,11 +117,11 @@ public static class DelegateExtensions
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
-            return Maybe<T>.Create.None();
+            return Maybe<T>.None();
 
         return value.ToMaybe();
     }
@@ -152,11 +152,11 @@ public static class DelegateExtensions
         try
         {
             await source().ConfigureAwait(false);
-            return Result.Create.Success();
+            return Result.Success();
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result.Fail(exceptionHandler.Evaluate(ex));
         }
     }
 
@@ -192,7 +192,7 @@ public static class DelegateExtensions
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
@@ -233,11 +233,11 @@ public static class DelegateExtensions
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
-            return Maybe<T>.Create.None();
+            return Maybe<T>.None();
 
         return value.ToMaybe();
     }
@@ -270,11 +270,11 @@ public static class DelegateExtensions
         try
         {
             source();
-            return Result.Create.Success();
+            return Result.Success();
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result.Fail(exceptionHandler.Evaluate(ex));
         }
     }
 
@@ -313,7 +313,7 @@ public static class DelegateExtensions
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
@@ -358,11 +358,11 @@ public static class DelegateExtensions
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
-            return Maybe<T>.Create.None();
+            return Maybe<T>.None();
 
         return value.ToMaybe();
     }
@@ -396,11 +396,11 @@ public static class DelegateExtensions
         try
         {
             await source().ConfigureAwait(false);
-            return Result.Create.Success();
+            return Result.Success();
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result.Fail(exceptionHandler.Evaluate(ex));
         }
     }
 
@@ -439,7 +439,7 @@ public static class DelegateExtensions
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
@@ -484,11 +484,11 @@ public static class DelegateExtensions
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(exceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(exceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
-            return Maybe<T>.Create.None();
+            return Maybe<T>.None();
 
         return value.ToMaybe();
     }
@@ -533,15 +533,15 @@ public static class DelegateExtensions
         try
         {
             source();
-            return Result.Create.Success();
+            return Result.Success();
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(firstExceptionHandler.Evaluate(ex));
+            return Result.Fail(firstExceptionHandler.Evaluate(ex));
         }
         catch (TException2 ex) when (secondExceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(secondExceptionHandler.Evaluate(ex));
+            return Result.Fail(secondExceptionHandler.Evaluate(ex));
         }
     }
 
@@ -592,11 +592,11 @@ public static class DelegateExtensions
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(firstExceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(firstExceptionHandler.Evaluate(ex));
         }
         catch (TException2 ex) when (secondExceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(secondExceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(secondExceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
@@ -652,15 +652,15 @@ public static class DelegateExtensions
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(firstExceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(firstExceptionHandler.Evaluate(ex));
         }
         catch (TException2 ex) when (secondExceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(secondExceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(secondExceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
-            return Maybe<T>.Create.None();
+            return Maybe<T>.None();
 
         return value.ToMaybe();
     }
@@ -706,15 +706,15 @@ public static class DelegateExtensions
         try
         {
             await source().ConfigureAwait(false);
-            return Result.Create.Success();
+            return Result.Success();
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(firstExceptionHandler.Evaluate(ex));
+            return Result.Fail(firstExceptionHandler.Evaluate(ex));
         }
         catch (TException2 ex) when (secondExceptionPredicate.Evaluate(ex))
         {
-            return Result.Create.Fail(secondExceptionHandler.Evaluate(ex));
+            return Result.Fail(secondExceptionHandler.Evaluate(ex));
         }
     }
 
@@ -765,11 +765,11 @@ public static class DelegateExtensions
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(firstExceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(firstExceptionHandler.Evaluate(ex));
         }
         catch (TException2 ex) when (secondExceptionPredicate.Evaluate(ex))
         {
-            return Result<T>.Create.Fail(secondExceptionHandler.Evaluate(ex));
+            return Result<T>.Fail(secondExceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
@@ -825,15 +825,15 @@ public static class DelegateExtensions
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(firstExceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(firstExceptionHandler.Evaluate(ex));
         }
         catch (TException2 ex) when (secondExceptionPredicate.Evaluate(ex))
         {
-            return Maybe<T>.Create.Fail(secondExceptionHandler.Evaluate(ex));
+            return Maybe<T>.Fail(secondExceptionHandler.Evaluate(ex));
         }
 
         if (value is null)
-            return Maybe<T>.Create.None();
+            return Maybe<T>.None();
 
         return value.ToMaybe();
     }

@@ -19,7 +19,7 @@ public class Flatten_extension_methods
         public void When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Result<Result<int>>.Create.Fail(error);
+            var source = Result<Result<int>>.Fail(error);
 
             var actual = source.Flatten();
 
@@ -45,7 +45,7 @@ public class Flatten_extension_methods
         public void When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Maybe<Maybe<int>>.Create.Fail(error);
+            var source = Maybe<Maybe<int>>.Fail(error);
 
             var actual = source.Flatten();
 
@@ -56,7 +56,7 @@ public class Flatten_extension_methods
         [Fact]
         public void When_IsNone_Returns_None()
         {
-            var source = Maybe<Maybe<int>>.Create.None();
+            var source = Maybe<Maybe<int>>.None();
 
             var actual = source.Flatten();
 

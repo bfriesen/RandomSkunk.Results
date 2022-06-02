@@ -1,5 +1,4 @@
 using static RandomSkunk.Results.Error;
-using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results;
 
@@ -7,17 +6,26 @@ namespace RandomSkunk.Results;
 /// Defines a result with a required value.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
-/// <remarks>
-/// Use <see cref="Create"/> to create instances of this type.
-/// </remarks>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public partial struct Result<T> : IEquatable<Result<T>>
 {
     /// <summary>
-    /// The factory object used to create instances of <see cref="Result{T}"/>. This field is
-    /// read-only.
+    /// A factory object that creates <c>Fail</c> results of type <see cref="Result{T}"/>.
     /// </summary>
-    public static readonly IResultFactory<T> Create = new Factory();
+    /// <remarks>
+    /// Applications are encouraged to define custom extension methods targeting <see cref="ResultFactory{T}"/> that return
+    /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
+    /// creating a <c>Fail</c> result when a user is not authorized:
+    /// <code><![CDATA[
+    /// public static Result<T> Unauthorized<T>(this ResultFactory<T> source) =>
+    ///     source.Error("User is not authorized.", new StackTrace(1).ToString(), 401);
+    /// ]]></code>
+    /// This extension method could be used elsewhere in the application like this:
+    /// <code><![CDATA[
+    /// return Result<AdminUser>.FailWith.Unauthorized();
+    /// ]]></code>
+    /// </remarks>
+    public static readonly ResultFactory<T> FailWith = new();
 
     internal readonly ResultType _type;
     internal readonly T? _value;
@@ -25,20 +33,20 @@ public partial struct Result<T> : IEquatable<Result<T>>
 
     private Result(T value)
     {
-        _type = Success;
+        _type = ResultType.Success;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
 
     private Result(Error? error)
     {
-        _type = Fail;
+        _type = ResultType.Fail;
         _value = default;
         _error = error ?? new Error();
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="Success"/> or <see cref="Fail"/>.
+    /// Gets the type of the result: <see cref="ResultType.Success"/> or <see cref="ResultType.Fail"/>.
     /// </summary>
     public ResultType Type => _type;
 
@@ -49,7 +57,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// <see langword="true"/> if this is a <c>Success</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsSuccess => _type == Success;
+    public bool IsSuccess => _type == ResultType.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
@@ -58,13 +66,13 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsFail => _type == Fail;
+    public bool IsFail => _type == ResultType.Fail;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Result{T}"/>
     /// struct.
     /// </summary>
-    public bool IsDefault => _type == Fail && _error is null;
+    public bool IsDefault => _type == ResultType.Fail && _error is null;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
@@ -89,6 +97,84 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool operator !=(Result<T> left, Result<T> right) => !(left == right);
+
+    /// <summary>
+    /// Creates a <c>Success</c> result with the specified value.
+    /// </summary>
+    /// <param name="value">
+    /// The value of the <c>Success</c> result. Must not be <see langword="null"/>.
+    /// </param>
+    /// <returns>A <c>Success</c> result.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="value"/> is <see langword="null"/>.
+    /// </exception>
+    public static Result<T> Success(T value) => new(value);
+
+    /// <summary>
+    /// Creates a <c>Fail</c> result with the specified error.
+    /// </summary>
+    /// <param name="error">
+    /// An error that describes the failure. If <see langword="null"/>, a default error is
+    /// used.
+    /// </param>
+    /// <returns>A <c>Fail</c> result.</returns>
+    public static Result<T> Fail(Error? error = null) => new(error);
+
+    /// <summary>
+    /// Creates a <c>Fail</c> result.
+    /// </summary>
+    /// <param name="exception">The exception that caused the failure.</param>
+    /// <param name="errorMessage">The optional error message.</param>
+    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="errorType">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
+    /// <returns>A <c>Fail</c> result.</returns>
+    public static Result<T> Fail(
+        Exception exception,
+        string? errorMessage = null,
+        int? errorCode = null,
+        string? errorIdentifier = null,
+        string? errorType = null,
+        Error? innerError = null) =>
+        Fail(FromException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+
+    /// <summary>
+    /// Creates a <c>Fail</c> result.
+    /// </summary>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="errorType">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
+    /// <returns>A <c>Fail</c> result.</returns>
+    public static Result<T> Fail(
+        string errorMessage,
+        string? stackTrace = null,
+        int? errorCode = null,
+        string? errorIdentifier = null,
+        string? errorType = null,
+        Error? innerError = null) =>
+        Fail(new Error(errorMessage, errorType)
+        {
+            StackTrace = stackTrace,
+            ErrorCode = errorCode,
+            Identifier = errorIdentifier,
+            InnerError = innerError,
+        });
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>
@@ -118,11 +204,4 @@ public partial struct Result<T> : IEquatable<Result<T>>
         Match(
             value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
             error => $"Fail({error.Type}: \"{error.Message}\")");
-
-    private sealed class Factory : IResultFactory<T>
-    {
-        public Result<T> Success(T value) => new(value);
-
-        public Result<T> Fail(Error? error = null) => new(error);
-    }
 }

@@ -27,7 +27,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsFail_Returns_false()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             var actual = source.HasValue(1);
 
@@ -57,7 +57,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsFail_Returns_false()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             var actual = source.HasValue(value => value == 2);
 
@@ -67,7 +67,7 @@ public class HasValue_methods
         [Fact]
         public void Given_null_is_value_equal_function_Throws_ArgumentNullException()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             Action act = () => source.HasValue(null!);
 
@@ -100,7 +100,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsFail_Returns_false()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             var actual = source.HasValue(1);
 
@@ -110,7 +110,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsNone_Returns_false()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = source.HasValue(1);
 
@@ -140,7 +140,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsFail_Returns_false()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             var actual = source.HasValue(value => value == 2);
 
@@ -150,7 +150,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsNone_Returns_false()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = source.HasValue(value => value == 2);
 
@@ -160,7 +160,7 @@ public class HasValue_methods
         [Fact]
         public void Given_null_is_value_equal_function_Throws_ArgumentNullException()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             Action act = () => source.HasValue(null!);
 

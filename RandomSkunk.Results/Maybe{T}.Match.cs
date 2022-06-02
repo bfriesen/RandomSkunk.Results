@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -40,8 +38,8 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => onSome(_value!),
-            None => onNone(),
+            MaybeType.Some => onSome(_value!),
+            MaybeType.None => onNone(),
             _ => onFail(Error()),
         };
     }
@@ -77,8 +75,8 @@ public partial struct Maybe<T>
 
         switch (_type)
         {
-            case Some: onSome(_value!); break;
-            case None: onNone(); break;
+            case MaybeType.Some: onSome(_value!); break;
+            case MaybeType.None: onNone(); break;
             default: onFail(Error()); break;
         }
     }
@@ -119,8 +117,8 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => onSome(_value!),
-            None => onNone(),
+            MaybeType.Some => onSome(_value!),
+            MaybeType.None => onNone(),
             _ => onFail(Error()),
         };
     }
@@ -157,8 +155,8 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => onSome(_value!),
-            None => onNone(),
+            MaybeType.Some => onSome(_value!),
+            MaybeType.None => onNone(),
             _ => onFail(Error()),
         };
     }

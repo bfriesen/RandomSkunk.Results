@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.ResultType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -34,8 +32,8 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => onSuccess(_value!),
-            _ => Result.Create.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => onSuccess(_value!),
+            _ => Result.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -66,8 +64,8 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => await onSuccessAsync(_value!).ConfigureAwait(false),
-            _ => Result.Create.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => await onSuccessAsync(_value!).ConfigureAwait(false),
+            _ => Result.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -99,8 +97,8 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => onSuccess(_value!),
-            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => onSuccess(_value!),
+            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -132,8 +130,8 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => await onSuccessAsync(_value!).ConfigureAwait(false),
-            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => await onSuccessAsync(_value!).ConfigureAwait(false),
+            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 }

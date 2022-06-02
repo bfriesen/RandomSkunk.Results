@@ -1,5 +1,4 @@
 using static RandomSkunk.Results.Exceptions;
-using static RandomSkunk.Results.MaybeType;
 
 namespace RandomSkunk.Results;
 
@@ -39,9 +38,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => (onSome(_value!) ?? throw FunctionMustNotReturnNull(nameof(onSome))).ToMaybe(),
-            None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => (onSome(_value!) ?? throw FunctionMustNotReturnNull(nameof(onSome))).ToMaybe(),
+            MaybeType.None => Maybe<TReturn>.None(),
+            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -76,9 +75,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => (await onSomeAsync(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(onSomeAsync))).ToMaybe(),
-            None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => (await onSomeAsync(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(onSomeAsync))).ToMaybe(),
+            MaybeType.None => Maybe<TReturn>.None(),
+            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 }

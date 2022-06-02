@@ -19,7 +19,7 @@ public class FlatMap_methods
         public void When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Result<int>.Create.Fail(error);
+            var source = Result<int>.Fail(error);
 
             var actual = source.FlatMap(value => value.ToString().ToResult());
 
@@ -30,7 +30,7 @@ public class FlatMap_methods
         [Fact]
         public void Given_null_flatmap_function_Throws_ArgumentNullException()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             Action act = () => source.FlatMap<string>(null!);
 
@@ -55,7 +55,7 @@ public class FlatMap_methods
         public void When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Maybe<int>.Create.Fail(error);
+            var source = Maybe<int>.Fail(error);
 
             var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
@@ -66,7 +66,7 @@ public class FlatMap_methods
         [Fact]
         public void When_IsNone_Returns_None()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
@@ -76,7 +76,7 @@ public class FlatMap_methods
         [Fact]
         public void Given_null_flatmap_function_Throws_ArgumentNullException()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             Action act = () => source.FlatMap<string>(null!);
 

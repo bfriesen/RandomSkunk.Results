@@ -19,13 +19,13 @@ public class Filter_methods
 
         var actual = source.Filter(value => value == 2);
 
-        actual.Should().Be(Maybe<int>.Create.None());
+        actual.Should().Be(Maybe<int>.None());
     }
 
     [Fact]
     public void When_IsFail_Returns_source()
     {
-        var source = Maybe<int>.Create.Fail();
+        var source = Maybe<int>.Fail();
 
         var actual = source.Filter(value => value == 1);
 
@@ -35,7 +35,7 @@ public class Filter_methods
     [Fact]
     public void When_IsNone_Returns_source()
     {
-        var source = Maybe<int>.Create.None();
+        var source = Maybe<int>.None();
 
         var actual = source.Filter(value => value == 1);
 
@@ -45,7 +45,7 @@ public class Filter_methods
     [Fact]
     public void Given_null_filter_function_Throws_ArgumentNullException()
     {
-        var source = Maybe<int>.Create.Fail();
+        var source = Maybe<int>.Fail();
 
         Action act = () => source.Filter(null!);
 

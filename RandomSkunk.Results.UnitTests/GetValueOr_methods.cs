@@ -17,7 +17,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_When_IsFail_Returns_fallback_value()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             var actual = source.GetValueOr(2);
 
@@ -37,7 +37,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_function_When_IsFail_Returns_function_evaluation()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             var actual = source.GetValueOr(() => 2);
 
@@ -47,7 +47,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_null_fallback_result_function_Throws_ArgumentNullException()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             Action act = () => source.GetValueOr(getFallbackValue: null!);
 
@@ -70,7 +70,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_When_IsFail_Returns_fallback_value()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             var actual = source.GetValueOr(2);
 
@@ -80,7 +80,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_When_IsNone_Returns_fallback_value()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = source.GetValueOr(2);
 
@@ -100,7 +100,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_function_When_IsFail_Returns_function_evaluation()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             var actual = source.GetValueOr(() => 2);
 
@@ -110,7 +110,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_function_When_IsNone_Returns_function_evaluation()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = source.GetValueOr(() => 2);
 
@@ -120,7 +120,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_null_fallback_result_function_Throws_ArgumentNullException()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             Action act = () => source.GetValueOr(getFallbackValue: null!);
 

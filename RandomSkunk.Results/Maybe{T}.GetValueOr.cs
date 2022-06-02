@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -20,7 +18,7 @@ public partial struct Maybe<T>
     /// </returns>
     public T GetValueOr(T fallbackValue)
     {
-        return _type == Some ? _value! : fallbackValue;
+        return _type == MaybeType.Some ? _value! : fallbackValue;
     }
 
     /// <summary>
@@ -42,6 +40,6 @@ public partial struct Maybe<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return _type == Some ? _value! : getFallbackValue();
+        return _type == MaybeType.Some ? _value! : getFallbackValue();
     }
 }

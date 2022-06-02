@@ -17,7 +17,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_When_IsFail_Returns_success_result_from_fallback_value()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             var actual = source.Or(2);
 
@@ -29,7 +29,7 @@ public class Or_methods
         [Fact]
         public void Given_null_fallback_value_Throws_ArgumentNullException()
         {
-            var source = Result<string>.Create.Fail();
+            var source = Result<string>.Fail();
 
             Action act = () => source.Or((string)null!);
 
@@ -49,7 +49,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_function_When_IsFail_Returns_success_result_from_function_evaluation()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             var actual = source.Or(() => 2);
 
@@ -61,7 +61,7 @@ public class Or_methods
         [Fact]
         public void Given_null_fallback_value_function_Throws_ArgumentNullException()
         {
-            var source = Result<string>.Create.Fail();
+            var source = Result<string>.Fail();
 
             Action act = () => source.Or((Func<string>)null!);
 
@@ -71,7 +71,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_function_returning_null_Throws_ArgumentException()
         {
-            var source = Result<string>.Create.Fail();
+            var source = Result<string>.Fail();
 
             Action act = () => source.Or(() => null!);
 
@@ -94,7 +94,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_When_IsFail_Returns_some_result_from_fallback_value()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             var actual = source.Or(2);
 
@@ -106,7 +106,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_When_IsNone_Returns_some_result_from_fallback_value()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = source.Or(2);
 
@@ -118,7 +118,7 @@ public class Or_methods
         [Fact]
         public void Given_null_fallback_value_Throws_ArgumentNullException()
         {
-            var source = Maybe<string>.Create.Fail();
+            var source = Maybe<string>.Fail();
 
             Action act = () => source.Or((string)null!);
 
@@ -138,7 +138,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_function_When_IsFail_Returns_some_result_from_function_evaluation()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             var actual = source.Or(() => 2);
 
@@ -150,7 +150,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_function_When_IsNone_Returns_some_result_from_function_evaluation()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = source.Or(() => 2);
 
@@ -162,7 +162,7 @@ public class Or_methods
         [Fact]
         public void Given_null_fallback_value_function_Throws_ArgumentNullException()
         {
-            var source = Maybe<string>.Create.Fail();
+            var source = Maybe<string>.Fail();
 
             Action act = () => source.Or((Func<string>)null!);
 
@@ -172,7 +172,7 @@ public class Or_methods
         [Fact]
         public void Given_fallback_value_function_returning_null_Throws_ArgumentException()
         {
-            var source = Maybe<string>.Create.Fail();
+            var source = Maybe<string>.Fail();
 
             Action act = () => source.Or(() => null!);
 

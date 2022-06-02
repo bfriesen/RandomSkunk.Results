@@ -1,5 +1,4 @@
 using static RandomSkunk.Results.Exceptions;
-using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results;
 
@@ -21,7 +20,7 @@ public partial struct Result<T>
     {
         if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
 
-        return _type == Success ? this : fallbackValue.ToResult();
+        return _type == ResultType.Success ? this : fallbackValue.ToResult();
     }
 
     /// <summary>
@@ -42,7 +41,7 @@ public partial struct Result<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        if (_type == Success)
+        if (_type == ResultType.Success)
             return this;
 
         var fallbackValue = getFallbackValue()

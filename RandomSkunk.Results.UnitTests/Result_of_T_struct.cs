@@ -34,7 +34,7 @@ public class Result_of_T_struct
         public void Fail_Returns_fail_result_with_specified_error()
         {
             var error = new Error();
-            var result = Result<int>.Create.Fail(error);
+            var result = Result<int>.Fail(error);
 
             result._type.Should().Be(Fail);
             result.IsFail.Should().BeTrue();
@@ -61,7 +61,7 @@ public class Result_of_T_struct
         [Fact]
         public void Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
         {
-            var result = Result<int>.Create.Fail();
+            var result = Result<int>.Fail();
 
             var actual = result.Match(
                 value => value + 1,
@@ -90,7 +90,7 @@ public class Result_of_T_struct
         public void Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
         {
             var error = new Error();
-            var result = Result<int>.Create.Fail(error);
+            var result = Result<int>.Fail(error);
 
             int? successValue = null;
             Error? failError = null;
@@ -121,7 +121,7 @@ public class Result_of_T_struct
         [Fact]
         public async Task Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
         {
-            var result = Result<int>.Create.Fail();
+            var result = Result<int>.Fail();
 
             var actual = await result.MatchAsync(
                 value => Task.FromResult(value + 1),
@@ -158,7 +158,7 @@ public class Result_of_T_struct
         public async Task Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
         {
             var error = new Error();
-            var result = Result<int>.Create.Fail(error);
+            var result = Result<int>.Fail(error);
 
             int? successValue = null;
             Error? failError = null;
@@ -197,9 +197,9 @@ public class Result_of_T_struct
         public void Given_IsFail_When_other_IsFail_with_equal_error_Returns_true()
         {
             var error = new Error("a", "d") { StackTrace = "b", ErrorCode = 1, Identifier = "c" };
-            var result = Result<int>.Create.Fail(error);
+            var result = Result<int>.Fail(error);
             var otherError = new Error("a", "d") { StackTrace = "b", ErrorCode = 1, Identifier = "c" };
-            object other = Result<int>.Create.Fail(otherError);
+            object other = Result<int>.Fail(otherError);
 
             var actual = result.Equals(other);
 
@@ -232,7 +232,7 @@ public class Result_of_T_struct
         public void Given_IsSuccess_When_other_IsFail_Returns_false()
         {
             var result = 1.ToResult();
-            object other = Result<int>.Create.Fail();
+            object other = Result<int>.Fail();
 
             var actual = result.Equals(other);
 
@@ -242,7 +242,7 @@ public class Result_of_T_struct
         [Fact]
         public void Given_IsFail_When_other_IsSuccess_Returns_false()
         {
-            var result = Result<int>.Create.Fail();
+            var result = Result<int>.Fail();
             object other = 1.ToResult();
 
             var actual = result.Equals(other);
@@ -254,9 +254,9 @@ public class Result_of_T_struct
         public void Given_IsFail_When_other_IsFail_with_unequal_error_Returns_false()
         {
             var error = new Error("a", "d") { StackTrace = "b", ErrorCode = 1, Identifier = "c" };
-            var result = Result<int>.Create.Fail(error);
+            var result = Result<int>.Fail(error);
             var otherError = new Error("w", "z") { StackTrace = "x", ErrorCode = 2, Identifier = "y" };
-            object other = Result<int>.Create.Fail(otherError);
+            object other = Result<int>.Fail(otherError);
 
             var actual = result.Equals(other);
 
@@ -282,10 +282,10 @@ public class Result_of_T_struct
         {
             var success1 = 1.ToResult().GetHashCode();
             var successA = "1".ToResult().GetHashCode();
-            var fail1 = Result<int>.Create.Fail("X").GetHashCode();
-            var fail2 = Result<int>.Create.Fail("Y").GetHashCode();
-            var failA = Result<string>.Create.Fail("X").GetHashCode();
-            var failB = Result<string>.Create.Fail("Y").GetHashCode();
+            var fail1 = Result<int>.Fail("X").GetHashCode();
+            var fail2 = Result<int>.Fail("Y").GetHashCode();
+            var failA = Result<string>.Fail("X").GetHashCode();
+            var failB = Result<string>.Fail("Y").GetHashCode();
 
             success1.Should().NotBe(successA);
             success1.Should().NotBe(fail1);

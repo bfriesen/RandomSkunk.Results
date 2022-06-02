@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -36,9 +34,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => onSome(_value!),
-            None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => onSome(_value!),
+            MaybeType.None => Maybe<TReturn>.None(),
+            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -71,9 +69,9 @@ public partial struct Maybe<T>
 
         return _type switch
         {
-            Some => await onSomeAsync(_value!).ConfigureAwait(false),
-            None => Maybe<TReturn>.Create.None(),
-            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            MaybeType.Some => await onSomeAsync(_value!).ConfigureAwait(false),
+            MaybeType.None => Maybe<TReturn>.None(),
+            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 }

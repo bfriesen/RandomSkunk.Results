@@ -25,7 +25,7 @@ public partial struct Maybe<T>
         {
             return filter(_value!)
                 ? this
-                : Maybe<T>.Create.None();
+                : Maybe<T>.None();
         }
 
         return this;
@@ -51,7 +51,7 @@ public partial struct Maybe<T>
         {
             return await filterAsync(_value!).ConfigureAwait(false)
                 ? this
-                : Maybe<T>.Create.None();
+                : Maybe<T>.None();
         }
 
         return this;

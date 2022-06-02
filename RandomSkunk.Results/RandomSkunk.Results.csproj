@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net461;net6.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
@@ -42,6 +42,9 @@
 		</Compile>
 		<Compile Update="ResultFactoryExtensions.*.cs">
 			<DependentUpon>ResultFactoryExtensions.cs</DependentUpon>
+		</Compile>
+		<Compile Update="Linq\LinqExtensions.*.cs">
+			<DependentUpon>Linq\LinqExtensions.cs</DependentUpon>
 		</Compile>
 	</ItemGroup>
 

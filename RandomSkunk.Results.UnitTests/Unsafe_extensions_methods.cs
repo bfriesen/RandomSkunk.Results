@@ -8,7 +8,7 @@ public class Unsafe_extensions_methods
         public void GetError_When_IsFail_Returns_error()
         {
             var error = new Error();
-            var source = Result.Create.Fail(error);
+            var source = Result.Fail(error);
 
             var actual = source.GetError();
 
@@ -18,7 +18,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetError_When_IsSuccess_Throws_InvalidStateException()
         {
-            var source = Result.Create.Success();
+            var source = Result.Success();
 
             Action act = () => source.GetError();
 
@@ -33,7 +33,7 @@ public class Unsafe_extensions_methods
         public void GetError_When_IsFail_Returns_error()
         {
             var error = new Error();
-            var source = Result<int>.Create.Fail(error);
+            var source = Result<int>.Fail(error);
 
             var actual = source.GetError();
 
@@ -64,7 +64,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetValue_When_IsFail_Throws_InvalidStateException()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             Action act = () => source.GetValue();
 
@@ -79,7 +79,7 @@ public class Unsafe_extensions_methods
         public void GetError_When_IsFail_Returns_error()
         {
             var error = new Error();
-            var source = Maybe<int>.Create.Fail(error);
+            var source = Maybe<int>.Fail(error);
 
             var actual = source.GetError();
 
@@ -100,7 +100,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetError_When_IsNone_Throws_InvalidStateException()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             Action act = () => source.GetError();
 
@@ -120,7 +120,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetValue_When_IsFail_Throws_InvalidStateException()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             Action act = () => source.GetValue();
 
@@ -131,7 +131,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetValue_When_IsNone_Throws_InvalidStateException()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             Action act = () => source.GetValue();
 

@@ -13,7 +13,7 @@ public static class FactoryExtensions
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null"/>.</exception>
     public static Result<T> ToResult<T>([DisallowNull] this T value) =>
-        Result<T>.Create.Success(value);
+        Result<T>.Success(value);
 
     /// <summary>
     /// Creates a maybe from the specified value.
@@ -22,5 +22,5 @@ public static class FactoryExtensions
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
     /// <returns>A <c>Some</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c> result.</returns>
     public static Maybe<T> ToMaybe<T>(this T? value) =>
-        Maybe<T>.Create.FromValue(value);
+        Maybe<T>.FromValue(value);
 }

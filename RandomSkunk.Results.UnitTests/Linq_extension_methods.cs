@@ -21,7 +21,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_early_fail_result_Returns_fail_result()
         {
-            var result = from n in Result<int>.Create.Fail("A")
+            var result = from n in Result<int>.Fail("A")
                          let n2 = n * 2
                          from s in $"n2: {n2}".ToResult()
                          select s;
@@ -35,7 +35,7 @@ public class Linq_extension_methods
         {
             var result = from n in 1.ToResult()
                          let n2 = n * 2
-                         from s in Result<string>.Create.Fail("B")
+                         from s in Result<string>.Fail("B")
                          select s;
 
             result.IsFail.Should().BeTrue();
@@ -45,9 +45,9 @@ public class Linq_extension_methods
         [Fact]
         public void Given_early_and_late_fail_results_Returns_fail_result()
         {
-            var result = from n in Result<int>.Create.Fail("A")
+            var result = from n in Result<int>.Fail("A")
                          let n2 = n * 2
-                         from s in Result<string>.Create.Fail("B")
+                         from s in Result<string>.Fail("B")
                          select s;
 
             result.IsFail.Should().BeTrue();
@@ -73,7 +73,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_early_fail_result_Returns_fail_result()
         {
-            var result = from n in Maybe<int>.Create.Fail("A")
+            var result = from n in Maybe<int>.Fail("A")
                          let n2 = n * 2
                          where n2 < 3
                          from s in $"n2: {n2}".ToMaybe()
@@ -86,7 +86,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_early_none_result_Returns_none_result()
         {
-            var result = from n in Maybe<int>.Create.None()
+            var result = from n in Maybe<int>.None()
                          let n2 = n * 2
                          where n2 < 3
                          from s in $"n2: {n2}".ToMaybe()
@@ -101,7 +101,7 @@ public class Linq_extension_methods
             var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 3
-                         from s in Maybe<string>.Create.Fail("B")
+                         from s in Maybe<string>.Fail("B")
                          select s;
 
             result.IsFail.Should().BeTrue();
@@ -114,7 +114,7 @@ public class Linq_extension_methods
             var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 3
-                         from s in Maybe<string>.Create.None()
+                         from s in Maybe<string>.None()
                          select s;
 
             result.IsNone.Should().BeTrue();
@@ -135,7 +135,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_early_fail_result_and_where_filter_returns_false_Returns_fail_result()
         {
-            var result = from n in Maybe<int>.Create.Fail("A")
+            var result = from n in Maybe<int>.Fail("A")
                          let n2 = n * 2
                          where n2 < 1
                          from s in $"n2: {n2}".ToMaybe()
@@ -151,7 +151,7 @@ public class Linq_extension_methods
             var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 1
-                         from s in Maybe<string>.Create.Fail("B")
+                         from s in Maybe<string>.Fail("B")
                          select s;
 
             result.IsNone.Should().BeTrue();

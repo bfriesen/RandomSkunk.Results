@@ -12,7 +12,7 @@ public partial struct Result<T>
     /// <returns>The current result.</returns>
     public Result<T> OnSuccess(Action<T> onSuccess)
     {
-        if (IsSuccess)
+        if (_type == ResultType.Success)
             onSuccess(_value!);
 
         return this;
@@ -25,7 +25,7 @@ public partial struct Result<T>
     /// <returns>The current result.</returns>
     public async Task<Result<T>> OnSuccessAsync(Func<T, Task> onSuccess)
     {
-        if (IsSuccess)
+        if (_type == ResultType.Success)
             await onSuccess(_value!).ConfigureAwait(false);
 
         return this;

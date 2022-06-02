@@ -23,7 +23,7 @@ public partial struct Result<T>
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
         return _type == ResultType.Fail
-            ? Create.Fail(getError(Error()))
+            ? Fail(getError(Error()))
             : this;
     }
 }

@@ -12,7 +12,7 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public Maybe<T> OnNone(Action onNone)
     {
-        if (IsNone)
+        if (_type == MaybeType.None)
             onNone();
 
         return this;
@@ -25,7 +25,7 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public async Task<Maybe<T>> OnNoneAsync(Func<Task> onNone)
     {
-        if (IsNone)
+        if (_type == MaybeType.None)
             await onNone().ConfigureAwait(false);
 
         return this;

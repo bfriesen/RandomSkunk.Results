@@ -12,7 +12,7 @@ public partial struct Result
     /// <returns>The current result.</returns>
     public Result OnFail(Action<Error> onFail)
     {
-        if (IsFail)
+        if (_type == ResultType.Fail)
             onFail(Error());
 
         return this;
@@ -25,7 +25,7 @@ public partial struct Result
     /// <returns>The current result.</returns>
     public async Task<Result> OnFailAsync(Func<Error, Task> onFail)
     {
-        if (IsFail)
+        if (_type == ResultType.Fail)
             await onFail(Error()).ConfigureAwait(false);
 
         return this;

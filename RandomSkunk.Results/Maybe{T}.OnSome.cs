@@ -12,7 +12,7 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public Maybe<T> OnSome(Action<T> onSome)
     {
-        if (IsSome)
+        if (_type == MaybeType.Some)
             onSome(_value!);
 
         return this;
@@ -25,7 +25,7 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public async Task<Maybe<T>> OnSomeAsync(Func<T, Task> onSome)
     {
-        if (IsSome)
+        if (_type == MaybeType.Some)
             await onSome(_value!).ConfigureAwait(false);
 
         return this;

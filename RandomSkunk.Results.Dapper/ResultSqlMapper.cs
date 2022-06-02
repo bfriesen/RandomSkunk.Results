@@ -7,7 +7,7 @@ namespace RandomSkunk.Results.Dapper;
 /// </summary>
 public static class ResultSqlMapper
 {
-    private static readonly Func<DbException, DbError> _defaultDbExceptionHandler = ex => DbError.FromException(ex);
+    private static readonly Func<DbException, DbError> _defaultDbExceptionHandler = ex => DbError.FromDbException(ex);
 
     /// <summary>
     /// Execute parameterized SQL.
@@ -20,7 +20,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -54,7 +54,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -87,7 +87,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -126,7 +126,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -164,7 +164,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -201,7 +201,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -239,7 +239,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -274,7 +274,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -311,7 +311,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -349,7 +349,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -386,7 +386,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -426,7 +426,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -470,7 +470,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -515,7 +515,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -561,7 +561,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -608,7 +608,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -656,7 +656,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -698,7 +698,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -736,7 +736,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -774,7 +774,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -808,7 +808,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -843,7 +843,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -878,7 +878,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -912,7 +912,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -947,7 +947,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -981,7 +981,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1021,7 +1021,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1065,7 +1065,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1110,7 +1110,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1156,7 +1156,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1203,7 +1203,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1251,7 +1251,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1293,7 +1293,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1330,7 +1330,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1363,7 +1363,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1400,7 +1400,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
@@ -1434,7 +1434,7 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="dbExceptionHandler">
     /// An optional function that maps a caught <see cref="DbException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromException"/>.
+    /// <see langword="null"/>, the error is created by calling <see cref="DbError.FromDbException"/>.
     /// </param>
     /// <param name="fallbackExceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If

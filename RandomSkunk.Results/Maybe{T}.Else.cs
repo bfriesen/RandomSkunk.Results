@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -14,7 +12,7 @@ public partial struct Maybe<T>
     /// <returns>Either the current result or <paramref name="fallbackResult"/>.</returns>
     public Maybe<T> Else(Maybe<T> fallbackResult)
     {
-        return _type == Some ? this : fallbackResult;
+        return _type == MaybeType.Some ? this : fallbackResult;
     }
 
     /// <summary>
@@ -34,6 +32,6 @@ public partial struct Maybe<T>
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return _type == Some ? this : getFallbackResult();
+        return _type == MaybeType.Some ? this : getFallbackResult();
     }
 }

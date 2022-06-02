@@ -24,15 +24,15 @@ public static class DapperResultFactoryExtensions
     /// The optional error that is the cause of the current error.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static Result Fail(
-        this IResultFactory source,
+    public static Result DbException(
+        this ResultFactory source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
         Error? innerError = null) =>
-        source.Fail(DbError.FromException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result with a <see cref="DbError"/>.
@@ -52,15 +52,15 @@ public static class DapperResultFactoryExtensions
     /// The optional error that is the cause of the current error.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static Result<T> Fail<T>(
-        this IResultFactory<T> source,
+    public static Result<T> DbException<T>(
+        this ResultFactory<T> source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
         Error? innerError = null) =>
-        source.Fail(DbError.FromException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
 
     /// <summary>
     /// Creates a <c>Fail</c> result with a <see cref="DbError"/>.
@@ -80,13 +80,13 @@ public static class DapperResultFactoryExtensions
     /// The optional error that is the cause of the current error.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static Maybe<T> Fail<T>(
-        this IMaybeFactory<T> source,
+    public static Maybe<T> DbException<T>(
+        this MaybeFactory<T> source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
         Error? innerError = null) =>
-        source.Fail(DbError.FromException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
 }

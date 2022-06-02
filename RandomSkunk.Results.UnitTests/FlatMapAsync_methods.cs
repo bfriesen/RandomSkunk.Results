@@ -19,7 +19,7 @@ public class FlatMapAsync_methods
         public async Task When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Result<int>.Create.Fail(error);
+            var source = Result<int>.Fail(error);
 
             var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToResult()));
 
@@ -30,7 +30,7 @@ public class FlatMapAsync_methods
         [Fact]
         public async Task Given_null_filter_function_Throws_ArgumentNullException()
         {
-            var source = Result<int>.Create.Fail();
+            var source = Result<int>.Fail();
 
             Func<Task> act = () => source.FlatMapAsync<string>(null!);
 
@@ -55,7 +55,7 @@ public class FlatMapAsync_methods
         public async Task When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Maybe<int>.Create.Fail(error);
+            var source = Maybe<int>.Fail(error);
 
             var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
 
@@ -66,7 +66,7 @@ public class FlatMapAsync_methods
         [Fact]
         public async Task When_IsNone_Returns_None()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
 
@@ -76,7 +76,7 @@ public class FlatMapAsync_methods
         [Fact]
         public async Task When_null_filter_function_Throws_ArgumentNullException()
         {
-            var source = Maybe<int>.Create.Fail();
+            var source = Maybe<int>.Fail();
 
             Func<Task> act = () => source.FlatMapAsync<string>(null!);
 

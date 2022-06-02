@@ -30,12 +30,12 @@ public static class HttpResponseExtensions
         if (source is null) throw new ArgumentNullException(nameof(source));
 
         if (source.IsSuccessStatusCode)
-            return Result.Create.Success();
+            return Result.Success();
 
         options ??= _defaultOptions;
         var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
-        return Result.Create.Fail(error);
+        return Result.Fail(error);
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public static class HttpResponseExtensions
 
         var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
-        return Result<T>.Create.Fail(error);
+        return Result<T>.Fail(error);
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public static class HttpResponseExtensions
 
         var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
-        return Maybe<T>.Create.Fail(error);
+        return Maybe<T>.Fail(error);
     }
 
     /// <summary>
@@ -527,13 +527,13 @@ public static class HttpResponseExtensions
             var value = await content.ReadFromJsonAsync<T>(options,  cancellationToken).ConfigureAwait(false);
 
             if (value is null)
-                return Result<T>.Create.Fail("Response content was the literal string \"null\".");
+                return Result<T>.Fail("Response content was the literal string \"null\".");
 
             return value.ToResult();
         }
         catch (Exception ex)
         {
-            return Result<T>.Create.Fail(ex, "Error reading value from response content.");
+            return Result<T>.Fail(ex, "Error reading value from response content.");
         }
     }
 
@@ -547,13 +547,13 @@ public static class HttpResponseExtensions
             var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
 
             if (value is null)
-                return Maybe<T>.Create.None();
+                return Maybe<T>.None();
 
             return value.ToMaybe();
         }
         catch (Exception ex)
         {
-            return Maybe<T>.Create.Fail(ex, "Error reading value from response content.");
+            return Maybe<T>.Fail(ex, "Error reading value from response content.");
         }
     }
 

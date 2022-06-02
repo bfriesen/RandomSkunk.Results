@@ -23,7 +23,7 @@ public partial struct Maybe<T>
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
         return _type == MaybeType.Fail
-            ? Create.Fail(getError(Error()))
+            ? Fail(getError(Error()))
             : this;
     }
 }

@@ -1,5 +1,4 @@
 using static RandomSkunk.Results.Error;
-using static RandomSkunk.Results.MaybeType;
 
 namespace RandomSkunk.Results;
 
@@ -7,17 +6,26 @@ namespace RandomSkunk.Results;
 /// Defines a result with an optional value.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
-/// <remarks>
-/// Use <see cref="Create"/> to create instances of this type.
-/// </remarks>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public partial struct Maybe<T> : IEquatable<Maybe<T>>
 {
     /// <summary>
-    /// The factory object used to create instances of <see cref="Maybe{T}"/>. This field is
-    /// read-only.
+    /// A factory object that creates <c>Fail</c> results of type <see cref="Maybe{T}"/>.
     /// </summary>
-    public static readonly IMaybeFactory<T> Create = new Factory();
+    /// <remarks>
+    /// Applications are encouraged to define custom extension methods targeting <see cref="MaybeFactory{T}"/> that return
+    /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
+    /// creating a <c>Fail</c> result when a user is not authorized:
+    /// <code><![CDATA[
+    /// public static Maybe<T> Unauthorized<T>(this MaybeFactory<T> source) =>
+    ///     source.Error("User is not authorized.", new StackTrace(1).ToString(), 401);
+    /// ]]></code>
+    /// This extension method could be used elsewhere in the application like this:
+    /// <code><![CDATA[
+    /// return Maybe<AdminUser>.FailWith.Unauthorized();
+    /// ]]></code>
+    /// </remarks>
+    public static readonly MaybeFactory<T> FailWith = new();
 
     internal readonly MaybeType _type;
     internal readonly T? _value;
@@ -25,7 +33,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
 
     private Maybe(T value)
     {
-        _type = Some;
+        _type = MaybeType.Some;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
@@ -34,20 +42,20 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     {
         if (none)
         {
-            _type = None;
+            _type = MaybeType.None;
             _value = default;
             _error = null;
         }
         else
         {
-            _type = Fail;
+            _type = MaybeType.Fail;
             _value = default;
             _error = error ?? new Error();
         }
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="Some"/>, <see cref="None"/>, or <see cref="Fail"/>.
+    /// Gets the type of the result: <see cref="MaybeType.Some"/>, <see cref="MaybeType.None"/>, or <see cref="MaybeType.Fail"/>.
     /// </summary>
     public MaybeType Type => _type;
 
@@ -58,7 +66,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// <see langword="true"/> if this is a <c>Some</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsSome => _type == Some;
+    public bool IsSome => _type == MaybeType.Some;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>None</c> result.
@@ -67,7 +75,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// <see langword="true"/> if this is a <c>None</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsNone => _type == None;
+    public bool IsNone => _type == MaybeType.None;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
@@ -76,13 +84,13 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsFail => _type == Fail;
+    public bool IsFail => _type == MaybeType.Fail;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Maybe{T}"/>
     /// struct.
     /// </summary>
-    public bool IsDefault => _type == Fail && _error is null;
+    public bool IsDefault => _type == MaybeType.Fail && _error is null;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the
@@ -107,6 +115,104 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
     /// </returns>
     public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
+
+    /// <summary>
+    /// Creates a <c>Some</c> result with the specified value.
+    /// </summary>
+    /// <param name="value">
+    /// The value of the <c>Some</c> result. Must not be <see langword="null"/>.
+    /// </param>
+    /// <returns>A <c>Some</c> result.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If <paramref name="value"/> is <see langword="null"/>.
+    /// </exception>
+    public static Maybe<T> Some(T value) => new(value);
+
+    /// <summary>
+    /// Creates a <c>None</c> result.
+    /// </summary>
+    /// <returns>A <c>None</c> result.</returns>
+    public static Maybe<T> None() => new(none: true);
+
+    /// <summary>
+    /// Creates a <c>Fail</c> result with the specified error.
+    /// </summary>
+    /// <param name="error">
+    /// An error that describes the failure. If <see langword="null"/>, a default error is
+    /// used.
+    /// </param>
+    /// <returns>A <c>Fail</c> result.</returns>
+    public static Maybe<T> Fail(Error? error = null) => new(none: false, error);
+
+    /// <summary>
+    /// Creates a <c>Fail</c> result.
+    /// </summary>
+    /// <param name="exception">The exception that caused the failure.</param>
+    /// <param name="errorMessage">The optional error message.</param>
+    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="errorType">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
+    /// <returns>A <c>Fail</c> result.</returns>
+    public static Maybe<T> Fail(
+        Exception exception,
+        string? errorMessage = null,
+        int? errorCode = null,
+        string? errorIdentifier = null,
+        string? errorType = null,
+        Error? innerError = null) =>
+        Fail(FromException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+
+    /// <summary>
+    /// Creates a <c>Fail</c> result.
+    /// </summary>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="errorType">
+    /// The optional type of the error. If <see langword="null"/>, then the
+    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
+    /// is used instead.
+    /// </param>
+    /// <param name="innerError">
+    /// The optional error that is the cause of the current error.
+    /// </param>
+    /// <returns>A <c>Fail</c> result.</returns>
+    public static Maybe<T> Fail(
+        string errorMessage,
+        string? stackTrace = null,
+        int? errorCode = null,
+        string? errorIdentifier = null,
+        string? errorType = null,
+        Error? innerError = null) =>
+        Fail(new Error(errorMessage, errorType)
+        {
+            StackTrace = stackTrace,
+            ErrorCode = errorCode,
+            Identifier = errorIdentifier,
+            InnerError = innerError,
+        });
+
+    /// <summary>
+    /// Creates a maybe from the specified value.
+    /// </summary>
+    /// <param name="value">The value. Can be <see langword="null"/>.</param>
+    /// <returns>
+    /// A <c>Some</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c>
+    /// result.
+    /// </returns>
+    public static Maybe<T> FromValue(
+        T? value) =>
+        value is not null
+            ? Some(value)
+            : None();
 
     /// <inheritdoc/>
     public bool Equals(Maybe<T> other) =>
@@ -138,13 +244,4 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
             value => $"Some({(value is string ? $"\"{value}\"" : $"{value}")})",
             () => "None",
             error => $"Fail({error.Type}: \"{error.Message}\")");
-
-    private sealed class Factory : IMaybeFactory<T>
-    {
-        public Maybe<T> Some(T value) => new(value);
-
-        public Maybe<T> None() => new(none: true);
-
-        public Maybe<T> Fail(Error? error = null) => new(none: false, error);
-    }
 }

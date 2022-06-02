@@ -9,7 +9,7 @@ public class CrossMapAsync_methods
         {
             var source = "a".ToResult();
 
-            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Create.Fail(value)));
+            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Message.Should().Be("a");
@@ -19,9 +19,9 @@ public class CrossMapAsync_methods
         public async Task Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Result<int>.Create.Fail(error);
+            var source = Result<int>.Fail(error);
 
-            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Create.Success()));
+            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Should().BeSameAs(error);
@@ -32,7 +32,7 @@ public class CrossMapAsync_methods
         {
             var source = "a".ToResult();
 
-            var actual = await source.CrossMapAsync(value => Task.FromResult(Maybe<int>.Create.Fail(value)));
+            var actual = await source.CrossMapAsync(value => Task.FromResult(Maybe<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Message.Should().Be("a");
@@ -42,7 +42,7 @@ public class CrossMapAsync_methods
         public async Task Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Result<int>.Create.Fail(error);
+            var source = Result<int>.Fail(error);
 
             var actual = await source.CrossMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
 
@@ -58,7 +58,7 @@ public class CrossMapAsync_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Create.Fail(value)));
+            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Message.Should().Be("a");
@@ -67,9 +67,9 @@ public class CrossMapAsync_methods
         [Fact]
         public async Task Given_target_is_Result_When_source_is_None_Returns_Fail_result()
         {
-            var source = Maybe<string>.Create.None();
+            var source = Maybe<string>.None();
 
-            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Create.Success()));
+            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Should().Be(ResultExtensions.DefaultGetNoneError());
@@ -79,9 +79,9 @@ public class CrossMapAsync_methods
         public async Task Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<string>.Create.Fail(error);
+            var source = Maybe<string>.Fail(error);
 
-            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Create.Success()));
+            var actual = await source.CrossMapAsync(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Should().BeSameAs(error);
@@ -92,7 +92,7 @@ public class CrossMapAsync_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = await source.CrossMapAsync(value => Task.FromResult(Result<int>.Create.Fail(value)));
+            var actual = await source.CrossMapAsync(value => Task.FromResult(Result<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.Error().Message.Should().Be("a");
@@ -101,7 +101,7 @@ public class CrossMapAsync_methods
         [Fact]
         public async Task Given_target_is_Result_of_T_When_source_is_None_Returns_Fail_result()
         {
-            var source = Maybe<int>.Create.None();
+            var source = Maybe<int>.None();
 
             var actual = await source.CrossMapAsync(value => Task.FromResult(value.ToString().ToResult()));
 
@@ -113,7 +113,7 @@ public class CrossMapAsync_methods
         public async Task Given_target_is_Result_of_T_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<int>.Create.Fail(error);
+            var source = Maybe<int>.Fail(error);
 
             var actual = await source.CrossMapAsync(value => Task.FromResult(value.ToString().ToResult()));
 

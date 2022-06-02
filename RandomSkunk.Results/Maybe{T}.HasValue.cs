@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -23,7 +21,7 @@ public partial struct Maybe<T>
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        return _type == Some && comparer.Equals(_value!, otherValue);
+        return _type == MaybeType.Some && comparer.Equals(_value!, otherValue);
     }
 
     /// <summary>
@@ -45,6 +43,6 @@ public partial struct Maybe<T>
     {
         if (comparison is null) throw new ArgumentNullException(nameof(comparison));
 
-        return _type == Some && comparison(_value!);
+        return _type == MaybeType.Some && comparison(_value!);
     }
 }

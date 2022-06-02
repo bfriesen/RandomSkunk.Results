@@ -1,5 +1,4 @@
 using static RandomSkunk.Results.Exceptions;
-using static RandomSkunk.Results.ResultType;
 
 namespace RandomSkunk.Results;
 
@@ -39,8 +38,8 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => (onSuccess(_value!) ?? throw FunctionMustNotReturnNull(nameof(onSuccess))).ToResult(),
-            _ => Result<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => (onSuccess(_value!) ?? throw FunctionMustNotReturnNull(nameof(onSuccess))).ToResult(),
+            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 
@@ -75,8 +74,8 @@ public partial struct Result<T>
 
         return _type switch
         {
-            Success => (await onSuccessAsync(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(onSuccessAsync))).ToResult(),
-            _ => Result<TReturn>.Create.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => (await onSuccessAsync(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(onSuccessAsync))).ToResult(),
+            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
 }

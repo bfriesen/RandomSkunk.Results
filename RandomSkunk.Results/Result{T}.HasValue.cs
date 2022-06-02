@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.ResultType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -23,7 +21,7 @@ public partial struct Result<T>
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        return _type == Success && comparer.Equals(_value!, otherValue);
+        return _type == ResultType.Success && comparer.Equals(_value!, otherValue);
     }
 
     /// <summary>
@@ -45,6 +43,6 @@ public partial struct Result<T>
     {
         if (comparison is null) throw new ArgumentNullException(nameof(comparison));
 
-        return _type == Success && comparison(_value!);
+        return _type == ResultType.Success && comparison(_value!);
     }
 }

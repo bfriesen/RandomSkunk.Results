@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.ResultType;
-
 namespace RandomSkunk.Results;
 
 /// <content>
@@ -20,7 +18,7 @@ public partial struct Result<T>
     /// </returns>
     public T GetValueOr(T fallbackValue)
     {
-        return _type == Success ? _value! : fallbackValue;
+        return _type == ResultType.Success ? _value! : fallbackValue;
     }
 
     /// <summary>
@@ -42,6 +40,6 @@ public partial struct Result<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return _type == Success ? _value! : getFallbackValue();
+        return _type == ResultType.Success ? _value! : getFallbackValue();
     }
 }
