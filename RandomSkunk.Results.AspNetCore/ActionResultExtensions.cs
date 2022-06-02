@@ -19,8 +19,8 @@ public static class ActionResultExtensions
             throw new ArgumentOutOfRangeException(nameof(successStatusCode), successStatusCode, "Must be between 200 and 299 inclusive.");
 
         return source.Match<IActionResult>(
-            success: () => new StatusCodeResult(successStatusCode),
-            fail: error => new ObjectResult(error.GetProblemDetails()) { StatusCode = error.ErrorCode ?? 500 });
+            onSuccess: () => new StatusCodeResult(successStatusCode),
+            onFail: error => new ObjectResult(error.GetProblemDetails()) { StatusCode = error.ErrorCode ?? 500 });
     }
 
     /// <summary>
@@ -36,8 +36,8 @@ public static class ActionResultExtensions
             throw new ArgumentOutOfRangeException(nameof(successStatusCode), successStatusCode, "Must be between 200 and 299 inclusive.");
 
         return source.Match<IActionResult>(
-            success: value => new ObjectResult(value) { StatusCode = successStatusCode },
-            fail: error => new ObjectResult(error.GetProblemDetails()) { StatusCode = error.ErrorCode ?? 500 });
+            onSuccess: value => new ObjectResult(value) { StatusCode = successStatusCode },
+            onFail: error => new ObjectResult(error.GetProblemDetails()) { StatusCode = error.ErrorCode ?? 500 });
     }
 
     /// <summary>
@@ -53,9 +53,9 @@ public static class ActionResultExtensions
             throw new ArgumentOutOfRangeException(nameof(someStatusCode), someStatusCode, "Must be between 200 and 299 inclusive.");
 
         return source.Match<IActionResult>(
-            some: value => new ObjectResult(value) { StatusCode = someStatusCode },
-            none: () => new NotFoundResult(),
-            fail: error => new ObjectResult(error.GetProblemDetails()) { StatusCode = error.ErrorCode ?? 500 });
+            onSome: value => new ObjectResult(value) { StatusCode = someStatusCode },
+            onNone: () => new NotFoundResult(),
+            onFail: error => new ObjectResult(error.GetProblemDetails()) { StatusCode = error.ErrorCode ?? 500 });
     }
 
     /// <summary>

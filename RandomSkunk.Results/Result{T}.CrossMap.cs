@@ -9,131 +9,131 @@ public partial struct Result<T>
 {
     /// <summary>
     /// Maps the <see cref="Result{T}"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="crossMap"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSuccess"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
-    /// <param name="crossMap">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     public Result CrossMap(
-        Func<T, Result> crossMap,
-        Func<Error, Error>? getError = null)
+        Func<T, Result> onSuccess,
+        Func<Error, Error>? onFail = null)
     {
-        if (crossMap is null) throw new ArgumentNullException(nameof(crossMap));
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
 
         return _type switch
         {
-            Success => crossMap(_value!),
-            _ => Result.Create.Fail(getError.Evaluate(Error())),
+            Success => onSuccess(_value!),
+            _ => Result.Create.Fail(onFail.Evaluate(Error())),
         };
     }
 
     /// <summary>
     /// Maps the <see cref="Result{T}"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="crossMapAsync"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSuccessAsync"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
-    /// <param name="crossMapAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     public async Task<Result> CrossMapAsync(
-        Func<T, Task<Result>> crossMapAsync,
-        Func<Error, Error>? getError = null)
+        Func<T, Task<Result>> onSuccessAsync,
+        Func<Error, Error>? onFail = null)
     {
-        if (crossMapAsync is null) throw new ArgumentNullException(nameof(crossMapAsync));
+        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
 
         return _type switch
         {
-            Success => await crossMapAsync(_value!).ConfigureAwait(false),
-            _ => Result.Create.Fail(getError.Evaluate(Error())),
+            Success => await onSuccessAsync(_value!).ConfigureAwait(false),
+            _ => Result.Create.Fail(onFail.Evaluate(Error())),
         };
     }
 
     /// <summary>
     /// Maps the <see cref="Result{T}"/> to a <see cref="Maybe{T}"/> using the specified
-    /// <paramref name="crossMap"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSuccess"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="crossMap">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     public Maybe<TReturn> CrossMap<TReturn>(
-        Func<T, Maybe<TReturn>> crossMap,
-        Func<Error, Error>? getError = null)
+        Func<T, Maybe<TReturn>> onSuccess,
+        Func<Error, Error>? onFail = null)
     {
-        if (crossMap is null) throw new ArgumentNullException(nameof(crossMap));
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
 
         return _type switch
         {
-            Success => crossMap(_value!),
-            _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(Error())),
+            Success => onSuccess(_value!),
+            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
         };
     }
 
     /// <summary>
     /// Maps the <see cref="Result{T}"/> to a <see cref="Maybe{T}"/> using the specified
-    /// <paramref name="crossMapAsync"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSuccessAsync"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="crossMapAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     public async Task<Maybe<TReturn>> CrossMapAsync<TReturn>(
-        Func<T, Task<Maybe<TReturn>>> crossMapAsync,
-        Func<Error, Error>? getError = null)
+        Func<T, Task<Maybe<TReturn>>> onSuccessAsync,
+        Func<Error, Error>? onFail = null)
     {
-        if (crossMapAsync is null) throw new ArgumentNullException(nameof(crossMapAsync));
+        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
 
         return _type switch
         {
-            Success => await crossMapAsync(_value!).ConfigureAwait(false),
-            _ => Maybe<TReturn>.Create.Fail(getError.Evaluate(Error())),
+            Success => await onSuccessAsync(_value!).ConfigureAwait(false),
+            _ => Maybe<TReturn>.Create.Fail(onFail.Evaluate(Error())),
         };
     }
 }

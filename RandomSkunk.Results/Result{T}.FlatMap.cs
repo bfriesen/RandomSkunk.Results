@@ -9,67 +9,67 @@ public partial struct Result<T>
 {
     /// <summary>
     /// Maps the current result to a another result using the specified
-    /// <paramref name="flatMap"/> function. The flat map function is evaluated if and only if the
+    /// <paramref name="onSuccess"/> function. The flat map function is evaluated if and only if the
     /// source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="flatMap">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="flatMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     public Result<TReturn> FlatMap<TReturn>(
-        Func<T, Result<TReturn>> flatMap,
-        Func<Error, Error>? getError = null)
+        Func<T, Result<TReturn>> onSuccess,
+        Func<Error, Error>? onFail = null)
     {
-        if (flatMap is null) throw new ArgumentNullException(nameof(flatMap));
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
 
         return _type switch
         {
-            Success => flatMap(_value!),
-            _ => Result<TReturn>.Create.Fail(getError.Evaluate(Error())),
+            Success => onSuccess(_value!),
+            _ => Result<TReturn>.Create.Fail(onFail.Evaluate(Error())),
         };
     }
 
     /// <summary>
     /// Maps the current result to a another result using the specified
-    /// <paramref name="flatMapAsync"/> function. The flat map function is evaluated if and only if
+    /// <paramref name="onSuccessAsync"/> function. The flat map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="flatMapAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="flatMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     public async Task<Result<TReturn>> FlatMapAsync<TReturn>(
-        Func<T, Task<Result<TReturn>>> flatMapAsync,
-        Func<Error, Error>? getError = null)
+        Func<T, Task<Result<TReturn>>> onSuccessAsync,
+        Func<Error, Error>? onFail = null)
     {
-        if (flatMapAsync is null) throw new ArgumentNullException(nameof(flatMapAsync));
+        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
 
         return _type switch
         {
-            Success => await flatMapAsync(_value!).ConfigureAwait(false),
-            _ => Result<TReturn>.Create.Fail(getError.Evaluate(Error())),
+            Success => await onSuccessAsync(_value!).ConfigureAwait(false),
+            _ => Result<TReturn>.Create.Fail(onFail.Evaluate(Error())),
         };
     }
 }
