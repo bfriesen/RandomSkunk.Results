@@ -2,7 +2,7 @@
      See: https://www.strathweb.com/2018/07/solution-wide-nuget-package-version-handling-with-msbuild-15/ -->
 <Project>
     <PropertyGroup>
-		<PackageVersion>1.0.0-alpha12</PackageVersion>
+		<PackageVersion>1.0.0-alpha13</PackageVersion>
         <LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(PackageId).xml</DocumentationFile>
