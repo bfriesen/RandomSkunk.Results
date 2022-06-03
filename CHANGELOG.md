@@ -235,7 +235,8 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha12...HEAD
+[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha13...HEAD
+[1.0.0-alpha13]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha12...v1.0.0-alpha13
 [1.0.0-alpha12]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha11...v1.0.0-alpha12
 [1.0.0-alpha11]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha10...v1.0.0-alpha11
 [1.0.0-alpha10]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha09...v1.0.0-alpha10
