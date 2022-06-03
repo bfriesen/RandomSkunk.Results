@@ -12,11 +12,13 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add `AsDisposable()` and `AsAsyncDisposable()` extension methods for `Result<T>` and `Maybe<T>`.
     - Add additional overloads of `Flatten` where the source is a mixed nested results. For example, `Result<Maybe<T>>` flattens to `Maybe<T>`.
+    - Add `Result<T>.FromValue` method, which gracefully handles null values by returning a `Fail` result.
 
 ### Changed
 
 - RandomSkunk.Results:
     - Remove `Create` factory field. Pull result factory methods up to the result types themselves. Add back `FailWith` factory field that only creates `Fail` results.
+    - The `FactoryExtensions.ToResult` extension method now gracefully handles null values by calling `Result<T>.FromValue`.
 
 ## [1.0.0-alpha12] - 2022-05-31
 

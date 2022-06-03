@@ -1,4 +1,5 @@
 using static RandomSkunk.Results.Error;
+using static RandomSkunk.Results.FactoryExtensions.FactoryExtensions;
 
 namespace RandomSkunk.Results;
 
@@ -175,6 +176,37 @@ public partial struct Result<T> : IEquatable<Result<T>>
             Identifier = errorIdentifier,
             InnerError = innerError,
         });
+
+    /// <summary>
+    /// Creates a result from the specified value.
+    /// </summary>
+    /// <param name="value">The value. Can be <see langword="null"/>.</param>
+    /// <param name="nullValueErrorMessage">
+    /// The error message to use if <paramref name="value"/> is <see langword="null"/>.
+    /// </param>
+    /// <param name="nullValueErrorCode">The error code to use if <paramref name="value"/> is <see langword="null"/>.</param>
+    /// <param name="nullValueErrorIdentifier">
+    /// The error identifier to use if <paramref name="value"/> is <see langword="null"/>.
+    /// </param>
+    /// <param name="nullValueErrorType">The error type to use if <paramref name="value"/> is <see langword="null"/>.</param>
+    /// <returns>
+    /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with
+    /// error code <c>400</c>.
+    /// </returns>
+    public static Result<T> FromValue(
+        T? value,
+        string nullValueErrorMessage = _defaultNullValueErrorMessage,
+        int nullValueErrorCode = _defaultNullValueErrorCode,
+        string? nullValueErrorIdentifier = null,
+        string? nullValueErrorType = null) =>
+        value is not null
+            ? Success(value)
+            : Fail(
+                string.IsNullOrEmpty(nullValueErrorMessage) ? _defaultNullValueErrorMessage : nullValueErrorMessage,
+                new StackTrace().ToString(),
+                nullValueErrorCode,
+                nullValueErrorIdentifier,
+                nullValueErrorType);
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>
