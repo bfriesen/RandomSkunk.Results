@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning].
     - Add `AsDisposable()` and `AsAsyncDisposable()` extension methods for `Result<T>` and `Maybe<T>`.
     - Add additional overloads of `Flatten` where the source is a mixed nested results. For example, `Result<Maybe<T>>` flattens to `Maybe<T>`.
     - Add `Result<T>.FromValue` method, which gracefully handles null values by returning a `Fail` result.
+    - Add extension methods for `IEnumerable<T>` in the `RandomSkunk.Results.Linq` namespace that behave the same way that the `System.Linq` extension methods do. Except instead of returning `T` and perhaps throwing an exception or returning `null`, they return `Result<T>` (the "OnFail" methods) or `Maybe<T>` (the "OnNone" methods).
+        - `FirstOrFail` | `FirstOrNone`
+        - `LastOrFail` | `LastOrNone`
+        - `SingleOrFail` | `SingleOrNone`
+        - `ElementAtOrFail` | `ElementAtOrNone`
 
 ### Changed
 
