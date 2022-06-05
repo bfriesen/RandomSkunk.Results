@@ -6,11 +6,10 @@ namespace RandomSkunk.Results;
 public static partial class ResultFactoryExtensions
 {
     /// <summary>
-    /// Creates a <c>Fail</c> result.
+    /// Creates a <c>Fail</c> result with a generated stack trace.
     /// </summary>
     /// <param name="source">The source factory.</param>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">
@@ -20,31 +19,33 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
+    /// </param>
+    /// <param name="stackTraceSkipFrames">
+    /// The number of frames up the stack from which to start the generated stack trace.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Error(
         this ResultFactory source,
         string errorMessage,
-        string? stackTrace = null,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
-        Error? innerError = null) =>
+        Error? innerError = null,
+        byte stackTraceSkipFrames = 2) =>
         source.Error(new Error(errorMessage, errorType)
         {
-            StackTrace = stackTrace,
+            StackTrace = new StackTrace(stackTraceSkipFrames).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
         });
 
     /// <summary>
-    /// Creates a <c>Fail</c> result.
+    /// Creates a <c>Fail</c> result with a generated stack trace.
     /// </summary>
     /// <typeparam name="T">The type of the result.</typeparam>
     /// <param name="source">The source factory.</param>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">
@@ -54,31 +55,33 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
+    /// </param>
+    /// <param name="stackTraceSkipFrames">
+    /// The number of frames up the stack from which to start the generated stack trace.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Error<T>(
         this ResultFactory<T> source,
         string errorMessage,
-        string? stackTrace = null,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
-        Error? innerError = null) =>
+        Error? innerError = null,
+        byte stackTraceSkipFrames = 2) =>
         source.Error(new Error(errorMessage, errorType)
         {
-            StackTrace = stackTrace,
+            StackTrace = new StackTrace(stackTraceSkipFrames).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
         });
 
     /// <summary>
-    /// Creates a <c>Fail</c> result.
+    /// Creates a <c>Fail</c> result with a generated stack trace.
     /// </summary>
     /// <typeparam name="T">The type of the result.</typeparam>
     /// <param name="source">The source factory.</param>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">
@@ -89,18 +92,21 @@ public static partial class ResultFactoryExtensions
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
+    /// <param name="stackTraceSkipFrames">
+    /// The number of frames up the stack from which to start the generated stack trace.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Error<T>(
         this MaybeFactory<T> source,
         string errorMessage,
-        string? stackTrace = null,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
-        Error? innerError = null) =>
+        Error? innerError = null,
+        byte stackTraceSkipFrames = 2) =>
         source.Error(new Error(errorMessage, errorType)
         {
-            StackTrace = stackTrace,
+            StackTrace = new StackTrace(stackTraceSkipFrames).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,

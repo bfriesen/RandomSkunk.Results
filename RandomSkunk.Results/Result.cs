@@ -141,7 +141,9 @@ public partial struct Result : IEquatable<Result>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="stackTrace">
+    /// The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
+    /// </param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">
@@ -162,7 +164,7 @@ public partial struct Result : IEquatable<Result>
         Error? innerError = null) =>
         Fail(new Error(errorMessage, errorType)
         {
-            StackTrace = stackTrace,
+            StackTrace = stackTrace ?? new StackTrace(1).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,

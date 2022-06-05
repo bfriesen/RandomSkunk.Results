@@ -9,7 +9,8 @@ public static class FactoryExtensions
     internal const int _defaultNullValueErrorCode = 400;
 
     /// <summary>
-    /// Creates a result with the specified value.
+    /// Creates a <c>Success</c> result with the specified non-null value. If the value is <see langword="null"/>, then a
+    /// <c>Fail</c> result is returned instead.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
@@ -22,8 +23,8 @@ public static class FactoryExtensions
     /// </param>
     /// <param name="nullValueErrorType">The error type to use if <paramref name="value"/> is <see langword="null"/>.</param>
     /// <returns>
-    /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with
-    /// the specified error code.
+    /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with a
+    /// generated stack trace.
     /// </returns>
     public static Result<T> ToResult<T>(
         this T? value,
@@ -31,7 +32,14 @@ public static class FactoryExtensions
         int nullValueErrorCode = _defaultNullValueErrorCode,
         string? nullValueErrorIdentifier = null,
         string? nullValueErrorType = null) =>
-        Result<T>.FromValue(value, nullValueErrorMessage, nullValueErrorCode, nullValueErrorIdentifier, nullValueErrorType);
+        value is not null
+            ? Result<T>.Success(value)
+            : Result<T>.Fail(
+                string.IsNullOrEmpty(nullValueErrorMessage) ? _defaultNullValueErrorMessage : nullValueErrorMessage,
+                new StackTrace().ToString(),
+                nullValueErrorCode,
+                nullValueErrorIdentifier,
+                nullValueErrorType);
 
     /// <summary>
     /// Creates a maybe from the specified value.

@@ -150,7 +150,9 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">The optional stack trace.</param>
+    /// <param name="stackTrace">
+    /// The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
+    /// </param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">
@@ -171,14 +173,15 @@ public partial struct Result<T> : IEquatable<Result<T>>
         Error? innerError = null) =>
         Fail(new Error(errorMessage, errorType)
         {
-            StackTrace = stackTrace,
+            StackTrace = stackTrace ?? new StackTrace(1).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
         });
 
     /// <summary>
-    /// Creates a result from the specified value.
+    /// Creates a <c>Success</c> result with the specified non-null value. If the value is <see langword="null"/>, then a
+    /// <c>Fail</c> result is returned instead.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
     /// <param name="nullValueErrorMessage">
@@ -190,8 +193,8 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// </param>
     /// <param name="nullValueErrorType">The error type to use if <paramref name="value"/> is <see langword="null"/>.</param>
     /// <returns>
-    /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with
-    /// error code <c>400</c>.
+    /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with a
+    /// generated stack trace.
     /// </returns>
     public static Result<T> FromValue(
         T? value,
