@@ -13,6 +13,9 @@ public static class ActionResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="source"/> is a <c>Success</c> result.</param>
     /// <returns>The equivalent action result object.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="successStatusCode"/> is less than 200 or greater than 299.
+    /// </exception>
     public static IActionResult ToActionResult(this Result source, int successStatusCode = 200)
     {
         if (successStatusCode < 200 || successStatusCode > 299)
@@ -30,6 +33,9 @@ public static class ActionResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="source"/> is a <c>Success</c> result.</param>
     /// <returns>The equivalent action result object.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="successStatusCode"/> is less than 200 or greater than 299.
+    /// </exception>
     public static IActionResult ToActionResult<T>(this Result<T> source, int successStatusCode = 200)
     {
         if (successStatusCode < 200 || successStatusCode > 299)
@@ -47,6 +53,9 @@ public static class ActionResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="someStatusCode">The status code to use when <paramref name="source"/> is a <c>Some</c> result.</param>
     /// <returns>The equivalent action result object.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="someStatusCode"/> is less than 200 or greater than 299.
+    /// </exception>
     public static IActionResult ToActionResult<T>(this Maybe<T> source, int someStatusCode = 200)
     {
         if (someStatusCode < 200 || someStatusCode > 299)
@@ -64,6 +73,9 @@ public static class ActionResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="source"/> is a <c>Success</c> result.</param>
     /// <returns>The equivalent action result object.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="successStatusCode"/> is less than 200 or greater than 299.
+    /// </exception>
     public static async Task<IActionResult> ToActionResult(this Task<Result> source, int successStatusCode = 200) =>
         (await source.ConfigureAwait(false)).ToActionResult(successStatusCode);
 
@@ -74,6 +86,9 @@ public static class ActionResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="source"/> is a <c>Success</c> result.</param>
     /// <returns>The equivalent action result object.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="successStatusCode"/> is less than 200 or greater than 299.
+    /// </exception>
     public static async Task<IActionResult> ToActionResult<T>(this Task<Result<T>> source, int successStatusCode = 200) =>
         (await source.ConfigureAwait(false)).ToActionResult(successStatusCode);
 
@@ -84,6 +99,9 @@ public static class ActionResultExtensions
     /// <param name="source">The source result.</param>
     /// <param name="someStatusCode">The status code to use when <paramref name="source"/> is a <c>Some</c> result.</param>
     /// <returns>The equivalent action result object.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// If <paramref name="someStatusCode"/> is less than 200 or greater than 299.
+    /// </exception>
     public static async Task<IActionResult> ToActionResult<T>(this Task<Maybe<T>> source, int someStatusCode = 200) =>
         (await source.ConfigureAwait(false)).ToActionResult(someStatusCode);
 }
