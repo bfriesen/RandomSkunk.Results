@@ -16,7 +16,7 @@ public partial struct Result<T>
     /// The value of this result if this is a <c>Success</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
-    public T GetValueOr(T fallbackValue)
+    public T? GetValueOr(T? fallbackValue)
     {
         return _type == ResultType.Success ? _value! : fallbackValue;
     }
@@ -36,7 +36,7 @@ public partial struct Result<T>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
-    public T GetValueOr(Func<T> getFallbackValue)
+    public T? GetValueOr(Func<T?> getFallbackValue)
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
