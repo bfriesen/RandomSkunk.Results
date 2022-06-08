@@ -15,29 +15,29 @@ public async Task<Maybe<T>> ExampleTryGetFromJsonAsync<T>()
 public async Task<Result> ExampleTryPostAsJsonAsync<T>(T value)
 {
     HttpClient httpClient = new HttpClient();
-    Result result = await httpClient.TryPostAsJsonAsync("http://example.com", value);
-    return result;
+    Result<HttpResponseMessage> result = await httpClient.TryPostAsJsonAsync("http://example.com", value);
+    return await result.EnsureSuccessStatusCodeAsync();
 }
 
 public async Task<Result> ExampleTryPatchAsJsonAsync<T>(T value)
 {
     HttpClient httpClient = new HttpClient();
-    Result result = await httpClient.TryPatchAsJsonAsync("http://example.com", value);
-    return result;
+    Result<HttpResponseMessage> result = await httpClient.TryPatchAsJsonAsync("http://example.com", value);
+    return await result.EnsureSuccessStatusCodeAsync();
 }
 
 public async Task<Result> ExampleTryPutAsJsonAsync<T>(T value)
 {
     HttpClient httpClient = new HttpClient();
-    Result result = await httpClient.TryPutAsJsonAsync("http://example.com", value);
-    return result;
+    Result<HttpResponseMessage> result = await httpClient.TryPutAsJsonAsync("http://example.com", value);
+    return await result.EnsureSuccessStatusCodeAsync();
 }
 
 public async Task<Result> ExampleTryDeleteAsync()
 {
     HttpClient httpClient = new HttpClient();
-    Result result = await httpClient.TryDeleteAsync("http://example.com");
-    return result;
+    Result<HttpResponseMessage> result = await httpClient.TryDeleteAsync("http://example.com");
+    return await result.EnsureSuccessStatusCodeAsync();
 }
 
 public async Task<Result<HttpResponseMessage>> ExampleTrySendAsync(
