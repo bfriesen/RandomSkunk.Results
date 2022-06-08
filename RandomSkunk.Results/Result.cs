@@ -17,9 +17,9 @@ public partial struct Result : IEquatable<Result>
     /// creating a <c>Fail</c> result when a user is not authorized:
     /// <code><![CDATA[
     /// public static Result Unauthorized(this ResultFactory source) =>
-    ///     source.Error("User is not authorized.", new StackTrace(1).ToString(), 401);
+    ///     source.Error("User is not authorized.", 401);
     /// ]]></code>
-    /// This extension method could be used elsewhere in the application like this:
+    /// To use:
     /// <code><![CDATA[
     /// return Result.FailWith.Unauthorized();
     /// ]]></code>
