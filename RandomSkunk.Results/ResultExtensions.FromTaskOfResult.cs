@@ -6,6 +6,47 @@ namespace RandomSkunk.Results;
 public static partial class ResultExtensions
 {
     /// <summary>
+    /// Converts this <see cref="Result{T}"/> to an equivalent <see cref="Maybe{T}"/>: if this is a <c>Success</c> result, then a
+    /// <c>Some</c> result with the same value is returned; if this is a <c>Fail</c> result, then a <c>Fail</c> result with
+    /// the same error is returned; a <c>None</c> result is never returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="onFail">
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// used for the returned result. Evaluated only if this is a <c>Fail</c> result.
+    /// </param>
+    /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
+    public static async Task<Maybe<T>> AsMaybe<T>(this Task<Result<T>> source, Func<Error, Error>? onFail = null) =>
+        (await source).CrossMap(value => value!.ToMaybe(), onFail);
+
+    /// <summary>
+    /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>: if this is a <c>Some</c> result, then a
+    /// <c>Success</c> result with the same value is returned; if this is a <c>Fail</c> result, then a <c>Fail</c> result with
+    /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with a "Not Found" error (error
+    /// code: 404) is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="onNone">
+    /// An optional function that maps a <c>None</c> result to the return result's error. If
+    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultGetNoneError"/> is used
+    /// instead. Evaluated only if this is a <c>None</c> result.
+    /// </param>
+    /// <param name="onFail">
+    /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
+    /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
+    /// used for the returned result. Evaluated only if this is a <c>Fail</c> result.
+    /// </param>
+    /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
+    public static async Task<Result<T>> AsResult<T>(
+        this Task<Maybe<T>> source,
+        Func<Error>? onNone = null,
+        Func<Error, Error>? onFail = null) =>
+        (await source).CrossMap(value => value!.ToResult(), onNone, onFail);
+
+    /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
     /// <paramref name="crossMap"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
