@@ -573,7 +573,7 @@ public static partial class ResultExtensions
     /// The value of this result if this is a <c>Success</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
-    public static async Task<T> GetValueOr<T>(this Task<Result<T>> source, T fallbackValue) =>
+    public static async Task<T?> GetValueOr<T>(this Task<Result<T>> source, T? fallbackValue) =>
         (await source.ConfigureAwait(false)).GetValueOr(fallbackValue);
 
     /// <summary>
@@ -593,7 +593,7 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<T> GetValueOr<T>(this Task<Result<T>> source, Func<T> getFallbackValue) =>
+    public static async Task<T?> GetValueOr<T>(this Task<Result<T>> source, Func<T?> getFallbackValue) =>
         (await source.ConfigureAwait(false)).GetValueOr(getFallbackValue);
 
     /// <summary>
@@ -609,7 +609,7 @@ public static partial class ResultExtensions
     /// The value of this result if this is a <c>Some</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
-    public static async Task<T> GetValueOr<T>(this Task<Maybe<T>> source, T fallbackValue) =>
+    public static async Task<T?> GetValueOr<T>(this Task<Maybe<T>> source, T? fallbackValue) =>
         (await source.ConfigureAwait(false)).GetValueOr(fallbackValue);
 
     /// <summary>
@@ -629,7 +629,7 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="getFallbackValue"/> is <see langword="null"/>.
     /// </exception>
-    public static async Task<T> GetValueOr<T>(this Task<Maybe<T>> source, Func<T> getFallbackValue) =>
+    public static async Task<T?> GetValueOr<T>(this Task<Maybe<T>> source, Func<T?> getFallbackValue) =>
         (await source.ConfigureAwait(false)).GetValueOr(getFallbackValue);
 
     /// <summary>
