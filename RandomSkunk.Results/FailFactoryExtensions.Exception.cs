@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// <content>
 /// Defines the <c>Exception</c> extension methods.
 /// </content>
-public static partial class ResultFactoryExtensions
+public static partial class FailFactoryExtensions
 {
     /// <summary>
     /// Creates a <c>Fail</c> result from the specified exception.
@@ -25,7 +25,7 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Exception(
-        this ResultFactory source,
+        this ResultFailFactory source,
         Exception exception,
         string? errorMessage = null,
         int? errorCode = null,
@@ -53,7 +53,7 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Exception<T>(
-        this ResultFactory<T> source,
+        this ResultFailFactory<T> source,
         Exception exception,
         string? errorMessage = null,
         int? errorCode = null,
@@ -81,7 +81,7 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Exception<T>(
-        this MaybeFactory<T> source,
+        this MaybeFailFactory<T> source,
         Exception exception,
         string? errorMessage = null,
         int? errorCode = null,

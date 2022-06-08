@@ -4,9 +4,9 @@ namespace RandomSkunk.Results;
 /// Defines methods for creating <c>Fail</c> results of type <see cref="Maybe{T}"/>.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
-public sealed class MaybeFactory<T>
+public sealed class MaybeFailFactory<T>
 {
-    internal MaybeFactory()
+    internal MaybeFailFactory()
     {
     }
 

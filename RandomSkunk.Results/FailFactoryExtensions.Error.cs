@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <content>
 /// Defines the <c>Error</c> extension methods.
 /// </content>
-public static partial class ResultFactoryExtensions
+public static partial class FailFactoryExtensions
 {
     /// <summary>
     /// Creates a <c>Fail</c> result with a generated stack trace.
@@ -25,7 +25,7 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Error(
-        this ResultFactory source,
+        this ResultFailFactory source,
         string errorMessage,
         int? errorCode = null,
         string? errorIdentifier = null,
@@ -61,7 +61,7 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Error<T>(
-        this ResultFactory<T> source,
+        this ResultFailFactory<T> source,
         string errorMessage,
         int? errorCode = null,
         string? errorIdentifier = null,
@@ -97,7 +97,7 @@ public static partial class ResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Error<T>(
-        this MaybeFactory<T> source,
+        this MaybeFailFactory<T> source,
         string errorMessage,
         int? errorCode = null,
         string? errorIdentifier = null,

@@ -25,7 +25,7 @@ public static class DapperResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result DbException(
-        this ResultFactory source,
+        this ResultFailFactory source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
@@ -53,7 +53,7 @@ public static class DapperResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> DbException<T>(
-        this ResultFactory<T> source,
+        this ResultFailFactory<T> source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
@@ -81,7 +81,7 @@ public static class DapperResultFactoryExtensions
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> DbException<T>(
-        this MaybeFactory<T> source,
+        this MaybeFailFactory<T> source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,

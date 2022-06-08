@@ -1,11 +1,12 @@
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// Defines methods for creating <c>Fail</c> results of type <see cref="Result"/>.
+/// Defines methods for creating <c>Fail</c> results of type <see cref="Result{T}"/>.
 /// </summary>
-public class ResultFactory
+/// <typeparam name="T">The type of the result value.</typeparam>
+public sealed class ResultFailFactory<T>
 {
-    internal ResultFactory()
+    internal ResultFailFactory()
     {
     }
 
@@ -16,5 +17,5 @@ public class ResultFactory
     /// An error that describes the failure. If <see langword="null"/>, a default error is used.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public Result Error(Error error) => Result.Fail(error);
+    public Result<T> Error(Error error) => Result<T>.Fail(error);
 }

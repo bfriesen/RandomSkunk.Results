@@ -13,7 +13,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Maybe{T}"/>.
     /// </summary>
     /// <remarks>
-    /// Applications are encouraged to define custom extension methods targeting <see cref="MaybeFactory{T}"/> that return
+    /// Applications are encouraged to define custom extension methods targeting <see cref="MaybeFailFactory{T}"/> that return
     /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
     /// creating a <c>Fail</c> result when a user is not authorized:
     /// <code><![CDATA[
@@ -25,7 +25,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// return Maybe<AdminUser>.FailWith.Unauthorized();
     /// ]]></code>
     /// </remarks>
-    public static readonly MaybeFactory<T> FailWith = new();
+    public static readonly MaybeFailFactory<T> FailWith = new();
 
     internal readonly MaybeType _type;
     internal readonly T? _value;

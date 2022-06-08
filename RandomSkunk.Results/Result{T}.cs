@@ -14,7 +14,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Result{T}"/>.
     /// </summary>
     /// <remarks>
-    /// Applications are encouraged to define custom extension methods targeting <see cref="ResultFactory{T}"/> that return
+    /// Applications are encouraged to define custom extension methods targeting <see cref="ResultFailFactory{T}"/> that return
     /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
     /// creating a <c>Fail</c> result when a user is not authorized:
     /// <code><![CDATA[
@@ -26,7 +26,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// return Result<AdminUser>.FailWith.Unauthorized();
     /// ]]></code>
     /// </remarks>
-    public static readonly ResultFactory<T> FailWith = new();
+    public static readonly ResultFailFactory<T> FailWith = new();
 
     internal readonly ResultType _type;
     internal readonly T? _value;
