@@ -50,7 +50,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
         {
             _type = MaybeType.Fail;
             _value = default;
-            _error = error ?? new Error();
+            _error = error ?? new Error() { StackTrace = new StackTrace(2).ToString() };
         }
     }
 

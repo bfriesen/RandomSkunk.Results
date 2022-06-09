@@ -39,7 +39,7 @@ public partial struct Result : IEquatable<Result>
         else
         {
             _type = ResultType.Fail;
-            _error = error ?? new Error();
+            _error = error ?? new Error() { StackTrace = new StackTrace(2).ToString() };
         }
     }
 
