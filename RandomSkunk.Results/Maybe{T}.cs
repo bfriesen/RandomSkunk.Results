@@ -173,9 +173,6 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="stackTrace">
-    /// The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
-    /// </param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">
@@ -186,14 +183,17 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
+    /// <param name="stackTrace">
+    /// The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
+    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Fail(
         string errorMessage,
-        string? stackTrace = null,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
-        Error? innerError = null) =>
+        Error? innerError = null,
+        string? stackTrace = null) =>
         Fail(new Error(errorMessage, errorType)
         {
             StackTrace = stackTrace ?? new StackTrace(1).ToString(),

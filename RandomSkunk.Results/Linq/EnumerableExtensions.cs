@@ -448,7 +448,7 @@ public static class EnumerableExtensions
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value) =>
         value is not null
             ? value.ToMaybe()
-            : Maybe<T>.Fail("The matching element was null.", new StackTrace().ToString(), 410);
+            : Maybe<T>.Fail("The matching element was null.", 410, stackTrace: new StackTrace().ToString());
 
     private static Result<T> IndexOutOfRange<T>(this ResultFailFactory<T> source) =>
         source.Error("Index was out of range. Must be non-negative and less than the size of the collection.", 404);

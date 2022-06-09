@@ -36,10 +36,10 @@ public static class FactoryExtensions
             ? Result<T>.Success(value)
             : Result<T>.Fail(
                 string.IsNullOrEmpty(nullValueErrorMessage) ? _defaultNullValueErrorMessage : nullValueErrorMessage,
-                new StackTrace().ToString(),
                 nullValueErrorCode,
                 nullValueErrorIdentifier,
-                nullValueErrorType);
+                nullValueErrorType,
+                stackTrace: new StackTrace().ToString());
 
     /// <summary>
     /// Creates a maybe from the specified value.
