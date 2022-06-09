@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning].
 ### Added
 
 - Add generated stack traces to additional fail factory methods.
+- Add `Result.AndAlso` and `Result.AndAlsoAsync` extension methods, allowing valueless results to be chained together.
 
 ## [1.0.0-alpha13] - 2022-06-03
 
