@@ -1,5 +1,4 @@
 using static RandomSkunk.Results.Error;
-using static RandomSkunk.Results.FactoryExtensions.FactoryExtensions;
 
 namespace RandomSkunk.Results;
 
@@ -174,32 +173,21 @@ public partial struct Result<T> : IEquatable<Result<T>>
     /// <c>Fail</c> result is returned instead.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <param name="nullValueErrorMessage">
-    /// The error message to use if <paramref name="value"/> is <see langword="null"/>.
+    /// <param name="getNullValueError">
+    /// An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result when the <paramref name="value"/>
+    /// parameter is <see langword="null"/>. If <see langword="null"/>, a function that returns an error with message "Value
+    /// cannot be null." and error code 400 is used instead.
     /// </param>
-    /// <param name="nullValueErrorCode">The error code to use if <paramref name="value"/> is <see langword="null"/>.</param>
-    /// <param name="nullValueErrorIdentifier">
-    /// The error identifier to use if <paramref name="value"/> is <see langword="null"/>.
-    /// </param>
-    /// <param name="nullValueErrorType">The error type to use if <paramref name="value"/> is <see langword="null"/>.</param>
     /// <returns>
     /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with a
     /// generated stack trace.
     /// </returns>
-    public static Result<T> FromValue(
-        T? value,
-        string nullValueErrorMessage = _defaultNullValueErrorMessage,
-        int nullValueErrorCode = _defaultNullValueErrorCode,
-        string? nullValueErrorIdentifier = null,
-        string? nullValueErrorType = null) =>
+    public static Result<T> FromValue(T? value, Func<Error>? getNullValueError = null) =>
         value is not null
             ? Success(value)
-            : Fail(
-                string.IsNullOrEmpty(nullValueErrorMessage) ? _defaultNullValueErrorMessage : nullValueErrorMessage,
-                nullValueErrorCode,
-                nullValueErrorIdentifier,
-                nullValueErrorType,
-                stackTrace: new StackTrace().ToString());
+            : Fail(getNullValueError is not null
+                ? getNullValueError()
+                : new("Value cannot be null.") { ErrorCode = 400, StackTrace = new StackTrace(0).ToString() });
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>

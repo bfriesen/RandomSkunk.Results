@@ -443,7 +443,7 @@ public static class EnumerableExtensions
     }
 
     private static Result<T> ToResultOrFailIfNull<T>(this T value) =>
-        value.ToResult("The matching element was null.", 410);
+        value.ToResult(() => new Error("The matching element was null.") { ErrorCode = 410 });
 
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value) =>
         value is not null

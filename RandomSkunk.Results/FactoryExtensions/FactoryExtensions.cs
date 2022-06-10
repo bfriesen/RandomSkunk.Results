@@ -5,41 +5,23 @@ namespace RandomSkunk.Results.FactoryExtensions;
 /// </summary>
 public static class FactoryExtensions
 {
-    internal const string _defaultNullValueErrorMessage = "Value cannot be null.";
-    internal const int _defaultNullValueErrorCode = 400;
-
     /// <summary>
     /// Creates a <c>Success</c> result with the specified non-null value. If the value is <see langword="null"/>, then a
     /// <c>Fail</c> result is returned instead.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <param name="nullValueErrorMessage">
-    /// The error message to use if <paramref name="value"/> is <see langword="null"/>.
+    /// <param name="getNullValueError">
+    /// An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result when the <paramref name="value"/>
+    /// parameter is <see langword="null"/>. If <see langword="null"/>, a function that returns an error with message "Value
+    /// cannot be null." and error code 400 is used instead.
     /// </param>
-    /// <param name="nullValueErrorCode">The error code to use if <paramref name="value"/> is <see langword="null"/>.</param>
-    /// <param name="nullValueErrorIdentifier">
-    /// The error identifier to use if <paramref name="value"/> is <see langword="null"/>.
-    /// </param>
-    /// <param name="nullValueErrorType">The error type to use if <paramref name="value"/> is <see langword="null"/>.</param>
     /// <returns>
     /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with a
     /// generated stack trace.
     /// </returns>
-    public static Result<T> ToResult<T>(
-        this T? value,
-        string nullValueErrorMessage = _defaultNullValueErrorMessage,
-        int nullValueErrorCode = _defaultNullValueErrorCode,
-        string? nullValueErrorIdentifier = null,
-        string? nullValueErrorType = null) =>
-        value is not null
-            ? Result<T>.Success(value)
-            : Result<T>.Fail(
-                string.IsNullOrEmpty(nullValueErrorMessage) ? _defaultNullValueErrorMessage : nullValueErrorMessage,
-                nullValueErrorCode,
-                nullValueErrorIdentifier,
-                nullValueErrorType,
-                stackTrace: new StackTrace().ToString());
+    public static Result<T> ToResult<T>(this T? value, Func<Error>? getNullValueError = null) =>
+        Result<T>.FromValue(value, getNullValueError);
 
     /// <summary>
     /// Creates a maybe from the specified value.

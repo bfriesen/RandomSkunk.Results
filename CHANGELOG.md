@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning].
 ### Changed
 
 - Simplify error/fail factory methods that have an exception parameter by removing the `type` and `innerError` parameters and using the name of the exception's type as the error type and its inner exception to create the inner error instead.
+- Simplify `Result<T>.FromValue` method and `FactoryExtensions.ToResult<T>` extension methods by replacing `nullValueErrorMessage`, `nullValueErrorCode`, `nullValueErrorIdentifier`, and `nullValueErrorType` parameters with single `getNullValueError` function parameter.
 
 ## [1.0.0-alpha13] - 2022-06-03
 
