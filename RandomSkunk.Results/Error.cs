@@ -90,14 +90,6 @@ public record class Error
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="type">
-    /// The optional type of the error. If <see langword="null"/>, then the
-    /// <see cref="MemberInfo.Name"/> of the <see cref="System.Type"/> of the current instance
-    /// is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
-    /// </param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="exception"/> is <see langword="null"/>.
@@ -106,9 +98,7 @@ public record class Error
         Exception exception,
         string? message = null,
         int? errorCode = null,
-        string? identifier = null,
-        string? type = null,
-        Error? innerError = null)
+        string? identifier = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
 
@@ -122,7 +112,11 @@ public record class Error
         if (errorCode is null && exception is ExternalException externalException)
             errorCode = externalException.ErrorCode;
 
-        return new Error(message, type)
+        Error? innerError = null;
+        if (exception.InnerException != null)
+            innerError = FromException(exception.InnerException);
+
+        return new Error(message, exception.GetType().Name)
         {
             StackTrace = exception.StackTrace,
             ErrorCode = errorCode,

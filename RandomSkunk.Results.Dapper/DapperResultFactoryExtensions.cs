@@ -15,24 +15,14 @@ public static class DapperResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorType">
-    /// The optional type of the error. If <see langword="null"/>, then the
-    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
-    /// is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
-    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result DbException(
         this ResultFailFactory source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
-        string? errorIdentifier = null,
-        string? errorType = null,
-        Error? innerError = null) =>
-        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+        string? errorIdentifier = null) =>
+        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier));
 
     /// <summary>
     /// Creates a <c>Fail</c> result with a <see cref="DbError"/>.
@@ -43,24 +33,14 @@ public static class DapperResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorType">
-    /// The optional type of the error. If <see langword="null"/>, then the
-    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
-    /// is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
-    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> DbException<T>(
         this ResultFailFactory<T> source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
-        string? errorIdentifier = null,
-        string? errorType = null,
-        Error? innerError = null) =>
-        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+        string? errorIdentifier = null) =>
+        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier));
 
     /// <summary>
     /// Creates a <c>Fail</c> result with a <see cref="DbError"/>.
@@ -71,22 +51,12 @@ public static class DapperResultFactoryExtensions
     /// <param name="errorMessage">The optional error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorType">
-    /// The optional type of the error. If <see langword="null"/>, then the
-    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
-    /// is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
-    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> DbException<T>(
         this MaybeFailFactory<T> source,
         DbException exception,
         string? errorMessage = null,
         int? errorCode = null,
-        string? errorIdentifier = null,
-        string? errorType = null,
-        Error? innerError = null) =>
-        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier, errorType, innerError));
+        string? errorIdentifier = null) =>
+        source.Error(DbError.FromDbException(exception, errorMessage, errorCode, errorIdentifier));
 }

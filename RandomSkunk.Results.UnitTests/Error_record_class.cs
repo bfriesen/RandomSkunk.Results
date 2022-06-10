@@ -11,17 +11,13 @@ public class Error_record_class
             var message = "my-message";
             var errorCode = 1;
             var identifier = "my-identifier";
-            var type = "my-type";
-            var innerError = new Error();
 
-            var error = Error.FromException(exception, message, errorCode, identifier, type, innerError);
+            var error = Error.FromException(exception, message, errorCode, identifier);
 
             error.Message.Should().Be($"{message}{Environment.NewLine}{exception.GetType().Name}: {exception.Message}");
             error.StackTrace.Should().Be(exception.StackTrace);
             error.ErrorCode.Should().Be(errorCode);
             error.Identifier.Should().Be(identifier);
-            error.Type.Should().Be(type);
-            error.InnerError.Should().BeSameAs(innerError);
         }
 
         [Fact]

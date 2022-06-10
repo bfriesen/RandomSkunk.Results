@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning].
 - Add generated stack traces to additional fail factory methods.
 - Add `Result.AndAlso` and `Result.AndAlsoAsync` extension methods, allowing valueless results to be chained together.
 
+### Changed
+
+- Simplify error/fail factory methods that have an exception parameter by removing the `type` and `innerError` parameters and using the name of the exception's type as the error type and its inner exception to create the inner error instead.
+
 ## [1.0.0-alpha13] - 2022-06-03
 
 ### Added

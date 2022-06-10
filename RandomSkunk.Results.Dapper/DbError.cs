@@ -56,13 +56,6 @@ public record class DbError : Error
     /// is used instead.
     /// </param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="type">
-    /// The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/> of the
-    /// <see cref="Type"/> of the current instance is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
-    /// </param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="exception"/> is <see langword="null"/>.
@@ -71,9 +64,7 @@ public record class DbError : Error
         DbException exception,
         string? message = null,
         int? errorCode = null,
-        string? identifier = null,
-        string? type = null,
-        Error? innerError = null)
+        string? identifier = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
 
@@ -84,7 +75,16 @@ public record class DbError : Error
         else
             message += Environment.NewLine + exceptionMessage;
 
-        return new DbError(message, type)
+        Error? innerError = null;
+        if (exception.InnerException != null)
+        {
+            if (exception.InnerException is DbException innerDbException)
+                innerError = FromDbException(innerDbException);
+            else
+                innerError = FromException(exception.InnerException);
+        }
+
+        return new DbError(message, exception.GetType().Name)
         {
             StackTrace = exception.StackTrace,
             ErrorCode = errorCode ?? exception.ErrorCode,
