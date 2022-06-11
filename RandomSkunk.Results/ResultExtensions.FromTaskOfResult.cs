@@ -48,205 +48,205 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="crossMap"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSuccess"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMap">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result> CrossMap<T>(
         this Task<Result<T>> source,
-        Func<T, Result> crossMap,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).CrossMap(crossMap, getError);
+        Func<T, Result> onSuccess,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).CrossMap(onSuccess, onFail);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="crossMapAsync"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSuccessAsync"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMapAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result> CrossMapAsync<T>(
         this Task<Result<T>> source,
-        Func<T, Task<Result>> crossMapAsync,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getError).ConfigureAwait(false);
+        Func<T, Task<Result>> onSuccessAsync,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).CrossMapAsync(onSuccessAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Maybe{T}"/> using the specified
-    /// <paramref name="crossMap"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSome"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMap">
+    /// <param name="onSome">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Maybe<TReturn>> CrossMap<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, Maybe<TReturn>> crossMap,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).CrossMap(crossMap, getError);
+        Func<T, Maybe<TReturn>> onSome,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).CrossMap(onSome, onFail);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Maybe{T}"/> using the specified
-    /// <paramref name="crossMapAsync"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSomeAsync"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMapAsync">
+    /// <param name="onSomeAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSomeAsync"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Maybe<TReturn>> CrossMapAsync<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, Task<Maybe<TReturn>>> crossMapAsync,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getError).ConfigureAwait(false);
+        Func<T, Task<Maybe<TReturn>>> onSomeAsync,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).CrossMapAsync(onSomeAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="crossMap"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSome"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
-    /// error returned by <paramref name="getNoneError"/> is used for the returned <c>Fail</c>
+    /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMap">
+    /// <param name="onSome">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getNoneError">
+    /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
     /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/>
     /// is used instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result> CrossMap<T>(
         this Task<Maybe<T>> source,
-        Func<T, Result> crossMap,
-        Func<Error>? getNoneError = null,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).CrossMap(crossMap, getNoneError, getError);
+        Func<T, Result> onSome,
+        Func<Error>? onNone = null,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).CrossMap(onSome, onNone, onFail);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="crossMapAsync"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSomeAsync"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
-    /// error returned by <paramref name="getNoneError"/> is used for the returned <c>Fail</c>
+    /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMapAsync">
+    /// <param name="onSomeAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getNoneError">
+    /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
     /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/>
     /// is used instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSomeAsync"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result> CrossMapAsync<T>(
         this Task<Maybe<T>> source,
-        Func<T, Task<Result>> crossMapAsync,
-        Func<Error>? getNoneError = null,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getNoneError, getError).ConfigureAwait(false);
+        Func<T, Task<Result>> onSomeAsync,
+        Func<Error>? onNone = null,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).CrossMapAsync(onSomeAsync, onNone, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result{T}"/> using the specified
-    /// <paramref name="crossMap"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSome"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
-    /// error returned by <paramref name="getNoneError"/> is used for the returned <c>Fail</c>
+    /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMap">
+    /// <param name="onSome">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getNoneError">
+    /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
     /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used
     /// instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If
     /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
@@ -254,36 +254,36 @@ public static partial class ResultExtensions
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result<TReturn>> CrossMap<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, Result<TReturn>> crossMap,
-        Func<Error>? getNoneError = null,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).CrossMap(crossMap, getNoneError, getError);
+        Func<T, Result<TReturn>> onSome,
+        Func<Error>? onNone = null,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).CrossMap(onSome, onNone, onFail);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result{T}"/> using the specified
-    /// <paramref name="crossMapAsync"/> function. The cross map function is evaluated if and only if
+    /// <paramref name="onSomeAsync"/> function. The cross map function is evaluated if and only if
     /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
-    /// error returned by <paramref name="getNoneError"/> is used for the returned <c>Fail</c>
+    /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="crossMapAsync">
+    /// <param name="onSomeAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
     /// only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getNoneError">
+    /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
     /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used
     /// instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If
     /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
@@ -291,14 +291,14 @@ public static partial class ResultExtensions
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="crossMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSomeAsync"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result<TReturn>> CrossMapAsync<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, Task<Result<TReturn>>> crossMapAsync,
-        Func<Error>? getNoneError = null,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).CrossMapAsync(crossMapAsync, getNoneError, getError).ConfigureAwait(false);
+        Func<T, Task<Result<TReturn>>> onSomeAsync,
+        Func<Error>? onNone = null,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).CrossMapAsync(onSomeAsync, onNone, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result, else returns the
@@ -430,63 +430,63 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
-    /// <paramref name="flatMap"/> function. The flat map function is evaluated if and only if
+    /// <paramref name="onSuccess"/> function. The flat map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="flatMap">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="flatMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result<TReturn>> FlatMap<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, Result<TReturn>> flatMap,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).FlatMap(flatMap, getError);
+        Func<T, Result<TReturn>> onSuccess,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
-    /// <paramref name="flatMapAsync"/> function. The flat map function is evaluated if and only if
+    /// <paramref name="onSuccessAsync"/> function. The flat map function is evaluated if and only if
     /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="flatMapAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="flatMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Result<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, Task<Result<TReturn>>> flatMapAsync,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).FlatMapAsync(flatMapAsync, getError).ConfigureAwait(false);
+        Func<T, Task<Result<TReturn>>> onSuccessAsync,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
-    /// <paramref name="flatMap"/> function. The flat map function is evaluated if and only if
+    /// <paramref name="onSome"/> function. The flat map function is evaluated if and only if
     /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, a
     /// <c>None</c> result is returned.
@@ -494,28 +494,28 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="flatMap">
+    /// <param name="onSome">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="flatMap"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Maybe<TReturn>> FlatMap<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, Maybe<TReturn>> flatMap,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).FlatMap(flatMap, getError);
+        Func<T, Maybe<TReturn>> onSome,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).FlatMap(onSome, onFail);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a another result using the specified
-    /// <paramref name="flatMapAsync"/> function. The flat map function is evaluated if and only if
+    /// <paramref name="onSomeAsync"/> function. The flat map function is evaluated if and only if
     /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, a
     /// <c>None</c> result is returned.
@@ -523,24 +523,24 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="flatMapAsync">
+    /// <param name="onSomeAsync">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The flat mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="flatMapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSomeAsync"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<Maybe<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, Task<Maybe<TReturn>>> flatMapAsync,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).FlatMapAsync(flatMapAsync, getError).ConfigureAwait(false);
+        Func<T, Task<Maybe<TReturn>>> onSomeAsync,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).FlatMapAsync(onSomeAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Flattens the nested result.
@@ -633,7 +633,7 @@ public static partial class ResultExtensions
         (await source.ConfigureAwait(false)).GetValueOr(getFallbackValue);
 
     /// <summary>
-    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
+    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="onSuccess"/>
     /// function. The map function is evaluated if and only if the source is a <c>Success</c>
     /// result, and the <see cref="Result{T}.Type"/> of the new result will always be the same as
     /// the source result.
@@ -641,30 +641,30 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="map">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="map"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="map"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="onSuccess"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static async Task<Result<TReturn>> Map<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, TReturn> map,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).Map(map, getError);
+        Func<T, TReturn> onSuccess,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).Map(onSuccess, onFail);
 
     /// <summary>
-    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
+    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="onSuccessAsync"/>
     /// function. The map function is evaluated if and only if the source is a <c>Success</c>
     /// result, and the <see cref="Result{T}.Type"/> of the new result will always be the same as
     /// the source result.
@@ -672,30 +672,30 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="mapAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Success</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="mapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="mapAsync"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="onSuccessAsync"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static async Task<Result<TReturn>> MapAsync<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, Task<TReturn>> mapAsync,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).MapAsync(mapAsync, getError).ConfigureAwait(false);
+        Func<T, Task<TReturn>> onSuccessAsync,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).MapAsync(onSuccessAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
-    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="map"/>
+    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="onSome"/>
     /// function. The map function is evaluated if and only if the source is a <c>Some</c> result,
     /// and the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
     /// result.
@@ -703,30 +703,30 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="map">
+    /// <param name="onSome">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="map"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="map"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="onSome"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static async Task<Maybe<TReturn>> Map<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, TReturn> map,
-        Func<Error, Error>? getError = null) =>
-        (await source.ConfigureAwait(false)).Map(map, getError);
+        Func<T, TReturn> onSome,
+        Func<Error, Error>? onFail = null) =>
+        (await source.ConfigureAwait(false)).Map(onSome, onFail);
 
     /// <summary>
-    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="mapAsync"/>
+    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="onSomeAsync"/>
     /// function. The map function is evaluated if and only if the source is a <c>Some</c> result,
     /// and the <see cref="Maybe{T}.Type"/> of the new result will always be the same as the source
     /// result.
@@ -734,85 +734,85 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="mapAsync">
+    /// <param name="onSomeAsync">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// Evaluated only if the source is a <c>Some</c> result.
     /// </param>
-    /// <param name="getError">
+    /// <param name="onFail">
     /// An optional function that maps a <c>Fail</c> result's error to the returned result's error.
     /// If <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is
     /// used for the returned result. Evaluated only if the source is a <c>Fail</c> result.
     /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="mapAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSomeAsync"/> is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    /// If <paramref name="mapAsync"/> returns <see langword="null"/> when evaluated.
+    /// If <paramref name="onSomeAsync"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static async Task<Maybe<TReturn>> MapAsync<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, Task<TReturn>> mapAsync,
-        Func<Error, Error>? getError = null) =>
-        await (await source.ConfigureAwait(false)).MapAsync(mapAsync, getError).ConfigureAwait(false);
+        Func<T, Task<TReturn>> onSomeAsync,
+        Func<Error, Error>? onFail = null) =>
+        await (await source.ConfigureAwait(false)).MapAsync(onSomeAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The return type of the match method.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task<T> Match<T>(
         this Task<Result> source,
-        Func<T> success,
-        Func<Error, T> fail) =>
-        (await source.ConfigureAwait(false)).Match(success, fail);
+        Func<T> onSuccess,
+        Func<Error, T> onFail) =>
+        (await source.ConfigureAwait(false)).Match(onSuccess, onFail);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>A task that represents the match operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task Match(
         this Task<Result> source,
-        Action success,
-        Action<Error> fail) =>
-        (await source.ConfigureAwait(false)).Match(success, fail);
+        Action onSuccess,
+        Action<Error> onFail) =>
+        (await source.ConfigureAwait(false)).Match(onSuccess, onFail);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The return type of the match method.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
@@ -821,101 +821,101 @@ public static partial class ResultExtensions
     /// matching function evaluation.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task<T> MatchAsync<T>(
         this Task<Result> source,
-        Func<Task<T>> success,
-        Func<Error, Task<T>> fail) =>
-        await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
+        Func<Task<T>> onSuccess,
+        Func<Error, Task<T>> onFail) =>
+        await (await source.ConfigureAwait(false)).MatchAsync(onSuccess, onFail).ConfigureAwait(false);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task MatchAsync(
         this Task<Result> source,
-        Func<Task> success,
-        Func<Error, Task> fail) =>
-        await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
+        Func<Task> onSuccess,
+        Func<Error, Task> onFail) =>
+        await (await source.ConfigureAwait(false)).MatchAsync(onSuccess, onFail).ConfigureAwait(false);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>. The non-null value of the
     /// <c>Success</c> result is passed to this function.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task<TReturn> Match<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, TReturn> success,
-        Func<Error, TReturn> fail) =>
-            (await source.ConfigureAwait(false)).Match(success, fail);
+        Func<T, TReturn> onSuccess,
+        Func<Error, TReturn> onFail) =>
+            (await source.ConfigureAwait(false)).Match(onSuccess, onFail);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>. The non-null value of the
     /// <c>Success</c> result is passed to this function.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>A task that represents the match operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task Match<T>(
         this Task<Result<T>> source,
-        Action<T> success,
-        Action<Error> fail) =>
-            (await source.ConfigureAwait(false)).Match(success, fail);
+        Action<T> onSuccess,
+        Action<Error> onFail) =>
+            (await source.ConfigureAwait(false)).Match(onSuccess, onFail);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>. The non-null value of the
     /// <c>Success</c> result is passed to this function.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
@@ -924,117 +924,117 @@ public static partial class ResultExtensions
     /// matching function evaluation.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task<TReturn> MatchAsync<T, TReturn>(
         this Task<Result<T>> source,
-        Func<T, Task<TReturn>> success,
-        Func<Error, Task<TReturn>> fail) =>
-            await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
+        Func<T, Task<TReturn>> onSuccess,
+        Func<Error, Task<TReturn>> onFail) =>
+            await (await source.ConfigureAwait(false)).MatchAsync(onSuccess, onFail).ConfigureAwait(false);
 
     /// <summary>
-    /// Evaluates either the <paramref name="success"/> or <paramref name="fail"/>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
     /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="success">
+    /// <param name="onSuccess">
     /// The function to evaluate if the result type is <c>Success</c>. The non-null value of the
     /// <c>Success</c> result is passed to this function.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="success"/> is <see langword="null"/> or if <paramref name="fail"/> is
+    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
     /// <see langword="null"/>.
     /// </exception>
     public static async Task MatchAsync<T>(
         this Task<Result<T>> source,
-        Func<T, Task> success,
-        Func<Error, Task> fail) =>
-            await (await source.ConfigureAwait(false)).MatchAsync(success, fail).ConfigureAwait(false);
+        Func<T, Task> onSuccess,
+        Func<Error, Task> onFail) =>
+            await (await source.ConfigureAwait(false)).MatchAsync(onSuccess, onFail).ConfigureAwait(false);
 
     /// <summary>
-    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or
+    /// <paramref name="onFail"/> function depending on whether the result type is <c>Some</c>,
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="some">
+    /// <param name="onSome">
     /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
-    /// <param name="none">
+    /// <param name="onNone">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
-    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>, or if <paramref name="onNone"/> is
+    /// <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<TReturn> Match<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, TReturn> some,
-        Func<TReturn> none,
-        Func<Error, TReturn> fail) =>
-        (await source.ConfigureAwait(false)).Match(some, none, fail);
+        Func<T, TReturn> onSome,
+        Func<TReturn> onNone,
+        Func<Error, TReturn> onFail) =>
+        (await source.ConfigureAwait(false)).Match(onSome, onNone, onFail);
 
     /// <summary>
-    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or
+    /// <paramref name="onFail"/> function depending on whether the result type is <c>Some</c>,
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="some">
+    /// <param name="onSome">
     /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
-    /// <param name="none">
+    /// <param name="onNone">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>A task that represents the match operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
-    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>, or if <paramref name="onNone"/> is
+    /// <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
     /// </exception>
     public static async Task Match<T>(
         this Task<Maybe<T>> source,
-        Action<T> some,
-        Action none,
-        Action<Error> fail) =>
-        (await source.ConfigureAwait(false)).Match(some, none, fail);
+        Action<T> onSome,
+        Action onNone,
+        Action<Error> onFail) =>
+        (await source.ConfigureAwait(false)).Match(onSome, onNone, onFail);
 
     /// <summary>
-    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// Evaluates either the <paramref name="onSome"/>, <paramref name="onNone"/>, or
+    /// <paramref name="onFail"/> function depending on whether the result type is <c>Some</c>,
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="some">
+    /// <param name="onSome">
     /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
-    /// <param name="none">
+    /// <param name="onNone">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
@@ -1043,45 +1043,45 @@ public static partial class ResultExtensions
     /// matching function evaluation.
     /// </returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
-    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// If <paramref name="onSome"/> is <see langword="null"/>, or if <paramref name="onNone"/> is
+    /// <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
     /// </exception>
     public static async Task<TReturn> MatchAsync<T, TReturn>(
         this Task<Maybe<T>> source,
-        Func<T, Task<TReturn>> some,
-        Func<Task<TReturn>> none,
-        Func<Error, Task<TReturn>> fail) =>
-        await (await source.ConfigureAwait(false)).MatchAsync(some, none, fail).ConfigureAwait(false);
+        Func<T, Task<TReturn>> onSome,
+        Func<Task<TReturn>> onNone,
+        Func<Error, Task<TReturn>> onFail) =>
+        await (await source.ConfigureAwait(false)).MatchAsync(onSome, onNone, onFail).ConfigureAwait(false);
 
     /// <summary>
-    /// Evaluates either the <paramref name="some"/>, <paramref name="none"/>, or
-    /// <paramref name="fail"/> function depending on whether the result type is <c>Some</c>,
+    /// Evaluates either the <paramref name="noneome"/>, <paramref name="onNone"/>, or
+    /// <paramref name="onFail"/> function depending on whether the result type is <c>Some</c>,
     /// <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The task returning the source result.</param>
-    /// <param name="some">
+    /// <param name="noneome">
     /// The function to evaluate if the result type is <c>Some</c>. The non-null value of the
     /// <c>Some</c> result is passed to this function.
     /// </param>
-    /// <param name="none">
+    /// <param name="onNone">
     /// The function to evaluate if the result type is <c>None</c>.
     /// </param>
-    /// <param name="fail">
+    /// <param name="onFail">
     /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
     /// <c>Fail</c> result is passed to this function.
     /// </param>
     /// <returns>A task representing the asynchronous match operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="some"/> is <see langword="null"/>, or if <paramref name="none"/> is
-    /// <see langword="null"/>, or if <paramref name="fail"/> is <see langword="null"/>.
+    /// If <paramref name="noneome"/> is <see langword="null"/>, or if <paramref name="onNone"/> is
+    /// <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
     /// </exception>
     public static async Task MatchAsync<T>(
         this Task<Maybe<T>> source,
-        Func<T, Task> some,
-        Func<Task> none,
-        Func<Error, Task> fail) =>
-        await (await source.ConfigureAwait(false)).MatchAsync(some, none, fail).ConfigureAwait(false);
+        Func<T, Task> noneome,
+        Func<Task> onNone,
+        Func<Error, Task> onFail) =>
+        await (await source.ConfigureAwait(false)).MatchAsync(noneome, onNone, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onFail"/> function if <paramref name="source"/> is a <c>Fail</c> result.
