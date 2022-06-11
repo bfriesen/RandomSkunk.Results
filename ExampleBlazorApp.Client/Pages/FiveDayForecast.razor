@@ -1,0 +1,69 @@
+@page "/"
+@using ExampleBlazorApp.Client.HttpClients
+@using ExampleBlazorApp.Client.Results
+@using ExampleBlazorApp.Shared
+@using RandomSkunk.Results
+
+<PageTitle>Five Day forecast</PageTitle>
+
+<h1>Five Day Forecast</h1>
+
+@if (_forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="form-group">
+        <label>City:
+            <input type="text" @bind-value="@_city"/>
+            <button @onclick="FetchForecast">Get Five-day Forecast</button>
+        </label>
+    </div>
+
+    <hr/>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>High</th>
+                <th>Low</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in _forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.HighF.ToString("0")F (@forecast.HighC.ToString("0")C)</td>
+                    <td>@forecast.LowF.ToString("0")F (@forecast.LowC.ToString("0")C)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IReadOnlyList<WeatherForecast> _forecasts = null!;
+
+    private string _city = "Chicago";
+
+    [Inject]
+    public WeatherForecastClient HttpClient { get; set; } = null!;
+
+    [Inject]
+    public IJSRuntime JS { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchForecast();
+    }
+
+    private async Task FetchForecast()
+    {
+        await HttpClient.GetFiveDayForecast(_city)
+            .OnSuccess(forcasts => _forecasts = forcasts)
+            .OnFailShowAlert(JS);
+    }
+}

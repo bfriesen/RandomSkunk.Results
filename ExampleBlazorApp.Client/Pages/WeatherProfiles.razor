@@ -1,0 +1,84 @@
+@page "/WeatherProfiles/View"
+@using ExampleBlazorApp.Client.HttpClients
+@using ExampleBlazorApp.Client.Results
+@using ExampleBlazorApp.Shared
+@using RandomSkunk.Results
+
+<PageTitle>Weather Profiles</PageTitle>
+
+<h1>Weather Profiles</h1>
+
+@if (_profiles is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="form-group">
+        <label>Profiles:
+            <select @onchange="@OnCityChanged">
+                @foreach (var profile in _profiles)
+                {
+                    <option value="@profile.City">@profile.City</option>
+                }
+            </select>
+        </label>
+    </div>
+}
+
+@if (_selectedProfile != null)
+{
+    <hr/>
+    <div class="form-group">
+        <table>
+            <caption>Weather profile for @_selectedProfile.City</caption>
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Average High (F)</th>
+                    <th>Average Low (F)</th>
+                    <th>Standard Deviation</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var monthlyTemperature in _selectedProfile.MonthlyTemperatures)
+                {
+                    <tr>
+                        <td>@monthlyTemperature.MonthName</td>
+                        <td>@monthlyTemperature.AverageHigh</td>
+                        <td>@monthlyTemperature.AverageLow</td>
+                        <td>@monthlyTemperature.StandardDeviation</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    private IReadOnlyList<WeatherProfile> _profiles = null!;
+
+    private WeatherProfile _selectedProfile = null!;
+
+    [Inject]
+    public WeatherProfileClient HttpClient { get; set; } = null!;
+
+    [Inject]
+    public IJSRuntime JS { get; set; } = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await HttpClient.GetWeatherProfiles()
+            .OnSuccess(profiles =>
+                {
+                    _profiles = profiles;
+                    _selectedProfile = _profiles.FirstOrDefault();
+                })
+            .OnFailShowAlert(JS);
+    }
+
+    private async Task OnCityChanged(ChangeEventArgs args)
+    {
+        _selectedProfile = _profiles.FirstOrDefault(p => p.City == (string)args.Value);
+    }
+}

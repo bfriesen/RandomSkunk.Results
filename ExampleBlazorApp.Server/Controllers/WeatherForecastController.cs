@@ -1,34 +1,23 @@
-using ExampleBlazorApp.Shared;
+using ExampleBlazorApp.Server.Services;
 using Microsoft.AspNetCore.Mvc;
+using RandomSkunk.Results.AspNetCore;
 
-namespace ExampleBlazorApp.Server.Controllers
+namespace ExampleBlazorApp.Server.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    private readonly IWeatherForecastSimulator _weatherForecastSimulator;
+
+    public WeatherForecastController(IWeatherForecastSimulator weatherForecastSimulator)
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+        _weatherForecastSimulator = weatherForecastSimulator;
+    }
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
+    [HttpGet("{city}")]
+    public async Task<IActionResult> Get(string city)
+    {
+        return await _weatherForecastSimulator.GetFiveDayForecast(city).ToActionResult();
     }
 }

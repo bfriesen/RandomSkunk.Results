@@ -1,13 +1,14 @@
-namespace ExampleBlazorApp.Shared
+namespace ExampleBlazorApp.Shared;
+
+public class WeatherForecast
 {
-    public class WeatherForecast
-    {
-        public DateTime Date { get; set; }
+    public DateTime Date { get; init; }
 
-        public int TemperatureC { get; set; }
+    public double HighC { get; init; }
 
-        public string? Summary { get; set; }
+    public double LowC { get; init; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
+    public double HighF { get => 32 + (HighC * 9.0 / 5.0); init => HighC = (value - 32) * 5.0 / 9.0; }
+
+    public double LowF { get => 32 + (LowC * 9.0 / 5.0); init => LowC = (value - 32) * 5.0 / 9.0; }
 }
