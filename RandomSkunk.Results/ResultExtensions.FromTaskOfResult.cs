@@ -19,7 +19,7 @@ public static partial class ResultExtensions
     /// </param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public static async Task<Maybe<T>> AsMaybe<T>(this Task<Result<T>> source, Func<Error, Error>? onFail = null) =>
-        (await source).CrossMap(value => value!.ToMaybe(), onFail);
+        (await source.ConfigureAwait(false)).AsMaybe(onFail);
 
     /// <summary>
     /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>: if this is a <c>Some</c> result, then a
@@ -44,7 +44,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> source,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null) =>
-        (await source).CrossMap(value => value!.ToResult(), onNone, onFail);
+        (await source.ConfigureAwait(false)).AsResult(onNone, onFail);
 
     /// <summary>
     /// Maps <paramref name="source"/> to a <see cref="Result"/> using the specified

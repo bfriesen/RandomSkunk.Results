@@ -43,7 +43,7 @@ public partial struct Result
 
         return _type switch
         {
-            ResultType.Success => await onSuccessAsync(),
+            ResultType.Success => await onSuccessAsync().ConfigureAwait(false),
             _ => onFail is null ? this : Fail(onFail(Error())),
         };
     }
