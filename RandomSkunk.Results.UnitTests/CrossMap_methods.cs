@@ -72,9 +72,9 @@ public class CrossMap_methods
             var actual = source.CrossMap(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be(ResultExtensions.DefaultGetNoneError().Message);
-            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultGetNoneError().ErrorCode);
-            actual.Error().Type.Should().Be(ResultExtensions.DefaultGetNoneError().Type);
+            actual.Error().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
+            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
+            actual.Error().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
         }
 
         [Fact]
@@ -108,9 +108,9 @@ public class CrossMap_methods
             var actual = source.CrossMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be(ResultExtensions.DefaultGetNoneError().Message);
-            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultGetNoneError().ErrorCode);
-            actual.Error().Type.Should().Be(ResultExtensions.DefaultGetNoneError().Type);
+            actual.Error().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
+            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
+            actual.Error().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
         }
 
         [Fact]

@@ -19,7 +19,7 @@ public partial struct Maybe<T>
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultGetNoneError"/>
+    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/>
     /// is used instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="onFail">
@@ -41,7 +41,7 @@ public partial struct Maybe<T>
         return _type switch
         {
             MaybeType.Some => onSome(_value!),
-            MaybeType.None => Result.Fail(onNone.Evaluate()),
+            MaybeType.None => Result.Fail(onNone.EvaluateOnNone()),
             _ => Result.Fail(onFail.Evaluate(Error())),
         };
     }
@@ -60,7 +60,7 @@ public partial struct Maybe<T>
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultGetNoneError"/>
+    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/>
     /// is used instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="onFail">
@@ -82,7 +82,7 @@ public partial struct Maybe<T>
         return _type switch
         {
             MaybeType.Some => await onSomeAsync(_value!).ConfigureAwait(false),
-            MaybeType.None => Result.Fail(onNone.Evaluate()),
+            MaybeType.None => Result.Fail(onNone.EvaluateOnNone()),
             _ => Result.Fail(onFail.Evaluate(Error())),
         };
     }
@@ -102,7 +102,7 @@ public partial struct Maybe<T>
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultGetNoneError"/> is used
+    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used
     /// instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="onFail">
@@ -124,7 +124,7 @@ public partial struct Maybe<T>
         return _type switch
         {
             MaybeType.Some => onSome(_value!),
-            MaybeType.None => Result<TReturn>.Fail(onNone.Evaluate()),
+            MaybeType.None => Result<TReturn>.Fail(onNone.EvaluateOnNone()),
             _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }
@@ -144,7 +144,7 @@ public partial struct Maybe<T>
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultGetNoneError"/> is used
+    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used
     /// instead. Evaluated only if the source is a <c>None</c> result.
     /// </param>
     /// <param name="onFail">
@@ -167,7 +167,7 @@ public partial struct Maybe<T>
         return _type switch
         {
             MaybeType.Some => await onSomeAsync(_value!).ConfigureAwait(false),
-            MaybeType.None => Result<TReturn>.Fail(onNone.Evaluate()),
+            MaybeType.None => Result<TReturn>.Fail(onNone.EvaluateOnNone()),
             _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };
     }

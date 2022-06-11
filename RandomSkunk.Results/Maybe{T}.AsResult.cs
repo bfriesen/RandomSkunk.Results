@@ -13,7 +13,7 @@ public partial struct Maybe<T>
     /// </summary>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultGetNoneError"/> is used
+    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used
     /// instead. Evaluated only if this is a <c>None</c> result.
     /// </param>
     /// <param name="onFail">
