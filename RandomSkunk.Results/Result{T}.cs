@@ -42,7 +42,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
     {
         _type = ResultType.Fail;
         _value = default;
-        _error = error ?? new Error() { StackTrace = new StackTrace(2).ToString() };
+        _error = error ?? new Error() { StackTrace = new StackTrace(1, true).ToString() };
     }
 
     /// <summary>
@@ -162,7 +162,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
         string? stackTrace = null) =>
         Fail(new Error(errorMessage, errorType)
         {
-            StackTrace = stackTrace ?? new StackTrace(1).ToString(),
+            StackTrace = stackTrace ?? new StackTrace(true).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
@@ -187,7 +187,7 @@ public partial struct Result<T> : IEquatable<Result<T>>
             ? Success(value)
             : Fail(getNullValueError is not null
                 ? getNullValueError()
-                : new("Value cannot be null.") { ErrorCode = 400, StackTrace = new StackTrace(0).ToString() });
+                : new("Value cannot be null.") { ErrorCode = 400, StackTrace = new StackTrace(true).ToString() });
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>

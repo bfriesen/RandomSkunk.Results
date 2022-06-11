@@ -20,9 +20,6 @@ public static partial class FailFactoryExtensions
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
-    /// <param name="stackTraceSkipFrames">
-    /// The number of frames up the stack from which to start the generated stack trace.
-    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Error(
         this ResultFailFactory source,
@@ -30,11 +27,10 @@ public static partial class FailFactoryExtensions
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
-        Error? innerError = null,
-        byte stackTraceSkipFrames = 2) =>
+        Error? innerError = null) =>
         source.Error(new Error(errorMessage, errorType)
         {
-            StackTrace = new StackTrace(stackTraceSkipFrames).ToString(),
+            StackTrace = new StackTrace(true).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
@@ -55,9 +51,6 @@ public static partial class FailFactoryExtensions
     /// </param>
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
-    /// </param>
-    /// <param name="stackTraceSkipFrames">
-    /// The number of frames up the stack from which to start the generated stack trace.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Error<T>(
@@ -66,11 +59,10 @@ public static partial class FailFactoryExtensions
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
-        Error? innerError = null,
-        byte stackTraceSkipFrames = 2) =>
+        Error? innerError = null) =>
         source.Error(new Error(errorMessage, errorType)
         {
-            StackTrace = new StackTrace(stackTraceSkipFrames).ToString(),
+            StackTrace = new StackTrace(true).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
@@ -92,9 +84,6 @@ public static partial class FailFactoryExtensions
     /// <param name="innerError">
     /// The optional error that is the cause of the current error.
     /// </param>
-    /// <param name="stackTraceSkipFrames">
-    /// The number of frames up the stack from which to start the generated stack trace.
-    /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Error<T>(
         this MaybeFailFactory<T> source,
@@ -102,11 +91,10 @@ public static partial class FailFactoryExtensions
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorType = null,
-        Error? innerError = null,
-        byte stackTraceSkipFrames = 2) =>
+        Error? innerError = null) =>
         source.Error(new Error(errorMessage, errorType)
         {
-            StackTrace = new StackTrace(stackTraceSkipFrames).ToString(),
+            StackTrace = new StackTrace(true).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,

@@ -39,7 +39,7 @@ public partial struct Result : IEquatable<Result>
         else
         {
             _type = ResultType.Fail;
-            _error = error ?? new Error() { StackTrace = new StackTrace(2).ToString() };
+            _error = error ?? new Error() { StackTrace = new StackTrace(1, true).ToString() };
         }
     }
 
@@ -154,7 +154,7 @@ public partial struct Result : IEquatable<Result>
         string? stackTrace = null) =>
         Fail(new Error(errorMessage, errorType)
         {
-            StackTrace = stackTrace ?? new StackTrace(1).ToString(),
+            StackTrace = stackTrace ?? new StackTrace(true).ToString(),
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
