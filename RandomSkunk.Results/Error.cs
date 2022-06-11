@@ -102,12 +102,10 @@ public record class Error
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
 
-        var exceptionMessage = $"{exception.GetType().Name}: {exception.Message}";
-
         if (string.IsNullOrWhiteSpace(message))
-            message = exceptionMessage;
+            message = exception.Message;
         else
-            message += Environment.NewLine + exceptionMessage;
+            message += Environment.NewLine + exception.Message;
 
         if (errorCode is null && exception is ExternalException externalException)
             errorCode = externalException.ErrorCode;

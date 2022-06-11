@@ -72,7 +72,9 @@ public class CrossMap_methods
             var actual = source.CrossMap(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Should().Be(ResultExtensions.DefaultGetNoneError());
+            actual.Error().Message.Should().Be(ResultExtensions.DefaultGetNoneError().Message);
+            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultGetNoneError().ErrorCode);
+            actual.Error().Type.Should().Be(ResultExtensions.DefaultGetNoneError().Type);
         }
 
         [Fact]
@@ -106,7 +108,9 @@ public class CrossMap_methods
             var actual = source.CrossMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Should().Be(ResultExtensions.DefaultGetNoneError());
+            actual.Error().Message.Should().Be(ResultExtensions.DefaultGetNoneError().Message);
+            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultGetNoneError().ErrorCode);
+            actual.Error().Type.Should().Be(ResultExtensions.DefaultGetNoneError().Type);
         }
 
         [Fact]

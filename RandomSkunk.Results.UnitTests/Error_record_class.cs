@@ -14,10 +14,11 @@ public class Error_record_class
 
             var error = Error.FromException(exception, message, errorCode, identifier);
 
-            error.Message.Should().Be($"{message}{Environment.NewLine}{exception.GetType().Name}: {exception.Message}");
+            error.Message.Should().Be($"{message}{Environment.NewLine}{exception.Message}");
             error.StackTrace.Should().Be(exception.StackTrace);
             error.ErrorCode.Should().Be(errorCode);
             error.Identifier.Should().Be(identifier);
+            error.Type.Should().Be(exception.GetType().Name);
         }
 
         [Fact]
@@ -27,11 +28,11 @@ public class Error_record_class
 
             var error = Error.FromException(exception);
 
-            error.Message.Should().Be($"{exception.GetType().Name}: {exception.Message}");
+            error.Message.Should().Be(exception.Message);
             error.StackTrace.Should().Be(exception.StackTrace);
             error.ErrorCode.Should().BeNull();
             error.Identifier.Should().BeNull();
-            error.Type.Should().Be(nameof(Error));
+            error.Type.Should().Be(exception.GetType().Name);
             error.InnerError.Should().BeNull();
         }
 
