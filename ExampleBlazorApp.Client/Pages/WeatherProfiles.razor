@@ -15,20 +15,23 @@
 else
 {
     <div class="form-group">
-        <label>Profiles:
+        <label>
+            Profiles:
             <select @onchange="@OnCityChanged">
                 @foreach (var profile in _profiles)
                 {
                     <option value="@profile.City">@profile.City</option>
                 }
             </select>
+            <button @onclick="@EditSelectedCity">Edit selected city</button>
+            <button @onclick="@AddNewCity">Add new city</button>
         </label>
     </div>
 }
 
 @if (_selectedProfile != null)
 {
-    <hr/>
+    <hr />
     <div class="form-group">
         <table>
             <caption>Weather profile for @_selectedProfile.City</caption>
@@ -55,10 +58,65 @@ else
     </div>
 }
 
+@if (_dialogProfile != null)
+{
+    <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">@_dialogTitle</h5>
+                    <button type="button" class="close" @onclick="@CloseDialog" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <EditForm Model="@_dialogProfile" OnValidSubmit="@SaveProfile">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+                        <div class="form-group">
+                            <label for="lastName">City: </label>
+                            <InputText id="city" class="form-control" @bind-Value="@_dialogProfile.City" placeholder="Enter city"></InputText>
+                            <ValidationMessage For="@(() => _dialogProfile.City)" />
+                        </div>
+                        <table>
+                            <caption>Weather profile for @_dialogProfile.City</caption>
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Average High (F)</th>
+                                    <th>Average Low (F)</th>
+                                    <th>Standard Deviation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var monthlyTemperature in _dialogProfile.MonthlyTemperatures)
+                                {
+                                    <tr>
+                                        <td>@monthlyTemperature.MonthName</td>
+                                        <td><InputNumber class="form-control" @bind-Value="@monthlyTemperature.AverageHigh"  placeholder="Enter average high temperature"></InputNumber></td>
+                                        <td><InputNumber class="form-control" @bind-Value="@monthlyTemperature.AverageLow" placeholder="Enter average low temperature"></InputNumber></td>
+                                        <td><InputNumber class="form-control" @bind-Value="@monthlyTemperature.StandardDeviation" placeholder="Enter standard deviation"></InputNumber></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <button type="submit" class="btn btn-primary">Save weather profile</button>
+                        <a class="btn btn-outline-primary" @onclick="@CloseDialog">Close</a>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private IReadOnlyList<WeatherProfile> _profiles = null!;
 
-    private WeatherProfile _selectedProfile = null!;
+    private WeatherProfile? _selectedProfile;
+
+    private bool _isNew;
+    private WeatherProfile? _dialogProfile;
+    private string? _dialogTitle;
 
     [Inject]
     public WeatherProfileClient HttpClient { get; set; } = null!;
@@ -66,9 +124,14 @@ else
     [Inject]
     public IJSRuntime JS { get; set; } = null!;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        await HttpClient.GetWeatherProfiles()
+        return FetchWeatherProfiles();
+    }
+
+    private Task FetchWeatherProfiles()
+    {
+        return HttpClient.GetWeatherProfiles()
             .OnSuccess(profiles =>
                 {
                     _profiles = profiles;
@@ -77,8 +140,59 @@ else
             .OnFailShowAlert(JS);
     }
 
-    private async Task OnCityChanged(ChangeEventArgs args)
+    private void OnCityChanged(ChangeEventArgs args)
     {
-        _selectedProfile = _profiles.FirstOrDefault(p => p.City == (string)args.Value);
+        _selectedProfile = _profiles.FirstOrDefault(p => p.City == (string?)args.Value);
+    }
+
+    private void EditSelectedCity()
+    {
+        _dialogTitle = $"Edit weather profile for {_selectedProfile!.City}";
+        _isNew = false;
+        _dialogProfile = _selectedProfile!.Clone();
+    }
+
+    private void AddNewCity()
+    {
+        _dialogTitle = "Add new weather profile";
+        _isNew = true;
+        _dialogProfile = new WeatherProfile
+        {
+            MonthlyTemperatures = new List<MonthlyTemperature>
+            {
+                new MonthlyTemperature { Month = 1 },
+                new MonthlyTemperature { Month = 2 },
+                new MonthlyTemperature { Month = 3 },
+                new MonthlyTemperature { Month = 4 },
+                new MonthlyTemperature { Month = 5 },
+                new MonthlyTemperature { Month = 6 },
+                new MonthlyTemperature { Month = 7 },
+                new MonthlyTemperature { Month = 8 },
+                new MonthlyTemperature { Month = 9 },
+                new MonthlyTemperature { Month = 10 },
+                new MonthlyTemperature { Month = 11 },
+                new MonthlyTemperature { Month = 12 },
+            }
+        };
+    }
+
+    private void CloseDialog()
+    {
+        _dialogProfile = null;
+        _dialogTitle = null;
+    }
+
+    private async Task SaveProfile()
+    {
+        foreach (var monthlyTemperature in _dialogProfile!.MonthlyTemperatures)
+            monthlyTemperature.City = _dialogProfile.City;
+
+        Result result;
+        if (_isNew)
+            result = await HttpClient.AddWeatherProfile(_dialogProfile);
+        else
+            result = await HttpClient.EditWeatherProfile(_dialogProfile);
+        await result.OnSuccess(() => CloseDialog())
+            .OnFailShowAlert(JS);
     }
 }

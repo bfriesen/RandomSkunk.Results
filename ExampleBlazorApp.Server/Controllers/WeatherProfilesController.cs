@@ -1,4 +1,5 @@
 using ExampleBlazorApp.Server.Repositories;
+using ExampleBlazorApp.Shared;
 using Microsoft.AspNetCore.Mvc;
 using RandomSkunk.Results.AspNetCore;
 
@@ -16,8 +17,20 @@ public class WeatherProfilesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetWeatherProfiles()
+    public Task<IActionResult> GetWeatherProfiles()
     {
-        return await _weatherRepository.GetWeatherProfiles().ToActionResult();
+        return _weatherRepository.GetWeatherProfiles().ToActionResult();
+    }
+
+    [HttpPost]
+    public Task<IActionResult> AddWeatherProfile([FromBody] WeatherProfile weatherProfile)
+    {
+        return _weatherRepository.AddWeatherProfile(weatherProfile).ToActionResult();
+    }
+
+    [HttpPut]
+    public Task<IActionResult> EditWeatherProfile([FromBody] WeatherProfile weatherProfile)
+    {
+        return _weatherRepository.EditWeatherProfile(weatherProfile).ToActionResult();
     }
 }

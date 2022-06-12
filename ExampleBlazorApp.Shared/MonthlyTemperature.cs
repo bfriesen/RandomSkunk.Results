@@ -29,4 +29,14 @@ public class MonthlyTemperature
             12 => "December",
             _ => null!,
         };
+
+    public MonthlyTemperature Clone() =>
+        new()
+        {
+            City = City,
+            Month = Month,
+            AverageHigh = AverageHigh,
+            AverageLow = AverageLow,
+            StandardDeviation = StandardDeviation,
+        };
 }

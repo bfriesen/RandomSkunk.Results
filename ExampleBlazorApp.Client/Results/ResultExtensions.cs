@@ -10,4 +10,10 @@ public static class ResultExtensions
 
     public static async Task<Result<T>> OnFailShowAlert<T>(this Task<Result<T>> source, IJSRuntime js) =>
         await (await source).OnFailShowAlert(js);
+
+    public static async Task<Result> OnFailShowAlert(this Result source, IJSRuntime js) =>
+        await source.OnFailAsync(async error => await js.InvokeVoidAsync("alert", error.Message));
+
+    public static async Task<Result> OnFailShowAlert(this Task<Result> source, IJSRuntime js) =>
+        await (await source).OnFailShowAlert(js);
 }

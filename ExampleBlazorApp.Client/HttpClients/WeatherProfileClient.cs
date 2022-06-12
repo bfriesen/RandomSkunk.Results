@@ -15,7 +15,19 @@ public class WeatherProfileClient
 
     public Task<Result<List<WeatherProfile>>> GetWeatherProfiles()
     {
-        return _httpClient.TryGetFromJsonAsync<List<WeatherProfile>>($"WeatherProfiles")
+        return _httpClient.TryGetFromJsonAsync<List<WeatherProfile>>("WeatherProfiles")
             .AsResult();
+    }
+
+    public Task<Result> AddWeatherProfile(WeatherProfile weatherProfile)
+    {
+        return _httpClient.TryPostAsJsonAsync("WeatherProfiles", weatherProfile)
+            .EnsureSuccessStatusCodeAsync();
+    }
+
+    public Task<Result> EditWeatherProfile(WeatherProfile weatherProfile)
+    {
+        return _httpClient.TryPutAsJsonAsync("WeatherProfiles", weatherProfile)
+            .EnsureSuccessStatusCodeAsync();
     }
 }

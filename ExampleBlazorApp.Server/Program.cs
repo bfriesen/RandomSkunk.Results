@@ -1,4 +1,3 @@
-using Dapper;
 using ExampleBlazorApp.Server.Repositories;
 using ExampleBlazorApp.Server.Services;
 
