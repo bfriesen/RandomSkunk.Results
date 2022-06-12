@@ -176,7 +176,12 @@ public static class HttpResponseExtensions
         this Result<HttpResponseMessage> source,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        source.CrossMapAsync(response => response.GetResultAsync(options, cancellationToken));
+        source.CrossMapAsync(async response =>
+        {
+            var result = await response.GetResultAsync(options, cancellationToken);
+            response.Dispose();
+            return result;
+        });
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
