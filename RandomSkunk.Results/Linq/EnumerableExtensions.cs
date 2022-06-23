@@ -34,7 +34,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Some</c> result of the first element of a sequence; a <c>None</c> result if the sequence contains no
+    /// Returns a <c>Success</c> result of the first element of a sequence; a <c>None</c> result if the sequence contains no
     /// elements; or a <c>Fail</c> result with error code <c>410</c> if the first element is <see langword="null"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
@@ -84,7 +84,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Some</c> result of the first element of the sequence that satisfies a condition; a <c>None</c> result if no
+    /// Returns a <c>Success</c> result of the first element of the sequence that satisfies a condition; a <c>None</c> result if no
     /// such element is found; or a <c>Fail</c> result with error code <c>410</c> if the first matched element is
     /// <see langword="null"/>.
     /// </summary>
@@ -143,7 +143,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Some</c> result of the last element of a sequence; <c>None</c> result if the sequence contains no elements;
+    /// Returns a <c>Success</c> result of the last element of a sequence; <c>None</c> result if the sequence contains no elements;
     /// or a <c>Fail</c> result with error code <c>410</c> if the last element is <see langword="null"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
@@ -202,7 +202,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Some</c> result of the last element of a sequence that satisfies a condition; a <c>None</c> result if no
+    /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition; a <c>None</c> result if no
     /// such element is found; or a <c>Fail</c> result with error code <c>410</c> if the last matched element is
     /// <see langword="null"/>.
     /// </summary>
@@ -262,7 +262,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Some</c> result of the only element of a sequence; a <c>None</c> result if the sequence is empty or the
+    /// Returns a <c>Success</c> result of the only element of a sequence; a <c>None</c> result if the sequence is empty or the
     /// single element is <see langword="null"/>; a <c>Fail</c> result with error code <c>400</c> if the sequence contains more
     /// than one element; or a <c>Fail</c> result with error code <c>410</c> if the single element is <see langword="null"/>.
     /// </summary>
@@ -334,7 +334,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Some</c> result of the only element of a sequence that satisfies a specified condition; a <c>None</c> result
+    /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition; a <c>None</c> result
     /// if no such element exists; a <c>Fail</c> result with error code <c>400</c> if more than one element satisfies the
     /// condition; or a <c>Fail</c> result with error code <c>410</c> if the single matched element is <see langword="null"/>.
     /// </summary>
@@ -407,7 +407,7 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Some</c> result of the element at a specified index in a sequence; a <c>None</c> result if the index is out
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence; a <c>None</c> result if the index is out
     /// of range; or a <c>Fail</c> result with error code <c>410</c> if the matched element is <see langword="null"/>.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>

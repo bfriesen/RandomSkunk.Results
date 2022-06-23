@@ -87,7 +87,7 @@ public class Unsafe_extensions_methods
         }
 
         [Fact]
-        public void GetError_When_IsSome_Throws_InvalidStateException()
+        public void GetError_When_IsSuccess_Throws_InvalidStateException()
         {
             var source = 1.ToMaybe();
 
@@ -108,7 +108,7 @@ public class Unsafe_extensions_methods
         }
 
         [Fact]
-        public void GetValue_When_IsSome_Returns_value()
+        public void GetValue_When_IsSuccess_Returns_value()
         {
             var source = 1.ToMaybe();
 
@@ -125,7 +125,7 @@ public class Unsafe_extensions_methods
             Action act = () => source.GetValue();
 
             act.Should().ThrowExactly<InvalidStateException>()
-                .WithMessage(CannotAccessValueUnlessSomeMessage);
+                .WithMessage(CannotAccessValueUnlessSuccessMessage);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ public class Unsafe_extensions_methods
             Action act = () => source.GetValue();
 
             act.Should().ThrowExactly<InvalidStateException>()
-                .WithMessage(CannotAccessValueUnlessSomeMessage);
+                .WithMessage(CannotAccessValueUnlessSuccessMessage);
         }
     }
 }

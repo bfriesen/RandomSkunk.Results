@@ -41,13 +41,13 @@ public class FlatMapAsync_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public async Task When_IsSome_Returns_function_evaluation()
+        public async Task When_IsSuccess_Returns_function_evaluation()
         {
             var source = 1.ToMaybe();
 
             var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
 
-            actual.IsSome.Should().BeTrue();
+            actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
         }
 

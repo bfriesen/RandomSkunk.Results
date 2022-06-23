@@ -5,7 +5,7 @@ public class Map_methods
     public class For_Result_of_T
     {
         [Fact]
-        public void When_IsSuccess_Returns_success_result_from_function_evaluation()
+        public void When_IsSuccess_Returns_Success_result_from_function_evaluation()
         {
             var source = 1.ToResult();
 
@@ -51,13 +51,13 @@ public class Map_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public void When_IsSome_Returns_some_result_from_function_evaluation()
+        public void When_IsSuccess_Returns_Success_result_from_function_evaluation()
         {
             var source = 1.ToMaybe();
 
             var actual = source.Map(value => value.ToString());
 
-            actual.IsSome.Should().BeTrue();
+            actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
         }
 
@@ -94,7 +94,7 @@ public class Map_methods
         }
 
         [Fact]
-        public void Given_IsSome_and_map_function_returning_null_Throws_ArgumentException()
+        public void Given_IsSuccess_and_map_function_returning_null_Throws_ArgumentException()
         {
             var source = 1.ToMaybe();
 

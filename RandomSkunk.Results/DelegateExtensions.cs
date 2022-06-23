@@ -90,7 +90,7 @@ public static class DelegateExtensions
     /// try/catch block.
     /// <para>
     /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
-    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// <c>Success</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
     /// If the function throws an exception, the exception is used to construct the error of the returned <c>Fail</c> result.
     /// </para>
     /// </summary>
@@ -206,7 +206,7 @@ public static class DelegateExtensions
     /// try/catch block.
     /// <para>
     /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
-    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// <c>Success</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
     /// If the function throws an exception, the exception is used to construct the error of the returned <c>Fail</c> result.
     /// </para>
     /// </summary>
@@ -327,7 +327,7 @@ public static class DelegateExtensions
     /// try/catch block.
     /// <para>
     /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
-    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// <c>Success</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
     /// If the function throws an exception of type <typeparamref name="TException"/>, the exception is used to construct the
     /// error of the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not
     /// caught.
@@ -453,7 +453,7 @@ public static class DelegateExtensions
     /// try/catch block.
     /// <para>
     /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
-    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// <c>Success</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
     /// If the function throws an exception of type <typeparamref name="TException"/>, the exception is used to construct the
     /// error of the returned <c>Fail</c> result. If the function throws some other type of exception, the exception is not
     /// caught.
@@ -610,7 +610,7 @@ public static class DelegateExtensions
     /// try/catch block.
     /// <para>
     /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
-    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// <c>Success</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
     /// If the function throws an exception of type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the
     /// exception is used to construct the error of the returned <c>Fail</c> result. If the function throws some other type of
     /// exception, the exception is not caught.
@@ -783,7 +783,7 @@ public static class DelegateExtensions
     /// try/catch block.
     /// <para>
     /// If the function doesn't throw an exception and doesn't return null, its return value is the value of the returned
-    /// <c>Some</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
+    /// <c>Success</c> result. If the function doesn't throw an exception but does return null, a <c>None</c> result is returned.
     /// If the function throws an exception of type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the
     /// exception is used to construct the error of the returned <c>Fail</c> result. If the function throws some other type of
     /// exception, the exception is not caught.

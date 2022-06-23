@@ -66,7 +66,7 @@ public class Linq_extension_methods
                          from s in $"n2: {n2}".ToMaybe()
                          select s;
 
-            result.IsSome.Should().BeTrue();
+            result.IsSuccess.Should().BeTrue();
             result._value.Should().Be("n2: 2");
         }
 

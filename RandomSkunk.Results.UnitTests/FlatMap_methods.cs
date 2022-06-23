@@ -41,13 +41,13 @@ public class FlatMap_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public void When_IsSome_Returns_function_evaluation()
+        public void When_IsSuccess_Returns_function_evaluation()
         {
             var source = 1.ToMaybe();
 
             var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
-            actual.IsSome.Should().BeTrue();
+            actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
         }
 

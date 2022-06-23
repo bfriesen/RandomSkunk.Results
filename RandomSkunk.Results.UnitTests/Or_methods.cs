@@ -82,7 +82,7 @@ public class Or_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public void Given_fallback_value_When_IsSome_Returns_source()
+        public void Given_fallback_value_When_IsSuccess_Returns_source()
         {
             var source = 1.ToMaybe();
 
@@ -92,26 +92,26 @@ public class Or_methods
         }
 
         [Fact]
-        public void Given_fallback_value_When_IsFail_Returns_some_result_from_fallback_value()
+        public void Given_fallback_value_When_IsFail_Returns_Success_result_from_fallback_value()
         {
             var source = Maybe<int>.Fail();
 
             var actual = source.Or(2);
 
             actual.Should().NotBe(source);
-            actual.IsSome.Should().BeTrue();
+            actual.IsSuccess.Should().BeTrue();
             actual._value.Should().Be(2);
         }
 
         [Fact]
-        public void Given_fallback_value_When_IsNone_Returns_some_result_from_fallback_value()
+        public void Given_fallback_value_When_IsNone_Returns_Success_result_from_fallback_value()
         {
             var source = Maybe<int>.None();
 
             var actual = source.Or(2);
 
             actual.Should().NotBe(source);
-            actual.IsSome.Should().BeTrue();
+            actual.IsSuccess.Should().BeTrue();
             actual._value.Should().Be(2);
         }
 
@@ -126,7 +126,7 @@ public class Or_methods
         }
 
         [Fact]
-        public void Given_fallback_value_function_When_IsSome_Returns_source()
+        public void Given_fallback_value_function_When_IsSuccess_Returns_source()
         {
             var source = 1.ToMaybe();
 
@@ -136,26 +136,26 @@ public class Or_methods
         }
 
         [Fact]
-        public void Given_fallback_value_function_When_IsFail_Returns_some_result_from_function_evaluation()
+        public void Given_fallback_value_function_When_IsFail_Returns_Success_result_from_function_evaluation()
         {
             var source = Maybe<int>.Fail();
 
             var actual = source.Or(() => 2);
 
             actual.Should().NotBe(source);
-            actual.IsSome.Should().BeTrue();
+            actual.IsSuccess.Should().BeTrue();
             actual._value.Should().Be(2);
         }
 
         [Fact]
-        public void Given_fallback_value_function_When_IsNone_Returns_some_result_from_function_evaluation()
+        public void Given_fallback_value_function_When_IsNone_Returns_Success_result_from_function_evaluation()
         {
             var source = Maybe<int>.None();
 
             var actual = source.Or(() => 2);
 
             actual.Should().NotBe(source);
-            actual.IsSome.Should().BeTrue();
+            actual.IsSuccess.Should().BeTrue();
             actual._value.Should().Be(2);
         }
 

@@ -14,14 +14,14 @@ public partial struct Maybe<T>
     /// <see langword="null"/>, then <see cref="EqualityComparer{T}.Default"/> is used instead.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>Some</c> result and its value equals
+    /// <see langword="true"/> if this is a <c>Success</c> result and its value equals
     /// <paramref name="otherValue"/>; otherwise, <see langword="false"/>.
     /// </returns>
     public bool HasValue(T otherValue, IEqualityComparer<T>? comparer = null)
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        return _type == MaybeType.Some && comparer.Equals(_value!, otherValue);
+        return _type == MaybeType.Success && comparer.Equals(_value!, otherValue);
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public partial struct Maybe<T>
     /// A function that defines the equality of the result value.
     /// </param>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>Some</c> result and
+    /// <see langword="true"/> if this is a <c>Success</c> result and
     /// <paramref name="comparison"/> evaluates to <see langword="true"/> when passed
     /// its value; otherwise, <see langword="false"/>.
     /// </returns>
@@ -43,6 +43,6 @@ public partial struct Maybe<T>
     {
         if (comparison is null) throw new ArgumentNullException(nameof(comparison));
 
-        return _type == MaybeType.Some && comparison(_value!);
+        return _type == MaybeType.Success && comparison(_value!);
     }
 }

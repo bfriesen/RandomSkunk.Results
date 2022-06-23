@@ -56,7 +56,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_first_is_not_null_Returns_Some()
+        public void OrNone_When_not_empty_and_first_is_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -64,10 +64,10 @@ public class Enumerable_extension_methods
             var seqResult = seq.FirstOrNone();
             var listResult = list.FirstOrNone();
 
-            seqResult.IsSome.Should().BeTrue();
+            seqResult.IsSuccess.Should().BeTrue();
             seqResult._value!.Should().Be(1);
 
-            listResult.IsSome.Should().BeTrue();
+            listResult.IsSuccess.Should().BeTrue();
             listResult._value!.Should().Be(1);
         }
 
@@ -134,13 +134,13 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_first_matched_and_not_null_Returns_Some()
+        public void OrNone_Given_predicate_When_first_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
 
             var seqResult = seq.FirstOrNone(x => x > 4);
 
-            seqResult.IsSome.Should().BeTrue();
+            seqResult.IsSuccess.Should().BeTrue();
             seqResult._value!.Should().Be(5);
         }
 
@@ -217,7 +217,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_last_is_not_null_Returns_Some()
+        public void OrNone_When_not_empty_and_last_is_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -225,10 +225,10 @@ public class Enumerable_extension_methods
             var seqResult = seq.LastOrNone();
             var listResult = list.LastOrNone();
 
-            seqResult.IsSome.Should().BeTrue();
+            seqResult.IsSuccess.Should().BeTrue();
             seqResult._value!.Should().Be(10);
 
-            listResult.IsSome.Should().BeTrue();
+            listResult.IsSuccess.Should().BeTrue();
             listResult._value!.Should().Be(10);
         }
 
@@ -295,13 +295,13 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_last_matched_and_not_null_Returns_Some()
+        public void OrNone_Given_predicate_When_last_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
 
             var seqResult = seq.LastOrNone(x => x < 6);
 
-            seqResult.IsSome.Should().BeTrue();
+            seqResult.IsSuccess.Should().BeTrue();
             seqResult._value!.Should().Be(5);
         }
 
@@ -394,7 +394,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_single_is_not_null_Returns_Some()
+        public void OrNone_When_not_empty_and_single_is_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 1);
             var list = seq.ToList();
@@ -402,10 +402,10 @@ public class Enumerable_extension_methods
             var seqResult = seq.SingleOrNone();
             var listResult = list.SingleOrNone();
 
-            seqResult.IsSome.Should().BeTrue();
+            seqResult.IsSuccess.Should().BeTrue();
             seqResult._value!.Should().Be(1);
 
-            listResult.IsSome.Should().BeTrue();
+            listResult.IsSuccess.Should().BeTrue();
             listResult._value!.Should().Be(1);
         }
 
@@ -504,13 +504,13 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_single_matched_and_not_null_Returns_Some()
+        public void OrNone_Given_predicate_When_single_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(5, 1);
 
             var seqResult = seq.SingleOrNone(x => x > 4);
 
-            seqResult.IsSome.Should().BeTrue();
+            seqResult.IsSuccess.Should().BeTrue();
             seqResult._value!.Should().Be(5);
         }
 
@@ -603,7 +603,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_element_at_matched_and_not_null_Returns_Some()
+        public void OrNone_When_element_at_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -611,10 +611,10 @@ public class Enumerable_extension_methods
             var seqResult = seq.FirstOrNone();
             var listResult = list.FirstOrNone();
 
-            seqResult.IsSome.Should().BeTrue();
+            seqResult.IsSuccess.Should().BeTrue();
             seqResult._value!.Should().Be(1);
 
-            listResult.IsSome.Should().BeTrue();
+            listResult.IsSuccess.Should().BeTrue();
             listResult._value!.Should().Be(1);
         }
 

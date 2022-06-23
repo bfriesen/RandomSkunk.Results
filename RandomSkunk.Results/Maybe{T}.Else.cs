@@ -6,21 +6,21 @@ namespace RandomSkunk.Results;
 public partial struct Maybe<T>
 {
     /// <summary>
-    /// Returns the current result if it is a <c>Some</c> result, else returns the specified fallback result.
+    /// Returns the current result if it is a <c>Success</c> result, else returns the specified fallback result.
     /// </summary>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>Some</c>.</param>
+    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either the current result or <paramref name="fallbackResult"/>.</returns>
     public Maybe<T> Else(Maybe<T> fallbackResult)
     {
-        return _type == MaybeType.Some ? this : fallbackResult;
+        return _type == MaybeType.Success ? this : fallbackResult;
     }
 
     /// <summary>
-    /// Returns the current result if it is a <c>Some</c> result, else returns the result from evaluating the
+    /// Returns the current result if it is a <c>Success</c> result, else returns the result from evaluating the
     /// <paramref name="getFallbackResult"/> function.
     /// </summary>
     /// <param name="getFallbackResult">
-    /// A function that returns the fallback result if the result is not <c>Some</c>.
+    /// A function that returns the fallback result if the result is not <c>Success</c>.
     /// </param>
     /// <returns>
     /// Either the current result or the value returned from <paramref name="getFallbackResult"/>.
@@ -32,6 +32,6 @@ public partial struct Maybe<T>
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return _type == MaybeType.Some ? this : getFallbackResult();
+        return _type == MaybeType.Success ? this : getFallbackResult();
     }
 }

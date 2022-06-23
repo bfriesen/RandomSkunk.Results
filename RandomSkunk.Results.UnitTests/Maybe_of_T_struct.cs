@@ -11,7 +11,7 @@ public class Maybe_of_T_struct
 
         result._type.Should().Be(Fail);
         result.IsFail.Should().BeTrue();
-        result.IsSome.Should().BeFalse();
+        result.IsSuccess.Should().BeFalse();
         result.IsDefault.Should().BeTrue();
         result.Error().Should().BeSameAs(Error.DefaultError);
     }
@@ -19,12 +19,12 @@ public class Maybe_of_T_struct
     public class Create
     {
         [Fact]
-        public void Some_Returns_some_result_with_specified_value()
+        public void Success_Returns_Success_result_with_specified_value()
         {
             var result = 1.ToMaybe();
 
-            result._type.Should().Be(Some);
-            result.IsSome.Should().BeTrue();
+            result._type.Should().Be(Success);
+            result.IsSuccess.Should().BeTrue();
             result.IsFail.Should().BeFalse();
             result.IsNone.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
@@ -32,27 +32,27 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Fail_Returns_fail_result_with_specified_error()
+        public void Fail_Returns_Fail_result_with_specified_error()
         {
             var error = new Error();
             var result = Maybe<int>.Fail(error);
 
             result._type.Should().Be(Fail);
             result.IsFail.Should().BeTrue();
-            result.IsSome.Should().BeFalse();
+            result.IsSuccess.Should().BeFalse();
             result.IsNone.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
             result.Error().Should().BeSameAs(error);
         }
 
         [Fact]
-        public void None_Returns_none_result()
+        public void None_Returns_None_result()
         {
             var result = Maybe<int>.None();
 
             result._type.Should().Be(None);
             result.IsNone.Should().BeTrue();
-            result.IsSome.Should().BeFalse();
+            result.IsSuccess.Should().BeFalse();
             result.IsFail.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
         }
@@ -61,7 +61,7 @@ public class Maybe_of_T_struct
     public class Match
     {
         [Fact]
-        public void Given_nonvoid_functions_When_IsSome_Returns_some_function_evaluation()
+        public void Given_nonvoid_functions_When_IsSuccess_Returns_Success_function_evaluation()
         {
             var result = 1.ToMaybe();
 
@@ -74,7 +74,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
+        public void Given_nonvoid_functions_When_IsFail_Returns_Fail_function_evaluation()
         {
             var result = Maybe<int>.Fail();
 
@@ -87,7 +87,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_nonvoid_functions_When_IsNone_Returns_none_function_evaluation()
+        public void Given_nonvoid_functions_When_IsNone_Returns_None_function_evaluation()
         {
             var result = Maybe<int>.None();
 
@@ -100,61 +100,61 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_void_functions_When_IsSome_Returns_some_function_evaluation()
+        public void Given_void_functions_When_IsSuccess_Returns_Success_function_evaluation()
         {
             var result = 1.ToMaybe();
 
-            int? someValue = null;
+            int? successValue = null;
             Error? failError = null;
             object? none = null;
 
             result.Match(
-                value => { someValue = value; },
+                value => { successValue = value; },
                 () => { none = new object(); },
                 error => { failError = error; });
 
-            someValue.Should().Be(1);
+            successValue.Should().Be(1);
             failError.Should().BeNull();
             none.Should().BeNull();
         }
 
         [Fact]
-        public void Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
+        public void Given_void_functions_When_IsFail_Returns_Fail_function_evaluation()
         {
             var error = new Error();
             var result = Maybe<int>.Fail(error);
 
-            int? someValue = null;
+            int? successValue = null;
             Error? failError = null;
             object? none = null;
 
             result.Match(
-                value => { someValue = value; },
+                value => { successValue = value; },
                 () => { none = new object(); },
                 error => { failError = error; });
 
-            someValue.Should().BeNull();
+            successValue.Should().BeNull();
             failError.Should().BeSameAs(error);
             none.Should().BeNull();
         }
 
         [Fact]
-        public void Given_void_functions_When_IsNone_Returns_none_function_evaluation()
+        public void Given_void_functions_When_IsNone_Returns_None_function_evaluation()
         {
             var error = new Error();
             var result = Maybe<int>.None();
 
-            int? someValue = null;
+            int? successValue = null;
             Error? failError = null;
             object? none = null;
 
             result.Match(
-                value => { someValue = value; },
+                value => { successValue = value; },
                 () => { none = new object(); },
                 error => { failError = error; });
 
             none.Should().NotBeNull();
-            someValue.Should().BeNull();
+            successValue.Should().BeNull();
             failError.Should().BeNull();
         }
     }
@@ -162,7 +162,7 @@ public class Maybe_of_T_struct
     public class MatchAsync
     {
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsSome_Returns_some_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsSuccess_Returns_Success_function_evaluation()
         {
             var result = 1.ToMaybe();
 
@@ -175,7 +175,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsFail_Returns_Fail_function_evaluation()
         {
             var result = Maybe<int>.Fail();
 
@@ -188,7 +188,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsNone_Returns_none_function_evaluation()
+        public async Task Given_nonvoid_functions_When_IsNone_Returns_None_function_evaluation()
         {
             var result = Maybe<int>.None();
 
@@ -201,18 +201,18 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_void_functions_When_IsSome_Returns_some_function_evaluation()
+        public async Task Given_void_functions_When_IsSuccess_Returns_Success_function_evaluation()
         {
             var result = 1.ToMaybe();
 
-            int? someValue = null;
+            int? successValue = null;
             Error? failError = null;
             object? none = null;
 
             await result.MatchAsync(
                 value =>
                 {
-                    someValue = value;
+                    successValue = value;
                     return Task.CompletedTask;
                 },
                 () =>
@@ -226,25 +226,25 @@ public class Maybe_of_T_struct
                     return Task.CompletedTask;
                 });
 
-            someValue.Should().Be(1);
+            successValue.Should().Be(1);
             failError.Should().BeNull();
             none.Should().BeNull();
         }
 
         [Fact]
-        public async Task Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
+        public async Task Given_void_functions_When_IsFail_Returns_Fail_function_evaluation()
         {
             var error = new Error();
             var result = Maybe<int>.Fail(error);
 
-            int? someValue = null;
+            int? successValue = null;
             Error? failError = null;
             object? none = null;
 
             await result.MatchAsync(
                 value =>
                 {
-                    someValue = value;
+                    successValue = value;
                     return Task.CompletedTask;
                 },
                 () =>
@@ -258,24 +258,24 @@ public class Maybe_of_T_struct
                     return Task.CompletedTask;
                 });
 
-            someValue.Should().BeNull();
+            successValue.Should().BeNull();
             failError.Should().BeSameAs(error);
             none.Should().BeNull();
         }
 
         [Fact]
-        public async Task Given_void_functions_When_IsNone_Returns_none_function_evaluation()
+        public async Task Given_void_functions_When_IsNone_Returns_None_function_evaluation()
         {
             var result = Maybe<int>.None();
 
-            int? someValue = null;
+            int? successValue = null;
             Error? failError = null;
             object? none = null;
 
             await result.MatchAsync(
                 value =>
                 {
-                    someValue = value;
+                    successValue = value;
                     return Task.CompletedTask;
                 },
                 () =>
@@ -290,7 +290,7 @@ public class Maybe_of_T_struct
                 });
 
             none.Should().NotBeNull();
-            someValue.Should().BeNull();
+            successValue.Should().BeNull();
             failError.Should().BeNull();
         }
     }
@@ -298,7 +298,7 @@ public class Maybe_of_T_struct
     public new class Equals
     {
         [Fact]
-        public void Given_IsSome_When_other_IsSome_with_same_value_Returns_true()
+        public void Given_IsSuccess_When_other_IsSuccess_with_same_value_Returns_true()
         {
             var result = 1.ToMaybe();
             object other = 1.ToMaybe();
@@ -344,7 +344,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_IsSome_When_other_IsSome_with_different_value_Returns_false()
+        public void Given_IsSuccess_When_other_IsSuccess_with_different_value_Returns_false()
         {
             var result = 1.ToMaybe();
             object other = 2.ToMaybe();
@@ -355,7 +355,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_IsSome_When_other_IsFail_Returns_false()
+        public void Given_IsSuccess_When_other_IsFail_Returns_false()
         {
             var result = 1.ToMaybe();
             object other = Maybe<int>.Fail();
@@ -366,7 +366,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_IsSome_When_other_IsNone_Returns_false()
+        public void Given_IsSuccess_When_other_IsNone_Returns_false()
         {
             var result = 1.ToMaybe();
             object other = Maybe<int>.None();
@@ -377,7 +377,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_IsFail_When_other_IsSome_Returns_false()
+        public void Given_IsFail_When_other_IsSuccess_Returns_false()
         {
             var result = Maybe<int>.Fail();
             object other = 1.ToMaybe();
@@ -412,7 +412,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_IsSome_When_other_is_different_value_Returns_false()
+        public void Given_IsSuccess_When_other_is_different_value_Returns_false()
         {
             var result = 1.ToMaybe();
             object other = 2;
@@ -428,8 +428,8 @@ public class Maybe_of_T_struct
         [Fact]
         public void Different_results_return_different_values()
         {
-            var some1 = 1.ToMaybe().GetHashCode();
-            var someA = "1".ToMaybe().GetHashCode();
+            var success1 = 1.ToMaybe().GetHashCode();
+            var successA = "1".ToMaybe().GetHashCode();
             var fail1 = Maybe<int>.Fail("X").GetHashCode();
             var fail2 = Maybe<int>.Fail("Y").GetHashCode();
             var failA = Maybe<string>.Fail("X").GetHashCode();
@@ -437,20 +437,20 @@ public class Maybe_of_T_struct
             var none1 = Maybe<int>.None().GetHashCode();
             var noneA = Maybe<string>.None().GetHashCode();
 
-            some1.Should().NotBe(someA);
-            some1.Should().NotBe(fail1);
-            some1.Should().NotBe(fail2);
-            some1.Should().NotBe(failA);
-            some1.Should().NotBe(failB);
-            some1.Should().NotBe(none1);
-            some1.Should().NotBe(noneA);
+            success1.Should().NotBe(successA);
+            success1.Should().NotBe(fail1);
+            success1.Should().NotBe(fail2);
+            success1.Should().NotBe(failA);
+            success1.Should().NotBe(failB);
+            success1.Should().NotBe(none1);
+            success1.Should().NotBe(noneA);
 
-            someA.Should().NotBe(fail1);
-            someA.Should().NotBe(fail2);
-            someA.Should().NotBe(failA);
-            someA.Should().NotBe(failB);
-            someA.Should().NotBe(none1);
-            someA.Should().NotBe(noneA);
+            successA.Should().NotBe(fail1);
+            successA.Should().NotBe(fail2);
+            successA.Should().NotBe(failA);
+            successA.Should().NotBe(failB);
+            successA.Should().NotBe(none1);
+            successA.Should().NotBe(noneA);
 
             fail1.Should().NotBe(fail2);
             fail1.Should().NotBe(failA);

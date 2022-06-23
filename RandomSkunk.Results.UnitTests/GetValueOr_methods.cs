@@ -58,7 +58,7 @@ public class GetValueOr_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public void Given_fallback_result_When_IsSome_Returns_value()
+        public void Given_fallback_result_When_IsSuccess_Returns_value()
         {
             var source = 1.ToMaybe();
 
@@ -88,7 +88,7 @@ public class GetValueOr_methods
         }
 
         [Fact]
-        public void Given_fallback_result_function_When_IsSome_Returns_value()
+        public void Given_fallback_result_function_When_IsSuccess_Returns_value()
         {
             var source = 1.ToMaybe();
 

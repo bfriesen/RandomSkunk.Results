@@ -67,7 +67,7 @@ public class WithError_methods
         }
 
         [Fact]
-        public void When_IsSome_Returns_source()
+        public void When_IsSuccess_Returns_source()
         {
             var source = 1.ToMaybe();
 

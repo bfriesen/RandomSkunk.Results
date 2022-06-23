@@ -3,7 +3,7 @@ namespace RandomSkunk.Results.UnitTests;
 public class Filter_methods
 {
     [Fact]
-    public void When_IsSome_and_function_returns_true_Returns_source()
+    public void When_IsSuccess_and_function_returns_true_Returns_source()
     {
         var source = 1.ToMaybe();
 
@@ -13,7 +13,7 @@ public class Filter_methods
     }
 
     [Fact]
-    public void When_IsSome_and_function_returns_false_Returns_None()
+    public void When_IsSuccess_and_function_returns_false_Returns_None()
     {
         var source = 1.ToMaybe();
 

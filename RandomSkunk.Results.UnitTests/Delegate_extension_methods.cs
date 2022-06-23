@@ -271,13 +271,13 @@ public class Delegate_extension_methods
             }
 
             [Fact]
-            public void When_source_does_not_throw_Returns_Some_result()
+            public void When_source_does_not_throw_Returns_Success_result()
             {
                 Func<int> source = () => 1;
 
                 var actual = source.TryInvokeAsMaybe();
 
-                actual.IsSome.Should().BeTrue();
+                actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
             }
 
@@ -307,13 +307,13 @@ public class Delegate_extension_methods
             }
 
             [Fact]
-            public void When_source_does_not_throw_Returns_Some_result()
+            public void When_source_does_not_throw_Returns_Success_result()
             {
                 Func<int> source = () => 1;
 
                 var actual = source.TryInvokeAsMaybe<int, InvalidOperationException>();
 
-                actual.IsSome.Should().BeTrue();
+                actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
             }
 
@@ -365,13 +365,13 @@ public class Delegate_extension_methods
             }
 
             [Fact]
-            public void When_source_does_not_throw_Returns_Some_result()
+            public void When_source_does_not_throw_Returns_Success_result()
             {
                 Func<int> source = () => 1;
 
                 var actual = source.TryInvokeAsMaybe<int, InvalidOperationException, DivideByZeroException>();
 
-                actual.IsSome.Should().BeTrue();
+                actual.IsSuccess.Should().BeTrue();
             }
 
             [Fact]
@@ -665,13 +665,13 @@ public class Delegate_extension_methods
             }
 
             [Fact]
-            public async Task When_source_does_not_throw_Returns_Some_result()
+            public async Task When_source_does_not_throw_Returns_Success_result()
             {
                 AsyncFunc<int> source = () => Task.FromResult(1);
 
                 var actual = await source.TryInvokeAsMaybeAsync();
 
-                actual.IsSome.Should().BeTrue();
+                actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
             }
 
@@ -701,13 +701,13 @@ public class Delegate_extension_methods
             }
 
             [Fact]
-            public async Task When_source_does_not_throw_Returns_Some_result()
+            public async Task When_source_does_not_throw_Returns_Success_result()
             {
                 AsyncFunc<int> source = () => Task.FromResult(1);
 
                 var actual = await source.TryInvokeAsMaybeAsync<int, InvalidOperationException>();
 
-                actual.IsSome.Should().BeTrue();
+                actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
             }
 
@@ -759,13 +759,13 @@ public class Delegate_extension_methods
             }
 
             [Fact]
-            public async Task When_source_does_not_throw_Returns_Some_result()
+            public async Task When_source_does_not_throw_Returns_Success_result()
             {
                 AsyncFunc<int> source = () => Task.FromResult(1);
 
                 var actual = await source.TryInvokeAsMaybeAsync<int, InvalidOperationException, DivideByZeroException>();
 
-                actual.IsSome.Should().BeTrue();
+                actual.IsSuccess.Should().BeTrue();
             }
 
             [Fact]

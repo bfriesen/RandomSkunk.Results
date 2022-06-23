@@ -7,15 +7,15 @@ public partial struct Maybe<T>
 {
     /// <summary>
     /// Maps the <see cref="Maybe{T}"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="onSome"/> function. The cross map function is evaluated if and only if
-    /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
+    /// <paramref name="onSuccess"/> function. The cross map function is evaluated if and only if
+    /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
     /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
-    /// <param name="onSome">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
-    /// only if the source is a <c>Some</c> result.
+    /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
@@ -29,18 +29,18 @@ public partial struct Maybe<T>
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="onSome"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     public Result CrossMap(
-        Func<T, Result> onSome,
+        Func<T, Result> onSuccess,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)
     {
-        if (onSome is null) throw new ArgumentNullException(nameof(onSome));
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
 
         return _type switch
         {
-            MaybeType.Some => onSome(_value!),
+            MaybeType.Success => onSuccess(_value!),
             MaybeType.None => Result.Fail(onNone.EvaluateOnNone()),
             _ => Result.Fail(onFail.Evaluate(Error())),
         };
@@ -48,15 +48,15 @@ public partial struct Maybe<T>
 
     /// <summary>
     /// Maps the <see cref="Maybe{T}"/> to a <see cref="Result"/> using the specified
-    /// <paramref name="onSomeAsync"/> function. The cross map function is evaluated if and only if
-    /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
+    /// <paramref name="onSuccessAsync"/> function. The cross map function is evaluated if and only if
+    /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
     /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
-    /// <param name="onSomeAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
-    /// only if the source is a <c>Some</c> result.
+    /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
@@ -70,18 +70,18 @@ public partial struct Maybe<T>
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="onSomeAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     public async Task<Result> CrossMapAsync(
-        Func<T, Task<Result>> onSomeAsync,
+        Func<T, Task<Result>> onSuccessAsync,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)
     {
-        if (onSomeAsync is null) throw new ArgumentNullException(nameof(onSomeAsync));
+        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
 
         return _type switch
         {
-            MaybeType.Some => await onSomeAsync(_value!).ConfigureAwait(false),
+            MaybeType.Success => await onSuccessAsync(_value!).ConfigureAwait(false),
             MaybeType.None => Result.Fail(onNone.EvaluateOnNone()),
             _ => Result.Fail(onFail.Evaluate(Error())),
         };
@@ -89,16 +89,16 @@ public partial struct Maybe<T>
 
     /// <summary>
     /// Maps the <see cref="Maybe{T}"/> to a <see cref="Result{T}"/> using the specified
-    /// <paramref name="onSome"/> function. The cross map function is evaluated if and only if
-    /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
+    /// <paramref name="onSuccess"/> function. The cross map function is evaluated if and only if
+    /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
     /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSome">
+    /// <param name="onSuccess">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
-    /// only if the source is a <c>Some</c> result.
+    /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
@@ -112,18 +112,18 @@ public partial struct Maybe<T>
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="onSome"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccess"/> is <see langword="null"/>.
     /// </exception>
     public Result<TReturn> CrossMap<TReturn>(
-        Func<T, Result<TReturn>> onSome,
+        Func<T, Result<TReturn>> onSuccess,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)
     {
-        if (onSome is null) throw new ArgumentNullException(nameof(onSome));
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
 
         return _type switch
         {
-            MaybeType.Some => onSome(_value!),
+            MaybeType.Success => onSuccess(_value!),
             MaybeType.None => Result<TReturn>.Fail(onNone.EvaluateOnNone()),
             _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };
@@ -131,16 +131,16 @@ public partial struct Maybe<T>
 
     /// <summary>
     /// Maps the <see cref="Maybe{T}"/> to a <see cref="Result{T}"/> using the specified
-    /// <paramref name="onSomeAsync"/> function. The cross map function is evaluated if and only if
-    /// the source is a <c>Some</c> result. If the source is a <c>Fail</c> result, the error is
+    /// <paramref name="onSuccessAsync"/> function. The cross map function is evaluated if and only if
+    /// the source is a <c>Success</c> result. If the source is a <c>Fail</c> result, the error is
     /// propagated to the returned <c>Fail</c> result. If the source is a <c>None</c> result, the
     /// error returned by <paramref name="onNone"/> is used for the returned <c>Fail</c>
     /// result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSomeAsync">
+    /// <param name="onSuccessAsync">
     /// A function that maps the value of the incoming result to the outgoing result. Evaluated
-    /// only if the source is a <c>Some</c> result.
+    /// only if the source is a <c>Success</c> result.
     /// </param>
     /// <param name="onNone">
     /// An optional function that maps a <c>None</c> result to the return result's error. If
@@ -155,18 +155,18 @@ public partial struct Maybe<T>
     /// </param>
     /// <returns>The cross mapped result.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="onSomeAsync"/> is <see langword="null"/>.
+    /// If <paramref name="onSuccessAsync"/> is <see langword="null"/>.
     /// </exception>
     public async Task<Result<TReturn>> CrossMapAsync<TReturn>(
-        Func<T, Task<Result<TReturn>>> onSomeAsync,
+        Func<T, Task<Result<TReturn>>> onSuccessAsync,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)
     {
-        if (onSomeAsync is null) throw new ArgumentNullException(nameof(onSomeAsync));
+        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
 
         return _type switch
         {
-            MaybeType.Some => await onSomeAsync(_value!).ConfigureAwait(false),
+            MaybeType.Success => await onSuccessAsync(_value!).ConfigureAwait(false),
             MaybeType.None => Result<TReturn>.Fail(onNone.EvaluateOnNone()),
             _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
         };

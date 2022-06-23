@@ -6,7 +6,7 @@ namespace RandomSkunk.Results.Unsafe;
 /// </summary>
 /// <remarks>
 /// In order to access a result's <c>Error</c> property, its <c>IsFail</c> property must be true.
-/// In order to access a result's <c>Value</c> property, its <c>IsSuccess</c> or <c>IsSome</c>
+/// In order to access a result's <c>Value</c> property, its <c>IsSuccess</c> or <c>IsSuccess</c>
 /// property must be true. Otherwise, in each case, this exception is thrown.
 /// </remarks>
 public class InvalidStateException : Exception

@@ -6,31 +6,31 @@ namespace RandomSkunk.Results;
 public partial struct Maybe<T>
 {
     /// <summary>
-    /// Gets the value of the <c>Some</c> result, or the specified fallback value if
+    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <param name="fallbackValue">
-    /// The fallback value to return if this is not a <c>Some</c> result.
+    /// The fallback value to return if this is not a <c>Success</c> result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>Some</c> result; otherwise,
+    /// The value of this result if this is a <c>Success</c> result; otherwise,
     /// <paramref name="fallbackValue"/>.
     /// </returns>
     public T? GetValueOr(T? fallbackValue)
     {
-        return _type == MaybeType.Some ? _value! : fallbackValue;
+        return _type == MaybeType.Success ? _value! : fallbackValue;
     }
 
     /// <summary>
-    /// Gets the value of the <c>Some</c> result, or the specified fallback value if
+    /// Gets the value of the <c>Success</c> result, or the specified fallback value if
     /// it is a <c>Fail</c> result.
     /// </summary>
     /// <param name="getFallbackValue">
-    /// A function that creates the fallback value to return if this is not a <c>Some</c>
+    /// A function that creates the fallback value to return if this is not a <c>Success</c>
     /// result.
     /// </param>
     /// <returns>
-    /// The value of this result if this is a <c>Some</c> result; otherwise, the value returned
+    /// The value of this result if this is a <c>Success</c> result; otherwise, the value returned
     /// by the <paramref name="getFallbackValue"/> function.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -40,6 +40,6 @@ public partial struct Maybe<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return _type == MaybeType.Some ? _value! : getFallbackValue();
+        return _type == MaybeType.Success ? _value! : getFallbackValue();
     }
 }

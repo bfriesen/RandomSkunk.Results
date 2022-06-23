@@ -54,7 +54,7 @@ public class CrossMap_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public void Given_target_is_Result_When_source_is_Some_Returns_crossMap_function_evaluation()
+        public void Given_target_is_Result_When_source_is_Success_Returns_crossMap_function_evaluation()
         {
             var source = "a".ToMaybe();
 
@@ -90,7 +90,7 @@ public class CrossMap_methods
         }
 
         [Fact]
-        public void Given_target_is_Result_of_T_When_source_is_Some_Returns_crossMap_function_evaluation()
+        public void Given_target_is_Result_of_T_When_source_is_Success_Returns_crossMap_function_evaluation()
         {
             var source = "a".ToMaybe();
 

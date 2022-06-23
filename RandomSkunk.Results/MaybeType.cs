@@ -13,7 +13,7 @@ public enum MaybeType
     /// <summary>
     /// A successful result with a value.
     /// </summary>
-    Some,
+    Success,
 
     /// <summary>
     /// A successful result without a value.

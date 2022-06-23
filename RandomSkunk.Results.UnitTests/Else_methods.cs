@@ -113,7 +113,7 @@ public class Else_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public void Given_fallback_result_When_IsSome_Returns_source()
+        public void Given_fallback_result_When_IsSuccess_Returns_source()
         {
             var source = 1.ToMaybe();
             var fallbackResult = 2.ToMaybe();
@@ -146,7 +146,7 @@ public class Else_methods
         }
 
         [Fact]
-        public void Given_fallback_result_function_When_IsSome_Returns_source()
+        public void Given_fallback_result_function_When_IsSuccess_Returns_source()
         {
             var source = 1.ToMaybe();
             var fallbackResult = 2.ToMaybe();

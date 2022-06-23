@@ -13,7 +13,7 @@ public static class LinqExtensions
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
-    /// function. The map function is only evaluated if the target is a <c>Some</c> result, and
+    /// function. The map function is only evaluated if the target is a <c>Success</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
@@ -110,7 +110,7 @@ public static class LinqExtensions
     /// method.
     /// </para>
     /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
-    /// function. The map function is only evaluated if the target is a <c>Some</c> result, and
+    /// function. The map function is only evaluated if the target is a <c>Success</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
@@ -201,13 +201,13 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>Alias for the <see cref="Maybe{T}.Filter(Func{T, bool})"/> method.</para>
-    /// Filter the specified result into a <c>None</c> result if it is a <c>Some</c> result and the
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Success</c> result and the
     /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <param name="predicate">
-    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
+    /// A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
     /// </param>
     /// <returns>The filtered result.</returns>

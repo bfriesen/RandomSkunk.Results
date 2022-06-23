@@ -59,23 +59,23 @@ public static class UnsafeResultExtensions
             : throw CannotAccessErrorUnlessFail();
 
     /// <summary>
-    /// Gets the value from the <c>Some</c> result.
+    /// Gets the value from the <c>Success</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="source">The source result.</param>
     /// <returns>
-    /// If <paramref name="source"/> is a <c>Some</c> result, its value; otherwise throws an
+    /// If <paramref name="source"/> is a <c>Success</c> result, its value; otherwise throws an
     /// <see cref="InvalidStateException"/>.
     /// </returns>
     /// <exception cref="InvalidStateException">
-    /// If the result is not a <c>Some</c> result.
+    /// If the result is not a <c>Success</c> result.
     /// </exception>
     public static T GetValue<T>(this Maybe<T> source) =>
         source._type switch
         {
-            MaybeType.Some => source._value!,
-            MaybeType.None => throw CannotAccessValueUnlessSome(),
-            _ => throw CannotAccessValueUnlessSome(source.Error()),
+            MaybeType.Success => source._value!,
+            MaybeType.None => throw CannotAccessValueUnlessSuccess(),
+            _ => throw CannotAccessValueUnlessSuccess(source.Error()),
         };
 
     /// <summary>

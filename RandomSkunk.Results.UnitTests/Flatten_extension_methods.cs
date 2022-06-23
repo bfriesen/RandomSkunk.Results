@@ -31,7 +31,7 @@ public class Flatten_extension_methods
     public class For_Maybe_of_T
     {
         [Fact]
-        public void When_IsSome_Returns_inner_result()
+        public void When_IsSuccess_Returns_inner_result()
         {
             var innerResult = 1.ToMaybe();
             var source = innerResult.ToMaybe();

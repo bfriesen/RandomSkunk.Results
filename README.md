@@ -1,6 +1,6 @@
 # RandomSkunk.Results
 
-Two things that make code harder to reason about are exceptions and `null`. The libraries in this repository aim to do something about exceptions by providing "result" structs to explicitly represent what happened during an operation that could potentially fail. To address `null`, these results don't accept `null` as any sort of input and don't provide `null` from any output<sup><abbr title="Technically, the GetValueOr methods will allow a null fallback value and return it if the result is not Succeses/Some. But the caller will have explicitly passed that null fallback value, so they shouldn't be surprised to get it back.">*</abbr></sup>.
+Two things that make code harder to reason about are exceptions and `null`. The libraries in this repository aim to do something about exceptions by providing "result" structs to explicitly represent what happened during an operation that could potentially fail. To address `null`, these results don't accept `null` as any sort of input and don't provide `null` from any output<sup><abbr title="Technically, the GetValueOr methods will allow a null fallback value and return it if the result is not Succeses. But the caller will have explicitly passed that null fallback value, so they shouldn't be surprised to get it back.">*</abbr></sup>.
 
 There are three types of results:
 - `Result`
@@ -16,7 +16,7 @@ There are three types of results:
 - `Maybe<T>`
     - For operations that can fail and have a return value which may or may not be provided.
     - Can be one of:
-        - `Some` with a non-null value,
+        - `Success` with a non-null value,
         - `Fail` with a non-null `Error` object, or
         - `None` indicating no value.
 

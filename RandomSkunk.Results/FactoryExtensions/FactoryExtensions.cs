@@ -28,7 +28,7 @@ public static class FactoryExtensions
     /// </summary>
     /// <typeparam name="T">The type of the result.</typeparam>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <returns>A <c>Some</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c> result.</returns>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c> result.</returns>
     public static Maybe<T> ToMaybe<T>(this T? value) =>
         Maybe<T>.FromValue(value);
 }

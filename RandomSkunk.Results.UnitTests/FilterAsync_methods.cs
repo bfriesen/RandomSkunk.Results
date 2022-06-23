@@ -3,7 +3,7 @@ namespace RandomSkunk.Results.UnitTests;
 public class FilterAsync_methods
 {
     [Fact]
-    public async Task When_IsSome_and_function_returns_true_Returns_source()
+    public async Task When_IsSuccess_and_function_returns_true_Returns_source()
     {
         var source = 1.ToMaybe();
 
@@ -13,7 +13,7 @@ public class FilterAsync_methods
     }
 
     [Fact]
-    public async Task When_IsSome_and_function_returns_false_Returns_None()
+    public async Task When_IsSuccess_and_function_returns_false_Returns_None()
     {
         var source = 1.ToMaybe();
 

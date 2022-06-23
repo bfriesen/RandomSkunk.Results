@@ -33,7 +33,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
 
     private Maybe(T value)
     {
-        _type = MaybeType.Some;
+        _type = MaybeType.Success;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
@@ -55,18 +55,18 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="MaybeType.Some"/>, <see cref="MaybeType.None"/>, or <see cref="MaybeType.Fail"/>.
+    /// Gets the type of the result: <see cref="MaybeType.Success"/>, <see cref="MaybeType.None"/>, or <see cref="MaybeType.Fail"/>.
     /// </summary>
     public MaybeType Type => _type;
 
     /// <summary>
-    /// Gets a value indicating whether this is a <c>Some</c> result.
+    /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns>
-    /// <see langword="true"/> if this is a <c>Some</c> result; otherwise,
+    /// <see langword="true"/> if this is a <c>Success</c> result; otherwise,
     /// <see langword="false"/>.
     /// </returns>
-    public bool IsSome => _type == MaybeType.Some;
+    public bool IsSuccess => _type == MaybeType.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>None</c> result.
@@ -117,16 +117,16 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
 
     /// <summary>
-    /// Creates a <c>Some</c> result with the specified value.
+    /// Creates a <c>Success</c> result with the specified value.
     /// </summary>
     /// <param name="value">
-    /// The value of the <c>Some</c> result. Must not be <see langword="null"/>.
+    /// The value of the <c>Success</c> result. Must not be <see langword="null"/>.
     /// </param>
-    /// <returns>A <c>Some</c> result.</returns>
+    /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="value"/> is <see langword="null"/>.
     /// </exception>
-    public static Maybe<T> Some(T value) => new(value);
+    public static Maybe<T> Success(T value) => new(value);
 
     /// <summary>
     /// Creates a <c>None</c> result.
@@ -197,19 +197,19 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
     /// <returns>
-    /// A <c>Some</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c>
+    /// A <c>Success</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c>
     /// result.
     /// </returns>
     public static Maybe<T> FromValue(
         T? value) =>
         value is not null
-            ? Some(value)
+            ? Success(value)
             : None();
 
     /// <inheritdoc/>
     public bool Equals(Maybe<T> other) =>
         _type == other._type
-        && ((IsSome && EqualityComparer<T?>.Default.Equals(_value, other._value))
+        && ((IsSuccess && EqualityComparer<T?>.Default.Equals(_value, other._value))
             || (IsFail && EqualityComparer<Error?>.Default.Equals(_error, other._error))
             || IsNone);
 
@@ -223,7 +223,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
         hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(typeof(T));
         hashCode = (hashCode * -1521134295) + _type.GetHashCode();
         hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
-        hashCode = (hashCode * -1521134295) + (IsSome ? _value!.GetHashCode() : 0);
+        hashCode = (hashCode * -1521134295) + (IsSuccess ? _value!.GetHashCode() : 0);
         hashCode *= 31;
         return hashCode;
     }
@@ -233,7 +233,7 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
 
     private string GetDebuggerDisplay() =>
         Match(
-            value => $"Some({(value is string ? $"\"{value}\"" : $"{value}")})",
+            value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
             () => "None",
             error => $"Fail({error.Type}: \"{error.Message}\")");
 }

@@ -6,11 +6,11 @@ namespace RandomSkunk.Results;
 public partial struct Maybe<T>
 {
     /// <summary>
-    /// Filter the current result into a <c>None</c> result if it is a <c>Some</c> result and the
+    /// Filter the current result into a <c>None</c> result if it is a <c>Success</c> result and the
     /// <paramref name="filter"/> function evaluates to <see langword="false"/>.
     /// </summary>
     /// <param name="filter">
-    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
+    /// A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
     /// </param>
     /// <returns>The filtered result.</returns>
@@ -21,7 +21,7 @@ public partial struct Maybe<T>
     {
         if (filter is null) throw new ArgumentNullException(nameof(filter));
 
-        if (IsSome)
+        if (IsSuccess)
         {
             return filter(_value!)
                 ? this
@@ -32,11 +32,11 @@ public partial struct Maybe<T>
     }
 
     /// <summary>
-    /// Filter the current result into a <c>None</c> result if it is a <c>Some</c> result and the
+    /// Filter the current result into a <c>None</c> result if it is a <c>Success</c> result and the
     /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>.
     /// </summary>
     /// <param name="filterAsync">
-    /// A function that filters a <c>Some</c> result into a <c>None</c> result by returning
+    /// A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
     /// </param>
     /// <returns>The filtered result.</returns>
@@ -47,7 +47,7 @@ public partial struct Maybe<T>
     {
         if (filterAsync is null) throw new ArgumentNullException(nameof(filterAsync));
 
-        if (IsSome)
+        if (IsSuccess)
         {
             return await filterAsync(_value!).ConfigureAwait(false)
                 ? this

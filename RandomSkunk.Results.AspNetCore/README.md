@@ -2,7 +2,7 @@
 
 ## IActionResult extension methods
 
-This library defines extension methods to convert each result type - `Result`, `Result<T>`, and `Maybe<T>` - directly into an equivalent `IActionResult`. For `Fail` results of any type, the error is converted to a `ProblemDetails` object (as described below) and used as the content of the returned action result; its HTTP status code comes from the error's error code. For `Success` results of type `Result<T>` and `Some` results of type `Maybe<T>`, the value is used as the content of the returned action result which has a `200 OK` status code. The HTTP status code to use for `Success` and `Some` results can be customized by providing the optional parameter in the `ToActionResult()` extension method.
+This library defines extension methods to convert each result type - `Result`, `Result<T>`, and `Maybe<T>` - directly into an equivalent `IActionResult`. For `Fail` results of any type, the error is converted to a `ProblemDetails` object (as described below) and used as the content of the returned action result; its HTTP status code comes from the error's error code. For `Success` results of type `Result<T>` and `Maybe<T>`, the value is used as the content of the returned action result which has a `200 OK` status code. The HTTP status code to use for `Success` results can be customized by providing the optional parameter in the `ToActionResult()` extension method.
 
 ```c#
 // Result
