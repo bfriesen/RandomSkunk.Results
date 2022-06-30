@@ -178,7 +178,7 @@ public static class HttpResponseExtensions
         CancellationToken cancellationToken = default) =>
         source.CrossMapAsync(async response =>
         {
-            var result = await response.GetResultAsync(options, cancellationToken);
+            var result = await response.GetResultAsync(options, cancellationToken).ConfigureAwait(false);
             response.Dispose();
             return result;
         });
