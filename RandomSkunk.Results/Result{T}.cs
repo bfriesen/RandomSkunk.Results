@@ -7,7 +7,6 @@ namespace RandomSkunk.Results;
 /// Defines a result with a required value.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
-[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
 {
     /// <summary>
@@ -212,6 +211,12 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     }
 
     /// <inheritdoc/>
+    public override string ToString() =>
+        Match(
+            value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
+            error => $"Fail({error.Type}: \"{error.Message}\")");
+
+    /// <inheritdoc/>
     T IResult<T>.GetSuccessValue() => this.GetValue();
 
     /// <inheritdoc/>
@@ -227,9 +232,4 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
-
-    private string GetDebuggerDisplay() =>
-        Match(
-            value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
-            error => $"Fail({error.Type}: \"{error.Message}\")");
 }

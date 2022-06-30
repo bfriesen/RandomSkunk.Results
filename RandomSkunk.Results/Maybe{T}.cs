@@ -7,7 +7,6 @@ namespace RandomSkunk.Results;
 /// Defines a result with an optional value.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
-[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 {
     /// <summary>
@@ -230,6 +229,13 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     }
 
     /// <inheritdoc/>
+    public override string ToString() =>
+        Match(
+            value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
+            () => "None",
+            error => $"Fail({error.Type}: \"{error.Message}\")");
+
+    /// <inheritdoc/>
     T IResult<T>.GetSuccessValue() => this.GetValue();
 
     /// <inheritdoc/>
@@ -246,10 +252,4 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
-
-    private string GetDebuggerDisplay() =>
-        Match(
-            value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
-            () => "None",
-            error => $"Fail({error.Type}: \"{error.Message}\")");
 }

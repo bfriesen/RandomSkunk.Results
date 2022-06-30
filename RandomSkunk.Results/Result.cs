@@ -1,4 +1,3 @@
-using RandomSkunk.Results.Unsafe;
 using static RandomSkunk.Results.Error;
 
 namespace RandomSkunk.Results;
@@ -6,7 +5,6 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result without a value.
 /// </summary>
-[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public partial struct Result : IResult, IEquatable<Result>
 {
     /// <summary>
@@ -181,6 +179,12 @@ public partial struct Result : IResult, IEquatable<Result>
     }
 
     /// <inheritdoc/>
+    public override string ToString() =>
+        Match(
+            () => "Success",
+            error => $"Fail({error.Type}: \"{error.Message}\")");
+
+    /// <inheritdoc/>
     object IResult.GetSuccessValue()
     {
         if (_type != ResultType.Success)
@@ -199,9 +203,4 @@ public partial struct Result : IResult, IEquatable<Result>
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
-
-    private string GetDebuggerDisplay() =>
-        Match(
-            () => "Success",
-            error => $"Fail({error.Type}: \"{error.Message}\")");
 }
