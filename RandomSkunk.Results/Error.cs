@@ -124,7 +124,29 @@ public record class Error
     }
 
     /// <inheritdoc/>
-    public sealed override string ToString() => ToString(null);
+    public sealed override string ToString() => ToString(this, null);
+
+    /// <summary>
+    /// Returns a string that represents the specified error.
+    /// </summary>
+    /// <param name="error">The error to get a string representation of.</param>
+    /// <param name="indention">The indention that begins each line.</param>
+    /// <returns>A string that represents the specified error.</returns>
+    protected static string ToString(Error error, string? indention)
+    {
+        var sb = new StringBuilder();
+        sb.Append(indention).Append(error.Type).Append(": ").Append(Indent(error.Message.TrimEnd(), indention));
+        if (error.Identifier is not null)
+            sb.AppendLine().Append(indention).Append("Identifier: ").Append(error.Identifier);
+        if (error.ErrorCode is not null)
+            sb.AppendLine().Append(indention).Append("Error Code: ").Append(error.ErrorCode);
+        error.PrintAdditionalProperties(sb, indention);
+        if (error.StackTrace is not null)
+            sb.AppendLine().Append(indention).Append("Stack Trace:").AppendLine().Append(Indent(error.StackTrace.TrimEnd(), indention, indention));
+        if (error.InnerError is not null)
+            sb.AppendLine().Append(indention).Append("Inner Error:").AppendLine().Append(ToString(error.InnerError, indention + "   "));
+        return sb.ToString();
+    }
 
     /// <summary>
     /// When overridden in an inherited class, appends additional properties of the derived error class to the
@@ -142,22 +164,6 @@ public record class Error
             return value;
 
         return firstLineIndentation + value.Replace("\n", "\n" + indention);
-    }
-
-    private string ToString(string? indention)
-    {
-        var sb = new StringBuilder();
-        sb.Append(indention).Append(Type).Append(": ").Append(Indent(Message, indention));
-        if (Identifier is not null)
-            sb.AppendLine().Append(indention).Append("Identifier: ").Append(Identifier);
-        if (ErrorCode is not null)
-            sb.AppendLine().Append(indention).Append("Error Code: ").Append(ErrorCode);
-        PrintAdditionalProperties(sb, indention);
-        if (StackTrace is not null)
-            sb.AppendLine().Append(indention).Append("Stack Trace:").AppendLine().Append(Indent(StackTrace, indention, indention));
-        if (InnerError is not null)
-            sb.AppendLine().Append(indention).Append("Inner Error:").AppendLine().Append(InnerError.ToString(indention + "   "));
-        return sb.ToString();
     }
 
     private string GetDebuggerDisplay() => $"{Type}: \"{Message}\"";
