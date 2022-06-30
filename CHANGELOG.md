@@ -9,14 +9,23 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
-- Add generated stack traces to additional fail factory methods.
-- Add `Result.AndAlso` and `Result.AndAlsoAsync` extension methods, allowing valueless results to be chained together.
+- RandomSkunk.Results:
+    - Add generated stack traces to additional fail factory methods.
+    - Add `Result.AndAlso` and `Result.AndAlsoAsync` extension methods, allowing valueless results to be chained together.
 
 ### Changed
 
-- Simplify error/fail factory methods that have an exception parameter by removing the `type` and `innerError` parameters and using the name of the exception's type as the error type and its inner exception to create the inner error instead.
-- Simplify `Result<T>.FromValue` method and `FactoryExtensions.ToResult<T>` extension methods by replacing `nullValueErrorMessage`, `nullValueErrorCode`, `nullValueErrorIdentifier`, and `nullValueErrorType` parameters with single `getNullValueError` function parameter.
-- Rename `Some` to `Success`.
+- RandomSkunk.Results:
+    - Simplify error/fail factory methods that have an exception parameter by removing the `type` and `innerError` parameters and using the name of the exception's type as the error type and its inner exception to create the inner error instead.
+    - Simplify `Result<T>.FromValue` method and `FactoryExtensions.ToResult<T>` extension methods by replacing `nullValueErrorMessage`, `nullValueErrorCode`, `nullValueErrorIdentifier`, and `nullValueErrorType` parameters with single `getNullValueError` function parameter.
+    - Rename `Some` to `Success`.
+    - Add `IResult` and `IResult<T>` interfaces, allowing different kinds of results to be used the same manner.
+    - Add `OnAllSuccess`, `OnAnyNonSuccess`, and `MatchAll` extension methods for value tuples of results.
+
+### Removed
+
+- RandomSkunk.Results:
+    - Remove the side-effect versions of Match methods. Use the `OnSuccess`, `OnFail`, or `OnNone` methods to apply side-effects based on a result instead.
 
 ## [1.0.0-alpha13] - 2022-06-03
 
