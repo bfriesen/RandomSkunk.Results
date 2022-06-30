@@ -29,6 +29,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha13] - 2022-06-03
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha13) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha13/lib/netstandard2.1/diff/1.0.0-alpha12/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha13) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha13/lib/netstandard2.1/diff/1.0.0-alpha12/))  
+[RandomSkunk.Results.Dapper API](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha13) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha13/lib/netstandard2.1/diff/1.0.0-alpha12/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha13) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha13/lib/netstandard2.1/diff/1.0.0-alpha12/))
+
 ### Added
 
 - RandomSkunk.Results:
@@ -48,6 +53,11 @@ and this project adheres to [Semantic Versioning].
     - The `FactoryExtensions.ToResult` extension method now gracefully handles null values by calling `Result<T>.FromValue`.
 
 ## [1.0.0-alpha12] - 2022-05-31
+
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha12) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha12/lib/netstandard2.1/diff/1.0.0-alpha11/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha12) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha12/lib/netstandard2.1/diff/1.0.0-alpha11/))  
+[RandomSkunk.Results.Dapper API](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha12)  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha12) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha12/lib/netstandard2.1/diff/1.0.0-alpha11/))
 
 ### Added
 
@@ -69,6 +79,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha11] - 2022-05-26
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha11) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha11/lib/netstandard2.1/diff/1.0.0-alpha10/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha11) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha11/lib/netstandard2.1/diff/1.0.0-alpha10/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha11) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha11/lib/netstandard2.1/diff/1.0.0-alpha10/))
+
 ### Fixed
 
 - RandomSkunk.Results:
@@ -89,6 +103,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha10] - 2022-05-24
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha10) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha10/lib/netstandard2.1/diff/1.0.0-alpha09/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha10) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha10/lib/netstandard2.1/diff/1.0.0-alpha09/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha10) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha10/lib/netstandard2.1/diff/1.0.0-alpha09/))
+
 ### Fixed
 
 - RandomSkunk.Results.Http:
@@ -108,6 +126,10 @@ and this project adheres to [Semantic Versioning].
     - `Error` is now a record class instead of a regular class.
 
 ## [1.0.0-alpha09] - 2022-05-19
+
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha09) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha09/lib/netstandard2.1/diff/1.0.0-alpha08/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha09) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha09/lib/netstandard2.1/diff/1.0.0-alpha08/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha09) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha09/lib/netstandard2.1/diff/1.0.0-alpha08/))
 
 ### Added
 
@@ -134,6 +156,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha08] - 2022-05-11
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha08) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha08/lib/netstandard2.1/diff/1.0.0-alpha07/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha08) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha08/lib/netstandard2.1/diff/1.0.0-alpha07/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha08) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha08/lib/netstandard2.1/diff/1.0.0-alpha07/))
+
 ### Added
 
 - RandomSkunk.Results:
@@ -155,6 +181,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha07] - 2022-05-09
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha07) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha07/lib/netstandard2.1/diff/1.0.0-alpha06/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha07) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha07/lib/netstandard2.1/diff/1.0.0-alpha06/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha07) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha07/lib/netstandard2.1/diff/1.0.0-alpha06/))
+
 ### Added
 
 - RandomSkunk.Results:
@@ -175,6 +205,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha06] - 2022-05-07
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha06) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha06/lib/netstandard2.1/diff/1.0.0-alpha05/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha06) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha06/lib/netstandard2.1/diff/1.0.0-alpha05/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha06) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha06/lib/netstandard2.1/diff/1.0.0-alpha05/))
+
 ### Changed
 
 - RandomSkunk.Results:
@@ -191,6 +225,10 @@ and this project adheres to [Semantic Versioning].
     - Add `InvalidStateException`, which is thrown from the unsafe extension methods when the result an invalid state for directly reading its value or error.
 
 ## [1.0.0-alpha05] - 2022-05-05
+
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha05) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha05/lib/netstandard2.1/diff/1.0.0-alpha04/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha05) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha05/lib/netstandard2.1/diff/1.0.0-alpha04/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha05) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha05/lib/netstandard2.1/diff/1.0.0-alpha04/))
 
 ### Added
 
@@ -210,6 +248,10 @@ and this project adheres to [Semantic Versioning].
     - Extension method maps the "errorType" extension property of the problem details object to the `Type` of the `Error` object.
 
 ## [1.0.0-alpha04] - 2022-05-02
+
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha04) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha04/lib/netstandard2.1/diff/1.0.0-alpha02/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha04)  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha04)
 
 ### Changed
 
@@ -236,6 +278,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha02] - 2022-04-28
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha02) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha02/lib/netstandard2.1/diff/1.0.0-alpha01/))
+
 ### Added
 
 - Add result extension methods: `Or`, `Else`, `Map`, `MapAsync`, `FlapMap`, `FlapMapAsync`, `Flatten`, `Filter`, and `FilterAsync`.
@@ -246,6 +290,8 @@ and this project adheres to [Semantic Versioning].
 - Add LINQ extension methods: `Select`, `SelectMany`, and `Where`.
 
 ## [1.0.0-alpha01] - 2022-04-28
+
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha01)
 
 ### Added
 
