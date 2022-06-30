@@ -61,7 +61,7 @@ public class Maybe_of_T_struct
     public class Match
     {
         [Fact]
-        public void Given_nonvoid_functions_When_IsSuccess_Returns_Success_function_evaluation()
+        public void When_IsSuccess_Returns_Success_function_evaluation()
         {
             var result = 1.ToMaybe();
 
@@ -74,7 +74,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_nonvoid_functions_When_IsFail_Returns_Fail_function_evaluation()
+        public void When_IsFail_Returns_Fail_function_evaluation()
         {
             var result = Maybe<int>.Fail();
 
@@ -87,7 +87,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public void Given_nonvoid_functions_When_IsNone_Returns_None_function_evaluation()
+        public void When_IsNone_Returns_None_function_evaluation()
         {
             var result = Maybe<int>.None();
 
@@ -97,72 +97,13 @@ public class Maybe_of_T_struct
                 error => -1);
 
             actual.Should().Be(0);
-        }
-
-        [Fact]
-        public void Given_void_functions_When_IsSuccess_Returns_Success_function_evaluation()
-        {
-            var result = 1.ToMaybe();
-
-            int? successValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            result.Match(
-                value => { successValue = value; },
-                () => { none = new object(); },
-                error => { failError = error; });
-
-            successValue.Should().Be(1);
-            failError.Should().BeNull();
-            none.Should().BeNull();
-        }
-
-        [Fact]
-        public void Given_void_functions_When_IsFail_Returns_Fail_function_evaluation()
-        {
-            var error = new Error();
-            var result = Maybe<int>.Fail(error);
-
-            int? successValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            result.Match(
-                value => { successValue = value; },
-                () => { none = new object(); },
-                error => { failError = error; });
-
-            successValue.Should().BeNull();
-            failError.Should().BeSameAs(error);
-            none.Should().BeNull();
-        }
-
-        [Fact]
-        public void Given_void_functions_When_IsNone_Returns_None_function_evaluation()
-        {
-            var error = new Error();
-            var result = Maybe<int>.None();
-
-            int? successValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            result.Match(
-                value => { successValue = value; },
-                () => { none = new object(); },
-                error => { failError = error; });
-
-            none.Should().NotBeNull();
-            successValue.Should().BeNull();
-            failError.Should().BeNull();
         }
     }
 
     public class MatchAsync
     {
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsSuccess_Returns_Success_function_evaluation()
+        public async Task When_IsSuccess_Returns_Success_function_evaluation()
         {
             var result = 1.ToMaybe();
 
@@ -175,7 +116,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsFail_Returns_Fail_function_evaluation()
+        public async Task When_IsFail_Returns_Fail_function_evaluation()
         {
             var result = Maybe<int>.Fail();
 
@@ -188,7 +129,7 @@ public class Maybe_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsNone_Returns_None_function_evaluation()
+        public async Task When_IsNone_Returns_None_function_evaluation()
         {
             var result = Maybe<int>.None();
 
@@ -198,100 +139,6 @@ public class Maybe_of_T_struct
                 error => Task.FromResult(-1));
 
             actual.Should().Be(0);
-        }
-
-        [Fact]
-        public async Task Given_void_functions_When_IsSuccess_Returns_Success_function_evaluation()
-        {
-            var result = 1.ToMaybe();
-
-            int? successValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            await result.MatchAsync(
-                value =>
-                {
-                    successValue = value;
-                    return Task.CompletedTask;
-                },
-                () =>
-                {
-                    none = new object();
-                    return Task.CompletedTask;
-                },
-                error =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                });
-
-            successValue.Should().Be(1);
-            failError.Should().BeNull();
-            none.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Given_void_functions_When_IsFail_Returns_Fail_function_evaluation()
-        {
-            var error = new Error();
-            var result = Maybe<int>.Fail(error);
-
-            int? successValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            await result.MatchAsync(
-                value =>
-                {
-                    successValue = value;
-                    return Task.CompletedTask;
-                },
-                () =>
-                {
-                    none = new object();
-                    return Task.CompletedTask;
-                },
-                error =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                });
-
-            successValue.Should().BeNull();
-            failError.Should().BeSameAs(error);
-            none.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Given_void_functions_When_IsNone_Returns_None_function_evaluation()
-        {
-            var result = Maybe<int>.None();
-
-            int? successValue = null;
-            Error? failError = null;
-            object? none = null;
-
-            await result.MatchAsync(
-                value =>
-                {
-                    successValue = value;
-                    return Task.CompletedTask;
-                },
-                () =>
-                {
-                    none = new object();
-                    return Task.CompletedTask;
-                },
-                error =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                });
-
-            none.Should().NotBeNull();
-            successValue.Should().BeNull();
-            failError.Should().BeNull();
         }
     }
 

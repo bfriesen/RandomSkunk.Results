@@ -47,7 +47,7 @@ public class Result_of_T_struct
     public class Match
     {
         [Fact]
-        public void Given_nonvoid_functions_When_IsSuccess_Returns_success_function_evaluation()
+        public void When_IsSuccess_Returns_success_function_evaluation()
         {
             var result = 1.ToResult();
 
@@ -59,7 +59,7 @@ public class Result_of_T_struct
         }
 
         [Fact]
-        public void Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
+        public void When_IsFail_Returns_fail_function_evaluation()
         {
             var result = Result<int>.Fail();
 
@@ -68,46 +68,13 @@ public class Result_of_T_struct
                 error => -1);
 
             actual.Should().Be(-1);
-        }
-
-        [Fact]
-        public void Given_void_functions_When_IsSuccess_Returns_success_function_evaluation()
-        {
-            var result = 1.ToResult();
-
-            int? successValue = null;
-            Error? failError = null;
-
-            result.Match(
-                value => successValue = value,
-                error => failError = error);
-
-            successValue.Should().Be(1);
-            failError.Should().BeNull();
-        }
-
-        [Fact]
-        public void Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
-        {
-            var error = new Error();
-            var result = Result<int>.Fail(error);
-
-            int? successValue = null;
-            Error? failError = null;
-
-            result.Match(
-                value => successValue = value,
-                error => failError = error);
-
-            successValue.Should().BeNull();
-            failError.Should().BeSameAs(error);
         }
     }
 
     public class MatchAsync
     {
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsSuccess_Returns_success_function_evaluation()
+        public async Task When_IsSuccess_Returns_success_function_evaluation()
         {
             var result = 1.ToResult();
 
@@ -119,7 +86,7 @@ public class Result_of_T_struct
         }
 
         [Fact]
-        public async Task Given_nonvoid_functions_When_IsFail_Returns_fail_function_evaluation()
+        public async Task When_IsFail_Returns_fail_function_evaluation()
         {
             var result = Result<int>.Fail();
 
@@ -128,55 +95,6 @@ public class Result_of_T_struct
                 error => Task.FromResult(-1));
 
             actual.Should().Be(-1);
-        }
-
-        [Fact]
-        public async Task Given_void_functions_When_IsSuccess_Returns_success_function_evaluation()
-        {
-            var result = 1.ToResult();
-
-            int? successValue = null;
-            Error? failError = null;
-
-            await result.MatchAsync(
-                value =>
-                {
-                    successValue = value;
-                    return Task.CompletedTask;
-                },
-                error =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                });
-
-            successValue.Should().Be(1);
-            failError.Should().BeNull();
-        }
-
-        [Fact]
-        public async Task Given_void_functions_When_IsFail_Returns_fail_function_evaluation()
-        {
-            var error = new Error();
-            var result = Result<int>.Fail(error);
-
-            int? successValue = null;
-            Error? failError = null;
-
-            await result.MatchAsync(
-                value =>
-                {
-                    successValue = value;
-                    return Task.CompletedTask;
-                },
-                error =>
-                {
-                    failError = error;
-                    return Task.CompletedTask;
-                });
-
-            successValue.Should().BeNull();
-            failError.Should().BeSameAs(error);
         }
     }
 
