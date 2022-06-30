@@ -1,3 +1,4 @@
+using RandomSkunk.Results.Unsafe;
 using static RandomSkunk.Results.Error;
 
 namespace RandomSkunk.Results;
@@ -7,7 +8,7 @@ namespace RandomSkunk.Results;
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public partial struct Maybe<T> : IEquatable<Maybe<T>>
+public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 {
     /// <summary>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Maybe{T}"/>.
@@ -227,6 +228,21 @@ public partial struct Maybe<T> : IEquatable<Maybe<T>>
         hashCode *= 31;
         return hashCode;
     }
+
+    /// <inheritdoc/>
+    T IResult<T>.GetSuccessValue() => this.GetValue();
+
+    /// <inheritdoc/>
+    object IResult.GetSuccessValue() => this.GetValue();
+
+    /// <inheritdoc/>
+    Error IResult.GetNonSuccessError(Func<Error>? getNoneError) =>
+        _type switch
+        {
+            MaybeType.Fail => this.GetError(),
+            MaybeType.None => getNoneError?.Invoke() ?? new Error("Not Found") { ErrorCode = 404, StackTrace = new StackTrace(true).ToString() },
+            _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
+        };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;

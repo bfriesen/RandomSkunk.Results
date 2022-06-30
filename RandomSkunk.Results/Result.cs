@@ -1,3 +1,4 @@
+using RandomSkunk.Results.Unsafe;
 using static RandomSkunk.Results.Error;
 
 namespace RandomSkunk.Results;
@@ -6,7 +7,7 @@ namespace RandomSkunk.Results;
 /// Defines a result without a value.
 /// </summary>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public partial struct Result : IEquatable<Result>
+public partial struct Result : IResult, IEquatable<Result>
 {
     /// <summary>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Result"/>.
@@ -178,6 +179,23 @@ public partial struct Result : IEquatable<Result>
         hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
         return hashCode;
     }
+
+    /// <inheritdoc/>
+    object IResult.GetSuccessValue()
+    {
+        if (_type != ResultType.Success)
+            throw Exceptions.CannotAccessValueUnlessSuccess();
+
+        return DBNull.Value;
+    }
+
+    /// <inheritdoc/>
+    Error IResult.GetNonSuccessError(Func<Error>? getNoneError) =>
+        _type switch
+        {
+            ResultType.Fail => Error(),
+            _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
+        };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
