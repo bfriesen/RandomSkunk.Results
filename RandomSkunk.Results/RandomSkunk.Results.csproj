@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net461;net6.0;netstandard2.0;netstandard2.1;</TargetFrameworks>
@@ -54,6 +54,12 @@
 		<None Include="README.md" Pack="true" PackagePath="\" />
 		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
 		<None Include="..\icon.png" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RandomSkunk.Results.SourceGenerators\RandomSkunk.Results.SourceGenerators.csproj"
+						  OutputItemType="Analyzer"
+						  ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 </Project>
