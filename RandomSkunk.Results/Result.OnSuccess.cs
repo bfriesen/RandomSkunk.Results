@@ -12,6 +12,8 @@ public partial struct Result
     /// <returns>The current result.</returns>
     public Result OnSuccess(Action onSuccess)
     {
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+
         if (_type == ResultType.Success)
             onSuccess();
 
@@ -25,6 +27,8 @@ public partial struct Result
     /// <returns>The current result.</returns>
     public async Task<Result> OnSuccessAsync(Func<Task> onSuccess)
     {
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+
         if (_type == ResultType.Success)
             await onSuccess().ConfigureAwait(false);
 

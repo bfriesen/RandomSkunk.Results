@@ -12,6 +12,8 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public Maybe<T> OnSuccess(Action<T> onSuccess)
     {
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+
         if (_type == MaybeType.Success)
             onSuccess(_value!);
 
@@ -25,6 +27,8 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public async Task<Maybe<T>> OnSuccessAsync(Func<T, Task> onSuccess)
     {
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+
         if (_type == MaybeType.Success)
             await onSuccess(_value!).ConfigureAwait(false);
 

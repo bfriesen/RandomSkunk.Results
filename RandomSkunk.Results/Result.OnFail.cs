@@ -12,6 +12,8 @@ public partial struct Result
     /// <returns>The current result.</returns>
     public Result OnFail(Action<Error> onFail)
     {
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+
         if (_type == ResultType.Fail)
             onFail(Error());
 
@@ -25,6 +27,8 @@ public partial struct Result
     /// <returns>The current result.</returns>
     public async Task<Result> OnFailAsync(Func<Error, Task> onFail)
     {
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+
         if (_type == ResultType.Fail)
             await onFail(Error()).ConfigureAwait(false);
 

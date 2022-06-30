@@ -12,6 +12,8 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public Maybe<T> OnFail(Action<Error> onFail)
     {
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+
         if (_type == MaybeType.Fail)
             onFail(Error());
 
@@ -25,6 +27,8 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public async Task<Maybe<T>> OnFailAsync(Func<Error, Task> onFail)
     {
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+
         if (_type == MaybeType.Fail)
             await onFail(Error()).ConfigureAwait(false);
 

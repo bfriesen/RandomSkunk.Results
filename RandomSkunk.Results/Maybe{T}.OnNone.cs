@@ -12,6 +12,8 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public Maybe<T> OnNone(Action onNone)
     {
+        if (onNone is null) throw new ArgumentNullException(nameof(onNone));
+
         if (_type == MaybeType.None)
             onNone();
 
@@ -25,6 +27,8 @@ public partial struct Maybe<T>
     /// <returns>The current result.</returns>
     public async Task<Maybe<T>> OnNoneAsync(Func<Task> onNone)
     {
+        if (onNone is null) throw new ArgumentNullException(nameof(onNone));
+
         if (_type == MaybeType.None)
             await onNone().ConfigureAwait(false);
 
