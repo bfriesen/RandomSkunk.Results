@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [1.0.0-alpha14] - 2022-06-30
 
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha14) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha14/lib/netstandard2.1/diff/1.0.0-alpha13/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha14) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha14/lib/netstandard2.1/diff/1.0.0-alpha13/))  
+[RandomSkunk.Results.Dapper API](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha14) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha14/lib/netstandard2.1/diff/1.0.0-alpha13/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha14) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha14/lib/netstandard2.1/diff/1.0.0-alpha13/))
+
 ### Added
 
 - RandomSkunk.Results:
