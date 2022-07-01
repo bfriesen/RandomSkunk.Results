@@ -3,17 +3,14 @@ using RandomSkunk.Results;
 
 namespace ExampleBlazorApp.Client.Results;
 
+// These extension methods demonstrate how an app can create common error-handling extension methods.
 public static class ResultExtensions
 {
-    public static async Task<Result<T>> OnFailShowAlert<T>(this Result<T> source, IJSRuntime js) =>
-        await source.OnFailAsync(async error => await js.InvokeVoidAsync("alert", error.Message));
+    public static Task<TResult> OnNonSuccessShowAlert<TResult>(this TResult source, IJSRuntime js)
+        where TResult : IResult =>
+        source.OnNonSuccessAsync(async error => await js.InvokeVoidAsync("alert", source.GetNonSuccessError().Message));
 
-    public static async Task<Result<T>> OnFailShowAlert<T>(this Task<Result<T>> source, IJSRuntime js) =>
-        await (await source).OnFailShowAlert(js);
-
-    public static async Task<Result> OnFailShowAlert(this Result source, IJSRuntime js) =>
-        await source.OnFailAsync(async error => await js.InvokeVoidAsync("alert", error.Message));
-
-    public static async Task<Result> OnFailShowAlert(this Task<Result> source, IJSRuntime js) =>
-        await (await source).OnFailShowAlert(js);
+    public static async Task<TResult> OnNonSuccessShowAlert<TResult>(this Task<TResult> source, IJSRuntime js)
+        where TResult : IResult =>
+        await (await source).OnNonSuccessShowAlert(js);
 }

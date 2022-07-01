@@ -8,6 +8,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// Register our typed http clients, which have methods that return result objects.
 builder.Services.AddHttpClient(Options.DefaultName, httpClient => httpClient.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddTypedClient<WeatherForecastClient>()
     .AddTypedClient<WeatherProfileClient>();

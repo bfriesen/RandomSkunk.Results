@@ -18,6 +18,12 @@ public class WeatherForecastController : ControllerBase
     [HttpGet("{city}")]
     public async Task<IActionResult> Get(string city)
     {
-        return await _weatherForecastSimulator.GetFiveDayForecast(city).ToActionResult();
+        // Get a simulated five day forcast as a Maybe<IReadOnlyList<WeatherForcast>>
+        // using our WeatherForecastSimulator.
+        return await _weatherForecastSimulator.GetFiveDayForecast(city)
+
+            // Using the RandomSkunk.Results.AspNetCore package, convert the
+            // Maybe<IReadOnlyList<WeatherForcast>> into an equivalent IActionResult.
+            .ToActionResult();
     }
 }

@@ -129,17 +129,6 @@ else
         return FetchWeatherProfiles();
     }
 
-    private Task FetchWeatherProfiles()
-    {
-        return HttpClient.GetWeatherProfiles()
-            .OnSuccess(profiles =>
-                {
-                    _profiles = profiles;
-                    _selectedProfile = _profiles.FirstOrDefault();
-                })
-            .OnFailShowAlert(JS);
-    }
-
     private void OnCityChanged(ChangeEventArgs args)
     {
         _selectedProfile = _profiles.FirstOrDefault(p => p.City == (string?)args.Value);
@@ -182,17 +171,46 @@ else
         _dialogTitle = null;
     }
 
+    private Task FetchWeatherProfiles()
+    {
+        // Make a call to the server to a list of weather profiles.
+        return HttpClient.GetWeatherProfiles()
+
+            // If it was successful, set the _profiles and _selectedProfile fields.
+            .OnSuccess(profiles =>
+                {
+                    _profiles = profiles;
+                    _selectedProfile = _profiles.FirstOrDefault();
+                })
+
+            // If the call to the server was not successful, show a JS alert with the error message.
+            .OnNonSuccessShowAlert(JS);
+    }
+
     private async Task SaveProfile()
     {
         foreach (var monthlyTemperature in _dialogProfile!.MonthlyTemperatures)
             monthlyTemperature.City = _dialogProfile.City;
 
         Result result;
+
         if (_isNew)
+        {
+            // Make a call to the server to add the new weather profile.
             result = await HttpClient.AddWeatherProfile(_dialogProfile);
+        }
         else
-            result = await HttpClient.EditWeatherProfile(_dialogProfile);
-        await result.OnSuccess(() => CloseDialog())
-            .OnFailShowAlert(JS);
+         {
+             // Make a call to the server to edit the existing weather profile.
+             result = await HttpClient.EditWeatherProfile(_dialogProfile);
+         }
+
+        await result
+
+            // If the call to the server was successful, close the dialog.
+            .OnSuccess(() => CloseDialog())
+
+            // If the call to the server was not successful, show a JS alert with the error message.
+            .OnNonSuccessShowAlert(JS);
     }
 }

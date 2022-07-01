@@ -2,6 +2,7 @@ using ExampleBlazorApp.Shared;
 using Microsoft.Data.Sqlite;
 using RandomSkunk.Results;
 using RandomSkunk.Results.Dapper;
+using System.Data.Common;
 
 namespace ExampleBlazorApp.Server.Repositories;
 
@@ -14,7 +15,7 @@ public class WeatherRepository : IWeatherRepository
         _connectionString = configuration.GetConnectionString("WeatherData");
     }
 
-    public async Task<Maybe<MonthlyTemperature>> GetAverageTemperature(string city, int month)
+    public async Task<Maybe<MonthlyTemperature>> GetMonthlyTemperature(string city, int month)
     {
         const string sql = @"
 SELECT
@@ -28,6 +29,9 @@ WHERE City = @city AND Month = @month;";
 
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
+
+        // Using the RandomSkunk.Results.Dapper package, query the database for the monthly temperature information
+        // for the given city and month. Any errors from making the query are automatically captured in the result.
         return await connection.TryQuerySingleOrNoneAsync<MonthlyTemperature>(sql, new { city, month });
     }
 
@@ -45,9 +49,13 @@ FROM WeatherData";
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
 
-        return await connection.TryQueryAsync<MonthlyTemperature>(sql)
-            .Map(value => (IReadOnlyList<WeatherProfile>)value.GroupBy(t => t.City).Select(g =>
-                new WeatherProfile { City = g.Key, MonthlyTemperatures = g.OrderBy(x => x.Month).ToList() }).ToList());
+        // Using the RandomSkunk.Results.Dapper package, query the database for the monthly temperature
+        // information. Any errors from making the query are automatically captured in the result.
+        var monthlyTemperaturesResult = await connection.TryQueryAsync<MonthlyTemperature>(sql);
+
+        // Convert the Result<IEnumerable<MonthlyTemperator>> into a Result<IReadOnlyList<WeatherProfile>>
+        // using the Map method. This works very similar to the Select extension method from LINQ.
+        return monthlyTemperaturesResult.Map(CreateWeatherProfiles);
     }
 
     public Task<Result> AddWeatherProfile(WeatherProfile weatherProfile)
@@ -82,14 +90,26 @@ WHERE City = @City AND Month = @Month;";
         return UpsertWeatherProfile(weatherProfile, sql);
     }
 
+    private static IReadOnlyList<WeatherProfile> CreateWeatherProfiles(IEnumerable<MonthlyTemperature> monthlyTemperatures)
+    {
+        return monthlyTemperatures.GroupBy(monthlyTemperature => monthlyTemperature.City)
+            .Select(monthlyTemperaturesByCity =>
+                new WeatherProfile
+                {
+                    City = monthlyTemperaturesByCity.Key,
+                    MonthlyTemperatures = monthlyTemperaturesByCity.OrderBy(x => x.Month).ToList(),
+                })
+            .ToList();
+    }
+
     private async Task<Result> UpsertWeatherProfile(WeatherProfile weatherProfile, string sql)
     {
-        using var connection = new SqliteConnection(_connectionString);
-        await connection.OpenAsync();
-        using var transaction = await connection.BeginTransactionAsync();
+        using DbConnection connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync(default);
 
-        var result = Result.Success();
-        foreach (var monthlyTemperature in weatherProfile.MonthlyTemperatures)
+        using DbTransaction transaction = await connection.BeginTransactionAsync();
+
+        foreach (MonthlyTemperature? monthlyTemperature in weatherProfile.MonthlyTemperatures)
         {
             var param = new
             {
@@ -100,21 +120,25 @@ WHERE City = @City AND Month = @Month;";
                 monthlyTemperature.StandardDeviation,
             };
 
-            result = await result.AndAlsoAsync(
-                () => connection.TryExecuteAsync(sql, param, transaction)
-                    .CrossMap(affectedRowCount =>
-                        affectedRowCount == 1
-                            ? Result.Success()
-                            : Result.Fail($"Expected 1 row to be affected, but was {affectedRowCount}.")));
+            // Using the RandomSkunk.Results.Dapper package, execute the query.
+            // Any errors from making the query are automatically captured in the result.
+            Result<int> rowsAffectedResult = await connection.TryExecuteAsync(sql, param, transaction);
+
+            // The caller doesn't care about the number of affected rows, so just make sure
+            // exactly one row was affected.
+            Result result = rowsAffectedResult.EnsureOneRowAffected();
 
             if (result.IsFail)
             {
+                // If the query failed or exactly one row was not affected, roll back the
+                // transaction and return the Fail result.
                 await transaction.RollbackAsync();
                 return result;
             }
         }
 
+        // If all queries were successful, commit the transaction and return a Success result.
         await transaction.CommitAsync();
-        return result;
+        return Result.Success();
     }
 }

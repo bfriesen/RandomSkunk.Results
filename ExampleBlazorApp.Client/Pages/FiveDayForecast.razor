@@ -62,8 +62,13 @@ else
 
     private async Task FetchForecast()
     {
+        // Make a call to the server using our WeatherForcastClient.
         await HttpClient.GetFiveDayForecast(_city)
+
+            // If it was successful, set the _forcasts field.
             .OnSuccess(forcasts => _forecasts = forcasts)
-            .OnFailShowAlert(JS);
+
+            // If it was not successful, show a JS alert with the error message.
+            .OnNonSuccessShowAlert(JS);
     }
 }

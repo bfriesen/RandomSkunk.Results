@@ -5,5 +5,5 @@ namespace ExampleBlazorApp.Server.Services;
 
 public interface IWeatherForecastSimulator
 {
-    Task<Result<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city);
+    Task<Maybe<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city);
 }

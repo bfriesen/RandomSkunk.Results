@@ -13,9 +13,12 @@ public class WeatherForecastClient
         _httpClient = httpClient;
     }
 
-    public Task<Result<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city)
+    public Task<Maybe<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city)
     {
-        return _httpClient.TryGetFromJsonAsync<IReadOnlyList<WeatherForecast>>($"WeatherForecast/{city}")
-            .AsResult();
+        var requestUri = $"WeatherForecast/{city}";
+
+        // Using the RandomSkunk.Results.Http package, make a request to the server to get the five-day forecast.
+        // Any errors from making the request are automatically captured in the result.
+        return _httpClient.TryGetFromJsonAsync<IReadOnlyList<WeatherForecast>>(requestUri);
     }
 }

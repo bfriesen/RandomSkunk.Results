@@ -13,21 +13,30 @@ public class WeatherProfileClient
         _httpClient = httpClient;
     }
 
-    public Task<Result<List<WeatherProfile>>> GetWeatherProfiles()
+    public Task<Maybe<List<WeatherProfile>>> GetWeatherProfiles()
     {
-        return _httpClient.TryGetFromJsonAsync<List<WeatherProfile>>("WeatherProfiles")
-            .AsResult();
+        // Using the RandomSkunk.Results.Http package, make a request to the server to get the weather profiles.
+        // Any errors from making the request are automatically captured in the result.
+        return _httpClient.TryGetFromJsonAsync<List<WeatherProfile>>("WeatherProfiles");
     }
 
-    public Task<Result> AddWeatherProfile(WeatherProfile weatherProfile)
+    public async Task<Result> AddWeatherProfile(WeatherProfile weatherProfile)
     {
-        return _httpClient.TryPostAsJsonAsync("WeatherProfiles", weatherProfile)
-            .EnsureSuccessStatusCodeAsync();
+        // Using the RandomSkunk.Results.Http package, make a request to the server to add the weather profile.
+        // Any errors from making the request are automatically captured in the result.
+        var responseResult = await _httpClient.TryPostAsJsonAsync("WeatherProfiles", weatherProfile);
+
+        // Since the caller doesn't care about the actual HttpResponse, just make sure it has a success status code.
+        return await responseResult.EnsureSuccessStatusCodeAsync();
     }
 
-    public Task<Result> EditWeatherProfile(WeatherProfile weatherProfile)
+    public async Task<Result> EditWeatherProfile(WeatherProfile weatherProfile)
     {
-        return _httpClient.TryPutAsJsonAsync("WeatherProfiles", weatherProfile)
-            .EnsureSuccessStatusCodeAsync();
+        // Using the RandomSkunk.Results.Http package, make a request to the server to edit the weather profile.
+        // Any errors from making the request are automatically captured in the result.
+        var responseResult = await _httpClient.TryPutAsJsonAsync("WeatherProfiles", weatherProfile);
+
+        // Since the caller doesn't care about the actual HttpResponse, just make sure it has a success status code.
+        return await responseResult.EnsureSuccessStatusCodeAsync();
     }
 }

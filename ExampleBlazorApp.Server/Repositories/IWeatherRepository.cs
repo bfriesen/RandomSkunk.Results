@@ -5,7 +5,7 @@ namespace ExampleBlazorApp.Server.Repositories
 {
     public interface IWeatherRepository
     {
-        Task<Maybe<MonthlyTemperature>> GetAverageTemperature(string city, int month);
+        Task<Maybe<MonthlyTemperature>> GetMonthlyTemperature(string city, int month);
 
         Task<Result<IReadOnlyList<WeatherProfile>>> GetWeatherProfiles();
 

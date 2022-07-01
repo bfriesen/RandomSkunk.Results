@@ -1,7 +1,6 @@
 using ExampleBlazorApp.Server.Repositories;
 using ExampleBlazorApp.Shared;
 using RandomSkunk.Results;
-using RandomSkunk.Results.FactoryExtensions;
 
 namespace ExampleBlazorApp.Server.Services;
 
@@ -21,27 +20,29 @@ public class WeatherForecastSimulator : IWeatherForecastSimulator
         _random = random;
     }
 
-    public async Task<Result<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city)
+    public async Task<Maybe<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city)
     {
-        return await _weatherRepository.GetAverageTemperature(city, DateTime.Now.Month)
-            .CrossMap(monthlyTemperature =>
-            {
-                var fiveDay = new WeatherForecast[5];
-                var date = DateTime.Today;
+        // Get the monthly temperature of the city and the current month using our WeatherRepository.
+        Maybe<MonthlyTemperature> monthlyTemperatureResult = await _weatherRepository.GetMonthlyTemperature(city, DateTime.Now.Month);
 
-                for (int i = 0; i < 5; i++, date = date.AddDays(1))
-                {
-                    var low = NextGaussian(monthlyTemperature.AverageLow, monthlyTemperature.StandardDeviation);
-                    var high = NextGaussian(monthlyTemperature.AverageHigh, monthlyTemperature.StandardDeviation);
-                    fiveDay[i] = new WeatherForecast { LowF = low, HighF = high, Date = date };
-                }
+        // Convert the Maybe<MonthlyTemperature> into a Maybe<IReadOnlyList<WeatherForecast>>
+        // using the Map method. This works very similar to the Select extension method from LINQ.
+        return monthlyTemperatureResult.Map(GenerateFiveDayForecast);
+    }
 
-                return ((IReadOnlyList<WeatherForecast>)fiveDay).ToResult();
-            });
+    private IReadOnlyList<WeatherForecast> GenerateFiveDayForecast(MonthlyTemperature monthlyTemperature)
+    {
+        var fiveDay = new WeatherForecast[5];
+        var date = DateTime.Today;
 
-        // TODO: Add rest of app:
-        // - Add UI to add additional cities.
-        // - Add comments to "interesting" code - e.g. wherever results are created/consumed.
+        for (int i = 0; i < 5; i++, date = date.AddDays(1))
+        {
+            var low = NextGaussian(monthlyTemperature.AverageLow, monthlyTemperature.StandardDeviation);
+            var high = NextGaussian(monthlyTemperature.AverageHigh, monthlyTemperature.StandardDeviation);
+            fiveDay[i] = new WeatherForecast { LowF = low, HighF = high, Date = date };
+        }
+
+        return fiveDay;
     }
 
     private double NextGaussian(double mean, double standardDeviation)
