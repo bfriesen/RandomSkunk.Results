@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add generated stack traces to additional fail factory methods.
     - Add `Result.AndAlso` and `Result.AndAlsoAsync` extension methods, allowing valueless results to be chained together.
+    - Add `IResult` and `IResult<T>` interfaces, allowing different kinds of results to be used the same manner.
+    - Add `OnAllSuccess`, `OnAnyNonSuccess`, and `MatchAll` extension methods for value tuples of results.
+    - Add `OnNonSuccess` extension methods.
 
 ### Changed
 
@@ -19,8 +22,6 @@ and this project adheres to [Semantic Versioning].
     - Simplify error/fail factory methods that have an exception parameter by removing the `type` and `innerError` parameters and using the name of the exception's type as the error type and its inner exception to create the inner error instead.
     - Simplify `Result<T>.FromValue` method and `FactoryExtensions.ToResult<T>` extension methods by replacing `nullValueErrorMessage`, `nullValueErrorCode`, `nullValueErrorIdentifier`, and `nullValueErrorType` parameters with single `getNullValueError` function parameter.
     - Rename `Some` to `Success`.
-    - Add `IResult` and `IResult<T>` interfaces, allowing different kinds of results to be used the same manner.
-    - Add `OnAllSuccess`, `OnAnyNonSuccess`, and `MatchAll` extension methods for value tuples of results.
 
 ### Removed
 

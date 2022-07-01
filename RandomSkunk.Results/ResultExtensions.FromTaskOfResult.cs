@@ -1064,6 +1064,44 @@ public static partial class ResultExtensions
         await (await source.ConfigureAwait(false)).OnSuccessAsync(onSuccess).ConfigureAwait(false);
 
     /// <summary>
+    /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
+    /// <param name="getNoneError">
+    /// An optional function that creates the <see cref="Error"/> that is returned if this is a <c>None</c> result; otherwise
+    /// this parameter is ignored. If <see langword="null"/> (and applicable), a function that returns an error with message
+    /// "Not Found" and error code 404 is used instead.
+    /// </param>
+    /// <returns>The current result.</returns>
+    public static async Task<TResult> OnNonSuccess<TResult>(
+        this Task<TResult> source,
+        Action<Error> onNonSuccess,
+        Func<Error>? getNoneError = null)
+        where TResult : IResult =>
+        (await source.ConfigureAwait(false)).OnNonSuccess(onNonSuccess, getNoneError);
+
+    /// <summary>
+    /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="source">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
+    /// <param name="getNoneError">
+    /// An optional function that creates the <see cref="Error"/> that is returned if this is a <c>None</c> result; otherwise
+    /// this parameter is ignored. If <see langword="null"/> (and applicable), a function that returns an error with message
+    /// "Not Found" and error code 404 is used instead.
+    /// </param>
+    /// <returns>The current result.</returns>
+    public static async Task<TResult> OnNonSuccessAsync<TResult>(
+        this Task<TResult> source,
+        Func<Error, Task> onNonSuccess,
+        Func<Error>? getNoneError = null)
+        where TResult : IResult =>
+        await (await source.ConfigureAwait(false)).OnNonSuccessAsync(onNonSuccess, getNoneError);
+
+    /// <summary>
     /// Returns <paramref name="source"/> if it is a <c>Success</c> result; otherwise, returns a
     /// new <c>Success</c> result with the specified fallback value.
     /// </summary>
