@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning].
     - Add `IResult` and `IResult<T>` interfaces, allowing different kinds of results to be used the same manner.
     - Add `OnAllSuccess`, `OnAnyNonSuccess`, and `MatchAll` extension methods for value tuples of results.
     - Add `OnNonSuccess` extension methods.
+- RandomSkunk.Results.Dapper:
+    - Add `EnsureOneRowAffected` and `EnsureNRowsAffected` extension methods.
 
 ### Changed
 
