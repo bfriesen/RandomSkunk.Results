@@ -14,6 +14,7 @@ public record class Error
 
     private readonly string _message;
     private readonly string _type;
+    private readonly string? _stackTrace;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
@@ -24,10 +25,16 @@ public record class Error
     /// <param name="type">
     /// The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
     /// </param>
-    public Error(string? message = null, string? type = null)
+    /// <param name="setStackTrace">
+    /// Whether to set the stack trace of the error to the current location. Default is <see langword="false"/>.
+    /// </param>
+    public Error(string? message = null, string? type = null, bool setStackTrace = false)
     {
         _message = message ?? _defaultMessage;
         _type = type ?? GetType().Name;
+
+        if (setStackTrace)
+            _stackTrace = new StackTrace(true).ToString();
     }
 
     /// <summary>
@@ -54,7 +61,11 @@ public record class Error
     /// <summary>
     /// Gets the optional stack trace.
     /// </summary>
-    public string? StackTrace { get; init; }
+    public string? StackTrace
+    {
+        get => _stackTrace;
+        init => _stackTrace = value ?? _stackTrace;
+    }
 
     /// <summary>
     /// Gets the optional error code.

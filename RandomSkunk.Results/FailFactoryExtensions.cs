@@ -35,12 +35,11 @@ public static partial class FailFactoryExtensions
     {
         if (failWith is null) throw new ArgumentNullException(nameof(failWith));
 
-        return failWith.Error(new Error(errorMessage, errorType)
+        return failWith.Error(new Error(errorMessage, errorType, setStackTrace: true)
         {
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
-            StackTrace = new StackTrace(true).ToString(),
         });
     }
 }

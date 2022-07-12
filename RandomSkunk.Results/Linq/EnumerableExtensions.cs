@@ -443,12 +443,12 @@ public static class EnumerableExtensions
     }
 
     private static Result<T> ToResultOrFailIfNull<T>(this T value) =>
-        value.ToResult(() => new Error("The matching element was null.") { ErrorCode = 410, StackTrace = new StackTrace(true).ToString() });
+        value.ToResult(() => new Error("The matching element was null.", setStackTrace: true) { ErrorCode = 410 });
 
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value) =>
         value is not null
             ? value.ToMaybe()
-            : Maybe<T>.Fail("The matching element was null.", 410, stackTrace: new StackTrace(true).ToString());
+            : Maybe<T>.Fail("The matching element was null.", 410);
 
     private static TResult IndexOutOfRange<TResult>(this FailFactory<TResult> failWith) =>
         failWith.Error("Index was out of range. Must be non-negative and less than the size of the collection.", 404);

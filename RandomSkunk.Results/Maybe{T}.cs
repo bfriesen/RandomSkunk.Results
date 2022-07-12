@@ -50,7 +50,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         {
             _type = MaybeType.Fail;
             _value = default;
-            _error = error ?? new Error() { StackTrace = new StackTrace(1, true).ToString() };
+            _error = error ?? new Error(setStackTrace: true);
         }
     }
 
@@ -184,9 +184,9 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         string? errorType = null,
         Error? innerError = null,
         string? stackTrace = null) =>
-        Fail(new Error(errorMessage, errorType)
+        Fail(new Error(errorMessage, errorType, setStackTrace: stackTrace is null)
         {
-            StackTrace = stackTrace ?? new StackTrace(true).ToString(),
+            StackTrace = stackTrace,
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,
@@ -246,7 +246,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _type switch
         {
             MaybeType.Fail => this.GetError(),
-            MaybeType.None => getNoneError?.Invoke() ?? new Error("Not Found") { ErrorCode = 404, StackTrace = new StackTrace(true).ToString() },
+            MaybeType.None => getNoneError?.Invoke() ?? new Error("Not Found", setStackTrace: true) { ErrorCode = 404 },
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 

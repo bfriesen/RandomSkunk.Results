@@ -26,5 +26,5 @@ public static partial class ResultExtensions
             ? _defaultOnNoneCallback()
             : onNone();
 
-    private static Error DefaultOnNone() => new("Not Found", "NotFoundError") { ErrorCode = 404, StackTrace = new StackTrace(true).ToString() };
+    private static Error DefaultOnNone() => new("Not Found", "NotFoundError", setStackTrace: true) { ErrorCode = 404 };
 }
