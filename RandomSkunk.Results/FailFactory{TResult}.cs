@@ -1,12 +1,15 @@
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// Defines methods for creating <c>Fail</c> results of type <see cref="Result{T}"/>.
+/// A factory object that create <c>Fail</c> results.
 /// </summary>
-/// <typeparam name="T">The type of the result value.</typeparam>
-public sealed class ResultFailFactory<T>
+/// <typeparam name="TResult">
+/// The type of <c>Fail</c> result that the factory creates: either <see cref="Result"/>, <see cref="Result{T}"/>, or
+/// <see cref="Maybe{T}"/>.
+/// </typeparam>
+public abstract class FailFactory<TResult>
 {
-    internal ResultFailFactory()
+    internal FailFactory()
     {
     }
 
@@ -17,5 +20,5 @@ public sealed class ResultFailFactory<T>
     /// An error that describes the failure. If <see langword="null"/>, a default error is used.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public Result<T> Error(Error error) => Result<T>.Fail(error);
+    public abstract TResult Error(Error error);
 }

@@ -11,19 +11,19 @@ public partial struct Result : IResult, IEquatable<Result>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Result"/>.
     /// </summary>
     /// <remarks>
-    /// Applications are encouraged to define custom extension methods targeting <see cref="ResultFailFactory"/> that return
-    /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
+    /// Applications are encouraged to define custom extension methods targeting <see cref="FailFactory{TResult}"/> that
+    /// return <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
     /// creating a <c>Fail</c> result when a user is not authorized:
     /// <code><![CDATA[
-    /// public static Result Unauthorized(this ResultFactory source) =>
-    ///     source.Error("User is not authorized.", 401);
+    /// public static TResult Unauthorized<TResult>(this FailFactory<TResult> failWith) =>
+    ///     failWith.Error("User is not authorized.", 401);
     /// ]]></code>
     /// To use:
     /// <code><![CDATA[
     /// return Result.FailWith.Unauthorized();
     /// ]]></code>
     /// </remarks>
-    public static readonly ResultFailFactory FailWith = new();
+    public static readonly FailFactory<Result> FailWith = new FailFactory();
 
     internal readonly ResultType _type;
     private readonly Error? _error;
@@ -203,4 +203,9 @@ public partial struct Result : IResult, IEquatable<Result>
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal Error Error() => _error ?? DefaultError;
+
+    private class FailFactory : FailFactory<Result>
+    {
+        public override Result Error(Error error) => Result.Fail(error);
+    }
 }

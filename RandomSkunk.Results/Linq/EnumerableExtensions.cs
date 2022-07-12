@@ -450,24 +450,18 @@ public static class EnumerableExtensions
             ? value.ToMaybe()
             : Maybe<T>.Fail("The matching element was null.", 410, stackTrace: new StackTrace(true).ToString());
 
-    private static Result<T> IndexOutOfRange<T>(this ResultFailFactory<T> source) =>
-        source.Error("Index was out of range. Must be non-negative and less than the size of the collection.", 404);
+    private static TResult IndexOutOfRange<TResult>(this FailFactory<TResult> failWith) =>
+        failWith.Error("Index was out of range. Must be non-negative and less than the size of the collection.", 404);
 
-    private static Result<T> SequenceContainsNoElements<T>(this ResultFailFactory<T> source) =>
-        source.Error("Sequence contains no elements.", 404);
+    private static TResult SequenceContainsNoElements<TResult>(this FailFactory<TResult> failWith) =>
+        failWith.Error("Sequence contains no elements.", 404);
 
-    private static Result<T> SequenceContainsNoMatchingElements<T>(this ResultFailFactory<T> source) =>
-        source.Error("Sequence contains no matching elements.", 404);
+    private static TResult SequenceContainsNoMatchingElements<TResult>(this FailFactory<TResult> failWith) =>
+        failWith.Error("Sequence contains no matching elements.", 404);
 
-    private static Result<T> SequenceContainsMoreThanOneElement<T>(this ResultFailFactory<T> source) =>
-        source.Error("Sequence contains more than one element.", 400);
+    private static TResult SequenceContainsMoreThanOneElement<TResult>(this FailFactory<TResult> failWith) =>
+        failWith.Error("Sequence contains more than one element.", 400);
 
-    private static Maybe<T> SequenceContainsMoreThanOneElement<T>(this MaybeFailFactory<T> source) =>
-        source.Error("Sequence contains more than one element.", 400);
-
-    private static Result<T> SequenceContainsMoreThanOneMatchingElement<T>(this ResultFailFactory<T> source) =>
-        source.Error("Sequence contains more than one matching element.", 400);
-
-    private static Maybe<T> SequenceContainsMoreThanOneMatchingElement<T>(this MaybeFailFactory<T> source) =>
-        source.Error("Sequence contains more than one matching element.", 400);
+    private static TResult SequenceContainsMoreThanOneMatchingElement<TResult>(this FailFactory<TResult> failWith) =>
+        failWith.Error("Sequence contains more than one matching element.", 400);
 }
