@@ -9,8 +9,8 @@ public static partial class ResultExtensions
     /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
     /// </summary>
     /// <typeparam name="TResult">The type of result.</typeparam>
-    /// <param name="source">The source result.</param>
-    /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
     /// <param name="getNoneError">
     /// An optional function that creates the <see cref="Error"/> that is returned if this is a <c>None</c> result; otherwise
     /// this parameter is ignored. If <see langword="null"/> (and applicable), a function that returns an error with message
@@ -18,28 +18,28 @@ public static partial class ResultExtensions
     /// </param>
     /// <returns>The current result.</returns>
     public static TResult OnNonSuccess<TResult>(
-        this TResult source,
+        this TResult sourceResult,
         Action<Error> onNonSuccess,
         Func<Error>? getNoneError = null)
         where TResult : IResult
     {
         if (onNonSuccess is null) throw new ArgumentNullException(nameof(onNonSuccess));
 
-        if (!source.IsSuccess)
+        if (!sourceResult.IsSuccess)
         {
-            var error = source.GetNonSuccessError(getNoneError);
+            var error = sourceResult.GetNonSuccessError(getNoneError);
             onNonSuccess(error);
         }
 
-        return source;
+        return sourceResult;
     }
 
     /// <summary>
     /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
     /// </summary>
     /// <typeparam name="TResult">The type of result.</typeparam>
-    /// <param name="source">The source result.</param>
-    /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
     /// <param name="getNoneError">
     /// An optional function that creates the <see cref="Error"/> that is returned if this is a <c>None</c> result; otherwise
     /// this parameter is ignored. If <see langword="null"/> (and applicable), a function that returns an error with message
@@ -47,19 +47,19 @@ public static partial class ResultExtensions
     /// </param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccessAsync<TResult>(
-        this TResult source,
+        this TResult sourceResult,
         Func<Error, Task> onNonSuccess,
         Func<Error>? getNoneError = null)
         where TResult : IResult
     {
         if (onNonSuccess is null) throw new ArgumentNullException(nameof(onNonSuccess));
 
-        if (!source.IsSuccess)
+        if (!sourceResult.IsSuccess)
         {
-            var error = source.GetNonSuccessError(getNoneError);
+            var error = sourceResult.GetNonSuccessError(getNoneError);
             await onNonSuccess(error).ConfigureAwait(false);
         }
 
-        return source;
+        return sourceResult;
     }
 }

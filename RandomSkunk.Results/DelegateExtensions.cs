@@ -14,7 +14,7 @@ public static class DelegateExtensions
     /// exception is used to construct the error of the returned <c>Fail</c> result.
     /// </para>
     /// </summary>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error.
     /// If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -23,17 +23,17 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result TryInvokeAsResult(
-        this Action source,
+        this Action sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null,
         Func<Exception, bool>? exceptionPredicate = null)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
 
         try
         {
-            source();
+            sourceDelegate();
             return Result.Success();
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
@@ -51,7 +51,7 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -60,19 +60,19 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
     public static Result<T> TryInvokeAsResult<T>(
-        this Func<T> source,
+        this Func<T> sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null,
         Func<Exception, bool>? exceptionPredicate = null)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
 
         T value;
         try
         {
-            value = source();
+            value = sourceDelegate();
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -80,7 +80,7 @@ public static class DelegateExtensions
         }
 
         if (value is null)
-            throw FunctionMustNotReturnNull(nameof(source));
+            throw FunctionMustNotReturnNull(nameof(sourceDelegate));
 
         return value.ToResult();
     }
@@ -95,7 +95,7 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -104,16 +104,16 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> TryInvokeAsMaybe<T>(
-        this Func<T> source,
+        this Func<T> sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null,
         Func<Exception, bool>? exceptionPredicate = null)
     {
         T value;
         try
         {
-            value = source();
+            value = sourceDelegate();
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -134,7 +134,7 @@ public static class DelegateExtensions
     /// exception is used to construct the error of the returned <c>Fail</c> result.
     /// </para>
     /// </summary>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -143,15 +143,15 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> TryInvokeAsResultAsync(
-        this AsyncAction source,
+        this AsyncAction sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null,
         Func<Exception, bool>? exceptionPredicate = null)
     {
         try
         {
-            await source().ConfigureAwait(false);
+            await sourceDelegate().ConfigureAwait(false);
             return Result.Success();
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
@@ -169,7 +169,7 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -178,17 +178,17 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
     public static async Task<Result<T>> TryInvokeAsResultAsync<T>(
-        this AsyncFunc<T> source,
+        this AsyncFunc<T> sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null,
         Func<Exception, bool>? exceptionPredicate = null)
     {
         T value;
         try
         {
-            value = await source().ConfigureAwait(false);
+            value = await sourceDelegate().ConfigureAwait(false);
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -196,7 +196,7 @@ public static class DelegateExtensions
         }
 
         if (value is null)
-            throw FunctionMustNotReturnNull(nameof(source));
+            throw FunctionMustNotReturnNull(nameof(sourceDelegate));
 
         return value.ToResult();
     }
@@ -211,7 +211,7 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -220,16 +220,16 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T>(
-        this AsyncFunc<T> source,
+        this AsyncFunc<T> sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null,
         Func<Exception, bool>? exceptionPredicate = null)
     {
         T value;
         try
         {
-            value = await source().ConfigureAwait(false);
+            value = await sourceDelegate().ConfigureAwait(false);
         }
         catch (Exception ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -251,7 +251,7 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -260,16 +260,16 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result TryInvokeAsResult<TException>(
-        this Action source,
+        this Action sourceDelegate,
         Func<TException, Error>? exceptionHandler = null,
         Func<TException, bool>? exceptionPredicate = null)
         where TException : Exception
     {
         try
         {
-            source();
+            sourceDelegate();
             return Result.Success();
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
@@ -289,7 +289,7 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -298,10 +298,10 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
     public static Result<T> TryInvokeAsResult<T, TException>(
-        this Func<T> source,
+        this Func<T> sourceDelegate,
         Func<TException, Error>? exceptionHandler = null,
         Func<TException, bool>? exceptionPredicate = null)
         where TException : Exception
@@ -309,7 +309,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = source();
+            value = sourceDelegate();
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -317,7 +317,7 @@ public static class DelegateExtensions
         }
 
         if (value is null)
-            throw FunctionMustNotReturnNull(nameof(source));
+            throw FunctionMustNotReturnNull(nameof(sourceDelegate));
 
         return value.ToResult();
     }
@@ -335,7 +335,7 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -344,9 +344,9 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> TryInvokeAsMaybe<T, TException>(
-        this Func<T> source,
+        this Func<T> sourceDelegate,
         Func<TException, Error>? exceptionHandler = null,
         Func<TException, bool>? exceptionPredicate = null)
         where TException : Exception
@@ -354,7 +354,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = source();
+            value = sourceDelegate();
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -377,7 +377,7 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -386,16 +386,16 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> TryInvokeAsResultAsync<TException>(
-        this AsyncAction source,
+        this AsyncAction sourceDelegate,
         Func<TException, Error>? exceptionHandler = null,
         Func<TException, bool>? exceptionPredicate = null)
         where TException : Exception
     {
         try
         {
-            await source().ConfigureAwait(false);
+            await sourceDelegate().ConfigureAwait(false);
             return Result.Success();
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
@@ -415,7 +415,7 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -424,10 +424,10 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
     public static async Task<Result<T>> TryInvokeAsResultAsync<T, TException>(
-        this AsyncFunc<T> source,
+        this AsyncFunc<T> sourceDelegate,
         Func<TException, Error>? exceptionHandler = null,
         Func<TException, bool>? exceptionPredicate = null)
         where TException : Exception
@@ -435,7 +435,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source().ConfigureAwait(false);
+            value = await sourceDelegate().ConfigureAwait(false);
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -443,7 +443,7 @@ public static class DelegateExtensions
         }
 
         if (value is null)
-            throw FunctionMustNotReturnNull(nameof(source));
+            throw FunctionMustNotReturnNull(nameof(sourceDelegate));
 
         return value.ToResult();
     }
@@ -461,7 +461,7 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="exceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -470,9 +470,9 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T, TException>(
-        this AsyncFunc<T> source,
+        this AsyncFunc<T> sourceDelegate,
         Func<TException, Error>? exceptionHandler = null,
         Func<TException, bool>? exceptionPredicate = null)
         where TException : Exception
@@ -480,7 +480,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source().ConfigureAwait(false);
+            value = await sourceDelegate().ConfigureAwait(false);
         }
         catch (TException ex) when (exceptionPredicate.Evaluate(ex))
         {
@@ -504,7 +504,7 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="firstExceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -520,9 +520,9 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result TryInvokeAsResult<TException1, TException2>(
-        this Action source,
+        this Action sourceDelegate,
         Func<TException1, Error>? firstExceptionHandler = null,
         Func<TException2, Error>? secondExceptionHandler = null,
         Func<TException1, bool>? firstExceptionPredicate = null,
@@ -532,7 +532,7 @@ public static class DelegateExtensions
     {
         try
         {
-            source();
+            sourceDelegate();
             return Result.Success();
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
@@ -558,7 +558,7 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="firstExceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -574,10 +574,10 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
     public static Result<T> TryInvokeAsResult<T, TException1, TException2>(
-        this Func<T> source,
+        this Func<T> sourceDelegate,
         Func<TException1, Error>? firstExceptionHandler = null,
         Func<TException2, Error>? secondExceptionHandler = null,
         Func<TException1, bool>? firstExceptionPredicate = null,
@@ -588,7 +588,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = source();
+            value = sourceDelegate();
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
@@ -600,7 +600,7 @@ public static class DelegateExtensions
         }
 
         if (value is null)
-            throw FunctionMustNotReturnNull(nameof(source));
+            throw FunctionMustNotReturnNull(nameof(sourceDelegate));
 
         return value.ToResult();
     }
@@ -619,7 +619,7 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="firstExceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -635,9 +635,9 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> TryInvokeAsMaybe<T, TException1, TException2>(
-        this Func<T> source,
+        this Func<T> sourceDelegate,
         Func<TException1, Error>? firstExceptionHandler = null,
         Func<TException2, Error>? secondExceptionHandler = null,
         Func<TException1, bool>? firstExceptionPredicate = null,
@@ -648,7 +648,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = source();
+            value = sourceDelegate();
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
@@ -677,7 +677,7 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="firstExceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -693,9 +693,9 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> TryInvokeAsResultAsync<TException1, TException2>(
-        this AsyncAction source,
+        this AsyncAction sourceDelegate,
         Func<TException1, Error>? firstExceptionHandler = null,
         Func<TException2, Error>? secondExceptionHandler = null,
         Func<TException1, bool>? firstExceptionPredicate = null,
@@ -705,7 +705,7 @@ public static class DelegateExtensions
     {
         try
         {
-            await source().ConfigureAwait(false);
+            await sourceDelegate().ConfigureAwait(false);
             return Result.Success();
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
@@ -731,7 +731,7 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="firstExceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -747,10 +747,10 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
     public static async Task<Result<T>> TryInvokeAsResultAsync<T, TException1, TException2>(
-        this AsyncFunc<T> source,
+        this AsyncFunc<T> sourceDelegate,
         Func<TException1, Error>? firstExceptionHandler = null,
         Func<TException2, Error>? secondExceptionHandler = null,
         Func<TException1, bool>? firstExceptionPredicate = null,
@@ -761,7 +761,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source().ConfigureAwait(false);
+            value = await sourceDelegate().ConfigureAwait(false);
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {
@@ -773,7 +773,7 @@ public static class DelegateExtensions
         }
 
         if (value is null)
-            throw FunctionMustNotReturnNull(nameof(source));
+            throw FunctionMustNotReturnNull(nameof(sourceDelegate));
 
         return value.ToResult();
     }
@@ -792,7 +792,7 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
-    /// <param name="source">The delegate to convert.</param>
+    /// <param name="sourceDelegate">The delegate to convert.</param>
     /// <param name="firstExceptionHandler">
     /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
     /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
@@ -808,9 +808,9 @@ public static class DelegateExtensions
     /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
     /// </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T, TException1, TException2>(
-        this AsyncFunc<T> source,
+        this AsyncFunc<T> sourceDelegate,
         Func<TException1, Error>? firstExceptionHandler = null,
         Func<TException2, Error>? secondExceptionHandler = null,
         Func<TException1, bool>? firstExceptionPredicate = null,
@@ -821,7 +821,7 @@ public static class DelegateExtensions
         T value;
         try
         {
-            value = await source().ConfigureAwait(false);
+            value = await sourceDelegate().ConfigureAwait(false);
         }
         catch (TException1 ex) when (firstExceptionPredicate.Evaluate(ex))
         {

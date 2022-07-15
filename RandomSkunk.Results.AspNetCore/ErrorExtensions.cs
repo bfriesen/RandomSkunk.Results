@@ -8,7 +8,7 @@ public static class ErrorExtensions
     /// <summary>
     /// Gets a <see cref="ProblemDetails"/> object that is equavalent to the error object.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceError">
     /// The <see cref="Error"/> to create a <see cref="ProblemDetails"/> from.
     /// </param>
     /// <param name="type">
@@ -22,27 +22,27 @@ public static class ErrorExtensions
     /// or may not yield further information if dereferenced.
     /// </param>
     /// <returns>The equivalent problem details object.</returns>
-    public static ProblemDetails GetProblemDetails(this Error source, string? type = null, string? instance = null)
+    public static ProblemDetails GetProblemDetails(this Error sourceError, string? type = null, string? instance = null)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceError is null) throw new ArgumentNullException(nameof(sourceError));
 
         var problemDetails = new ProblemDetails
         {
             Type = type,
-            Title = source.Type,
-            Status = source.ErrorCode,
-            Detail = source.Message,
+            Title = sourceError.Type,
+            Status = sourceError.ErrorCode,
+            Detail = sourceError.Message,
             Instance = instance,
         };
 
-        if (source.StackTrace is not null)
-            problemDetails.Extensions["errorStackTrace"] = source.StackTrace;
+        if (sourceError.StackTrace is not null)
+            problemDetails.Extensions["errorStackTrace"] = sourceError.StackTrace;
 
-        if (source.Identifier is not null)
-            problemDetails.Extensions["errorIdentifier"] = source.Identifier;
+        if (sourceError.Identifier is not null)
+            problemDetails.Extensions["errorIdentifier"] = sourceError.Identifier;
 
-        if (source.InnerError is not null)
-            problemDetails.Extensions["errorInnerError"] = source.InnerError;
+        if (sourceError.InnerError is not null)
+            problemDetails.Extensions["errorInnerError"] = sourceError.InnerError;
 
         return problemDetails;
     }

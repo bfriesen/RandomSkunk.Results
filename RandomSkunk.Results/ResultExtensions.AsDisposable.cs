@@ -9,41 +9,41 @@ public static partial class ResultExtensions
     /// Gets an object that, when disposed, disposes the source result's value.
     /// </summary>
     /// <typeparam name="TDisposable">The <see cref="IDisposable"/> type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <returns>An <see cref="IDisposable"/> object.</returns>
-    public static IDisposable AsDisposable<TDisposable>(this Result<TDisposable> source)
+    public static IDisposable AsDisposable<TDisposable>(this Result<TDisposable> sourceResult)
         where TDisposable : IDisposable =>
-        new DisposableResult<TDisposable>(source);
+        new DisposableResult<TDisposable>(sourceResult);
 
     /// <summary>
     /// Gets an object that, when disposed, disposes the source result's value.
     /// </summary>
     /// <typeparam name="TDisposable">The <see cref="IDisposable"/> type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <returns>An <see cref="IDisposable"/> object.</returns>
-    public static IDisposable AsDisposable<TDisposable>(this Maybe<TDisposable> source)
+    public static IDisposable AsDisposable<TDisposable>(this Maybe<TDisposable> sourceResult)
         where TDisposable : IDisposable =>
-        new DisposableMaybe<TDisposable>(source);
+        new DisposableMaybe<TDisposable>(sourceResult);
 
     /// <summary>
     /// Gets an object that, when disposed, disposes the source result's value.
     /// </summary>
     /// <typeparam name="TAsyncDisposable">The <see cref="IAsyncDisposable"/> type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <returns>An <see cref="IAsyncDisposable"/> object.</returns>
-    public static IAsyncDisposable AsAsyncDisposable<TAsyncDisposable>(this Result<TAsyncDisposable> source)
+    public static IAsyncDisposable AsAsyncDisposable<TAsyncDisposable>(this Result<TAsyncDisposable> sourceResult)
         where TAsyncDisposable : IAsyncDisposable =>
-        new AsyncDisposableResult<TAsyncDisposable>(source);
+        new AsyncDisposableResult<TAsyncDisposable>(sourceResult);
 
     /// <summary>
     /// Gets an object that, when disposed, disposes the source result's value.
     /// </summary>
     /// <typeparam name="TAsyncDisposable">The <see cref="IAsyncDisposable"/> type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <returns>An <see cref="IAsyncDisposable"/> object.</returns>
-    public static IAsyncDisposable AsAsyncDisposable<TAsyncDisposable>(this Maybe<TAsyncDisposable> source)
+    public static IAsyncDisposable AsAsyncDisposable<TAsyncDisposable>(this Maybe<TAsyncDisposable> sourceResult)
         where TAsyncDisposable : IAsyncDisposable =>
-        new AsyncDisposableMaybe<TAsyncDisposable>(source);
+        new AsyncDisposableMaybe<TAsyncDisposable>(sourceResult);
 
     private class DisposableResult<TDisposable> : IDisposable
         where TDisposable : IDisposable

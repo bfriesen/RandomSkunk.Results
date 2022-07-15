@@ -10,22 +10,22 @@ public static class EnumerableExtensions
     /// the sequence contains no elements; or a <c>Fail</c> result with error code <c>410</c> if the first element is
     /// <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">The <see cref="IEnumerable{T}"/> to return the first element of.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">The <see cref="IEnumerable{T}"/> to return the first element of.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Result<T> FirstOrFail<T>(this IEnumerable<T> source)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Result<T> FirstOrFail<T>(this IEnumerable<T> sourceSequence)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
 
-        if (source is IList<T> list)
+        if (sourceSequence is IList<T> list)
         {
             if (list.Count > 0)
                 return list[0].ToResultOrFailIfNull();
         }
         else
         {
-            using IEnumerator<T> enumerator = source.GetEnumerator();
+            using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (enumerator.MoveNext())
                 return enumerator.Current.ToResultOrFailIfNull();
         }
@@ -37,22 +37,22 @@ public static class EnumerableExtensions
     /// Returns a <c>Success</c> result of the first element of a sequence; a <c>None</c> result if the sequence contains no
     /// elements; or a <c>Fail</c> result with error code <c>410</c> if the first element is <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">The <see cref="IEnumerable{T}"/> to return the first element of.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">The <see cref="IEnumerable{T}"/> to return the first element of.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Maybe<T> FirstOrNone<T>(this IEnumerable<T> source)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> FirstOrNone<T>(this IEnumerable<T> sourceSequence)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
 
-        if (source is IList<T> list)
+        if (sourceSequence is IList<T> list)
         {
             if (list.Count > 0)
                 return list[0].ToMaybeOrFailIfNull();
         }
         else
         {
-            using IEnumerator<T> enumerator = source.GetEnumerator();
+            using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (enumerator.MoveNext())
                 return enumerator.Current.ToMaybeOrFailIfNull();
         }
@@ -65,19 +65,19 @@ public static class EnumerableExtensions
     /// with error code <c>404</c> if no such element is found; or a <c>Fail</c> result with error code <c>410</c> if the first
     /// matched element is <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> or <paramref name="predicate"/> is <see langword="null"/>.
+    /// If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static Result<T> FirstOrFail<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Result<T> FirstOrFail<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        foreach (var item in source)
+        foreach (var item in sourceSequence)
             if (predicate(item)) return item.ToResultOrFailIfNull();
 
         return Result<T>.FailWith.SequenceContainsNoMatchingElements();
@@ -88,19 +88,19 @@ public static class EnumerableExtensions
     /// such element is found; or a <c>Fail</c> result with error code <c>410</c> if the first matched element is
     /// <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> or <paramref name="predicate"/> is <see langword="null"/>.
+    /// If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static Maybe<T> FirstOrNone<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Maybe<T> FirstOrNone<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        foreach (var item in source)
+        foreach (var item in sourceSequence)
             if (predicate(item)) return item.ToMaybeOrFailIfNull();
 
         return Maybe<T>.None();
@@ -111,15 +111,15 @@ public static class EnumerableExtensions
     /// sequence contains no elements; or a <c>Fail</c> result with error code <c>410</c> if the last element is
     /// <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the last element of.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the last element of.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Result<T> LastOrFail<T>(this IEnumerable<T> source)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Result<T> LastOrFail<T>(this IEnumerable<T> sourceSequence)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
 
-        if (source is IList<T> list)
+        if (sourceSequence is IList<T> list)
         {
             int count = list.Count;
             if (count > 0)
@@ -127,7 +127,7 @@ public static class EnumerableExtensions
         }
         else
         {
-            using IEnumerator<T> enumerator = source.GetEnumerator();
+            using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (enumerator.MoveNext())
             {
                 T current;
@@ -146,15 +146,15 @@ public static class EnumerableExtensions
     /// Returns a <c>Success</c> result of the last element of a sequence; <c>None</c> result if the sequence contains no elements;
     /// or a <c>Fail</c> result with error code <c>410</c> if the last element is <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the last element of.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the last element of.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Maybe<T> LastOrNone<T>(this IEnumerable<T> source)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> LastOrNone<T>(this IEnumerable<T> sourceSequence)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
 
-        if (source is IList<T> list)
+        if (sourceSequence is IList<T> list)
         {
             int count = list.Count;
             if (count > 0)
@@ -162,7 +162,7 @@ public static class EnumerableExtensions
         }
         else
         {
-            using IEnumerator<T> enumerator = source.GetEnumerator();
+            using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (enumerator.MoveNext())
             {
                 T current;
@@ -182,20 +182,20 @@ public static class EnumerableExtensions
     /// error code <c>404</c> if no such element is found; or a <c>Fail</c> result with error code <c>410</c> if the last matched
     /// element is <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> or <paramref name="predicate"/> is <see langword="null"/>.
+    /// If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static Result<T> LastOrFail<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Result<T> LastOrFail<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         var result = Result<T>.FailWith.SequenceContainsNoMatchingElements();
-        foreach (T item in source)
+        foreach (T item in sourceSequence)
             if (predicate(item)) result = item.ToResultOrFailIfNull();
 
         return result;
@@ -206,20 +206,20 @@ public static class EnumerableExtensions
     /// such element is found; or a <c>Fail</c> result with error code <c>410</c> if the last matched element is
     /// <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> or <paramref name="predicate"/> is <see langword="null"/>.
+    /// If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static Maybe<T> LastOrNone<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Maybe<T> LastOrNone<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         var result = Maybe<T>.None();
-        foreach (T item in source)
+        foreach (T item in sourceSequence)
             if (predicate(item)) result = item.ToMaybeOrFailIfNull();
 
         return result;
@@ -231,15 +231,15 @@ public static class EnumerableExtensions
     /// sequence contains more than one element; or a <c>Fail</c> result with error code <c>410</c> if the single element is
     /// <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Result<T> SingleOrFail<T>(this IEnumerable<T> source)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Result<T> SingleOrFail<T>(this IEnumerable<T> sourceSequence)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
 
-        if (source is IList<T> list)
+        if (sourceSequence is IList<T> list)
         {
             switch (list.Count)
             {
@@ -249,7 +249,7 @@ public static class EnumerableExtensions
         }
         else
         {
-            using IEnumerator<T> enumerator = source.GetEnumerator();
+            using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (!enumerator.MoveNext())
                 return Result<T>.FailWith.SequenceContainsNoElements();
 
@@ -266,15 +266,15 @@ public static class EnumerableExtensions
     /// single element is <see langword="null"/>; a <c>Fail</c> result with error code <c>400</c> if the sequence contains more
     /// than one element; or a <c>Fail</c> result with error code <c>410</c> if the single element is <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Maybe<T> SingleOrNone<T>(this IEnumerable<T> source)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> SingleOrNone<T>(this IEnumerable<T> sourceSequence)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
 
-        if (source is IList<T> list)
+        if (sourceSequence is IList<T> list)
         {
             switch (list.Count)
             {
@@ -284,7 +284,7 @@ public static class EnumerableExtensions
         }
         else
         {
-            using IEnumerator<T> enumerator = source.GetEnumerator();
+            using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (!enumerator.MoveNext())
                 return Maybe<T>.None();
 
@@ -302,21 +302,21 @@ public static class EnumerableExtensions
     /// one element satisfies the condition; or a <c>Fail</c> result with error code <c>410</c> if the single matched element is
     /// <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
     /// <param name="predicate">A function to test an element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> or <paramref name="predicate"/> is <see langword="null"/>.
+    /// If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static Result<T> SingleOrFail<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Result<T> SingleOrFail<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         Result<T> result = default;
         long count = 0;
-        foreach (var item in source)
+        foreach (var item in sourceSequence)
         {
             if (predicate(item))
             {
@@ -338,21 +338,21 @@ public static class EnumerableExtensions
     /// if no such element exists; a <c>Fail</c> result with error code <c>400</c> if more than one element satisfies the
     /// condition; or a <c>Fail</c> result with error code <c>410</c> if the single matched element is <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return a single element from.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return a single element from.</param>
     /// <param name="predicate">A function to test an element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">
-    /// If <paramref name="source"/> or <paramref name="predicate"/> is <see langword="null"/>.
+    /// If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static Maybe<T> SingleOrNone<T>(this IEnumerable<T> source, Func<T, bool> predicate)
+    public static Maybe<T> SingleOrNone<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         Maybe<T> result = default;
         long count = 0;
-        foreach (var item in source)
+        foreach (var item in sourceSequence)
         {
             if (predicate(item))
             {
@@ -374,25 +374,25 @@ public static class EnumerableExtensions
     /// <c>404</c> if the index is out of range; or a <c>Fail</c> result with error code <c>410</c> if the matched element is
     /// <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
     /// <param name="index">The zero-based index of the element to retrieve.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Result<T> ElementAtOrFail<T>(this IEnumerable<T> source, int index)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Result<T> ElementAtOrFail<T>(this IEnumerable<T> sourceSequence, int index)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence == null) throw new ArgumentNullException(nameof(sourceSequence));
 
         if (index >= 0)
         {
-            if (source is IList<T> list)
+            if (sourceSequence is IList<T> list)
             {
                 if (index < list.Count)
                     return list[index].ToResultOrFailIfNull();
             }
             else
             {
-                using IEnumerator<T> enumerator = source.GetEnumerator();
+                using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     if (index == 0)
@@ -410,25 +410,25 @@ public static class EnumerableExtensions
     /// Returns a <c>Success</c> result of the element at a specified index in a sequence; a <c>None</c> result if the index is out
     /// of range; or a <c>Fail</c> result with error code <c>410</c> if the matched element is <see langword="null"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-    /// <param name="source">An <see cref="IEnumerable{T}"/> to return an element from.</param>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
     /// <param name="index">The zero-based index of the element to retrieve.</param>
     /// <returns>A result representing the operation.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="source"/> is <see langword="null"/>.</exception>
-    public static Maybe<T> ElementAtOrNone<T>(this IEnumerable<T> source, int index)
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> ElementAtOrNone<T>(this IEnumerable<T> sourceSequence, int index)
     {
-        if (source == null) throw new ArgumentNullException(nameof(source));
+        if (sourceSequence == null) throw new ArgumentNullException(nameof(sourceSequence));
 
         if (index >= 0)
         {
-            if (source is IList<T> list)
+            if (sourceSequence is IList<T> list)
             {
                 if (index < list.Count)
                     return list[index].ToMaybeOrFailIfNull();
             }
             else
             {
-                using IEnumerator<T> enumerator = source.GetEnumerator();
+                using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     if (index == 0)

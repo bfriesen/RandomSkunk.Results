@@ -11,14 +11,14 @@ public static class LinqExtensions
     /// <para>
     /// Alias for the <see cref="Result{T}.Map{TReturn}(Func{T, TReturn}, Func{Error, Error}?)"/> method.
     /// </para>
-    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
+    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="selector"/>
     /// function. The map function is only evaluated if the target is a <c>Success</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -30,9 +30,9 @@ public static class LinqExtensions
     /// If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Result<TReturn> Select<T, TReturn>(
-        this Result<T> source,
+        this Result<T> sourceResult,
         Func<T, TReturn> selector) =>
-        source.Map(selector);
+        sourceResult.Map(selector);
 
     /// <summary>
     /// <para>
@@ -43,7 +43,7 @@ public static class LinqExtensions
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -52,9 +52,9 @@ public static class LinqExtensions
     /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     public static Result<TReturn> SelectMany<T, TReturn>(
-        this Result<T> source,
+        this Result<T> sourceResult,
         Func<T, Result<TReturn>> selector) =>
-        source.Then(selector);
+        sourceResult.Then(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector
@@ -66,7 +66,7 @@ public static class LinqExtensions
     /// <paramref name="intermediateSelector"/>.
     /// </typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
     /// </param>
@@ -75,7 +75,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>
     /// An <see cref="Maybe{T}"/> whose value is the result of invoking the transform
-    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="source"/>
+    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/>
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -86,14 +86,14 @@ public static class LinqExtensions
     /// If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Result<TReturn> SelectMany<T, TIntermediate, TReturn>(
-        this Result<T> source,
+        this Result<T> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> resultSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return source.Then(
+        return sourceResult.Then(
             sourceValue => intermediateSelector(sourceValue).Then(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!)
@@ -104,14 +104,14 @@ public static class LinqExtensions
     /// <para>
     /// Alias for the <see cref="Maybe{T}.Map{TReturn}(Func{T, TReturn}, Func{Error, Error}?)"/> method.
     /// </para>
-    /// Maps <paramref name="source"/> to a new result using the specified <paramref name="selector"/>
+    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="selector"/>
     /// function. The map function is only evaluated if the target is a <c>Success</c> result, and
     /// the <see cref="Result{T}.Type"/> of the new result will always be the same as the target
     /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -123,21 +123,21 @@ public static class LinqExtensions
     /// If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Maybe<TReturn> Select<T, TReturn>(
-        this Maybe<T> source,
+        this Maybe<T> sourceResult,
         Func<T, TReturn> selector) =>
-        source.Map(selector);
+        sourceResult.Map(selector);
 
     /// <summary>
     /// <para>
     /// Alias for the <see cref="Maybe{T}.Then{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
-    /// If this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
+    /// Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
     /// <c>None</c> result, return a <c>None</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -146,9 +146,9 @@ public static class LinqExtensions
     /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     public static Maybe<TReturn> SelectMany<T, TReturn>(
-        this Maybe<T> source,
+        this Maybe<T> sourceResult,
         Func<T, Maybe<TReturn>> selector) =>
-        source.Then(selector);
+        sourceResult.Then(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector
@@ -159,7 +159,7 @@ public static class LinqExtensions
     /// The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
     /// </typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
     /// </param>
@@ -168,7 +168,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>
     /// An <see cref="Maybe{T}"/> whose value is the result of invoking the transform
-    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="source"/>
+    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/>
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -179,14 +179,14 @@ public static class LinqExtensions
     /// If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Maybe<TReturn> SelectMany<T, TIntermediate, TReturn>(
-        this Maybe<T> source,
+        this Maybe<T> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> resultSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return source.Then(
+        return sourceResult.Then(
             sourceValue => intermediateSelector(sourceValue).Then(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!) ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToMaybe()));
@@ -202,7 +202,7 @@ public static class LinqExtensions
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -211,9 +211,9 @@ public static class LinqExtensions
     /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     public static Maybe<TReturn> SelectMany<T, TReturn>(
-        this Result<T> source,
+        this Result<T> sourceResult,
         Func<T, Maybe<TReturn>> selector) =>
-        source.Then(selector);
+        sourceResult.Then(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector
@@ -225,7 +225,7 @@ public static class LinqExtensions
     /// <paramref name="intermediateSelector"/>.
     /// </typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
     /// </param>
@@ -234,7 +234,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>
     /// An <see cref="Maybe{T}"/> whose value is the result of invoking the transform
-    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="source"/>
+    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/>
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -245,14 +245,14 @@ public static class LinqExtensions
     /// If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Maybe<TReturn> SelectMany<T, TIntermediate, TReturn>(
-        this Result<T> source,
+        this Result<T> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> resultSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return source.Then(
+        return sourceResult.Then(
             sourceValue => intermediateSelector(sourceValue).Then(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!)
@@ -264,12 +264,12 @@ public static class LinqExtensions
     /// Alias for the <see cref="Maybe{T}.Then{TReturn}(Func{T, Result{TReturn}}, Func{Error}?, Func{Error, Error}?)"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
-    /// If this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
+    /// Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
     /// <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="selector">
     /// A function that maps the value of the incoming result to the value of the outgoing result.
     /// </param>
@@ -278,9 +278,9 @@ public static class LinqExtensions
     /// If <paramref name="selector"/> is <see langword="null"/>.
     /// </exception>
     public static Result<TReturn> SelectMany<T, TReturn>(
-        this Maybe<T> source,
+        this Maybe<T> sourceResult,
         Func<T, Result<TReturn>> selector) =>
-        source.Then(selector);
+        sourceResult.Then(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector
@@ -291,7 +291,7 @@ public static class LinqExtensions
     /// The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
     /// </typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="intermediateSelector">
     /// A transform function to apply to the value of the input result.
     /// </param>
@@ -300,7 +300,7 @@ public static class LinqExtensions
     /// </param>
     /// <returns>
     /// An <see cref="Maybe{T}"/> whose value is the result of invoking the transform
-    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="source"/>
+    /// function <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/>
     /// and then mapping the values of that result and the source result to the final result.
     /// </returns>
     /// <exception cref="ArgumentNullException">
@@ -311,14 +311,14 @@ public static class LinqExtensions
     /// If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
     /// </exception>
     public static Result<TReturn> SelectMany<T, TIntermediate, TReturn>(
-        this Maybe<T> source,
+        this Maybe<T> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> resultSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return source.Then(
+        return sourceResult.Then(
             sourceValue => intermediateSelector(sourceValue).Then(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!) ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToResult()));
@@ -330,7 +330,7 @@ public static class LinqExtensions
     /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="source">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="predicate">
     /// A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     /// <see langword="false"/>.
@@ -339,6 +339,6 @@ public static class LinqExtensions
     /// <exception cref="ArgumentNullException">
     /// If <paramref name="predicate"/> is <see langword="null"/>.
     /// </exception>
-    public static Maybe<T> Where<T>(this Maybe<T> source, Func<T, bool> predicate) =>
-        source.Filter(predicate);
+    public static Maybe<T> Where<T>(this Maybe<T> sourceResult, Func<T, bool> predicate) =>
+        sourceResult.Filter(predicate);
 }

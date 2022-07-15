@@ -33,7 +33,7 @@ public static class HttpClientExtensions
     /// Sends a DELETE request to the specified Uri with a cancellation token as an asynchronous operation. A
     /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="getHttpError">
     /// An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c> result's error. If
@@ -48,19 +48,19 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryDeleteAsync(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        Delegates.AsyncFunc(() => source.DeleteAsync(requestUri, cancellationToken))
+        Delegates.AsyncFunc(() => sourceHttpClient.DeleteAsync(requestUri, cancellationToken))
             .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
     /// an asynchronous operation. A <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="getHttpError">
     /// An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c> result's error. If
@@ -75,12 +75,12 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryGetAsync(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        Delegates.AsyncFunc(() => source.GetAsync(requestUri, cancellationToken))
+        Delegates.AsyncFunc(() => sourceHttpClient.GetAsync(requestUri, cancellationToken))
             .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
@@ -88,7 +88,7 @@ public static class HttpClientExtensions
     /// an asynchronous operation. A <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="getHttpError">
     /// An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c> result's error. If
@@ -107,14 +107,14 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static async Task<Maybe<TValue>> TryGetFromJsonAsync<TValue>(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        var responseResult = await source.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken).ConfigureAwait(false);
+        var responseResult = await sourceHttpClient.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken).ConfigureAwait(false);
         var returnResult = await responseResult.ReadMaybeFromJsonAsync<TValue>(options, cancellationToken).ConfigureAwait(false);
         responseResult.OnSuccess(response => response.Dispose());
         return returnResult;
@@ -126,7 +126,7 @@ public static class HttpClientExtensions
     /// Sends a PATCH request to the specified Uri containing the value serialized as JSON in the request body. A
     /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
     /// <param name="getHttpError">
@@ -142,13 +142,13 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPatchAsync(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        Delegates.AsyncFunc(() => source.PatchAsync(requestUri, content, cancellationToken))
+        Delegates.AsyncFunc(() => sourceHttpClient.PatchAsync(requestUri, content, cancellationToken))
             .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
@@ -156,7 +156,7 @@ public static class HttpClientExtensions
     /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
     /// <param name="getHttpError">
@@ -176,7 +176,7 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPatchAsJsonAsync<TValue>(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
         Func<HttpRequestException, Error>? getHttpError = null,
@@ -185,7 +185,7 @@ public static class HttpClientExtensions
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return source.TryPatchAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
+        return sourceHttpClient.TryPatchAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
     }
 
 #endif
@@ -194,7 +194,7 @@ public static class HttpClientExtensions
     /// Sends a POST request to the specified Uri containing the value serialized as JSON in the request body. A
     /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
     /// <param name="getHttpError">
@@ -210,13 +210,13 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPostAsync(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        Delegates.AsyncFunc(() => source.PostAsync(requestUri, content, cancellationToken))
+        Delegates.AsyncFunc(() => sourceHttpClient.PostAsync(requestUri, content, cancellationToken))
             .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
@@ -224,7 +224,7 @@ public static class HttpClientExtensions
     /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
     /// <param name="getHttpError">
@@ -244,7 +244,7 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPostAsJsonAsync<TValue>(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
         Func<HttpRequestException, Error>? getHttpError = null,
@@ -253,14 +253,14 @@ public static class HttpClientExtensions
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return source.TryPostAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
+        return sourceHttpClient.TryPostAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
     }
 
     /// <summary>
     /// Sends a PUT request to the specified Uri containing the value serialized as JSON in the request body. A
     /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
     /// <param name="getHttpError">
@@ -276,13 +276,13 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPutAsync(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        Delegates.AsyncFunc(() => source.PutAsync(requestUri, content, cancellationToken))
+        Delegates.AsyncFunc(() => sourceHttpClient.PutAsync(requestUri, content, cancellationToken))
             .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 
     /// <summary>
@@ -290,7 +290,7 @@ public static class HttpClientExtensions
     /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
     /// <param name="getHttpError">
@@ -310,7 +310,7 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPutAsJsonAsync<TValue>(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
         Func<HttpRequestException, Error>? getHttpError = null,
@@ -319,14 +319,14 @@ public static class HttpClientExtensions
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return source.TryPutAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
+        return sourceHttpClient.TryPutAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
     }
 
     /// <summary>
     /// Send an HTTP request as an asynchronous operation. A <see cref="Result{T}"/> value is returned, representing the result of
     /// the overall operation.
     /// </summary>
-    /// <param name="source">The HTTP client used to send the request.</param>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="request">The HTTP request message to send.</param>
     /// <param name="getHttpError">
     /// An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c> result's error. If
@@ -341,11 +341,11 @@ public static class HttpClientExtensions
     /// </param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TrySendAsync(
-        this HttpClient source,
+        this HttpClient sourceHttpClient,
         HttpRequestMessage request,
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        Delegates.AsyncFunc(() => source.SendAsync(request, cancellationToken))
+        Delegates.AsyncFunc(() => sourceHttpClient.SendAsync(request, cancellationToken))
             .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
 }

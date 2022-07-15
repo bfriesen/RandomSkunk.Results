@@ -10,7 +10,7 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
     /// </param>
     /// <param name="options">
@@ -23,17 +23,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response.</returns>
     public static async Task<Result> GetResultAsync(
-        this HttpResponseMessage source,
+        this HttpResponseMessage sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceResponse is null) throw new ArgumentNullException(nameof(sourceResponse));
 
-        if (source.IsSuccessStatusCode)
+        if (sourceResponse.IsSuccessStatusCode)
             return Result.Success();
 
         options ??= _defaultOptions;
-        var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
+        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Result.Fail(error);
     }
@@ -41,7 +41,7 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -50,16 +50,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response.</returns>
     public static Task<Result> GetResultAsync(
-        this HttpResponseMessage source,
+        this HttpResponseMessage sourceResponse,
         CancellationToken cancellationToken = default) =>
-        source.GetResultAsync(null, cancellationToken);
+        sourceResponse.GetResultAsync(null, cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="options">
@@ -72,17 +72,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this HttpResponseMessage source,
+        this HttpResponseMessage sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceResponse is null) throw new ArgumentNullException(nameof(sourceResponse));
         options ??= _defaultOptions;
 
-        if (source.IsSuccessStatusCode)
-            return await ReadValue<T>(source.Content, options, cancellationToken).ConfigureAwait(false);
+        if (sourceResponse.IsSuccessStatusCode)
+            return await ReadValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(false);
 
-        var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
+        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Result<T>.Fail(error);
     }
@@ -92,7 +92,7 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -101,16 +101,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this HttpResponseMessage source,
+        this HttpResponseMessage sourceResponse,
         CancellationToken cancellationToken = default) =>
-        source.ReadResultFromJsonAsync<T>(null, cancellationToken);
+        sourceResponse.ReadResultFromJsonAsync<T>(null, cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="options">
@@ -123,17 +123,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this HttpResponseMessage source,
+        this HttpResponseMessage sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default)
     {
-        if (source is null) throw new ArgumentNullException(nameof(source));
+        if (sourceResponse is null) throw new ArgumentNullException(nameof(sourceResponse));
         options ??= _defaultOptions;
 
-        if (source.IsSuccessStatusCode)
-            return await ReadMaybeValue<T>(source.Content, options, cancellationToken).ConfigureAwait(false);
+        if (sourceResponse.IsSuccessStatusCode)
+            return await ReadMaybeValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(false);
 
-        var problemDetails = await ReadProblemDetails(source, options, cancellationToken).ConfigureAwait(false);
+        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Maybe<T>.Fail(error);
     }
@@ -143,7 +143,7 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -152,15 +152,15 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this HttpResponseMessage source,
+        this HttpResponseMessage sourceResponse,
         CancellationToken cancellationToken = default) =>
-        source.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
+        sourceResponse.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
     /// a <c>Fail</c> result.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="options">
@@ -173,10 +173,10 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result> EnsureSuccessStatusCodeAsync(
-        this Result<HttpResponseMessage> source,
+        this Result<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        source.ThenAsync(async response =>
+        sourceResponse.ThenAsync(async response =>
         {
             var result = await response.GetResultAsync(options, cancellationToken).ConfigureAwait(false);
             response.Dispose();
@@ -187,7 +187,7 @@ public static class HttpResponseExtensions
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
     /// a <c>Fail</c> result.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -196,16 +196,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result> EnsureSuccessStatusCodeAsync(
-        this Result<HttpResponseMessage> source,
+        this Result<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        source.EnsureSuccessStatusCodeAsync(null, cancellationToken);
+        sourceResponse.EnsureSuccessStatusCodeAsync(null, cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="options">
@@ -218,17 +218,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this Result<HttpResponseMessage> source,
+        this Result<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        source.ThenAsync(response => response.ReadResultFromJsonAsync<T>(options, cancellationToken));
+        sourceResponse.ThenAsync(response => response.ReadResultFromJsonAsync<T>(options, cancellationToken));
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -237,16 +237,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this Result<HttpResponseMessage> source,
+        this Result<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        source.ReadResultFromJsonAsync<T>(null, cancellationToken);
+        sourceResponse.ReadResultFromJsonAsync<T>(null, cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="options">
@@ -259,17 +259,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Result<HttpResponseMessage> source,
+        this Result<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        source.ThenAsync(response => response.ReadMaybeFromJsonAsync<T>(options, cancellationToken));
+        sourceResponse.ThenAsync(response => response.ReadMaybeFromJsonAsync<T>(options, cancellationToken));
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -278,14 +278,14 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Result<HttpResponseMessage> source,
+        this Result<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        source.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
+        sourceResponse.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
 
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
     /// </param>
     /// <param name="options">
@@ -298,15 +298,15 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response.</returns>
     public static async Task<Result> GetResultAsync(
-        this Task<HttpResponseMessage> source,
+        this Task<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).GetResultAsync(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).GetResultAsync(options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -315,16 +315,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response.</returns>
     public static async Task<Result> GetResultAsync(
-        this Task<HttpResponseMessage> source,
+        this Task<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).GetResultAsync(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).GetResultAsync(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="options">
@@ -337,17 +337,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this Task<HttpResponseMessage> source,
+        this Task<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -356,16 +356,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this Task<HttpResponseMessage> source,
+        this Task<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="options">
@@ -378,17 +378,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<HttpResponseMessage> source,
+        this Task<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -397,15 +397,15 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<HttpResponseMessage> source,
+        this Task<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
     /// a <c>Fail</c> result.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="options">
@@ -418,16 +418,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>A result representing the response.</returns>
     public static async Task<Result> EnsureSuccessStatusCodeAsync(
-        this Task<Result<HttpResponseMessage>> source,
+        this Task<Result<HttpResponseMessage>> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).EnsureSuccessStatusCodeAsync(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).EnsureSuccessStatusCodeAsync(options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
     /// a <c>Fail</c> result.
     /// </summary>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -436,16 +436,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>A result representing the response.</returns>
     public static async Task<Result> EnsureSuccessStatusCodeAsync(
-        this Task<Result<HttpResponseMessage>> source,
+        this Task<Result<HttpResponseMessage>> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).EnsureSuccessStatusCodeAsync(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).EnsureSuccessStatusCodeAsync(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="options">
@@ -458,17 +458,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this Task<Result<HttpResponseMessage>> source,
+        this Task<Result<HttpResponseMessage>> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -477,16 +477,16 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
-        this Task<Result<HttpResponseMessage>> source,
+        this Task<Result<HttpResponseMessage>> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="options">
@@ -499,17 +499,17 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<Result<HttpResponseMessage>> source,
+        this Task<Result<HttpResponseMessage>> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="source">
+    /// <param name="sourceResponse">
     /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
     /// </param>
     /// <param name="cancellationToken">
@@ -518,9 +518,9 @@ public static class HttpResponseExtensions
     /// </param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<Result<HttpResponseMessage>> source,
+        this Task<Result<HttpResponseMessage>> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await source.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
 
     private static async Task<Result<T>> ReadValue<T>(
         HttpContent content,
