@@ -23,5 +23,5 @@ public partial struct Maybe<T>
     /// </param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public Result<T> AsResult(Func<Error>? onNone = null, Func<Error, Error>? onFail = null) =>
-        CrossMap(value => value.ToResult(), onNone, onFail);
+        Then(value => value.ToResult(), onNone, onFail);
 }

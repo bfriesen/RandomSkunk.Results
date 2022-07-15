@@ -17,5 +17,5 @@ public partial struct Result<T>
     /// </param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public Maybe<T> AsMaybe(Func<Error, Error>? onFail = null) =>
-        CrossMap(value => value.ToMaybe(), onFail);
+        Then(value => value.ToMaybe(), onFail);
 }
