@@ -89,7 +89,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
     /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is equal to the <paramref name="right"/>
-    /// parameter; otherwise, <see langword="false"/>.</returns>
+    ///     parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Maybe<T> left, Maybe<T> right) => left.Equals(right);
 
     /// <summary>
@@ -98,7 +98,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
     /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is not equal to the <paramref name="right"/>
-    /// parameter; otherwise, <see langword="false"/>.</returns>
+    ///     parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
 
     /// <summary>
@@ -144,10 +144,10 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/>
-    /// of the <see cref="Type"/> of the current instance is used instead.</param>
+    ///     of the <see cref="Type"/> of the current instance is used instead.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
-    /// </param>
+    ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Fail(
         string errorMessage,

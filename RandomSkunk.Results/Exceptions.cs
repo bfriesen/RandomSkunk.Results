@@ -10,7 +10,7 @@ internal static class Exceptions
     public const string FunctionMustNotReturnNullMessage = "Function must not return a null value.";
 
     public static InvalidStateException CannotAccessErrorUnlessFail() => new(CannotAccessErrorUnlessFailMessage);
-    
+
     public static InvalidStateException CannotAccessErrorUnlessNonSuccess() => new(CannotAccessErrorUnlessNonSuccessMessage);
 
     public static InvalidStateException CannotAccessValueUnlessSuccess(Error? error = null) => new(CannotAccessValueUnlessSuccessMessage, error);

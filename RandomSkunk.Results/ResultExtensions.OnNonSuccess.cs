@@ -10,8 +10,8 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
     /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    /// <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    /// returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
+    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
+    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static TResult OnNonSuccess<TResult>(
         this TResult sourceResult,
@@ -37,8 +37,8 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
     /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    /// <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    /// returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
+    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
+    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccessAsync<TResult>(
         this TResult sourceResult,

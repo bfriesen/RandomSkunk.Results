@@ -6,8 +6,8 @@ namespace RandomSkunk.Results.Dapper;
 public static class ExecuteResultExtensions
 {
     /// <summary>
-    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is one; otherwise,
-    /// returns a <c>Fail</c> result.
+    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is one;
+    /// otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
     /// <returns>A result representing a database query that affected one row.</returns>
@@ -15,8 +15,8 @@ public static class ExecuteResultExtensions
         sourceResult.EnsureNRowsAffected(1);
 
     /// <summary>
-    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is one; otherwise,
-    /// returns a <c>Fail</c> result.
+    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is one;
+    /// otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
     /// <returns>A result representing a database query that affected one row.</returns>

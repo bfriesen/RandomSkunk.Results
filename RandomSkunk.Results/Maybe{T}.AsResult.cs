@@ -10,11 +10,11 @@ public partial struct Maybe<T>
     /// code: <see cref="ErrorCodes.NotFound"/>) is returned.
     /// </summary>
     /// <param name="onNone">An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used instead.
-    /// Evaluated only if this is a <c>None</c> result.</param>
+    ///     <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used instead.
+    ///     Evaluated only if this is a <c>None</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if this is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public Result<T> AsResult(Func<Error>? onNone = null, Func<Error, Error>? onFail = null) =>
         Then(value => value.ToResult(), onNone, onFail);

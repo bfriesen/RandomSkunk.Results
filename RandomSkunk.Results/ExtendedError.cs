@@ -16,15 +16,11 @@ public sealed record class ExtendedError : Error
     /// <summary>
     /// Initializes a new instance of the <see cref="ExtendedError"/> class.
     /// </summary>
-    /// <param name="message">
-    /// The error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/> is used instead.
-    /// </param>
-    /// <param name="type">
-    /// The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
-    /// </param>
-    /// <param name="extensions">
-    /// Additional properties not found in the <see cref="Error"/> class.
-    /// </param>
+    /// <param name="message">The error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/>
+    ///     is used instead.</param>
+    /// <param name="type">The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
+    ///     </param>
+    /// <param name="extensions">Additional properties not found in the <see cref="Error"/> class.</param>
     public ExtendedError(string? message = null, string? type = null, IReadOnlyDictionary<string, object>? extensions = null)
         : base(message, type ?? "Error") =>
         _extensions = extensions ?? (_emptyExtensions ??= new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
@@ -43,17 +39,14 @@ public sealed record class ExtendedError : Error
     /// </summary>
     /// <typeparam name="T">The type of the extension property.</typeparam>
     /// <param name="key">The name of the extension property.</param>
-    /// <param name="options">
-    /// JSON serialization options used to deserialize to the desired type when the actual value is a <see cref="JsonElement"/>.
-    /// </param>
-    /// <param name="value">
-    /// When this method returns, contains the value associated with the specified key, if the key is found and is of a valid
-    /// type; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <see cref="ExtendedError"/> contains an extension property with the specified key that is
-    /// of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
-    /// </returns>
+    /// <param name="options">JSON serialization options used to deserialize to the desired type when the actual value is a
+    ///     <see cref="JsonElement"/>.</param>
+    /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found
+    ///     and is of a valid type; otherwise, the default value for the type of the value parameter. This parameter is passed
+    ///     uninitialized.</param>
+    /// <returns><see langword="true"/> if the <see cref="ExtendedError"/> contains an extension property with the specified key
+    ///     that is of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise,
+    ///     <see langword="false"/>.</returns>
     public bool TryGet<T>(string key, JsonSerializerOptions? options, [NotNullWhen(true)] out T? value)
     {
         if (Extensions.TryGetValue(key, out var obj) && obj != null)
@@ -96,14 +89,12 @@ public sealed record class ExtendedError : Error
     /// </summary>
     /// <typeparam name="T">The type of the extension property.</typeparam>
     /// <param name="key">The name of the extension property.</param>
-    /// <param name="value">
-    /// When this method returns, contains the value associated with the specified key, if the key is found and is of a valid
-    /// type; otherwise, the default value for the type of the value parameter. This parameter is passed uninitialized.
-    /// </param>
-    /// <returns>
-    /// <see langword="true"/> if the <see cref="ExtendedError"/> contains an extension property with the specified key that is
-    /// of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
-    /// </returns>
+    /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found
+    ///     and is of a valid type; otherwise, the default value for the type of the value parameter. This parameter is passed
+    ///     uninitialized.</param>
+    /// <returns><see langword="true"/> if the <see cref="ExtendedError"/> contains an extension property with the specified key
+    ///     that is of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise,
+    ///     <see langword="false"/>.</returns>
     public bool TryGet<T>(string key, [NotNullWhen(true)] out T? value) =>
         TryGet(key, null, out value);
 

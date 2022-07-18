@@ -8,12 +8,10 @@ public record class DbError : Error
     /// <summary>
     /// Initializes a new instance of the <see cref="DbError"/> class.
     /// </summary>
-    /// <param name="message">
-    /// The error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/> is used instead.
-    /// </param>
-    /// <param name="type">
-    /// The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
-    /// </param>
+    /// <param name="message">The error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/>
+    ///     is used instead.</param>
+    /// <param name="type">The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
+    ///     </param>
     public DbError(string? message = null, string? type = null)
         : base(message, type)
     {
@@ -51,15 +49,11 @@ public record class DbError : Error
     /// </summary>
     /// <param name="exception">The exception to create the error from.</param>
     /// <param name="message">The error message.</param>
-    /// <param name="errorCode">
-    /// The optional error code. If <see langword="null"/>, then the <see cref="ExternalException.ErrorCode"/> of the exception
-    /// is used instead.
-    /// </param>
+    /// <param name="errorCode">The optional error code. If <see langword="null"/>, then the
+    ///     <see cref="ExternalException.ErrorCode"/> of the exception is used instead.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="exception"/> is <see langword="null"/>.
-    /// </exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
     public static DbError FromDbException(
         DbException exception,
         string? message = null,

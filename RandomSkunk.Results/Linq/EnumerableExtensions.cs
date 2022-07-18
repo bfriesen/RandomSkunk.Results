@@ -71,7 +71,7 @@ public static class EnumerableExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is
-    /// <see langword="null"/>.</exception>
+    ///     <see langword="null"/>.</exception>
     public static Result<T> FirstOrFail<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
@@ -93,7 +93,7 @@ public static class EnumerableExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is
-    /// <see langword="null"/>.</exception>
+    ///     <see langword="null"/>.</exception>
     public static Maybe<T> FirstOrNone<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
@@ -187,7 +187,7 @@ public static class EnumerableExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is
-    /// <see langword="null"/>.</exception>
+    ///     <see langword="null"/>.</exception>
     public static Result<T> LastOrFail<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
@@ -210,7 +210,7 @@ public static class EnumerableExtensions
     /// <param name="predicate">A function to test each element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is
-    /// <see langword="null"/>.</exception>
+    ///     <see langword="null"/>.</exception>
     public static Maybe<T> LastOrNone<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
@@ -306,7 +306,7 @@ public static class EnumerableExtensions
     /// <param name="predicate">A function to test an element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is
-    /// <see langword="null"/>.</exception>
+    ///     <see langword="null"/>.</exception>
     public static Result<T> SingleOrFail<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
@@ -342,7 +342,7 @@ public static class EnumerableExtensions
     /// <param name="predicate">A function to test an element for a condition.</param>
     /// <returns>A result representing the operation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceSequence"/> or <paramref name="predicate"/> is
-    /// <see langword="null"/>.</exception>
+    ///     <see langword="null"/>.</exception>
     public static Maybe<T> SingleOrNone<T>(this IEnumerable<T> sourceSequence, Func<T, bool> predicate)
     {
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));

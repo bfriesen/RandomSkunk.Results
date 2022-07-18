@@ -11,8 +11,8 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if this is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public static async Task<Maybe<T>> AsMaybe<T>(this Task<Result<T>> sourceResult, Func<Error, Error>? onFail = null) =>
         (await sourceResult.ConfigureAwait(false)).AsMaybe(onFail);
@@ -26,11 +26,11 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNone">An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used instead.
-    /// Evaluated only if this is a <c>None</c> result.</param>
+    ///     <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used instead.
+    ///     Evaluated only if this is a <c>None</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if this is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public static async Task<Result<T>> AsResult<T>(
         this Task<Maybe<T>> sourceResult,
@@ -46,10 +46,10 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the outgoing result. Evaluated only if
-    /// the source is a <c>Success</c> result.</param>
+    ///     the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Result> Then<T>(
@@ -66,10 +66,10 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the outgoing result. Evaluated only
-    /// if the source is a <c>Success</c> result.</param>
+    ///     if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Result> ThenAsync<T>(
@@ -87,10 +87,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the outgoing result. Evaluated only if
-    /// the source is a <c>Success</c> result.</param>
+    ///     the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> Then<T, TReturn>(
@@ -108,10 +108,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the outgoing result. Evaluated only
-    /// if the source is a <c>Success</c> result.</param>
+    ///     if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> ThenAsync<T, TReturn>(
@@ -129,13 +129,13 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the outgoing result. Evaluated only if
-    /// the source is a <c>Success</c> result.</param>
+    ///     the source is a <c>Success</c> result.</param>
     /// <param name="onNone">An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
-    /// if the source is a <c>None</c> result.</param>
+    ///     <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
+    ///     if the source is a <c>None</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Result> Then<T>(
@@ -154,13 +154,13 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the outgoing result. Evaluated only
-    /// if the source is a <c>Success</c> result.</param>
+    ///     if the source is a <c>Success</c> result.</param>
     /// <param name="onNone">An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
-    /// if the source is a <c>None</c> result.</param>
+    ///     <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
+    ///     if the source is a <c>None</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Result> ThenAsync<T>(
@@ -180,13 +180,13 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the outgoing result. Evaluated only if
-    /// the source is a <c>Success</c> result.</param>
+    ///     the source is a <c>Success</c> result.</param>
     /// <param name="onNone">An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
-    /// if the source is a <c>None</c> result.</param>
+    ///     <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
+    ///     if the source is a <c>None</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> Then<T, TReturn>(
@@ -206,13 +206,13 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the outgoing result. Evaluated only
-    /// if the source is a <c>Success</c> result.</param>
+    ///     if the source is a <c>Success</c> result.</param>
     /// <param name="onNone">An optional function that maps a <c>None</c> result to the return result's error. If
-    /// <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
-    /// if the source is a <c>None</c> result.</param>
+    ///     <see langword="null"/>, the error returned from <see cref="DefaultOnNoneCallback"/> is used instead. Evaluated only
+    ///     if the source is a <c>None</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> ThenAsync<T, TReturn>(
@@ -238,7 +238,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
-    /// </returns>
+    ///     </returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
     public static async Task<Result> Else(this Task<Result> sourceResult, Func<Result> getFallbackResult) =>
         (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
@@ -261,7 +261,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
-    /// </returns>
+    ///     </returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> Else<T>(this Task<Result<T>> sourceResult, Func<Result<T>> getFallbackResult) =>
         (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
@@ -284,7 +284,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
-    /// </returns>
+    ///     </returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> sourceResult, Func<Maybe<T>> getFallbackResult) =>
         (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
@@ -296,10 +296,10 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="filter">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    /// <see langword="false"/>.</param>
+    ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    /// <paramref name="filter"/> is <see langword="null"/>.</exception>
+    ///     <paramref name="filter"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> Filter<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, bool> filter) =>
@@ -312,10 +312,10 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="filterAsync">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    /// <see langword="false"/>.</param>
+    ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    /// <paramref name="filterAsync"/> is <see langword="null"/>.</exception>
+    ///     <paramref name="filterAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> FilterAsync<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<bool>> filterAsync) =>
@@ -330,10 +330,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> Then<T, TReturn>(
@@ -351,10 +351,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> ThenAsync<T, TReturn>(
@@ -373,10 +373,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> Then<T, TReturn>(
@@ -395,10 +395,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> ThenAsync<T, TReturn>(
@@ -432,7 +432,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="fallbackValue">The fallback value to return if this is not a <c>Success</c> result.</param>
     /// <returns>The value of this result if this is a <c>Success</c> result; otherwise, <paramref name="fallbackValue"/>.
-    /// </returns>
+    ///     </returns>
     public static async Task<T?> GetValueOr<T>(this Task<Result<T>> sourceResult, T? fallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).GetValueOr(fallbackValue);
 
@@ -442,9 +442,9 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getFallbackValue">A function that creates the fallback value to return if this is not a <c>Success</c>
-    /// result.</param>
+    ///     result.</param>
     /// <returns>The value of this result if this is a <c>Success</c> result; otherwise, the value returned by the
-    /// <paramref name="getFallbackValue"/> function.</returns>
+    ///     <paramref name="getFallbackValue"/> function.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
     public static async Task<T?> GetValueOr<T>(this Task<Result<T>> sourceResult, Func<T?> getFallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).GetValueOr(getFallbackValue);
@@ -456,7 +456,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="fallbackValue">The fallback value to return if this is not a <c>Success</c> result.</param>
     /// <returns>The value of this result if this is a <c>Success</c> result; otherwise, <paramref name="fallbackValue"/>.
-    /// </returns>
+    ///     </returns>
     public static async Task<T?> GetValueOr<T>(this Task<Maybe<T>> sourceResult, T? fallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).GetValueOr(fallbackValue);
 
@@ -466,9 +466,9 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getFallbackValue">A function that creates the fallback value to return if this is not a <c>Success</c>
-    /// result.</param>
+    ///     result.</param>
     /// <returns>The value of this result if this is a <c>Success</c> result; otherwise, the value returned by the
-    /// <paramref name="getFallbackValue"/> function.</returns>
+    ///     <paramref name="getFallbackValue"/> function.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
     public static async Task<T?> GetValueOr<T>(this Task<Maybe<T>> sourceResult, Func<T?> getFallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).GetValueOr(getFallbackValue);
@@ -482,14 +482,14 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If <paramref name="onSuccess"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
+    ///     </exception>
     public static async Task<Result<TReturn>> Map<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, TReturn> onSuccess,
@@ -505,14 +505,14 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If <paramref name="onSuccessAsync"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
+    ///     </exception>
     public static async Task<Result<TReturn>> MapAsync<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessAsync,
@@ -528,14 +528,14 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If <paramref name="onSuccess"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
+    ///     </exception>
     public static async Task<Maybe<TReturn>> Map<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, TReturn> onSuccess,
@@ -551,14 +551,14 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If <paramref name="onSuccessAsync"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
+    ///     </exception>
     public static async Task<Maybe<TReturn>> MapAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessAsync,
@@ -573,10 +573,10 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>.</param>
     /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    /// result is passed to this function.</param>
+    ///     result is passed to this function.</param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
-    /// <paramref name="onFail"/> is <see langword="null"/>.</exception>
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
     public static async Task<T> Match<T>(
         this Task<Result> sourceResult,
         Func<T> onSuccess,
@@ -591,11 +591,11 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>.</param>
     /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    /// result is passed to this function.</param>
+    ///     result is passed to this function.</param>
     /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
-    /// evaluation.</returns>
+    ///     evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
-    /// <paramref name="onFail"/> is <see langword="null"/>.</exception>
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
     public static async Task<T> MatchAsync<T>(
         this Task<Result> sourceResult,
         Func<Task<T>> onSuccess,
@@ -610,12 +610,12 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
-    /// <c>Success</c> result is passed to this function.</param>
+    ///     <c>Success</c> result is passed to this function.</param>
     /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    /// result is passed to this function.</param>
+    ///     result is passed to this function.</param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
-    /// <paramref name="onFail"/> is <see langword="null"/>.</exception>
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
     public static async Task<TReturn> Match<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, TReturn> onSuccess,
@@ -629,15 +629,14 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccess">
-    /// The function to evaluate if the result type is <c>Success</c>. The non-null value of the
-    /// <c>Success</c> result is passed to this function.</param>
+    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
+    ///     <c>Success</c> result is passed to this function.</param>
     /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    /// result is passed to this function.</param>
+    ///     result is passed to this function.</param>
     /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
-    /// evaluation.</returns>
+    ///     evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
-    /// <paramref name="onFail"/> is <see langword="null"/>.</exception>
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
     public static async Task<TReturn> MatchAsync<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccess,
@@ -652,14 +651,14 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
-    /// <c>Success</c> result is passed to this function.</param>
+    ///     <c>Success</c> result is passed to this function.</param>
     /// <param name="onNone">The function to evaluate if the result type is <c>None</c>.</param>
     /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    /// result is passed to this function.</param>
+    ///     result is passed to this function.</param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>, or if
-    /// <paramref name="onNone"/> is <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
-    /// </exception>
+    ///     <paramref name="onNone"/> is <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
+    ///     </exception>
     public static async Task<TReturn> Match<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, TReturn> onSuccess,
@@ -675,15 +674,15 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
-    /// <c>Success</c> result is passed to this function.</param>
+    ///     <c>Success</c> result is passed to this function.</param>
     /// <param name="onNone">The function to evaluate if the result type is <c>None</c>.</param>
     /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    /// result is passed to this function.</param>
+    ///     result is passed to this function.</param>
     /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
-    /// evaluation.</returns>
+    ///     evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>, or if
-    /// <paramref name="onNone"/> is <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
-    /// </exception>
+    ///     <paramref name="onNone"/> is <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
+    ///     </exception>
     public static async Task<TReturn> MatchAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccess,
@@ -834,8 +833,8 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
     /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    /// <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    /// returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
+    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
+    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccess<TResult>(
         this Task<TResult> sourceResult,
@@ -851,8 +850,8 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
     /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    /// <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    /// returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
+    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
+    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccessAsync<TResult>(
         this Task<TResult> sourceResult,
@@ -883,7 +882,7 @@ public static partial class ResultExtensions
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
+    ///     </exception>
     public static async Task<Result<T>> Or<T>(this Task<Result<T>> sourceResult, Func<T> getFallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).Or(getFallbackValue);
 
@@ -909,7 +908,7 @@ public static partial class ResultExtensions
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
-    /// </exception>
+    ///     </exception>
     public static async Task<Maybe<T>> Or<T>(this Task<Maybe<T>> sourceResult, Func<T> getFallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).Or(getFallbackValue);
 
@@ -919,7 +918,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getError">A function that returns the error for the returned <c>Fail</c> result.</param>
     /// <returns>A new <c>Fail</c> result with its error specified by the <paramref name="getError"/> function if this is a
-    /// <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
+    ///     <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getError"/> is <see langword="null"/>.</exception>
     public static async Task<Result> WithError(this Task<Result> sourceResult, Func<Error, Error> getError) =>
         (await sourceResult.ConfigureAwait(false)).WithError(getError);
@@ -931,7 +930,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getError">A function that returns the error for the returned <c>Fail</c> result.</param>
     /// <returns>A new <c>Fail</c> result with its error specified by the <paramref name="getError"/> function if this is a
-    /// <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
+    ///     <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getError"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> WithError<T>(this Task<Result<T>> sourceResult, Func<Error, Error> getError) =>
         (await sourceResult.ConfigureAwait(false)).WithError(getError);
@@ -943,7 +942,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="getError">A function that returns the error for the returned <c>Fail</c> result.</param>
     /// <returns>A new <c>Fail</c> result with its error specified by the <paramref name="getError"/> function if this is a
-    /// <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
+    ///     <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getError"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> WithError<T>(this Task<Maybe<T>> sourceResult, Func<Error, Error> getError) =>
         (await sourceResult.ConfigureAwait(false)).WithError(getError);
@@ -955,10 +954,10 @@ public static partial class ResultExtensions
     /// </summary>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Result> Then(
@@ -974,10 +973,10 @@ public static partial class ResultExtensions
     /// </summary>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Result> ThenAsync(
@@ -994,10 +993,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> Then<TReturn>(
@@ -1014,10 +1013,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> ThenAsync<TReturn>(
@@ -1034,10 +1033,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> Then<TReturn>(
@@ -1054,10 +1053,10 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    /// Evaluated only if the source is a <c>Success</c> result.</param>
+    ///     Evaluated only if the source is a <c>Success</c> result.</param>
     /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    /// <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    /// Evaluated only if the source is a <c>Fail</c> result.</param>
+    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
+    ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> ThenAsync<TReturn>(

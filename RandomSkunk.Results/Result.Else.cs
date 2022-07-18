@@ -1,8 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content>
-/// Defines the <c>Else</c> methods.
-/// </content>
+/// <content> Defines the <c>Else</c> methods. </content>
 public partial struct Result
 {
     /// <summary>
@@ -19,15 +17,9 @@ public partial struct Result
     /// Returns the current result if it is a <c>Success</c> result, else returns the result from evaluating the
     /// <paramref name="getFallbackResult"/> function.
     /// </summary>
-    /// <param name="getFallbackResult">
-    /// A function that returns the fallback result if the result is not <c>Success</c>.
-    /// </param>
-    /// <returns>
-    /// Either the current result or the value returned from <paramref name="getFallbackResult"/>.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="getFallbackResult"/> is <see langword="null"/>.
-    /// </exception>
+    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
+    /// <returns>Either the current result or the value returned from <paramref name="getFallbackResult"/>.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
     public Result Else(Func<Result> getFallbackResult)
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));

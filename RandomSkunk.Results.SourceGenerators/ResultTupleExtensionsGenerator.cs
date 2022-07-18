@@ -68,9 +68,7 @@ public static class ResultTupleExtensions
     /// <typeparam name=""T1"">The type of the first result.</typeparam>");
         GenerateTypeParamDocs(sb, tupleCount);
         sb.Append($@"    /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// A callback function to invoke if all results in the tuple are <c>Success</c> results.
-    /// </param>
+    /// <param name=""onAllSuccess"">A callback function to invoke if all results in the tuple are <c>Success</c> results.</param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> is <see langword=""null""/>.</exception>
     public static ");
@@ -111,9 +109,7 @@ public static class ResultTupleExtensions
     /// <typeparam name=""T1"">The type of the first result.</typeparam>");
         GenerateTypeParamDocs(sb, tupleCount);
         sb.Append(@"    /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// A callback function to invoke if all results in the tuple are <c>Success</c> results.
-    /// </param>
+    /// <param name=""onAllSuccess"">A callback function to invoke if all results in the tuple are <c>Success</c> results.</param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> is <see langword=""null""/>.</exception>
     public static async Task<");
@@ -152,9 +148,7 @@ public static class ResultTupleExtensions
     /// Invokes the <paramref name=""onAllSuccess""/> function if all results in the tuple are <c>Success</c> results.
     /// </summary>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// A callback function to invoke if all results in the tuple are <c>Success</c> results.
-    /// </param>
+    /// <param name=""onAllSuccess"">A callback function to invoke if all results in the tuple are <c>Success</c> results.</param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> is <see langword=""null""/>.</exception>
     public static ");
@@ -191,9 +185,7 @@ public static class ResultTupleExtensions
     /// Invokes the <paramref name=""onAllSuccess""/> function if all results in the tuple are <c>Success</c> results.
     /// </summary>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// A callback function to invoke if all results in the tuple are <c>Success</c> results.
-    /// </param>
+    /// <param name=""onAllSuccess"">A callback function to invoke if all results in the tuple are <c>Success</c> results.</param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> is <see langword=""null""/>.</exception>
     public static async Task<");
@@ -230,14 +222,11 @@ public static class ResultTupleExtensions
     /// Invokes the <paramref name=""onAnyNonSuccess""/> function if any results in the tuple are <c>non-Success</c> results.
     /// </summary>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAnyNonSuccess"">
-    /// A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
-    /// </param>
-    /// <param name=""getNoneError"">
-    /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
-    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
-    /// </param>
+    /// <param name=""onAnyNonSuccess"">A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
+    ///     </param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
+    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
+    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.</exception>
     public static ");
@@ -275,14 +264,11 @@ public static class ResultTupleExtensions
     /// Invokes the <paramref name=""onAnyNonSuccess""/> function if any results in the tuple are <c>non-Success</c> results.
     /// </summary>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAnyNonSuccess"">
-    /// A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
-    /// </param>
-    /// <param name=""getNoneError"">
-    /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
-    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
-    /// </param>
+    /// <param name=""onAnyNonSuccess"">A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
+    ///     </param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
+    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
+    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.</exception>
     public static async Task<");
@@ -324,25 +310,18 @@ public static class ResultTupleExtensions
         GenerateTypeParamDocs(sb, tupleCount);
         sb.Append(@"    /// <typeparam name=""TReturn"">The return type of the match all method.</typeparam>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// The function to evaluate if all results are <c>Success</c>. The non-null values of each of the <c>Success</c> results are
-    /// passed to this function.
-    /// </param>
-    /// <param name=""onAnyNonSuccess"">
-    /// The function to evaluate if any results are <c>non-Success</c>. The error passed to this function depends on how many
-    /// results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is passed to this function. If more
-    /// than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is returned containing the error of each
-    /// <c>non-Success</c> result.
-    /// </param>
-    /// <param name=""getNoneError"">
-    /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
-    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
-    /// </param>
+    /// <param name=""onAllSuccess"">The function to evaluate if all results are <c>Success</c>. The non-null values of each of the
+    ///     <c>Success</c> results are passed to this function.</param>
+    /// <param name=""onAnyNonSuccess"">The function to evaluate if any results are <c>non-Success</c>. The error passed to this
+    ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
+    ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
+    ///     returned containing the error of each <c>non-Success</c> result.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
+    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
+    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
     /// <returns>The result of the matching function evaluation.</returns>
-    /// <exception cref=""ArgumentNullException"">
-    /// If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.
-    /// </exception>
+    /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
+    ///     <see langword=""null""/>.</exception>
     public static TReturn MatchAll<");
         GenerateTypeDefinitionArguments(sb, tupleCount);
         sb.Append(@", TReturn>(
@@ -391,25 +370,18 @@ public static class ResultTupleExtensions
         GenerateTypeParamDocs(sb, tupleCount);
         sb.Append(@"    /// <typeparam name=""TReturn"">The return type of the match all method.</typeparam>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// The function to evaluate if all results are <c>Success</c>. The non-null values of each of the <c>Success</c> results are
-    /// passed to this function.
-    /// </param>
-    /// <param name=""onAnyNonSuccess"">
-    /// The function to evaluate if any results are <c>non-Success</c>. The error passed to this function depends on how many
-    /// results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is passed to this function. If more
-    /// than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is returned containing the error of each
-    /// <c>non-Success</c> result.
-    /// </param>
-    /// <param name=""getNoneError"">
-    /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
-    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
-    /// </param>
+    /// <param name=""onAllSuccess"">The function to evaluate if all results are <c>Success</c>. The non-null values of each of the
+    ///     <c>Success</c> results are passed to this function.</param>
+    /// <param name=""onAnyNonSuccess"">The function to evaluate if any results are <c>non-Success</c>. The error passed to this
+    ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
+    ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
+    ///     returned containing the error of each <c>non-Success</c> result.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
+    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
+    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
     /// <returns>The result of the matching function evaluation.</returns>
-    /// <exception cref=""ArgumentNullException"">
-    /// If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.
-    /// </exception>
+    /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
+    ///     <see langword=""null""/>.</exception>
     public static Task<TReturn> MatchAllAsync<");
         GenerateTypeDefinitionArguments(sb, tupleCount);
         sb.Append(@", TReturn>(
@@ -456,25 +428,18 @@ public static class ResultTupleExtensions
     /// </summary>
     /// <typeparam name=""TReturn"">The return type of the match all method.</typeparam>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// The function to evaluate if all results are <c>Success</c>. The non-null values of each of the <c>Success</c> results are
-    /// passed to this function.
-    /// </param>
-    /// <param name=""onAnyNonSuccess"">
-    /// The function to evaluate if any results are <c>non-Success</c>. The error passed to this function depends on how many
-    /// results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is passed to this function. If more
-    /// than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is returned containing the error of each
-    /// <c>non-Success</c> result.
-    /// </param>
-    /// <param name=""getNoneError"">
-    /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
-    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
-    /// </param>
+    /// <param name=""onAllSuccess"">The function to evaluate if all results are <c>Success</c>. The non-null values of each of the
+    ///     <c>Success</c> results are passed to this function.</param>
+    /// <param name=""onAnyNonSuccess"">The function to evaluate if any results are <c>non-Success</c>. The error passed to this
+    ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
+    ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
+    ///     returned containing the error of each <c>non-Success</c> result.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
+    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
+    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
     /// <returns>The result of the matching function evaluation.</returns>
-    /// <exception cref=""ArgumentNullException"">
-    /// If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.
-    /// </exception>
+    /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
+    ///     <see langword=""null""/>.</exception>
     public static TReturn MatchAll<TReturn>(
         this ");
         GenerateNonGenericTupleDefinition(sb, tupleCount);
@@ -519,25 +484,18 @@ public static class ResultTupleExtensions
     /// </summary>
     /// <typeparam name=""TReturn"">The return type of the match all method.</typeparam>
     /// <param name=""results"">A tuple of results.</param>
-    /// <param name=""onAllSuccess"">
-    /// The function to evaluate if all results are <c>Success</c>. The non-null values of each of the <c>Success</c> results are
-    /// passed to this function.
-    /// </param>
-    /// <param name=""onAnyNonSuccess"">
-    /// The function to evaluate if any results are <c>non-Success</c>. The error passed to this function depends on how many
-    /// results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is passed to this function. If more
-    /// than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is returned containing the error of each
-    /// <c>non-Success</c> result.
-    /// </param>
-    /// <param name=""getNoneError"">
-    /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
-    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
-    /// </param>
+    /// <param name=""onAllSuccess"">The function to evaluate if all results are <c>Success</c>. The non-null values of each of the
+    ///     <c>Success</c> results are passed to this function.</param>
+    /// <param name=""onAnyNonSuccess"">The function to evaluate if any results are <c>non-Success</c>. The error passed to this
+    ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
+    ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
+    ///     returned containing the error of each <c>non-Success</c> result.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
+    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
+    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
     /// <returns>The result of the matching function evaluation.</returns>
-    /// <exception cref=""ArgumentNullException"">
-    /// If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.
-    /// </exception>
+    /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
+    ///     <see langword=""null""/>.</exception>
     public static Task<TReturn> MatchAllAsync<TReturn>(
         this ");
         GenerateNonGenericTupleDefinition(sb, tupleCount);

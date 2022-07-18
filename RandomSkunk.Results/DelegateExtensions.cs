@@ -15,13 +15,10 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error.
-    /// If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
+    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result TryInvokeAsResult(
@@ -52,13 +49,10 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
+    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
@@ -96,13 +90,10 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
+    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> TryInvokeAsMaybe<T>(
@@ -135,13 +126,10 @@ public static class DelegateExtensions
     /// </para>
     /// </summary>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
+    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> TryInvokeAsResultAsync(
@@ -170,13 +158,10 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
+    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
@@ -212,13 +197,10 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
+    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T>(
@@ -252,13 +234,10 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c>
+    ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result TryInvokeAsResult<TException>(
@@ -290,13 +269,10 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c>
+    ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
@@ -336,13 +312,10 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c>
+    ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> TryInvokeAsMaybe<T, TException>(
@@ -378,13 +351,10 @@ public static class DelegateExtensions
     /// </summary>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c>
+    ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> TryInvokeAsResultAsync<TException>(
@@ -416,13 +386,10 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c>
+    ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
@@ -462,13 +429,10 @@ public static class DelegateExtensions
     /// <typeparam name="T">The type of the returned result value.</typeparam>
     /// <typeparam name="TException">The type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="exceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="exceptionPredicate">
-    /// An optional predicate function that is applied to the catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="exceptionHandler">An optional function that maps a caught <typeparamref name="TException"/> to a <c>Fail</c>
+    ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionPredicate">An optional predicate function that is applied to the catch block's <c>when</c> clause.
+    ///     </param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T, TException>(
@@ -505,20 +469,16 @@ public static class DelegateExtensions
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="firstExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="secondExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException2"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="firstExceptionPredicate">
-    /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
-    /// </param>
-    /// <param name="secondExceptionPredicate">
-    /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="firstExceptionHandler">An optional function that maps a caught <typeparamref name="TException1"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="secondExceptionHandler">An optional function that maps a caught <typeparamref name="TException2"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="firstExceptionPredicate">An optional predicate function that is applied to the first catch block's
+    ///     <c>when</c> clause.</param>
+    /// <param name="secondExceptionPredicate">An optional predicate function that is applied to the second catch block's
+    ///     <c>when</c> clause.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result TryInvokeAsResult<TException1, TException2>(
@@ -559,20 +519,16 @@ public static class DelegateExtensions
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="firstExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="secondExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException2"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="firstExceptionPredicate">
-    /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
-    /// </param>
-    /// <param name="secondExceptionPredicate">
-    /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="firstExceptionHandler">An optional function that maps a caught <typeparamref name="TException1"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="secondExceptionHandler">An optional function that maps a caught <typeparamref name="TException2"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="firstExceptionPredicate">An optional predicate function that is applied to the first catch block's
+    ///     <c>when</c> clause.</param>
+    /// <param name="secondExceptionPredicate">An optional predicate function that is applied to the second catch block's
+    ///     <c>when</c> clause.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
@@ -620,20 +576,16 @@ public static class DelegateExtensions
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="firstExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="secondExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException2"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="firstExceptionPredicate">
-    /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
-    /// </param>
-    /// <param name="secondExceptionPredicate">
-    /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="firstExceptionHandler">An optional function that maps a caught <typeparamref name="TException1"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="secondExceptionHandler">An optional function that maps a caught <typeparamref name="TException2"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="firstExceptionPredicate">An optional predicate function that is applied to the first catch block's
+    ///     <c>when</c> clause.</param>
+    /// <param name="secondExceptionPredicate">An optional predicate function that is applied to the second catch block's
+    ///     <c>when</c> clause.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> TryInvokeAsMaybe<T, TException1, TException2>(
@@ -666,8 +618,8 @@ public static class DelegateExtensions
     }
 
     /// <summary>
-    /// Converts the specified <see cref="AsyncAction"/> delegate to a <see cref="Result"/> by evaluating it inside a
-    /// try/catch block.
+    /// Converts the specified <see cref="AsyncAction"/> delegate to a <see cref="Result"/> by evaluating it inside a try/catch
+    /// block.
     /// <para>
     /// If the function doesn't throw an exception, a <c>Success</c> result is returned. If the function throws an exception of
     /// type <typeparamref name="TException1"/> or <typeparamref name="TException2"/>, the exception is used to construct the
@@ -678,20 +630,16 @@ public static class DelegateExtensions
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="firstExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="secondExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException2"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="firstExceptionPredicate">
-    /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
-    /// </param>
-    /// <param name="secondExceptionPredicate">
-    /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="firstExceptionHandler">An optional function that maps a caught <typeparamref name="TException1"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="secondExceptionHandler">An optional function that maps a caught <typeparamref name="TException2"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="firstExceptionPredicate">An optional predicate function that is applied to the first catch block's
+    ///     <c>when</c> clause.</param>
+    /// <param name="secondExceptionPredicate">An optional predicate function that is applied to the second catch block's
+    ///     <c>when</c> clause.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> TryInvokeAsResultAsync<TException1, TException2>(
@@ -732,20 +680,16 @@ public static class DelegateExtensions
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="firstExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="secondExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException2"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="firstExceptionPredicate">
-    /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
-    /// </param>
-    /// <param name="secondExceptionPredicate">
-    /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="firstExceptionHandler">An optional function that maps a caught <typeparamref name="TException1"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="secondExceptionHandler">An optional function that maps a caught <typeparamref name="TException2"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="firstExceptionPredicate">An optional predicate function that is applied to the first catch block's
+    ///     <c>when</c> clause.</param>
+    /// <param name="secondExceptionPredicate">An optional predicate function that is applied to the second catch block's
+    ///     <c>when</c> clause.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If the source function returns <see langword="null"/>.</exception>
@@ -793,20 +737,16 @@ public static class DelegateExtensions
     /// <typeparam name="TException1">The first type of exception to catch.</typeparam>
     /// <typeparam name="TException2">The second type of exception to catch.</typeparam>
     /// <param name="sourceDelegate">The delegate to convert.</param>
-    /// <param name="firstExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException1"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="secondExceptionHandler">
-    /// An optional function that maps a caught <typeparamref name="TException2"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.
-    /// </param>
-    /// <param name="firstExceptionPredicate">
-    /// An optional predicate function that is applied to the first catch block's <c>when</c> clause.
-    /// </param>
-    /// <param name="secondExceptionPredicate">
-    /// An optional predicate function that is applied to the second catch block's <c>when</c> clause.
-    /// </param>
+    /// <param name="firstExceptionHandler">An optional function that maps a caught <typeparamref name="TException1"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="secondExceptionHandler">An optional function that maps a caught <typeparamref name="TException2"/> to a
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
+    ///     <see cref="Error.FromException"/>.</param>
+    /// <param name="firstExceptionPredicate">An optional predicate function that is applied to the first catch block's
+    ///     <c>when</c> clause.</param>
+    /// <param name="secondExceptionPredicate">An optional predicate function that is applied to the second catch block's
+    ///     <c>when</c> clause.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> TryInvokeAsMaybeAsync<T, TException1, TException2>(

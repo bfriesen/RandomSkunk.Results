@@ -1,28 +1,20 @@
 namespace RandomSkunk.Results;
 
-/// <content>
-/// Defines the <c>Match</c> and <c>MatchAsync</c> methods.
-/// </content>
+/// <content> Defines the <c>Match</c> and <c>MatchAsync</c> methods. </content>
 public partial struct Result<T>
 {
     /// <summary>
-    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
-    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
+    /// type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
-    /// <param name="onSuccess">
-    /// The function to evaluate if the result type is <c>Success</c>. The non-null value of the
-    /// <c>Success</c> result is passed to this function.
-    /// </param>
-    /// <param name="onFail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
-    /// <c>Fail</c> result is passed to this function.
-    /// </param>
+    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
+    ///     <c>Success</c> result is passed to this function.</param>
+    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
+    ///     result is passed to this function.</param>
     /// <returns>The result of the matching function evaluation.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
-    /// <see langword="null"/>.
-    /// </exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
     public TReturn Match<TReturn>(
         Func<T, TReturn> onSuccess,
         Func<Error, TReturn> onFail)
@@ -36,26 +28,18 @@ public partial struct Result<T>
     }
 
     /// <summary>
-    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/>
-    /// function depending on whether the result type is <c>Success</c> or <c>Fail</c>.
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
+    /// type is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
-    /// <param name="onSuccess">
-    /// The function to evaluate if the result type is <c>Success</c>. The non-null value of the
-    /// <c>Success</c> result is passed to this function.
-    /// </param>
-    /// <param name="onFail">
-    /// The function to evaluate if the result type is <c>Fail</c>. The non-null error of the
-    /// <c>Fail</c> result is passed to this function.
-    /// </param>
-    /// <returns>
-    /// A task that represents the asynchronous match operation, which wraps the result of the
-    /// matching function evaluation.
-    /// </returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="onSuccess"/> is <see langword="null"/> or if <paramref name="onFail"/> is
-    /// <see langword="null"/>.
-    /// </exception>
+    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
+    ///     <c>Success</c> result is passed to this function.</param>
+    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
+    ///     result is passed to this function.</param>
+    /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
+    ///     evaluation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
     public Task<TReturn> MatchAsync<TReturn>(
         Func<T, Task<TReturn>> onSuccess,
         Func<Error, Task<TReturn>> onFail)

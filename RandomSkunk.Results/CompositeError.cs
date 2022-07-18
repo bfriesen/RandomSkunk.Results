@@ -22,10 +22,8 @@ public record class CompositeError : Error
     /// Creates an error from the specified sequence of errors.
     /// </summary>
     /// <param name="errors">A sequence of one or more errors.</param>
-    /// <returns>
-    /// If <paramref name="errors"/> contains a single error, that error; otherwise a <see cref="CompositeError"/> consisting of
-    /// the specified errors.
-    /// </returns>
+    /// <returns>If <paramref name="errors"/> contains a single error, that error; otherwise a <see cref="CompositeError"/>
+    ///     consisting of the specified errors.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="errors"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="errors"/> is empty.</exception>
     public static Error Create(IEnumerable<Error> errors)

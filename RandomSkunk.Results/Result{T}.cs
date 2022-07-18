@@ -73,7 +73,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
     /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is equal to the <paramref name="right"/>
-    /// parameter; otherwise, <see langword="false"/>.</returns>
+    ///     parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Result<T> left, Result<T> right) => left.Equals(right);
 
     /// <summary>
@@ -82,7 +82,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
     /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is not equal to the <paramref name="right"/>
-    /// parameter; otherwise, <see langword="false"/>.</returns>
+    ///     parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Result<T> left, Result<T> right) => !(left == right);
 
     /// <summary>
@@ -122,10 +122,10 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorType">The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/>
-    /// of the <see cref="Type"/> of the current instance is used instead.</param>
+    ///     of the <see cref="Type"/> of the current instance is used instead.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
-    /// </param>
+    ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Fail(
         string errorMessage,
@@ -149,11 +149,11 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
     /// <param name="getNullValueError">An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result when
-    /// the <paramref name="value"/> parameter is <see langword="null"/>. If <see langword="null"/>, a function that returns
-    /// an error with message "Value cannot be null." and error code <see cref="ErrorCodes.BadRequest"/> is used instead.
-    /// </param>
+    ///     the <paramref name="value"/> parameter is <see langword="null"/>. If <see langword="null"/>, a function that returns
+    ///     an error with message "Value cannot be null." and error code <see cref="ErrorCodes.BadRequest"/> is used instead.
+    ///     </param>
     /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
-    /// result with a generated stack trace.</returns>
+    ///     result with a generated stack trace.</returns>
     public static Result<T> FromValue(T? value, Func<Error>? getNullValueError = null) =>
         value is not null
             ? Success(value)

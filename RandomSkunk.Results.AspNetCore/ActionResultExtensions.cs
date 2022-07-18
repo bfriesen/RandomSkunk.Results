@@ -12,10 +12,10 @@ public static class ActionResultExtensions
     /// </summary>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
-    /// </param>
+    ///     </param>
     /// <returns>The equivalent action result object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
-    /// 299.</exception>
+    ///     299.</exception>
     public static IActionResult ToActionResult(this Result sourceResult, int successStatusCode = 200)
     {
         if (successStatusCode < 200 || successStatusCode > 299)
@@ -32,10 +32,10 @@ public static class ActionResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
-    /// </param>
+    ///     </param>
     /// <returns>The equivalent action result object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
-    /// 299.</exception>
+    ///     299.</exception>
     public static IActionResult ToActionResult<T>(this Result<T> sourceResult, int successStatusCode = 200)
     {
         if (successStatusCode < 200 || successStatusCode > 299)
@@ -52,10 +52,10 @@ public static class ActionResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
-    /// </param>
+    ///     </param>
     /// <returns>The equivalent action result object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
-    /// 299.</exception>
+    ///     299.</exception>
     public static IActionResult ToActionResult<T>(this Maybe<T> sourceResult, int successStatusCode = 200)
     {
         if (successStatusCode < 200 || successStatusCode > 299)
@@ -72,10 +72,10 @@ public static class ActionResultExtensions
     /// </summary>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
-    /// </param>
+    ///     </param>
     /// <returns>The equivalent action result object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
-    /// 299.</exception>
+    ///     299.</exception>
     public static async Task<IActionResult> ToActionResult(this Task<Result> sourceResult, int successStatusCode = 200) =>
         (await sourceResult.ConfigureAwait(false)).ToActionResult(successStatusCode);
 
@@ -85,10 +85,10 @@ public static class ActionResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
-    /// </param>
+    ///     </param>
     /// <returns>The equivalent action result object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
-    /// 299.</exception>
+    ///     299.</exception>
     public static async Task<IActionResult> ToActionResult<T>(this Task<Result<T>> sourceResult, int successStatusCode = 200) =>
         (await sourceResult.ConfigureAwait(false)).ToActionResult(successStatusCode);
 
@@ -98,10 +98,10 @@ public static class ActionResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
-    /// </param>
+    ///     </param>
     /// <returns>The equivalent action result object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
-    /// 299.</exception>
+    ///     299.</exception>
     public static async Task<IActionResult> ToActionResult<T>(this Task<Maybe<T>> sourceResult, int successStatusCode = 200) =>
         (await sourceResult.ConfigureAwait(false)).ToActionResult(successStatusCode);
 }

@@ -11,8 +11,8 @@ public partial struct Result : IResult, IEquatable<Result>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Result"/>.
     /// </summary>
     /// <remarks>
-    /// Applications are encouraged to define custom extension methods targeting <see cref="FailFactory{TResult}"/> that
-    /// return <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
+    /// Applications are encouraged to define custom extension methods targeting <see cref="FailFactory{TResult}"/> that return
+    /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
     /// creating a <c>Fail</c> result when a user is not authorized:
     /// <code><![CDATA[
     /// public static TResult Unauthorized<TResult>(this FailFactory<TResult> failWith) =>
@@ -50,49 +50,36 @@ public partial struct Result : IResult, IEquatable<Result>
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>Success</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
     public bool IsSuccess => _type == ResultType.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
     public bool IsFail => _type == ResultType.Fail;
 
     /// <summary>
-    /// Gets a value indicating whether this is a default instance of the <see cref="Result"/>
-    /// struct.
+    /// Gets a value indicating whether this is a default instance of the <see cref="Result"/> struct.
     /// </summary>
     public bool IsDefault => _type == ResultType.Fail && _error is null;
 
     /// <summary>
-    /// Indicates whether the <paramref name="left"/> parameter is equal to the
-    /// <paramref name="right"/> parameter.
+    /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="left"/> parameter is equal to the
-    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is equal to the <paramref name="right"/>
+    ///     parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Result left, Result right) => left.Equals(right);
 
     /// <summary>
-    /// Indicates whether the <paramref name="left"/> parameter is not equal to the
-    /// <paramref name="right"/> parameter.
+    /// Indicates whether the <paramref name="left"/> parameter is not equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="left"/> parameter is not equal to the
-    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is not equal to the <paramref name="right"/>
+    ///     parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Result left, Result right) => !(left == right);
 
     /// <summary>
@@ -104,10 +91,7 @@ public partial struct Result : IResult, IEquatable<Result>
     /// <summary>
     /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
-    /// <param name="error">
-    /// An error that describes the failure. If <see langword="null"/>, a default error is
-    /// used.
-    /// </param>
+    /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(Error? error = null) => new(success: false, error);
 
@@ -132,17 +116,11 @@ public partial struct Result : IResult, IEquatable<Result>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorType">
-    /// The optional type of the error. If <see langword="null"/>, then the
-    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
-    /// is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
-    /// </param>
-    /// <param name="stackTrace">
-    /// The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
-    /// </param>
+    /// <param name="errorType">The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/>
+    ///     of the <see cref="Type"/> of the current instance is used instead.</param>
+    /// <param name="innerError">The optional error that is the cause of the current error.</param>
+    /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
+    ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(
         string errorMessage,

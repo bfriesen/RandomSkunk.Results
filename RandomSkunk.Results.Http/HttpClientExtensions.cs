@@ -36,13 +36,13 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryDeleteAsync(
         this HttpClient sourceHttpClient,
@@ -60,13 +60,13 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryGetAsync(
         this HttpClient sourceHttpClient,
@@ -85,15 +85,15 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.</param>
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static async Task<Maybe<TValue>> TryGetFromJsonAsync<TValue>(
         this HttpClient sourceHttpClient,
@@ -187,13 +187,13 @@ public static class HttpClientExtensions
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPostAsync(
         this HttpClient sourceHttpClient,
@@ -214,15 +214,15 @@ public static class HttpClientExtensions
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.</param>
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPostAsJsonAsync<TValue>(
         this HttpClient sourceHttpClient,
@@ -245,13 +245,13 @@ public static class HttpClientExtensions
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPutAsync(
         this HttpClient sourceHttpClient,
@@ -272,15 +272,15 @@ public static class HttpClientExtensions
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.</param>
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPutAsJsonAsync<TValue>(
         this HttpClient sourceHttpClient,
@@ -302,13 +302,13 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="request">The HTTP request message to send.</param>
     /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    /// result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    /// </param>
+    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    ///     </param>
     /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    /// <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    /// <see cref="DefaultGetTimeoutError"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
+    ///     <see cref="DefaultGetTimeoutError"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.</param>
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TrySendAsync(
         this HttpClient sourceHttpClient,

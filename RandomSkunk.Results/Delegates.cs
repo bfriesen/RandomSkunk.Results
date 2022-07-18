@@ -20,9 +20,8 @@ public static class Delegates
     /// <typeparam name="T">The type of the return value of the method that the delegate encapsulates.</typeparam>
     /// <param name="func">The <c>Func&lt;T&gt;</c> delegate to return.</param>
     /// <returns>The <c>Func&lt;T&gt;</c> delegate.</returns>
-    /// <exception cref="ArgumentException">
-    /// If <typeparamref name="T"/> is <see cref="Task"/> or <see cref="Task{TResult}"/>.
-    /// </exception>
+    /// <exception cref="ArgumentException">If <typeparamref name="T"/> is <see cref="Task"/> or <see cref="Task{TResult}"/>.
+    ///     </exception>
     /// <exception cref="ArgumentNullException">If <paramref name="func"/> is <see langword="null"/>.</exception>
     public static Func<T> Func<T>(Func<T> func)
     {

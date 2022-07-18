@@ -19,15 +19,12 @@ public record class Error
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
     /// </summary>
-    /// <param name="message">
-    /// The error message. If <see langword="null"/>, then the value of <see cref="DefaultMessage"/> is used instead.
-    /// </param>
-    /// <param name="type">
-    /// The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
-    /// </param>
-    /// <param name="setStackTrace">
-    /// Whether to set the stack trace of the error to the current location. Default is <see langword="false"/>.
-    /// </param>
+    /// <param name="message">The error message. If <see langword="null"/>, then the value of <see cref="DefaultMessage"/> is
+    ///     used instead.</param>
+    /// <param name="type">The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
+    ///     </param>
+    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. Default is
+    ///     <see langword="false"/>.</param>
     public Error(string? message = null, string? type = null, bool setStackTrace = false)
     {
         _message = message ?? _defaultMessage;
@@ -40,9 +37,7 @@ public record class Error
     /// <summary>
     /// Gets or sets the default error message, to be used when an error message is not specified.
     /// </summary>
-    /// <exception cref="ArgumentNullException">
-    /// If the property is set to <see langword="null"/>.
-    /// </exception>
+    /// <exception cref="ArgumentNullException">If the property is set to <see langword="null"/>.</exception>
     public static string DefaultMessage
     {
         get => _defaultMessage;
@@ -102,9 +97,7 @@ public record class Error
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="exception"/> is <see langword="null"/>.
-    /// </exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
     public static Error FromException(
         Exception exception,
         string? message = null,

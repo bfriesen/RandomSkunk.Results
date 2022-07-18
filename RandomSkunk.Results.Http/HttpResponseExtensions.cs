@@ -10,17 +10,11 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response.</returns>
     public static async Task<Result> GetResultAsync(
         this HttpResponseMessage sourceResponse,
@@ -41,13 +35,9 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response.</returns>
     public static Task<Result> GetResultAsync(
         this HttpResponseMessage sourceResponse,
@@ -59,17 +49,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this HttpResponseMessage sourceResponse,
@@ -92,13 +76,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> ReadResultFromJsonAsync<T>(
         this HttpResponseMessage sourceResponse,
@@ -110,17 +90,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this HttpResponseMessage sourceResponse,
@@ -143,13 +117,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this HttpResponseMessage sourceResponse,
@@ -157,20 +127,14 @@ public static class HttpResponseExtensions
         sourceResponse.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
 
     /// <summary>
-    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
-    /// a <c>Fail</c> result.
+    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
+    /// <c>Fail</c> result.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result> EnsureSuccessStatusCodeAsync(
         this Result<HttpResponseMessage> sourceResponse,
@@ -184,16 +148,12 @@ public static class HttpResponseExtensions
         });
 
     /// <summary>
-    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
-    /// a <c>Fail</c> result.
+    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
+    /// <c>Fail</c> result.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result> EnsureSuccessStatusCodeAsync(
         this Result<HttpResponseMessage> sourceResponse,
@@ -205,17 +165,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Result<HttpResponseMessage> sourceResponse,
@@ -228,13 +182,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Result<HttpResponseMessage> sourceResponse,
@@ -246,17 +196,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Result<HttpResponseMessage> sourceResponse,
@@ -269,13 +213,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Result<HttpResponseMessage> sourceResponse,
@@ -285,17 +225,11 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response.</returns>
     public static async Task<Result> GetResultAsync(
         this Task<HttpResponseMessage> sourceResponse,
@@ -306,13 +240,9 @@ public static class HttpResponseExtensions
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response.</returns>
     public static async Task<Result> GetResultAsync(
         this Task<HttpResponseMessage> sourceResponse,
@@ -324,17 +254,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
@@ -347,13 +271,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
@@ -365,17 +285,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
@@ -388,13 +302,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
@@ -402,20 +312,14 @@ public static class HttpResponseExtensions
         await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
 
     /// <summary>
-    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
-    /// a <c>Fail</c> result.
+    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
+    /// <c>Fail</c> result.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static async Task<Result> EnsureSuccessStatusCodeAsync(
         this Task<Result<HttpResponseMessage>> sourceResponse,
@@ -424,16 +328,12 @@ public static class HttpResponseExtensions
         await (await sourceResponse.ConfigureAwait(false)).EnsureSuccessStatusCodeAsync(options, cancellationToken).ConfigureAwait(false);
 
     /// <summary>
-    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns
-    /// a <c>Fail</c> result.
+    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
+    /// <c>Fail</c> result.
     /// </summary>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static async Task<Result> EnsureSuccessStatusCodeAsync(
         this Task<Result<HttpResponseMessage>> sourceResponse,
@@ -445,17 +345,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
@@ -468,13 +362,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
@@ -486,17 +376,11 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
@@ -509,13 +393,9 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">
-    /// The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of
-    /// cancellation.
-    /// </param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The maybe result representing the response content.</returns>
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
