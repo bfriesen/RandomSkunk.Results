@@ -38,7 +38,7 @@ public class Tuple_extension_methods
                 {
                     0 => new Error("a") { ErrorCode = 1 },
                     1 => new Error("b") { ErrorCode = 2 },
-                    2 => new Error("Not Found") { ErrorCode = 404 },
+                    2 => new Error("Not Found") { ErrorCode = ErrorCodes.NotFound },
                     _ => CompositeError.Create(new[] { new Error("a") { ErrorCode = 1 }, new Error("b") { ErrorCode = 2 } }),
                 },
             });
@@ -55,7 +55,7 @@ public class Tuple_extension_methods
                     0 => new Error("a") { ErrorCode = 1 },
                     1 => new Error("b") { ErrorCode = 2 },
                     2 => new Error("c") { ErrorCode = 3 },
-                    3 => new Error("Not Found") { ErrorCode = 404 },
+                    3 => new Error("Not Found") { ErrorCode = ErrorCodes.NotFound },
                     _ => CompositeError.Create(new[] { new Error("a") { ErrorCode = 1 }, new Error("b") { ErrorCode = 2 }, new Error("c") { ErrorCode = 3 } }),
                 },
             });

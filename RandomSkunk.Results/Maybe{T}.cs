@@ -13,8 +13,8 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Maybe{T}"/>.
     /// </summary>
     /// <remarks>
-    /// Applications are encouraged to define custom extension methods targeting <see cref="FailFactory{TResult}"/> that
-    /// return <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
+    /// Applications are encouraged to define custom extension methods targeting <see cref="FailFactory{TResult}"/> that return
+    /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
     /// creating a <c>Fail</c> result when a user is not authorized:
     /// <code><![CDATA[
     /// public static TResult Unauthorized<TResult>(this FailFactory<TResult> failWith) =>
@@ -55,77 +55,58 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="MaybeType.Success"/>, <see cref="MaybeType.None"/>, or <see cref="MaybeType.Fail"/>.
+    /// Gets the type of the result: <see cref="MaybeType.Success"/>, <see cref="MaybeType.None"/>, or
+    /// <see cref="MaybeType.Fail"/>.
     /// </summary>
     public MaybeType Type => _type;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>Success</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
     public bool IsSuccess => _type == MaybeType.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>None</c> result.
     /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>None</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if this is a <c>None</c> result; otherwise, <see langword="false"/>.</returns>
     public bool IsNone => _type == MaybeType.None;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
-    /// <returns>
-    /// <see langword="true"/> if this is a <c>Fail</c> result; otherwise,
-    /// <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
     public bool IsFail => _type == MaybeType.Fail;
 
     /// <summary>
-    /// Gets a value indicating whether this is a default instance of the <see cref="Maybe{T}"/>
-    /// struct.
+    /// Gets a value indicating whether this is a default instance of the <see cref="Maybe{T}"/> struct.
     /// </summary>
     public bool IsDefault => _type == MaybeType.Fail && _error is null;
 
     /// <summary>
-    /// Indicates whether the <paramref name="left"/> parameter is equal to the
-    /// <paramref name="right"/> parameter.
+    /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="left"/> parameter is equal to the
-    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is equal to the <paramref name="right"/>
+    /// parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator ==(Maybe<T> left, Maybe<T> right) => left.Equals(right);
 
     /// <summary>
-    /// Indicates whether the <paramref name="left"/> parameter is not equal to the
-    /// <paramref name="right"/> parameter.
+    /// Indicates whether the <paramref name="left"/> parameter is not equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>
     /// <param name="right">The right side of the comparison.</param>
-    /// <returns>
-    /// <see langword="true"/> if the <paramref name="left"/> parameter is not equal to the
-    /// <paramref name="right"/> parameter; otherwise, <see langword="false"/>.
-    /// </returns>
+    /// <returns><see langword="true"/> if the <paramref name="left"/> parameter is not equal to the <paramref name="right"/>
+    /// parameter; otherwise, <see langword="false"/>.</returns>
     public static bool operator !=(Maybe<T> left, Maybe<T> right) => !(left == right);
 
     /// <summary>
     /// Creates a <c>Success</c> result with the specified value.
     /// </summary>
-    /// <param name="value">
-    /// The value of the <c>Success</c> result. Must not be <see langword="null"/>.
-    /// </param>
+    /// <param name="value">The value of the <c>Success</c> result. Must not be <see langword="null"/>.</param>
     /// <returns>A <c>Success</c> result.</returns>
-    /// <exception cref="ArgumentNullException">
-    /// If <paramref name="value"/> is <see langword="null"/>.
-    /// </exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null"/>.</exception>
     public static Maybe<T> Success(T value) => new(value);
 
     /// <summary>
@@ -137,10 +118,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <summary>
     /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
-    /// <param name="error">
-    /// An error that describes the failure. If <see langword="null"/>, a default error is
-    /// used.
-    /// </param>
+    /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Fail(Error? error = null) => new(none: false, error);
 
@@ -165,16 +143,10 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorType">
-    /// The optional type of the error. If <see langword="null"/>, then the
-    /// <see cref="MemberInfo.Name"/> of the <see cref="Type"/> of the current instance
-    /// is used instead.
-    /// </param>
-    /// <param name="innerError">
-    /// The optional error that is the cause of the current error.
-    /// </param>
-    /// <param name="stackTrace">
-    /// The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
+    /// <param name="errorType">The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/>
+    /// of the <see cref="Type"/> of the current instance is used instead.</param>
+    /// <param name="innerError">The optional error that is the cause of the current error.</param>
+    /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
     /// </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Maybe<T> Fail(
@@ -196,10 +168,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// Creates a maybe from the specified value.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <returns>
-    /// A <c>Success</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c>
-    /// result.
-    /// </returns>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c> result.</returns>
     public static Maybe<T> FromValue(
         T? value) =>
         value is not null
@@ -246,7 +215,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _type switch
         {
             MaybeType.Fail => this.GetError(),
-            MaybeType.None => getNoneError?.Invoke() ?? new Error("Not Found", setStackTrace: true) { ErrorCode = 404 },
+            MaybeType.None => getNoneError?.Invoke() ?? new Error("Not Found", setStackTrace: true) { ErrorCode = ErrorCodes.NotFound },
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 

@@ -11,15 +11,12 @@ public static class FactoryExtensions
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <param name="getNullValueError">
-    /// An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result when the <paramref name="value"/>
-    /// parameter is <see langword="null"/>. If <see langword="null"/>, a function that returns an error with message "Value
-    /// cannot be null." and error code 400 is used instead.
+    /// <param name="getNullValueError">An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result when
+    /// the <paramref name="value"/> parameter is <see langword="null"/>. If <see langword="null"/>, a function that returns
+    /// an error with message "Value cannot be null." and error code <see cref="ErrorCodes.BadRequest"/> is used instead.
     /// </param>
-    /// <returns>
-    /// A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c> result with a
-    /// generated stack trace.
-    /// </returns>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
+    /// result with a generated stack trace.</returns>
     public static Result<T> ToResult<T>(this T? value, Func<Error>? getNullValueError = null) =>
         Result<T>.FromValue(value, getNullValueError);
 

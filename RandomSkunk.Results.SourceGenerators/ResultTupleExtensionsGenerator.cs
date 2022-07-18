@@ -235,8 +235,8 @@ public static class ResultTupleExtensions
     /// </param>
     /// <param name=""getNoneError"">
     /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code 404 is
-    /// used instead.
+    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
+    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
     /// </param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.</exception>
@@ -280,8 +280,8 @@ public static class ResultTupleExtensions
     /// </param>
     /// <param name=""getNoneError"">
     /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code 404 is
-    /// used instead.
+    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
+    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
     /// </param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/>.</exception>
@@ -317,8 +317,8 @@ public static class ResultTupleExtensions
     private static void GenerateGenericMatchAll(StringBuilder sb, int tupleCount)
     {
         sb.Append(@"    /// <summary>
-    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on whether
-    /// all results in the tuple are <c>Success</c> or not.
+    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on
+    /// whether all results in the tuple are <c>Success</c> or not.
     /// </summary>
     /// <typeparam name=""T1"">The type of the first result.</typeparam>");
         GenerateTypeParamDocs(sb, tupleCount);
@@ -336,8 +336,8 @@ public static class ResultTupleExtensions
     /// </param>
     /// <param name=""getNoneError"">
     /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code 404 is
-    /// used instead.
+    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
+    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">
@@ -384,8 +384,8 @@ public static class ResultTupleExtensions
     private static void GenerateGenericMatchAllAsync(StringBuilder sb, int tupleCount)
     {
         sb.Append(@"    /// <summary>
-    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on whether
-    /// all results in the tuple are <c>Success</c> or not.
+    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on
+    /// whether all results in the tuple are <c>Success</c> or not.
     /// </summary>
     /// <typeparam name=""T1"">The type of the first result.</typeparam>");
         GenerateTypeParamDocs(sb, tupleCount);
@@ -403,8 +403,8 @@ public static class ResultTupleExtensions
     /// </param>
     /// <param name=""getNoneError"">
     /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code 404 is
-    /// used instead.
+    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
+    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">
@@ -451,8 +451,8 @@ public static class ResultTupleExtensions
     private static void GenerateNonGenericMatchAll(StringBuilder sb, int tupleCount)
     {
         sb.Append(@"    /// <summary>
-    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on whether
-    /// all results in the tuple are <c>Success</c> or not.
+    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on
+    /// whether all results in the tuple are <c>Success</c> or not.
     /// </summary>
     /// <typeparam name=""TReturn"">The return type of the match all method.</typeparam>
     /// <param name=""results"">A tuple of results.</param>
@@ -468,8 +468,8 @@ public static class ResultTupleExtensions
     /// </param>
     /// <param name=""getNoneError"">
     /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code 404 is
-    /// used instead.
+    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
+    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">
@@ -514,8 +514,8 @@ public static class ResultTupleExtensions
     private static void GenerateNonGenericMatchAllAsync(StringBuilder sb, int tupleCount)
     {
         sb.Append(@"    /// <summary>
-    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on whether
-    /// all results in the tuple are <c>Success</c> or not.
+    /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on
+    /// whether all results in the tuple are <c>Success</c> or not.
     /// </summary>
     /// <typeparam name=""TReturn"">The return type of the match all method.</typeparam>
     /// <param name=""results"">A tuple of results.</param>
@@ -531,8 +531,8 @@ public static class ResultTupleExtensions
     /// </param>
     /// <param name=""getNoneError"">
     /// An optional function that creates the <see cref=""Error""/> for any <c>None</c> results (otherwise not applicable). If
-    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code 404 is
-    /// used instead.
+    /// <see langword=""null""/> (and applicable), a function that returns an error with message ""Not Found"" and error code
+    /// <see cref=""ErrorCodes.NotFound""/> is used instead.
     /// </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">

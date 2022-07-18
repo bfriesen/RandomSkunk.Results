@@ -1,8 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content>
-/// Defines the <c>OnNonSuccess</c> and <c>OnNonSuccessAsync</c> extension methods.
-/// </content>
+/// <content> Defines the <c>OnNonSuccess</c> and <c>OnNonSuccessAsync</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     /// <summary>
@@ -11,11 +9,9 @@ public static partial class ResultExtensions
     /// <typeparam name="TResult">The type of result.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
-    /// <param name="getNoneError">
-    /// An optional function that creates the <see cref="Error"/> that is returned if this is a <c>None</c> result; otherwise
-    /// this parameter is ignored. If <see langword="null"/> (and applicable), a function that returns an error with message
-    /// "Not Found" and error code 404 is used instead.
-    /// </param>
+    /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
+    /// <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
+    /// returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static TResult OnNonSuccess<TResult>(
         this TResult sourceResult,
@@ -40,11 +36,9 @@ public static partial class ResultExtensions
     /// <typeparam name="TResult">The type of result.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
-    /// <param name="getNoneError">
-    /// An optional function that creates the <see cref="Error"/> that is returned if this is a <c>None</c> result; otherwise
-    /// this parameter is ignored. If <see langword="null"/> (and applicable), a function that returns an error with message
-    /// "Not Found" and error code 404 is used instead.
-    /// </param>
+    /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
+    /// <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
+    /// returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccessAsync<TResult>(
         this TResult sourceResult,
