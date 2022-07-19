@@ -14,19 +14,6 @@ public interface IResult
     bool IsSuccess { get; }
 
     /// <summary>
-    /// Gets the non-null value of the <c>Success</c> result, or throws an <see cref="InvalidStateException"/> if this is not a
-    /// <c>Success</c> result.
-    /// </summary>
-    /// <remarks>
-    /// For <c>Success</c> results of type <see cref="Result"/> (non-generic), <see cref="DBNull"/> is returned. Otherwise, for
-    /// <c>Success</c> results of type <see cref="Result{T}"/> (generic) and <see cref="Maybe{T}"/>, the value returned by this
-    /// method is the actual value of the result.
-    /// </remarks>
-    /// <returns>The value of the <c>Success</c> result.</returns>
-    /// <exception cref="InvalidStateException">If this is not a <c>Success</c> result.</exception>
-    object GetSuccessValue();
-
-    /// <summary>
     /// Gets the error of the <c>non-Success</c> result, or throws an <see cref="InvalidStateException"/> if this is a
     /// <c>Success</c> result.
     /// </summary>

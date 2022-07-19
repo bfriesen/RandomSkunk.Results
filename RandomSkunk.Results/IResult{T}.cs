@@ -14,5 +14,5 @@ public interface IResult<T> : IResult
     /// </summary>
     /// <returns>The value of the <c>Success</c> result.</returns>
     /// <exception cref="InvalidStateException">If this is not a <c>Success</c> result.</exception>
-    new T GetSuccessValue();
+    T GetSuccessValue();
 }

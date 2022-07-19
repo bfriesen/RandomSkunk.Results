@@ -208,9 +208,6 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     T IResult<T>.GetSuccessValue() => this.GetValue();
 
     /// <inheritdoc/>
-    object IResult.GetSuccessValue() => this.GetValue();
-
-    /// <inheritdoc/>
     Error IResult.GetNonSuccessError(Func<Error>? getNoneError) =>
         _type switch
         {

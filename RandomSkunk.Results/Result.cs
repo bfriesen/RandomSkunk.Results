@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result without a value.
 /// </summary>
-public partial struct Result : IResult, IEquatable<Result>
+public partial struct Result : IResult<DBNull>, IEquatable<Result>
 {
     /// <summary>
     /// A factory object that creates <c>Fail</c> results of type <see cref="Result"/>.
@@ -163,7 +163,7 @@ public partial struct Result : IResult, IEquatable<Result>
             error => $"Fail({error.Type}: \"{error.Message}\")");
 
     /// <inheritdoc/>
-    object IResult.GetSuccessValue()
+    DBNull IResult<DBNull>.GetSuccessValue()
     {
         if (_type != ResultType.Success)
             throw Exceptions.CannotAccessValueUnlessSuccess();
