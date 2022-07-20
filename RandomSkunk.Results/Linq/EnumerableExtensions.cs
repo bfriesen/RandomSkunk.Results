@@ -6,9 +6,9 @@ namespace RandomSkunk.Results.Linq;
 public static class EnumerableExtensions
 {
     /// <summary>
-    /// Returns a <c>Success</c> result of the first element of a sequence; a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.NotFound"/> if the sequence contains no elements; or a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.Gone"/> if the first element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the first element of a sequence. If the sequence is empty, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.NotFound"/> is returned. If the first element is <see langword="null"/>, a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">The <see cref="IEnumerable{T}"/> to return the first element of.</param>
@@ -34,9 +34,9 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the first element of a sequence; a <c>None</c> result if the sequence contains no
-    /// elements; or a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the first element is
-    /// <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the first element of a sequence. If the sequence is empty, a <c>None</c> result is
+    /// returned. If the first element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">The <see cref="IEnumerable{T}"/> to return the first element of.</param>
@@ -62,9 +62,10 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the first element of the sequence that satisfies a condition; a <c>Fail</c> result
-    /// with error code <see cref="ErrorCodes.NotFound"/> if no such element is found; or a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.Gone"/> if the first matched element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the first element of the sequence that satisfies a condition. If no element satisfies
+    /// the condition, a <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the first element
+    /// that satisfies the condition is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
@@ -84,9 +85,9 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the first element of the sequence that satisfies a condition; a <c>None</c> result if
-    /// no such element is found; or a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the first matched
-    /// element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the first element of the sequence that satisfies a condition. If no element satisfies
+    /// the condition, a <c>None</c> result is returned. If the first element that satisfies the condition is
+    /// <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
@@ -106,9 +107,9 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the last element of a sequence; <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.NotFound"/> if the sequence contains no elements; or a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.Gone"/> if the last element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the last element of a sequence. If the sequence is empty, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element is <see langword="null"/>, a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the last element of.</param>
@@ -142,9 +143,9 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the last element of a sequence; <c>None</c> result if the sequence contains no
-    /// elements; or a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the last element is
-    /// <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the last element of a sequence. If the sequence is empty, a <c>None</c> result is
+    /// returned. If the last element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the last element of.</param>
@@ -178,9 +179,10 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition; a <c>Fail</c> result with
-    /// error code <see cref="ErrorCodes.NotFound"/> if no such element is found; or a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.Gone"/> if the last matched element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition. If no element satisfies the
+    /// condition, a <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element that
+    /// satisfies the condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> is
+    /// returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
@@ -201,9 +203,9 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition; a <c>None</c> result if no
-    /// such element is found; or a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the last matched element
-    /// is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition. If no element satisfies the
+    /// condition, a <c>None</c> result is returned. If the last element that satisfies the condition is <see langword="null"/>,
+    /// a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
@@ -224,10 +226,10 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the only element of a sequence; a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.NotFound"/> if the sequence is empty or the single element is <see langword="null"/>; a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.BadRequest"/> if the sequence contains more than one element; or a
-    /// <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the single element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the only element of a sequence. If the sequence is empty, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.NotFound"/> is returned. If the sequence contains more than one element, a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.BadRequest"/> is returned. If the single element is <see langword="null"/>,
+    /// a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
@@ -260,10 +262,10 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the only element of a sequence; a <c>None</c> result if the sequence is empty or the
-    /// single element is <see langword="null"/>; a <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/> if the
-    /// sequence contains more than one element; or a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the
-    /// single element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the only element of a sequence. If the sequence is empty, a <c>None</c> result is
+    /// returned. If the sequence contains more than one element, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.BadRequest"/> is returned. If the single element is <see langword="null"/>, a <c>Fail</c> result
+    /// with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
@@ -296,10 +298,11 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition; a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NotFound"/> if no such element exists; a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.BadRequest"/> if more than one element satisfies the condition; or a <c>Fail</c> result with error
-    /// code <see cref="ErrorCodes.Gone"/> if the single matched element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition. If no element
+    /// satisfies the condition, a <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If more than
+    /// one element satisfies the condition, a <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/> is
+    /// returned. If the single element that satisfies the condition is <see langword="null"/>, a <c>Fail</c> result with error
+    /// code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return the single element of.</param>
@@ -332,10 +335,10 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition; a <c>None</c>
-    /// result if no such element exists; a <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/> if more than
-    /// one element satisfies the condition; or a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the single
-    /// matched element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition. If no element
+    /// satisfies the condition, a <c>None</c> result is returned. If more than one element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/> is returned. If the single element that satisfies
+    /// the condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return a single element from.</param>
@@ -368,9 +371,9 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the element at a specified index in a sequence; a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.NotFound"/> if the index is out of range; or a <c>Fail</c> result with error code
-    /// <see cref="ErrorCodes.Gone"/> if the matched element is <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence. If the index is out of range, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the element at the specified index
+    /// is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
@@ -405,9 +408,9 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
-    /// Returns a <c>Success</c> result of the element at a specified index in a sequence; a <c>None</c> result if the index is
-    /// out of range; or a <c>Fail</c> result with error code <see cref="ErrorCodes.Gone"/> if the matched element is
-    /// <see langword="null"/>.
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence. If the index is out of range, a
+    /// <c>None</c> result is returned. If the element at the specified index is <see langword="null"/>, a <c>Fail</c> result
+    /// with error code <see cref="ErrorCodes.Gone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
@@ -442,25 +445,25 @@ public static class EnumerableExtensions
     }
 
     private static Result<T> ToResultOrFailIfNull<T>(this T value) =>
-        value.ToResult(() => new Error("The matching element was null.", setStackTrace: true) { ErrorCode = ErrorCodes.Gone });
+        value.ToResult(() => Errors.Gone("The matching element was null."));
 
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value) =>
         value is not null
             ? value.ToMaybe()
-            : Maybe<T>.Fail("The matching element was null.", ErrorCodes.Gone);
+            : Maybe<T>.FailWith.Gone("The matching element was null.");
 
     private static TResult IndexOutOfRange<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.Error("Index was out of range. Must be non-negative and less than the size of the collection.", ErrorCodes.NotFound);
+        failWith.NotFound("Index was out of range. Must be non-negative and less than the size of the collection.");
 
     private static TResult SequenceContainsNoElements<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.Error("Sequence contains no elements.", ErrorCodes.NotFound);
+        failWith.NotFound("Sequence contains no elements.");
 
     private static TResult SequenceContainsNoMatchingElements<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.Error("Sequence contains no matching elements.", ErrorCodes.NotFound);
+        failWith.NotFound("Sequence contains no matching elements.");
 
     private static TResult SequenceContainsMoreThanOneElement<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.Error("Sequence contains more than one element.", ErrorCodes.BadRequest);
+        failWith.BadRequest("Sequence contains more than one element.");
 
     private static TResult SequenceContainsMoreThanOneMatchingElement<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.Error("Sequence contains more than one matching element.", ErrorCodes.BadRequest);
+        failWith.BadRequest("Sequence contains more than one matching element.");
 }

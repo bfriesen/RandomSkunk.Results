@@ -6,8 +6,8 @@ public partial struct Maybe<T>
     /// <summary>
     /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>: if this is a <c>Success</c> result, then a
     /// <c>Success</c> result with the same value is returned; if this is a <c>Fail</c> result, then a <c>Fail</c> result with
-    /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with a "Not Found" error (error
-    /// code: <see cref="ErrorCodes.NotFound"/>) is returned.
+    /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/>) is returned.
     /// </summary>
     /// <param name="onNone">An optional function that maps a <c>None</c> result to the return result's error. If
     ///     <see langword="null"/>, the error returned from <see cref="ResultExtensions.DefaultOnNoneCallback"/> is used instead.
@@ -17,5 +17,5 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public Result<T> AsResult(Func<Error>? onNone = null, Func<Error, Error>? onFail = null) =>
-        Then(value => value.ToResult(), onNone, onFail);
+        Then(value => Result<T>.Success(value), onNone, onFail);
 }

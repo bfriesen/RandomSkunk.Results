@@ -148,10 +148,10 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <c>Fail</c> result is returned instead.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <param name="getNullValueError">An optional function that creates the <see cref="Results.Error"/> of the <c>Fail</c>
-    ///     result when the <paramref name="value"/> parameter is <see langword="null"/>. If <see langword="null"/>, a function
-    ///     that returns an error with message "Value cannot be null." and error code <see cref="ErrorCodes.BadRequest"/> is used
-    ///     instead.</param>
+    /// <param name="getNullValueError">An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result when
+    ///     the <paramref name="value"/> parameter is <see langword="null"/>. When <see langword="null"/> or not provided, a
+    ///     function that returns an error with error code <see cref="ErrorCodes.BadRequest"/> and a message indicating that the
+    ///     value cannot be null is returned instead.</param>
     /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
     ///     result with a generated stack trace.</returns>
     public static Result<T> FromValue(T? value, Func<Error>? getNullValueError = null) =>
@@ -159,7 +159,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
             ? Success(value)
             : Fail(getNullValueError is not null
                 ? getNullValueError()
-                : new("Value cannot be null.", setStackTrace: true) { ErrorCode = ErrorCodes.BadRequest });
+                : Errors.BadRequest("Value cannot be null."));
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>

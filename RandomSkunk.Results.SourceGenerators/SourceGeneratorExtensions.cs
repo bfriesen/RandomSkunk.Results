@@ -116,9 +116,9 @@ public static class ResultTupleExtensions
             .Append($@"    /// <param name=""sourceResults"">A tuple of results.</param>
     /// <param name=""onAnyNonSuccess"">A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
     ///     </param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
-    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
-    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
+    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
+    ///     </param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/> or if any of
     ///     the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.</exception>
@@ -169,9 +169,9 @@ public static class ResultTupleExtensions
             .Append($@"    /// <param name=""sourceResults"">A tuple of results.</param>
     /// <param name=""onAnyNonSuccess"">A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
     ///     </param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
-    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
-    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
+    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
+    ///     </param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/> or if any of
     ///     the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.</exception>
@@ -229,9 +229,9 @@ public static class ResultTupleExtensions
     ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
     ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
     ///     returned containing the error of each <c>non-Success</c> result.</param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
-    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
-    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
+    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
+    ///     </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
     ///     <see langword=""null""/> or if any of the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.
@@ -294,9 +294,9 @@ public static class ResultTupleExtensions
     ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
     ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
     ///     returned containing the error of each <c>non-Success</c> result.</param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for any <c>None</c> results
-    ///     (otherwise not applicable). If <see langword=""null""/> (and applicable), a function that returns an error with message
-    ///     ""Not Found"" and error code <see cref=""ErrorCodes.NotFound""/> is used instead.</param>
+    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
+    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
+    ///     </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
     ///     <see langword=""null""/> or if any of the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.

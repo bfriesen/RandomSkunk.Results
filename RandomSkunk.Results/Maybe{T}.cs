@@ -212,7 +212,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _type switch
         {
             MaybeType.Fail => this.GetError(),
-            MaybeType.None => getNoneError?.Invoke() ?? new Error("Not Found", setStackTrace: true) { ErrorCode = ErrorCodes.NotFound },
+            MaybeType.None => getNoneError?.Invoke() ?? Errors.NotFound(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 
