@@ -45,7 +45,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be("a");
+            actual.GetError().Message.Should().Be("a");
         }
 
         [Fact]
@@ -57,7 +57,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Should().BeSameAs(error);
+            actual.GetError().Should().BeSameAs(error);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(Maybe<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be("a");
+            actual.GetError().Message.Should().Be("a");
         }
 
         [Fact]
@@ -90,7 +90,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Should().BeSameAs(error);
+            actual.GetError().Should().BeSameAs(error);
         }
 
         [Fact]
@@ -157,7 +157,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be("a");
+            actual.GetError().Message.Should().Be("a");
         }
 
         [Fact]
@@ -168,9 +168,9 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
-            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
-            actual.Error().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
+            actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
+            actual.GetError().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
+            actual.GetError().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
         }
 
         [Fact]
@@ -182,7 +182,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Should().BeSameAs(error);
+            actual.GetError().Should().BeSameAs(error);
         }
 
         [Fact]
@@ -203,7 +203,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(Result<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be("a");
+            actual.GetError().Message.Should().Be("a");
         }
 
         [Fact]
@@ -214,9 +214,9 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
-            actual.Error().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
-            actual.Error().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
+            actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
+            actual.GetError().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
+            actual.GetError().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
         }
 
         [Fact]
@@ -228,7 +228,7 @@ public class ThenAsync_methods
             var actual = await source.ThenAsync(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsFail.Should().BeTrue();
-            actual.Error().Should().BeSameAs(error);
+            actual.GetError().Should().BeSameAs(error);
         }
 
         [Fact]

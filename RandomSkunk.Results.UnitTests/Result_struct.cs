@@ -13,7 +13,7 @@ public class Result_struct
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
         result.IsDefault.Should().BeTrue();
-        result.Error().Should().BeSameAs(Error.DefaultError);
+        result.GetError().Should().BeSameAs(Error.DefaultError);
     }
 
     public class Create
@@ -39,7 +39,7 @@ public class Result_struct
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
-            result.Error().Should().BeSameAs(error);
+            result.GetError().Should().BeSameAs(error);
         }
     }
 
