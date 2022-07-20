@@ -42,13 +42,13 @@ public record class CompositeError : Error
     }
 
     /// <inheritdoc/>
-    protected override void PrintAdditionalProperties(StringBuilder sb, string? indention)
+    protected override void PrintAdditionalProperties(StringBuilder sb, string? indention, bool includeStackTrace)
     {
         int i = 0;
         foreach (var error in Errors)
         {
             sb.AppendLine().Append(indention).Append("Error[").Append(i++).Append("]:").AppendLine();
-            sb.Append(ToString(error, indention + "   "));
+            sb.Append(ToString(error, indention + "   ", includeStackTrace));
         }
     }
 }

@@ -127,8 +127,22 @@ public record class Error
         };
     }
 
-    /// <inheritdoc/>
-    public sealed override string ToString() => ToString(this, null);
+    /// <summary>
+    /// Returns a string that represents the current error.
+    /// </summary>
+    /// <remarks>
+    /// For security reasons, the error's stack trace is excluded. To include the stack trace, pass <see langword="true"/> to the
+    /// <see cref="ToString(bool)"/> overload.
+    /// </remarks>
+    /// <returns>A string that represents the current error.</returns>
+    public sealed override string ToString() => ToString(false);
+
+    /// <summary>
+    /// Returns a string that represents the current error.
+    /// </summary>
+    /// <param name="includeStackTrace">Whether to include the error's stack trace in the returned string.</param>
+    /// <returns>A string that represents the current error.</returns>
+    public string ToString(bool includeStackTrace) => ToString(this, null, includeStackTrace);
 
     /// <summary>
     /// Returns a string that represents the specified error.
@@ -136,7 +150,8 @@ public record class Error
     /// <param name="error">The error to get a string representation of.</param>
     /// <param name="indention">The indention that begins each line.</param>
     /// <returns>A string that represents the specified error.</returns>
-    protected static string ToString(Error error, string? indention)
+    /// <param name="includeStackTrace">Whether to include an error's stack trace in the returned string.</param>
+    protected static string ToString(Error error, string? indention, bool includeStackTrace)
     {
         var sb = new StringBuilder();
         sb.Append(indention).Append(error.Type).Append(": ").Append(Indent(error.Message.TrimEnd(), indention));
@@ -144,11 +159,11 @@ public record class Error
             sb.AppendLine().Append(indention).Append("Identifier: ").Append(error.Identifier);
         if (error.ErrorCode is not null)
             sb.AppendLine().Append(indention).Append("Error Code: ").Append(error.ErrorCode);
-        error.PrintAdditionalProperties(sb, indention);
-        if (error.StackTrace is not null)
+        error.PrintAdditionalProperties(sb, indention, includeStackTrace);
+        if (error.StackTrace is not null && includeStackTrace)
             sb.AppendLine().Append(indention).Append("Stack Trace:").AppendLine().Append(Indent(error.StackTrace.TrimEnd(), indention, indention));
         if (error.InnerError is not null)
-            sb.AppendLine().Append(indention).Append("Inner Error:").AppendLine().Append(ToString(error.InnerError, indention + "   "));
+            sb.AppendLine().Append(indention).Append("Inner Error:").AppendLine().Append(ToString(error.InnerError, indention + "   ", includeStackTrace));
         return sb.ToString();
     }
 
@@ -158,7 +173,8 @@ public record class Error
     /// </summary>
     /// <param name="sb">The <see cref="StringBuilder"/> to append to.</param>
     /// <param name="indention">Leading whitespace for the beginning of each line.</param>
-    protected virtual void PrintAdditionalProperties(StringBuilder sb, string? indention)
+    /// <param name="includeStackTrace">Whether to include an error's stack trace in the returned string.</param>
+    protected virtual void PrintAdditionalProperties(StringBuilder sb, string? indention, bool includeStackTrace)
     {
     }
 
