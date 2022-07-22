@@ -30,7 +30,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Result{T}.Then{TReturn}(Func{T, Result{TReturn}}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Result{TReturn}}, Func{Error, Error}?)"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
     /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
@@ -44,7 +44,7 @@ public static class LinqExtensions
     public static Result<TReturn> SelectMany<T, TReturn>(
         this Result<T> sourceResult,
         Func<T, Result<TReturn>> selector) =>
-        sourceResult.Then(selector);
+        sourceResult.FlatMap(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
@@ -72,8 +72,8 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.Then(
-            sourceValue => intermediateSelector(sourceValue).Then(
+        return sourceResult.FlatMap(
+            sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!)
                         ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToResult()));
@@ -102,7 +102,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Maybe{T}.Then{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
     /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
@@ -117,7 +117,7 @@ public static class LinqExtensions
     public static Maybe<TReturn> SelectMany<T, TReturn>(
         this Maybe<T> sourceResult,
         Func<T, Maybe<TReturn>> selector) =>
-        sourceResult.Then(selector);
+        sourceResult.FlatMap(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
@@ -145,15 +145,15 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.Then(
-            sourceValue => intermediateSelector(sourceValue).Then(
+        return sourceResult.FlatMap(
+            sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!) ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToMaybe()));
     }
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Result{T}.Then{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
     /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is
@@ -168,7 +168,7 @@ public static class LinqExtensions
     public static Maybe<TReturn> SelectMany<T, TReturn>(
         this Result<T> sourceResult,
         Func<T, Maybe<TReturn>> selector) =>
-        sourceResult.Then(selector);
+        sourceResult.FlatMap(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
@@ -196,8 +196,8 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.Then(
-            sourceValue => intermediateSelector(sourceValue).Then(
+        return sourceResult.FlatMap(
+            sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!)
                         ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToMaybe()));
@@ -205,7 +205,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Maybe{T}.Then{TReturn}(Func{T, Result{TReturn}}, Func{Error}?, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Result{TReturn}}, Func{Error}?, Func{Error, Error}?)"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
     /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
@@ -220,7 +220,7 @@ public static class LinqExtensions
     public static Result<TReturn> SelectMany<T, TReturn>(
         this Maybe<T> sourceResult,
         Func<T, Result<TReturn>> selector) =>
-        sourceResult.Then(selector);
+        sourceResult.FlatMap(selector);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
@@ -248,8 +248,8 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.Then(
-            sourceValue => intermediateSelector(sourceValue).Then(
+        return sourceResult.FlatMap(
+            sourceValue => intermediateSelector(sourceValue).FlatMap(
                 intermediateValue =>
                     (resultSelector(sourceValue!, intermediateValue!) ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToResult()));
     }

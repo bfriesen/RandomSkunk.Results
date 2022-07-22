@@ -17,5 +17,5 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public Result<T> AsResult(Func<Error>? onNone = null, Func<Error, Error>? onFail = null) =>
-        Then(value => Result<T>.Success(value), onNone, onFail);
+        FlatMap(value => Result<T>.Success(value), onNone, onFail);
 }

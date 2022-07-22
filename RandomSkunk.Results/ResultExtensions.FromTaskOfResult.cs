@@ -52,11 +52,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> Then<T>(
+    public static async Task<Result> FlatMap<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Result> onSuccess,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -72,11 +72,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> ThenAsync<T>(
+    public static async Task<Result> FlatMapAsync<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result>> onSuccessAsync,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -93,11 +93,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> Then<T, TReturn>(
+    public static async Task<Maybe<TReturn>> FlatMap<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Maybe<TReturn>> onSuccess,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -114,11 +114,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> ThenAsync<T, TReturn>(
+    public static async Task<Maybe<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Maybe<TReturn>>> onSuccessAsync,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -138,12 +138,12 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> Then<T>(
+    public static async Task<Result> FlatMap<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Result> onSuccess,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onNone, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onNone, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -163,12 +163,12 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> ThenAsync<T>(
+    public static async Task<Result> FlatMapAsync<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result>> onSuccessAsync,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onNone, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onNone, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -189,12 +189,12 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> Then<T, TReturn>(
+    public static async Task<Result<TReturn>> FlatMap<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Result<TReturn>> onSuccess,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onNone, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onNone, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -215,12 +215,12 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> ThenAsync<T, TReturn>(
+    public static async Task<Result<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result<TReturn>>> onSuccessAsync,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onNone, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onNone, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
@@ -336,11 +336,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> Then<T, TReturn>(
+    public static async Task<Result<TReturn>> FlatMap<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Result<TReturn>> onSuccess,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// Maps <paramref name="sourceResult"/> to a another result using the specified <paramref name="onSuccessAsync"/> function.
@@ -357,11 +357,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> ThenAsync<T, TReturn>(
+    public static async Task<Result<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result<TReturn>>> onSuccessAsync,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -379,11 +379,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> Then<T, TReturn>(
+    public static async Task<Maybe<TReturn>> FlatMap<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Maybe<TReturn>> onSuccess,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -401,11 +401,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> ThenAsync<T, TReturn>(
+    public static async Task<Maybe<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Maybe<TReturn>>> onSuccessAsync,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail).ConfigureAwait(false);
 
     /// <summary>
     /// Flattens the nested result.
@@ -960,11 +960,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> Then(
+    public static async Task<Result> FlatMap(
         this Task<Result> sourceResult,
         Func<Result> onSuccess,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -979,11 +979,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> ThenAsync(
+    public static async Task<Result> FlatMapAsync(
         this Task<Result> sourceResult,
         Func<Task<Result>> onSuccessAsync,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onFail);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -999,11 +999,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> Then<TReturn>(
+    public static async Task<Result<TReturn>> FlatMap<TReturn>(
         this Task<Result> sourceResult,
         Func<Result<TReturn>> onSuccess,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -1019,11 +1019,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> ThenAsync<TReturn>(
+    public static async Task<Result<TReturn>> FlatMapAsync<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Result<TReturn>>> onSuccessAsync,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onFail);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -1039,11 +1039,11 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> Then<TReturn>(
+    public static async Task<Maybe<TReturn>> FlatMap<TReturn>(
         this Task<Result> sourceResult,
         Func<Maybe<TReturn>> onSuccess,
         Func<Error, Error>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(false)).Then(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccess, onFail);
 
     /// <summary>
     /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
@@ -1059,9 +1059,9 @@ public static partial class ResultExtensions
     ///     Evaluated only if the source is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> ThenAsync<TReturn>(
+    public static async Task<Maybe<TReturn>> FlatMapAsync<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Maybe<TReturn>>> onSuccessAsync,
         Func<Error, Error>? onFail = null) =>
-        await (await sourceResult.ConfigureAwait(false)).ThenAsync(onSuccessAsync, onFail);
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessAsync, onFail);
 }

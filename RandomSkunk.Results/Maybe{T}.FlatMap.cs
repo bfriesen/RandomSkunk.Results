@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>Then</c> and <c>ThenAsync</c> methods. </content>
+/// <content> Defines the <c>FlatMap</c> and <c>FlatMapAsync</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <summary>
@@ -16,7 +16,7 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public Maybe<TReturn> Then<TReturn>(
+    public Maybe<TReturn> FlatMap<TReturn>(
         Func<T, Maybe<TReturn>> onSuccess,
         Func<Error, Error>? onFail = null)
     {
@@ -43,7 +43,7 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<TReturn>> ThenAsync<TReturn>(
+    public async Task<Maybe<TReturn>> FlatMapAsync<TReturn>(
         Func<T, Task<Maybe<TReturn>>> onSuccessAsync,
         Func<Error, Error>? onFail = null)
     {
@@ -72,7 +72,7 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public Result Then(
+    public Result FlatMap(
         Func<T, Result> onSuccess,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)
@@ -102,7 +102,7 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public async Task<Result> ThenAsync(
+    public async Task<Result> FlatMapAsync(
         Func<T, Task<Result>> onSuccessAsync,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)
@@ -133,7 +133,7 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public Result<TReturn> Then<TReturn>(
+    public Result<TReturn> FlatMap<TReturn>(
         Func<T, Result<TReturn>> onSuccess,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)
@@ -164,7 +164,7 @@ public partial struct Maybe<T>
     ///     Evaluated only if this is a <c>Fail</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public async Task<Result<TReturn>> ThenAsync<TReturn>(
+    public async Task<Result<TReturn>> FlatMapAsync<TReturn>(
         Func<T, Task<Result<TReturn>>> onSuccessAsync,
         Func<Error>? onNone = null,
         Func<Error, Error>? onFail = null)

@@ -31,7 +31,7 @@ public static class ExecuteResultExtensions
     /// <param name="affectedRows">The expected number of affected rows.</param>
     /// <returns>A result representing a database query that affected one row.</returns>
     public static Result EnsureNRowsAffected(this Result<int> sourceResult, int affectedRows) =>
-        sourceResult.Then(affectedRowCount =>
+        sourceResult.FlatMap(affectedRowCount =>
             affectedRowCount == affectedRows
                 ? Result.Success()
                 : Result.Fail($"Expected {affectedRows} row{(affectedRows != 1 ? "s" : null)} to be affected, but was {affectedRowCount}."));

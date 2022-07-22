@@ -9,7 +9,7 @@ public class Then_methods
         {
             var source = 1.ToResult();
 
-            var actual = source.Then(value => value.ToString().ToResult());
+            var actual = source.FlatMap(value => value.ToString().ToResult());
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -21,7 +21,7 @@ public class Then_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.Then(value => value.ToString().ToResult());
+            var actual = source.FlatMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -32,7 +32,7 @@ public class Then_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.Then((Func<int, Result<string>>)null!);
+            Action act = () => source.FlatMap((Func<int, Result<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -42,7 +42,7 @@ public class Then_methods
         {
             var source = "a".ToResult();
 
-            var actual = source.Then(value => Result.Fail(value));
+            var actual = source.FlatMap(value => Result.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -54,7 +54,7 @@ public class Then_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.Then(value => Result.Success());
+            var actual = source.FlatMap(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -65,7 +65,7 @@ public class Then_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.Then(null!);
+            Action act = () => source.FlatMap(null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -75,7 +75,7 @@ public class Then_methods
         {
             var source = "a".ToResult();
 
-            var actual = source.Then(value => Maybe<int>.Fail(value));
+            var actual = source.FlatMap(value => Maybe<int>.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -87,7 +87,7 @@ public class Then_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.Then(value => value.ToString().ToMaybe());
+            var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -98,7 +98,7 @@ public class Then_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.Then((Func<int, Maybe<string>>)null!);
+            Action act = () => source.FlatMap((Func<int, Maybe<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -111,7 +111,7 @@ public class Then_methods
         {
             var source = 1.ToMaybe();
 
-            var actual = source.Then(value => value.ToString().ToMaybe());
+            var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -123,7 +123,7 @@ public class Then_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = source.Then(value => value.ToString().ToMaybe());
+            var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -134,7 +134,7 @@ public class Then_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = source.Then(value => value.ToString().ToMaybe());
+            var actual = source.FlatMap(value => value.ToString().ToMaybe());
 
             actual.IsNone.Should().BeTrue();
         }
@@ -144,7 +144,7 @@ public class Then_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.Then((Func<int, Maybe<string>>)null!);
+            Action act = () => source.FlatMap((Func<int, Maybe<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -154,7 +154,7 @@ public class Then_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = source.Then(value => Result.Fail(value));
+            var actual = source.FlatMap(value => Result.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -165,7 +165,7 @@ public class Then_methods
         {
             var source = Maybe<string>.None();
 
-            var actual = source.Then(value => Result.Success());
+            var actual = source.FlatMap(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
@@ -179,7 +179,7 @@ public class Then_methods
             var error = new Error();
             var source = Maybe<string>.Fail(error);
 
-            var actual = source.Then(value => Result.Success());
+            var actual = source.FlatMap(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -190,7 +190,7 @@ public class Then_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.Then(null!);
+            Action act = () => source.FlatMap(null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -200,7 +200,7 @@ public class Then_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = source.Then(value => Result<int>.Fail(value));
+            var actual = source.FlatMap(value => Result<int>.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -211,7 +211,7 @@ public class Then_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = source.Then(value => value.ToString().ToResult());
+            var actual = source.FlatMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
@@ -225,7 +225,7 @@ public class Then_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = source.Then(value => value.ToString().ToResult());
+            var actual = source.FlatMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -236,7 +236,7 @@ public class Then_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.Then((Func<int, Result<string>>)null!);
+            Action act = () => source.FlatMap((Func<int, Result<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -249,7 +249,7 @@ public class Then_methods
         {
             var source = Result.Success();
 
-            var actual = source.Then(() => Result.Fail("a"));
+            var actual = source.FlatMap(() => Result.Fail("a"));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -260,7 +260,7 @@ public class Then_methods
         {
             var source = Result.Fail("a");
 
-            var actual = source.Then(() => Result.Success());
+            var actual = source.FlatMap(() => Result.Success());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -271,7 +271,7 @@ public class Then_methods
         {
             var source = Result.Fail();
 
-            Action act = () => source.Then(null!);
+            Action act = () => source.FlatMap(null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -281,7 +281,7 @@ public class Then_methods
         {
             var source = Result.Success();
 
-            var actual = source.Then(() => Result<int>.Success(1));
+            var actual = source.FlatMap(() => Result<int>.Success(1));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be(1);
@@ -292,7 +292,7 @@ public class Then_methods
         {
             var source = Result.Fail("a");
 
-            var actual = source.Then(() => Result<int>.Success(1));
+            var actual = source.FlatMap(() => Result<int>.Success(1));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -303,7 +303,7 @@ public class Then_methods
         {
             var source = Result.Fail();
 
-            Action act = () => source.Then((Func<Result<string>>)null!);
+            Action act = () => source.FlatMap((Func<Result<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -313,7 +313,7 @@ public class Then_methods
         {
             var source = Result.Success();
 
-            var actual = source.Then(() => Maybe<int>.Success(1));
+            var actual = source.FlatMap(() => Maybe<int>.Success(1));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be(1);
@@ -324,7 +324,7 @@ public class Then_methods
         {
             var source = Result.Fail("a");
 
-            var actual = source.Then(() => Maybe<int>.Success(1));
+            var actual = source.FlatMap(() => Maybe<int>.Success(1));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -335,7 +335,7 @@ public class Then_methods
         {
             var source = Result.Fail();
 
-            Action act = () => source.Then((Func<Maybe<string>>)null!);
+            Action act = () => source.FlatMap((Func<Maybe<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
