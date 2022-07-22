@@ -30,6 +30,23 @@ public class MonthlyTemperature
             _ => null!,
         };
 
+    public static List<MonthlyTemperature> CreateListForCalendarYear() =>
+        new()
+        {
+            new MonthlyTemperature { Month = 1 },
+            new MonthlyTemperature { Month = 2 },
+            new MonthlyTemperature { Month = 3 },
+            new MonthlyTemperature { Month = 4 },
+            new MonthlyTemperature { Month = 5 },
+            new MonthlyTemperature { Month = 6 },
+            new MonthlyTemperature { Month = 7 },
+            new MonthlyTemperature { Month = 8 },
+            new MonthlyTemperature { Month = 9 },
+            new MonthlyTemperature { Month = 10 },
+            new MonthlyTemperature { Month = 11 },
+            new MonthlyTemperature { Month = 12 },
+        };
+
     public MonthlyTemperature Clone() =>
         new()
         {

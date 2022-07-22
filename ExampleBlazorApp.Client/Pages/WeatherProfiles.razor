@@ -1,6 +1,5 @@
 @page "/WeatherProfiles/View"
 @using ExampleBlazorApp.Client.HttpClients
-@using ExampleBlazorApp.Client.Results
 @using ExampleBlazorApp.Shared
 @using RandomSkunk.Results
 
@@ -145,24 +144,7 @@ else
     {
         _dialogTitle = "Add new weather profile";
         _isNew = true;
-        _dialogProfile = new WeatherProfile
-        {
-            MonthlyTemperatures = new List<MonthlyTemperature>
-            {
-                new MonthlyTemperature { Month = 1 },
-                new MonthlyTemperature { Month = 2 },
-                new MonthlyTemperature { Month = 3 },
-                new MonthlyTemperature { Month = 4 },
-                new MonthlyTemperature { Month = 5 },
-                new MonthlyTemperature { Month = 6 },
-                new MonthlyTemperature { Month = 7 },
-                new MonthlyTemperature { Month = 8 },
-                new MonthlyTemperature { Month = 9 },
-                new MonthlyTemperature { Month = 10 },
-                new MonthlyTemperature { Month = 11 },
-                new MonthlyTemperature { Month = 12 },
-            }
-        };
+        _dialogProfile = new WeatherProfile { MonthlyTemperatures = MonthlyTemperature.CreateListForCalendarYear() };
     }
 
     private void CloseDialog()
@@ -171,20 +153,23 @@ else
         _dialogTitle = null;
     }
 
-    private Task FetchWeatherProfiles()
+    private async Task FetchWeatherProfiles()
     {
         // Make a call to the server to a list of weather profiles.
-        return HttpClient.GetWeatherProfiles()
+        var result = await HttpClient.GetWeatherProfiles();
 
-            // If it was successful, set the _profiles and _selectedProfile fields.
+         // Handle the result:
+         await result
+
+            // If the call to the server was successful, set the _profiles and _selectedProfile fields.
             .OnSuccess(profiles =>
                 {
                     _profiles = profiles;
                     _selectedProfile = _profiles.FirstOrDefault();
                 })
 
-            // If the call to the server was not successful, show a JS alert with the error message.
-            .OnNonSuccessShowAlert(JS);
+            // If the call to the server was not successful, log to the browser console and alert the user.
+            .OnNonSuccessLogAndAlert(JS);
     }
 
     private async Task SaveProfile()
@@ -205,12 +190,13 @@ else
              result = await HttpClient.EditWeatherProfile(_dialogProfile);
          }
 
+         // Handle the result:
         await result
 
             // If the call to the server was successful, close the dialog.
             .OnSuccess(() => CloseDialog())
 
-            // If the call to the server was not successful, show a JS alert with the error message.
-            .OnNonSuccessShowAlert(JS);
+            // If the call to the server was not successful, log to the browser console and alert the user.
+            .OnNonSuccessLogAndAlert(JS);
     }
 }

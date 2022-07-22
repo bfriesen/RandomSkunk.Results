@@ -1,6 +1,5 @@
 @page "/"
 @using ExampleBlazorApp.Client.HttpClients
-@using ExampleBlazorApp.Client.Results
 @using ExampleBlazorApp.Shared
 @using RandomSkunk.Results
 
@@ -68,7 +67,7 @@ else
             // If it was successful, set the _forcasts field.
             .OnSuccess(forcasts => _forecasts = forcasts)
 
-            // If it was not successful, show a JS alert with the error message.
-            .OnNonSuccessShowAlert(JS);
+            // If it was not successful, log to the browser console and alert the user.
+            .OnNonSuccessLogAndAlert(JS);
     }
 }

@@ -25,7 +25,7 @@ SELECT
     AverageLow,
     StandardDeviation
 FROM WeatherData
-WHERE City = @city AND Month = @month;";
+WHERE City = @city AND Month = @month";
 
         using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
