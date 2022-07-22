@@ -23,7 +23,7 @@ public static class FactoryExtensions
     /// <summary>
     /// Creates a maybe from the specified value.
     /// </summary>
-    /// <typeparam name="T">The type of the result.</typeparam>
+    /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="sourceValue">The value. Can be <see langword="null"/>.</param>
     /// <returns>A <c>Success</c> result if <paramref name="sourceValue"/> is not null; otherwise, a <c>None</c> result.
     ///     </returns>

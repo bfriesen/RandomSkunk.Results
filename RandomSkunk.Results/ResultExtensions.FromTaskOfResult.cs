@@ -567,13 +567,13 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
-    /// type is <c>Success</c> or <c>Fail</c>.
+    /// is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>.</param>
-    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    ///     result is passed to this function.</param>
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
     ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
@@ -585,13 +585,13 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
-    /// type is <c>Success</c> or <c>Fail</c>.
+    /// is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>.</param>
-    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    ///     result is passed to this function.</param>
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
     /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
     ///     evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
@@ -604,15 +604,15 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
-    /// type is <c>Success</c> or <c>Fail</c>.
+    /// is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>. The non-null value of the
     ///     <c>Success</c> result is passed to this function.</param>
-    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    ///     result is passed to this function.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
     ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
@@ -624,15 +624,15 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
-    /// type is <c>Success</c> or <c>Fail</c>.
+    /// is <c>Success</c> or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>. The non-null value of the
     ///     <c>Success</c> result is passed to this function.</param>
-    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    ///     result is passed to this function.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
     /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
     ///     evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
@@ -645,16 +645,16 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/>, <paramref name="onNone"/>, or <paramref name="onFail"/> function
-    /// depending on whether the result type is <c>Success</c>, <c>None</c>, or <c>Fail</c>.
+    /// depending on whether the result is <c>Success</c>, <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>. The non-null value of the
     ///     <c>Success</c> result is passed to this function.</param>
-    /// <param name="onNone">The function to evaluate if the result type is <c>None</c>.</param>
-    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    ///     result is passed to this function.</param>
+    /// <param name="onNone">The function to evaluate if the result is <c>None</c>.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>, or if
     ///     <paramref name="onNone"/> is <see langword="null"/>, or if <paramref name="onFail"/> is <see langword="null"/>.
@@ -668,16 +668,16 @@ public static partial class ResultExtensions
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/>, <paramref name="onNone"/>, or <paramref name="onFail"/> function
-    /// depending on whether the result type is <c>Success</c>, <c>None</c>, or <c>Fail</c>.
+    /// depending on whether the result is <c>Success</c>, <c>None</c>, or <c>Fail</c>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The return type of the match method.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccess">The function to evaluate if the result type is <c>Success</c>. The non-null value of the
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>. The non-null value of the
     ///     <c>Success</c> result is passed to this function.</param>
-    /// <param name="onNone">The function to evaluate if the result type is <c>None</c>.</param>
-    /// <param name="onFail">The function to evaluate if the result type is <c>Fail</c>. The non-null error of the <c>Fail</c>
-    ///     result is passed to this function.</param>
+    /// <param name="onNone">The function to evaluate if the result is <c>None</c>.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
     /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
     ///     evaluation.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>, or if
