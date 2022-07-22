@@ -5,29 +5,11 @@ namespace RandomSkunk.Results.Http;
 /// </summary>
 public static class HttpClientExtensions
 {
-    private static Func<HttpRequestException, Error> _defaultGetHttpError =
+    private static readonly Func<HttpRequestException, Error> _defaultGetHttpError =
         ex => Error.FromException(ex, "The HTTP request failed.", ErrorCodes.BadGateway);
 
-    private static Func<TaskCanceledException, Error> _defaultGetTimeoutError =
+    private static readonly Func<TaskCanceledException, Error> _defaultGetTimeoutError =
         ex => Error.FromException(ex, "The HTTP request timed out.", ErrorCodes.GatewayTimeout);
-
-    /// <summary>
-    /// Gets or sets the default value for <c>Func&lt;HttpRequestException, Error&gt; getHttpError</c> parameters.
-    /// </summary>
-    public static Func<HttpRequestException, Error> DefaultGetHttpError
-    {
-        get => _defaultGetHttpError;
-        set => _defaultGetHttpError = value ?? throw new ArgumentNullException(nameof(value));
-    }
-
-    /// <summary>
-    /// Gets or sets the default value for <c>Func&lt;TaskCanceledException, Error&gt; getTimeoutError</c> parameters.
-    /// </summary>
-    public static Func<TaskCanceledException, Error> DefaultGetTimeoutError
-    {
-        get => _defaultGetTimeoutError;
-        set => _defaultGetTimeoutError = value ?? throw new ArgumentNullException(nameof(value));
-    }
 
     /// <summary>
     /// Sends a DELETE request to the specified Uri with a cancellation token as an asynchronous operation. A
@@ -35,12 +17,20 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
@@ -59,12 +49,20 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
@@ -84,12 +82,20 @@ public static class HttpClientExtensions
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -118,13 +124,19 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getHttpError">
-    /// An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
     /// </param>
-    /// <param name="getTimeoutError">
-    /// An optional function that maps a caught <see cref="TaskCanceledException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetTimeoutError"/>.
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
     /// </param>
     /// <param name="cancellationToken">
     /// A cancellation token that can be used by other objects or threads to receive notice of cancellation.
@@ -148,13 +160,19 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getHttpError">
-    /// An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
     /// </param>
-    /// <param name="getTimeoutError">
-    /// An optional function that maps a caught <see cref="TaskCanceledException"/> to a <c>Fail</c> result's error. If
-    /// <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetTimeoutError"/>.
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
     /// </param>
     /// <param name="options">
     /// Options to control the behavior during deserialization. The default options are those specified by
@@ -186,12 +204,20 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
@@ -213,12 +239,20 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -244,12 +278,20 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
@@ -271,12 +313,20 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -301,12 +351,20 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="request">The HTTP request message to send.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to a <c>Fail</c>
-    ///     result's error. If <see langword="null"/>, the exception is mapped by invoking <see cref="DefaultGetHttpError"/>.
-    ///     </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the exception is mapped by invoking
-    ///     <see cref="DefaultGetTimeoutError"/>.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>

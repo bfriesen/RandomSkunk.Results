@@ -168,9 +168,12 @@ public class Then_methods
             var actual = source.FlatMap(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
-            actual.GetError().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
-            actual.GetError().Title.Should().Be(ResultExtensions.DefaultOnNoneCallback().Title);
+
+            var expectedError = Errors.NotFound();
+
+            actual.GetError().Message.Should().Be(expectedError.Message);
+            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.GetError().Title.Should().Be(expectedError.Title);
         }
 
         [Fact]
@@ -214,9 +217,12 @@ public class Then_methods
             var actual = source.FlatMap(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
-            actual.GetError().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
-            actual.GetError().Title.Should().Be(ResultExtensions.DefaultOnNoneCallback().Title);
+
+            var expectedError = Errors.NotFound();
+
+            actual.GetError().Message.Should().Be(expectedError.Message);
+            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.GetError().Title.Should().Be(expectedError.Title);
         }
 
         [Fact]
