@@ -134,8 +134,8 @@ public record class NotFoundError : Error
 // Create a fail result with our custom error.
 Result<T> result = Result<T>.Fail(new NotFoundError(123));
 
- // errorType: "NotFoundError"
-string errorType = result.Error.Type;
+ // errorTitle: "Not Found Error"
+string errorTitle = result.Error.Type;
 
 // errorMessage: "A record with the ID 123 could not be found."
 string errorMessage = result.Error.Message;

@@ -14,8 +14,8 @@ public static class FailFactoryExtensions
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorType">The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/>
-    ///     of the <see cref="Type"/> of the current instance is used instead.</param>
+    /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    ///     </param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static TResult Error<TResult>(
@@ -23,12 +23,12 @@ public static class FailFactoryExtensions
         string errorMessage,
         int? errorCode = null,
         string? errorIdentifier = null,
-        string? errorType = null,
+        string? errorTitle = null,
         Error? innerError = null)
     {
         if (failWith is null) throw new ArgumentNullException(nameof(failWith));
 
-        return failWith.Error(new Error(errorMessage, errorType, setStackTrace: true)
+        return failWith.Error(new Error(errorMessage, errorTitle, setStackTrace: true)
         {
             ErrorCode = errorCode,
             Identifier = errorIdentifier,

@@ -170,7 +170,7 @@ public class Then_methods
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
             actual.GetError().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
-            actual.GetError().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
+            actual.GetError().Title.Should().Be(ResultExtensions.DefaultOnNoneCallback().Title);
         }
 
         [Fact]
@@ -216,7 +216,7 @@ public class Then_methods
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be(ResultExtensions.DefaultOnNoneCallback().Message);
             actual.GetError().ErrorCode.Should().Be(ResultExtensions.DefaultOnNoneCallback().ErrorCode);
-            actual.GetError().Type.Should().Be(ResultExtensions.DefaultOnNoneCallback().Type);
+            actual.GetError().Title.Should().Be(ResultExtensions.DefaultOnNoneCallback().Title);
         }
 
         [Fact]

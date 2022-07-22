@@ -15,7 +15,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(Exception));
+                actual.GetError().Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -40,7 +40,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -75,7 +75,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -87,7 +87,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(DivideByZeroException));
+                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -125,7 +125,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(Exception));
+                actual.GetError().Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -161,7 +161,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -207,7 +207,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -219,7 +219,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(DivideByZeroException));
+                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -267,7 +267,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(Exception));
+                actual.GetError().Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -303,7 +303,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -349,7 +349,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -361,7 +361,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(DivideByZeroException));
+                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -409,7 +409,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(Exception));
+                actual.GetError().Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -434,7 +434,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -469,7 +469,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -481,7 +481,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(DivideByZeroException));
+                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -519,7 +519,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(Exception));
+                actual.GetError().Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -555,7 +555,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -601,7 +601,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -613,7 +613,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(DivideByZeroException));
+                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -661,7 +661,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(Exception));
+                actual.GetError().Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -697,7 +697,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -743,7 +743,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(InvalidOperationException));
+                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -755,7 +755,7 @@ public class Delegate_extension_methods
 
                 actual.IsFail.Should().BeTrue();
                 actual.GetError().Message.Should().Be("a");
-                actual.GetError().Type.Should().Be(nameof(DivideByZeroException));
+                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]

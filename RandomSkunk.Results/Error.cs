@@ -13,7 +13,7 @@ public record class Error
     private static string _defaultMessage = "An error occurred.";
 
     private readonly string _message;
-    private readonly string _type;
+    private readonly string _title;
     private readonly string? _stackTrace;
 
     /// <summary>
@@ -21,14 +21,14 @@ public record class Error
     /// </summary>
     /// <param name="message">The error message. If <see langword="null"/>, then the value of <see cref="DefaultMessage"/> is
     ///     used instead.</param>
-    /// <param name="type">The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
+    /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
     /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. Default is
     ///     <see langword="false"/>.</param>
-    public Error(string? message = null, string? type = null, bool setStackTrace = false)
+    public Error(string? message = null, string? title = null, bool setStackTrace = false)
     {
         _message = message ?? _defaultMessage;
-        _type = type ?? GetType().Name;
+        _title = title ?? Format.AsSentenceCase(GetType().Name);
 
         if (setStackTrace)
             _stackTrace = new StackTrace(true).ToString();
@@ -73,12 +73,12 @@ public record class Error
     public string? Identifier { get; init; }
 
     /// <summary>
-    /// Gets the type of the error.
+    /// Gets the title for the error.
     /// </summary>
-    public string Type
+    public string Title
     {
-        get => _type;
-        init => _type = value ?? throw new ArgumentNullException(nameof(value));
+        get => _title;
+        init => _title = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public record class Error
     protected static string ToString(Error error, string? indention, bool includeStackTrace)
     {
         var sb = new StringBuilder();
-        sb.Append(indention).Append(error.Type).Append(": ").Append(Indent(error.Message.TrimEnd(), indention));
+        sb.Append(indention).Append(error.Title).Append(": ").Append(Indent(error.Message.TrimEnd(), indention));
         if (error.Identifier is not null)
             sb.AppendLine().Append(indention).Append("Identifier: ").Append(error.Identifier);
         if (error.ErrorCode is not null)
@@ -186,5 +186,5 @@ public record class Error
         return firstLineIndentation + value.Replace("\n", "\n" + indention);
     }
 
-    private string GetDebuggerDisplay() => $"{Type}: \"{Message}\"";
+    private string GetDebuggerDisplay() => $"{Title}: \"{Message}\"";
 }

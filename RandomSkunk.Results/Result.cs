@@ -116,8 +116,8 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorType">The optional type of the error. If <see langword="null"/>, then the <see cref="MemberInfo.Name"/>
-    ///     of the <see cref="Type"/> of the current instance is used instead.</param>
+    /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    ///     </param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
     ///     </param>
@@ -126,10 +126,10 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
         string errorMessage,
         int? errorCode = null,
         string? errorIdentifier = null,
-        string? errorType = null,
+        string? errorTitle = null,
         Error? innerError = null,
         string? stackTrace = null) =>
-        Fail(new Error(errorMessage, errorType, setStackTrace: stackTrace is null)
+        Fail(new Error(errorMessage, errorTitle, setStackTrace: stackTrace is null)
         {
             StackTrace = stackTrace,
             ErrorCode = errorCode,
@@ -160,7 +160,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     public override string ToString() =>
         Match(
             () => "Success",
-            error => $"Fail({error.Type}: \"{error.Message}\")");
+            error => $"Fail({error.Title}: \"{error.Message}\")");
 
     /// <inheritdoc/>
     DBNull IResult<DBNull>.GetSuccessValue()

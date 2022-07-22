@@ -10,10 +10,10 @@ public record class DbError : Error
     /// </summary>
     /// <param name="message">The error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/>
     ///     is used instead.</param>
-    /// <param name="type">The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
+    /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
-    public DbError(string? message = null, string? type = null)
-        : base(message, type)
+    public DbError(string? message = null, string? title = null)
+        : base(message, title)
     {
     }
 

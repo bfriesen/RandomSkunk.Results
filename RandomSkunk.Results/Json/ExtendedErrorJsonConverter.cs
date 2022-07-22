@@ -90,8 +90,8 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
         if (value.Identifier != null)
             writer.WriteString(Identifier, value.Identifier);
 
-        if (value.Type != null)
-            writer.WriteString(Type, value.Type);
+        if (value.Title != null)
+            writer.WriteString(Type, value.Title);
 
         if (value.InnerError != null)
         {

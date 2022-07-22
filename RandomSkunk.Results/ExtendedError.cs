@@ -18,11 +18,11 @@ public sealed record class ExtendedError : Error
     /// </summary>
     /// <param name="message">The error message. If <see langword="null"/>, then the value of <see cref="Error.DefaultMessage"/>
     ///     is used instead.</param>
-    /// <param name="type">The type of the error. If <see langword="null"/>, then the name of the error type is used instead.
+    /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
     /// <param name="extensions">Additional properties not found in the <see cref="Error"/> class.</param>
-    public ExtendedError(string? message = null, string? type = null, IReadOnlyDictionary<string, object>? extensions = null)
-        : base(message, type ?? "Error") =>
+    public ExtendedError(string? message = null, string? title = null, IReadOnlyDictionary<string, object>? extensions = null)
+        : base(message, title ?? "Error") =>
         _extensions = extensions ?? (_emptyExtensions ??= new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
 
     /// <summary>

@@ -18,7 +18,7 @@ public class Error_record_class
             error.StackTrace.Should().Be(exception.StackTrace);
             error.ErrorCode.Should().Be(errorCode);
             error.Identifier.Should().Be(identifier);
-            error.Type.Should().Be(exception.GetType().Name);
+            error.Title.Should().Be(exception.GetType().Name);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ public class Error_record_class
             error.StackTrace.Should().Be(exception.StackTrace);
             error.ErrorCode.Should().BeNull();
             error.Identifier.Should().BeNull();
-            error.Type.Should().Be(exception.GetType().Name);
+            error.Title.Should().Be(exception.GetType().Name);
             error.InnerError.Should().BeNull();
         }
 

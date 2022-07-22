@@ -22,7 +22,7 @@ public static class ErrorExtensions
         var problemDetails = new ProblemDetails
         {
             Type = type,
-            Title = sourceError.Type,
+            Title = sourceError.Title,
             Status = sourceError.ErrorCode,
             Detail = sourceError.Message,
             Instance = instance,
