@@ -30,7 +30,7 @@ public static class EnumerableExtensions
                 return enumerator.Current.ToResultOrFailIfNull();
         }
 
-        return Result<T>.FailWith.SequenceContainsNoElements();
+        return Result<T>.Fail(SequenceContainsNoElements());
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public static class EnumerableExtensions
         foreach (var item in sourceSequence)
             if (predicate(item)) return item.ToResultOrFailIfNull();
 
-        return Result<T>.FailWith.SequenceContainsNoMatchingElements();
+        return Result<T>.Fail(SequenceContainsNoMatchingElements());
     }
 
     /// <summary>
@@ -139,7 +139,7 @@ public static class EnumerableExtensions
             }
         }
 
-        return Result<T>.FailWith.SequenceContainsNoElements();
+        return Result<T>.Fail(SequenceContainsNoElements());
     }
 
     /// <summary>
@@ -195,7 +195,7 @@ public static class EnumerableExtensions
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var result = Result<T>.FailWith.SequenceContainsNoMatchingElements();
+        var result = Result<T>.Fail(SequenceContainsNoMatchingElements());
         foreach (T item in sourceSequence)
             if (predicate(item)) result = item.ToResultOrFailIfNull();
 
@@ -243,7 +243,7 @@ public static class EnumerableExtensions
         {
             switch (list.Count)
             {
-                case 0: return Result<T>.FailWith.SequenceContainsNoElements();
+                case 0: return Result<T>.Fail(SequenceContainsNoElements());
                 case 1: return list[0].ToResultOrFailIfNull();
             }
         }
@@ -251,14 +251,14 @@ public static class EnumerableExtensions
         {
             using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (!enumerator.MoveNext())
-                return Result<T>.FailWith.SequenceContainsNoElements();
+                return Result<T>.Fail(SequenceContainsNoElements());
 
             T current = enumerator.Current;
             if (!enumerator.MoveNext())
                 return current.ToResultOrFailIfNull();
         }
 
-        return Result<T>.FailWith.SequenceContainsMoreThanOneElement();
+        return Result<T>.Fail(SequenceContainsMoreThanOneElement());
     }
 
     /// <summary>
@@ -294,7 +294,7 @@ public static class EnumerableExtensions
                 return current.ToMaybeOrFailIfNull();
         }
 
-        return Maybe<T>.FailWith.SequenceContainsMoreThanOneElement();
+        return Maybe<T>.Fail(SequenceContainsMoreThanOneElement());
     }
 
     /// <summary>
@@ -328,9 +328,9 @@ public static class EnumerableExtensions
 
         return count switch
         {
-            0 => Result<T>.FailWith.SequenceContainsNoMatchingElements(),
+            0 => Result<T>.Fail(SequenceContainsNoMatchingElements()),
             1 => result,
-            _ => Result<T>.FailWith.SequenceContainsMoreThanOneMatchingElement(),
+            _ => Result<T>.Fail(SequenceContainsMoreThanOneMatchingElement()),
         };
     }
 
@@ -366,7 +366,7 @@ public static class EnumerableExtensions
         {
             0 => Maybe<T>.None(),
             1 => result,
-            _ => Maybe<T>.FailWith.SequenceContainsMoreThanOneMatchingElement(),
+            _ => Maybe<T>.Fail(SequenceContainsMoreThanOneMatchingElement()),
         };
     }
 
@@ -404,7 +404,7 @@ public static class EnumerableExtensions
             }
         }
 
-        return Result<T>.FailWith.IndexOutOfRange();
+        return Result<T>.Fail(IndexOutOfRange());
     }
 
     /// <summary>
@@ -450,20 +450,20 @@ public static class EnumerableExtensions
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value) =>
         value is not null
             ? value.ToMaybe()
-            : Maybe<T>.FailWith.Gone("The matching element was null.");
+            : Maybe<T>.Fail(Errors.Gone("The matching element was null."));
 
-    private static TResult IndexOutOfRange<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.NotFound("Index was out of range. Must be non-negative and less than the size of the collection.");
+    private static Error IndexOutOfRange() =>
+        Errors.NotFound("Index was out of range. Must be non-negative and less than the size of the collection.");
 
-    private static TResult SequenceContainsNoElements<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.NotFound("Sequence contains no elements.");
+    private static Error SequenceContainsNoElements() =>
+        Errors.NotFound("Sequence contains no elements.");
 
-    private static TResult SequenceContainsNoMatchingElements<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.NotFound("Sequence contains no matching elements.");
+    private static Error SequenceContainsNoMatchingElements() =>
+        Errors.NotFound("Sequence contains no matching elements.");
 
-    private static TResult SequenceContainsMoreThanOneElement<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.BadRequest("Sequence contains more than one element.");
+    private static Error SequenceContainsMoreThanOneElement() =>
+        Errors.BadRequest("Sequence contains more than one element.");
 
-    private static TResult SequenceContainsMoreThanOneMatchingElement<TResult>(this FailFactory<TResult> failWith) =>
-        failWith.BadRequest("Sequence contains more than one matching element.");
+    private static Error SequenceContainsMoreThanOneMatchingElement() =>
+        Errors.BadRequest("Sequence contains more than one matching element.");
 }
