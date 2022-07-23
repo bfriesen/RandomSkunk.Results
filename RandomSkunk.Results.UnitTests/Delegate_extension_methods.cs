@@ -138,16 +138,6 @@ public class Delegate_extension_methods
                 actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
             }
-
-            [Fact]
-            public void When_source_returns_null_Throws_ArgumentException()
-            {
-                Func<string> source = () => null!;
-
-                Action act = () => source.TryInvokeAsResult();
-
-                act.Should().ThrowExactly<ArgumentException>();
-            }
         }
 
         public class Given_generic_exception
@@ -173,16 +163,6 @@ public class Delegate_extension_methods
 
                 actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
-            }
-
-            [Fact]
-            public void When_source_returns_null_Throws_ArgumentException()
-            {
-                Func<string> source = () => null!;
-
-                Action act = () => source.TryInvokeAsResult<string, InvalidOperationException>();
-
-                act.Should().ThrowExactly<ArgumentException>();
             }
 
             [Fact]
@@ -230,16 +210,6 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsSuccess.Should().BeTrue();
-            }
-
-            [Fact]
-            public void When_source_returns_null_Throws_ArgumentException()
-            {
-                Func<string> source = () => null!;
-
-                Action act = () => source.TryInvokeAsResult<string, InvalidOperationException, DivideByZeroException>();
-
-                act.Should().ThrowExactly<ArgumentException>();
             }
 
             [Fact]
@@ -532,16 +502,6 @@ public class Delegate_extension_methods
                 actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
             }
-
-            [Fact]
-            public async Task When_source_returns_null_Throws_ArgumentException()
-            {
-                AsyncFunc<string> source = () => Task.FromResult<string>(null!);
-
-                Func<Task> act = () => source.TryInvokeAsResultAsync();
-
-                await act.Should().ThrowExactlyAsync<ArgumentException>();
-            }
         }
 
         public class Given_generic_exception
@@ -567,16 +527,6 @@ public class Delegate_extension_methods
 
                 actual.IsSuccess.Should().BeTrue();
                 actual._value!.Should().Be(1);
-            }
-
-            [Fact]
-            public async Task When_source_returns_null_Throws_ArgumentException()
-            {
-                AsyncFunc<string> source = () => Task.FromResult<string>(null!);
-
-                Func<Task> act = () => source.TryInvokeAsResultAsync<string, InvalidOperationException>();
-
-                await act.Should().ThrowExactlyAsync<ArgumentException>();
             }
 
             [Fact]
@@ -624,16 +574,6 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsSuccess.Should().BeTrue();
-            }
-
-            [Fact]
-            public async Task When_source_returns_null_Throws_ArgumentException()
-            {
-                AsyncFunc<string> source = () => Task.FromResult<string>(null!);
-
-                Func<Task> act = () => source.TryInvokeAsResultAsync<string, InvalidOperationException, DivideByZeroException>();
-
-                await act.Should().ThrowExactlyAsync<ArgumentException>();
             }
 
             [Fact]

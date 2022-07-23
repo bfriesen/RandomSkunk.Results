@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.Exceptions;
-
 namespace RandomSkunk.Results.Linq;
 
 /// <summary>
@@ -21,8 +19,6 @@ public static class LinqExtensions
     /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static Result<TReturn> Select<T, TReturn>(
         this Result<T> sourceResult,
         Func<T, TReturn> selector) =>
@@ -62,8 +58,6 @@ public static class LinqExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static Result<TReturn> SelectMany<T, TIntermediate, TReturn>(
         this Result<T> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
@@ -73,10 +67,8 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue =>
-                    (resultSelector(sourceValue!, intermediateValue!)
-                        ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToResult()));
+            sourceValue => intermediateSelector(sourceValue).Map(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
     /// <summary>
@@ -93,8 +85,6 @@ public static class LinqExtensions
     /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="selector"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static Maybe<TReturn> Select<T, TReturn>(
         this Maybe<T> sourceResult,
         Func<T, TReturn> selector) =>
@@ -135,8 +125,6 @@ public static class LinqExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static Maybe<TReturn> SelectMany<T, TIntermediate, TReturn>(
         this Maybe<T> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
@@ -146,9 +134,8 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue =>
-                    (resultSelector(sourceValue!, intermediateValue!) ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToMaybe()));
+            sourceValue => intermediateSelector(sourceValue).Map(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
     /// <summary>
@@ -186,8 +173,6 @@ public static class LinqExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static Maybe<TReturn> SelectMany<T, TIntermediate, TReturn>(
         this Result<T> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
@@ -197,10 +182,8 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue =>
-                    (resultSelector(sourceValue!, intermediateValue!)
-                        ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToMaybe()));
+            sourceValue => intermediateSelector(sourceValue).Map(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
     /// <summary>
@@ -239,8 +222,6 @@ public static class LinqExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="resultSelector"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static Result<TReturn> SelectMany<T, TIntermediate, TReturn>(
         this Maybe<T> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
@@ -250,9 +231,8 @@ public static class LinqExtensions
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
         return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).FlatMap(
-                intermediateValue =>
-                    (resultSelector(sourceValue!, intermediateValue!) ?? throw FunctionMustNotReturnNull(nameof(resultSelector))).ToResult()));
+            sourceValue => intermediateSelector(sourceValue).Map(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
     /// <summary>

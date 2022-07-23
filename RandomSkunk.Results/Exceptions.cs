@@ -14,6 +14,4 @@ internal static class Exceptions
     public static InvalidStateException CannotAccessErrorUnlessNonSuccess() => new(CannotAccessErrorUnlessNonSuccessMessage);
 
     public static InvalidStateException CannotAccessValueUnlessSuccess(Error? error = null) => new(CannotAccessValueUnlessSuccessMessage, error);
-
-    public static ArgumentException FunctionMustNotReturnNull(string paramName) => new(FunctionMustNotReturnNullMessage, paramName);
 }

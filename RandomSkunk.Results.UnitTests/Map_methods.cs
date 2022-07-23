@@ -36,16 +36,6 @@ public class Map_methods
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
-
-        [Fact]
-        public void Given_IsSuccess_and_map_function_returning_null_Throws_ArgumentException()
-        {
-            var source = 1.ToResult();
-
-            Action act = () => source.Map<string>(value => null!);
-
-            act.Should().ThrowExactly<ArgumentException>();
-        }
     }
 
     public class For_Maybe_of_T
@@ -91,16 +81,6 @@ public class Map_methods
             Action act = () => source.Map<string>(null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Given_IsSuccess_and_map_function_returning_null_Throws_ArgumentException()
-        {
-            var source = 1.ToMaybe();
-
-            Action act = () => source.Map<string>(value => null!);
-
-            act.Should().ThrowExactly<ArgumentException>();
         }
     }
 }

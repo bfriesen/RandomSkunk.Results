@@ -36,16 +36,6 @@ public class MapAsync_methods
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
-
-        [Fact]
-        public async Task Given_IsSuccess_and_map_function_returning_null_Throws_ArgumentException()
-        {
-            var source = 1.ToResult();
-
-            Func<Task> act = () => source.MapAsync(value => Task.FromResult<string>(null!));
-
-            await act.Should().ThrowExactlyAsync<ArgumentException>();
-        }
     }
 
     public class For_Maybe_of_T
@@ -91,16 +81,6 @@ public class MapAsync_methods
             Func<Task> act = () => source.MapAsync<string>(null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Given_IsSuccess_and_map_function_returning_null_Throws_ArgumentException()
-        {
-            var source = 1.ToMaybe();
-
-            Func<Task> act = () => source.MapAsync(cancellationToken => Task.FromResult<string>(null!));
-
-            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
     }
 }

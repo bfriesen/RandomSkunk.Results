@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.Exceptions;
-
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Or</c> methods. </content>
@@ -26,18 +24,10 @@ public partial struct Result<T>
     /// <param name="getFallbackValue">A function that returns the fallback value if the result is not <c>Success</c>.</param>
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public Result<T> Or(Func<T> getFallbackValue)
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        if (_type == ResultType.Success)
-            return this;
-
-        var fallbackValue = getFallbackValue()
-             ?? throw FunctionMustNotReturnNull(nameof(getFallbackValue));
-
-        return fallbackValue.ToResult();
+        return _type == ResultType.Success ? this : getFallbackValue().ToResult();
     }
 }

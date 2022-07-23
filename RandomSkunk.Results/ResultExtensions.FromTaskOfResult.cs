@@ -578,8 +578,6 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
-    ///     evaluated.</exception>
     public static async Task<Result<TReturn>> Map<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, TReturn> onSuccessSelector) =>
@@ -603,8 +601,6 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
-    ///     evaluated.</exception>
     public static async Task<Result<TReturn>> MapAsync<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
@@ -629,8 +625,6 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
-    ///     evaluated.</exception>
     public static async Task<Maybe<TReturn>> Map<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, TReturn> onSuccessSelector) =>
@@ -655,8 +649,6 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
-    ///     evaluated.</exception>
     public static async Task<Maybe<TReturn>> MapAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
@@ -978,8 +970,6 @@ public static partial class ResultExtensions
     /// <param name="getFallbackValue">A function that returns the fallback value if the result is not <c>Success</c>.</param>
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static async Task<Result<T>> Or<T>(this Task<Result<T>> sourceResult, Func<T> getFallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).Or(getFallbackValue);
 
@@ -1004,8 +994,6 @@ public static partial class ResultExtensions
     /// <param name="getFallbackValue">A function that returns the fallback value if the result is not <c>Success</c>.</param>
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="getFallbackValue"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
     public static async Task<Maybe<T>> Or<T>(this Task<Maybe<T>> sourceResult, Func<T> getFallbackValue) =>
         (await sourceResult.ConfigureAwait(false)).Or(getFallbackValue);
 

@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.Exceptions;
-
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Map</c> and <c>MapAsync</c> methods. </content>
@@ -21,15 +19,13 @@ public partial struct Result<T>
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
-    ///     evaluated.</exception>
     public Result<TReturn> Map<TReturn>(Func<T, TReturn> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            ResultType.Success => (onSuccessSelector(_value!) ?? throw FunctionMustNotReturnNull(nameof(onSuccessSelector))).ToResult(),
+            ResultType.Success => onSuccessSelector(_value!).ToResult(),
             _ => Result<TReturn>.Fail(Error()),
         };
     }
@@ -50,15 +46,13 @@ public partial struct Result<T>
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
-    ///     evaluated.</exception>
     public async Task<Result<TReturn>> MapAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            ResultType.Success => (await onSuccessSelector(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(onSuccessSelector))).ToResult(),
+            ResultType.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToResult(),
             _ => Result<TReturn>.Fail(Error()),
         };
     }

@@ -67,16 +67,6 @@ public class Or_methods
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
-
-        [Fact]
-        public void Given_fallback_value_function_returning_null_Throws_ArgumentException()
-        {
-            var source = Result<string>.Fail();
-
-            Action act = () => source.Or(() => null!);
-
-            act.Should().ThrowExactly<ArgumentException>();
-        }
     }
 
     public class For_Maybe_of_T
@@ -167,16 +157,6 @@ public class Or_methods
             Action act = () => source.Or((Func<string>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Given_fallback_value_function_returning_null_Throws_ArgumentException()
-        {
-            var source = Maybe<string>.Fail();
-
-            Action act = () => source.Or(() => null!);
-
-            act.Should().ThrowExactly<ArgumentException>();
         }
     }
 }
