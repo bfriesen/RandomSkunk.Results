@@ -26,6 +26,14 @@ public class ResultTupleExtensionsGenerator : ISourceGenerator
                 .AppendOnAnyNonSuccessAsyncMethod(tupleCount)
                 .AppendMatchAllMethod(tupleCount)
                 .AppendMatchAllAsyncMethod(tupleCount)
+                .AppendMapAllMethod(tupleCount)
+                .AppendMapAllAsyncMethod(tupleCount)
+                .AppendFlatMapAllResultMethod(tupleCount)
+                .AppendFlatMapAllAsyncResultMethod(tupleCount)
+                .AppendFlatMapAllResultOfTMethod(tupleCount)
+                .AppendFlatMapAllAsyncResultOfTMethod(tupleCount)
+                .AppendFlatMapAllMaybeOfTMethod(tupleCount)
+                .AppendFlatMapAllAsyncMaybeOfTMethod(tupleCount)
                 .AppendEndRegion();
         }
 

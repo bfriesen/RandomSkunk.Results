@@ -2,7 +2,7 @@ using System.Text;
 
 namespace RandomSkunk.Results.SourceGenerators;
 
-internal static class SourceGeneratorExtensions
+internal static class ResultTupleExtensionsGeneratorExtensions
 {
     public static StringBuilder AppendBeginClassDefinition(this StringBuilder code) =>
         code.Append(@"// Auto-generated code
@@ -252,8 +252,8 @@ public static class ResultTupleExtensions
         if (onAnyNonSuccess is null) throw new ArgumentNullException(nameof(onAnyNonSuccess));
 
         if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
-        .AppendItemNNullChecks(tupleCount)
-        .Append(@"
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
         if (sourceResults.Item1.IsSuccess")
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
@@ -337,6 +337,456 @@ public static class ResultTupleExtensions
             .Append(@");
 
             return onAnyNonSuccess(error);
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendMapAllMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
+    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the value of the
+    ///     outgoing result. Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static Result<TReturn> MapAll<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", TReturn>(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", TReturn> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            var value = onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+
+            return Result<TReturn>.Success(value);
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Result<TReturn>.Fail(error);
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendMapAllAsyncMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
+    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the value of the
+    ///     outgoing result. Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static async Task<Result<TReturn>> MapAllAsync<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", TReturn>(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", Task<TReturn>> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            var value = await onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+
+            return Result<TReturn>.Success(value);
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Result<TReturn>.Fail(error);
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendFlatMapAllResultMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
+    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static Result FlatMapAll")
+            .AppendTypeDefinitionForT(tupleCount)
+            .Append(@"(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", Result> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            return onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Result.Fail(error);
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendFlatMapAllAsyncResultMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
+    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static Task<Result> FlatMapAllAsync")
+            .AppendTypeDefinitionForT(tupleCount)
+            .Append(@"(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", Task<Result>> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            return onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Task.FromResult(Result.Fail(error));
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendFlatMapAllResultOfTMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
+    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
+    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static Result<TReturn> FlatMapAll<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", TReturn>(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", Result<TReturn>> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            return onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Result<TReturn>.Fail(error);
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendFlatMapAllAsyncResultOfTMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
+    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
+    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static Task<Result<TReturn>> FlatMapAllAsync<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", TReturn>(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", Task<Result<TReturn>>> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            return onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Task.FromResult(Result<TReturn>.Fail(error));
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendFlatMapAllMaybeOfTMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
+    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
+    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static Maybe<TReturn> FlatMapAll<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", TReturn>(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", Maybe<TReturn>> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            return onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Maybe<TReturn>.Fail(error);
+        }
+    }
+
+");
+    }
+
+    public static StringBuilder AppendFlatMapAllAsyncMaybeOfTMethod(this StringBuilder code, int tupleCount)
+    {
+        return code.Append(@"    /// <summary>
+    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
+    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
+    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
+    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
+    /// is returned.
+    /// </summary>
+    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
+            .AppendTypeParamDocsForT(tupleCount)
+            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
+    /// <param name=""sourceResults"">A tuple of results.</param>
+    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
+    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
+    /// <returns>The mapped result.</returns>
+    public static Task<Maybe<TReturn>> FlatMapAllAsync<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", TReturn>(
+        this ")
+            .AppendTupleDefinitionForT(tupleCount)
+            .Append(@" sourceResults,
+        Func<")
+            .AppendTypeDefinitionArgumentsForT(tupleCount)
+            .Append(@", Task<Maybe<TReturn>>> onAllSuccessSelector)
+    {
+        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
+
+        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
+            .AppendItemNNullChecks(tupleCount)
+            .Append(@"
+        if (sourceResults.Item1.IsSuccess")
+            .AppendAndItemNIsSuccessClauses(tupleCount)
+            .Append(@")
+        {
+            return onAllSuccessSelector(
+                sourceResults.Item1.GetSuccessValue()")
+            .AppendItemNGetSuccessValueParameters(tupleCount)
+            .Append(@");
+        }
+        else
+        {
+            var error = GetNonSuccessError(
+                null,
+                sourceResults.Item1")
+            .AppendItemNParameters(tupleCount)
+            .Append(@");
+
+            return Task.FromResult(Maybe<TReturn>.Fail(error));
         }
     }
 
