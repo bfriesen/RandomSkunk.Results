@@ -6,8 +6,16 @@ namespace RandomSkunk.Results;
 public partial struct Result<T>
 {
     /// <summary>
-    /// Maps the current result to a new result using the specified <paramref name="onSuccessSelector"/> function.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
@@ -27,10 +35,16 @@ public partial struct Result<T>
     }
 
     /// <summary>
-    /// Maps the current result to a new result using the specified <paramref name="onSuccessSelector"/> function. The map
-    /// function is evaluated if and only if this is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new
-    /// result will always be the same as this result.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>

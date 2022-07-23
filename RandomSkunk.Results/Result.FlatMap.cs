@@ -4,9 +4,16 @@ namespace RandomSkunk.Results;
 public partial struct Result
 {
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
-    /// function. Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
@@ -23,9 +30,16 @@ public partial struct Result
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
-    /// function. Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
@@ -42,8 +56,9 @@ public partial struct Result
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
-    /// function. Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -62,8 +77,9 @@ public partial struct Result
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
-    /// function. Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -82,9 +98,9 @@ public partial struct Result
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
-    /// function. Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. A <c>None</c>
-    /// result is never returned.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -103,9 +119,9 @@ public partial struct Result
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
-    /// function. Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. A <c>None</c>
-    /// result is never returned.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing

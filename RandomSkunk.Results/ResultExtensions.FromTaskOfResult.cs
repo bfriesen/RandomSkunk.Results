@@ -46,10 +46,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).AsResult(onNoneGetError);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
@@ -62,10 +68,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
@@ -78,10 +90,16 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is never returned.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -95,10 +113,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is never returned.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -112,11 +136,17 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Else if <paramref name="sourceResult"/> is a <c>Fail</c> result, return a
-    /// <c>Fail</c> result with an equivalent error. Otherwise, if <paramref name="sourceResult"/> is a <c>None</c> result,
-    /// return a <c>Fail</c> result with an error indicating that there was no value.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
@@ -147,11 +177,17 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector, onNoneGetError);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Else if <paramref name="sourceResult"/> is a <c>Fail</c> result, return a
-    /// <c>Fail</c> result with an equivalent error. Otherwise, if <paramref name="sourceResult"/> is a <c>None</c> result,
-    /// return a <c>Fail</c> result with an error indicating that there was no value.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
@@ -182,11 +218,17 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector, onNoneGetError).ConfigureAwait(false);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Else if <paramref name="sourceResult"/> is a <c>Fail</c> result, return a
-    /// <c>Fail</c> result with an equivalent error. Otherwise, if <paramref name="sourceResult"/> is a <c>None</c> result,
-    /// return a <c>Fail</c> result with an error indicating that there was no value.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -218,11 +260,17 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector, onNoneGetError);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. ELse if <paramref name="sourceResult"/> is a <c>Fail</c> result, return a
-    /// <c>Fail</c> result with an equivalent error. Otherwise, if <paramref name="sourceResult"/> is a <c>None</c> result,
-    /// return a <c>Fail</c> result with an error indicating that there was no value.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -353,10 +401,16 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).FilterAsync(filterAsync).ConfigureAwait(false);
 
     /// <summary>
-    /// Maps <paramref name="sourceResult"/> to a another result using the specified <paramref name="onSuccessSelector"/>
-    /// function. The flat map function is evaluated if and only if the source is a <c>Success</c> result. If the source is a
-    /// <c>Fail</c> result, the error is propagated to the returned <c>Fail</c> result.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -370,10 +424,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
-    /// Maps <paramref name="sourceResult"/> to a another result using the specified <paramref name="onSuccessSelector"/>
-    /// function. The flat map function is evaluated if and only if the source is a <c>Success</c> result. If the source is a
-    /// <c>Fail</c> result, the error is propagated to the returned <c>Fail</c> result.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -387,11 +447,17 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Else if <paramref name="sourceResult"/> is a <c>Fail</c> result, return a
-    /// <c>Fail</c> result with an equivalent error. Otherwise, if <paramref name="sourceResult"/> is a <c>None</c> result,
-    /// return a <c>None</c> result.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>None</c> result.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -405,11 +471,17 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Else if <paramref name="sourceResult"/> is a <c>Fail</c> result, return a
-    /// <c>Fail</c> result with an equivalent error. Otherwise, if <paramref name="sourceResult"/> is a <c>None</c> result,
-    /// return a <c>None</c> result.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>None</c> result.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -489,10 +561,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).GetValueOr(getFallbackValue);
 
     /// <summary>
-    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="onSuccessSelector"/> function.
-    /// The map function is evaluated if and only if the source is a <c>Success</c> result, and the <see cref="Result{T}.Type"/>
-    /// of the new result will always be the same as the source result.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -508,10 +586,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).Map(onSuccessSelector);
 
     /// <summary>
-    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="onSuccessSelector"/> function.
-    /// The map function is evaluated if and only if the source is a <c>Success</c> result, and the <see cref="Result{T}.Type"/>
-    /// of the new result will always be the same as the source result.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -527,10 +611,17 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).MapAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
-    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="onSuccessSelector"/> function.
-    /// The map function is evaluated if and only if the source is a <c>Success</c> result, and the <see cref="Maybe{T}.Type"/>
-    /// of the new result will always be the same as the source result.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>None</c> result.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -546,10 +637,17 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).Map(onSuccessSelector);
 
     /// <summary>
-    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="onSuccessSelector"/> function.
-    /// The map function is evaluated if and only if the source is a <c>Success</c> result, and the <see cref="Maybe{T}.Type"/>
-    /// of the new result will always be the same as the source result.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
+    /// <c>None</c> result.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -947,10 +1045,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).WithError(onFailGetError);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
@@ -962,10 +1066,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
@@ -977,10 +1087,16 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -993,10 +1109,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -1009,10 +1131,16 @@ public static partial class ResultExtensions
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is never returned.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -1025,10 +1153,16 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
-    /// If <paramref name="sourceResult"/> is a <c>Success</c> result, then return the result from evaluating the
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if <paramref name="sourceResult"/> is a <c>Fail</c> result,
-    /// return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is never returned.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
+    /// might not be <c>Success</c>).
+    /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
