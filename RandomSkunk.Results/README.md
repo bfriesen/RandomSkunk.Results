@@ -9,184 +9,136 @@ This library contains three result types: `Result<T>`, which represents a result
 To create a result, use one of the static factory methods.
 
 ```c#
+int i = 123;
+string s = "abc";
+string n = null!;
+
 // Results that have a required value:
-Result<int> result1 = Result<int>.Success(123);
-Result<int> result1a = 123.ToResult(); // using RandomSkunk.Result.FactoryExtensions;
+Result<int> result1 = Result<int>.Success(i);
 Result<int> result2 = Result<int>.Fail();
 
-// Results that have an optional value:
-Maybe<int> result3 = Maybe<int>.Success(123);
-Maybe<int> result3a = 123.ToMaybe(); // using RandomSkunk.Result.FactoryExtensions;
-Maybe<int> result4 = Maybe<int>.None();
-Maybe<int> result5 = Maybe<int>.Fail();
+Result<string> result3 = Result<string>.FromValue(s); // Success("abc")
+Result<string> result4 = Result<string>.FromValue(n); // Fail("Result value cannot be null.")
 
-Maybe<string> result6 = Maybe<string>.FromValue("abc"); // Success("abc")
-Maybe<string> result7 = Maybe<string>.FromValue(null); // None
+// using RandomSkunk.Result.FactoryExtensions;
+Result<string> result5 = s.ToResult(); // Success("abc")
+Result<string> result6 = n.ToResult(); // Fail("Result value cannot be null.")
+
+// Results that have an optional value:
+Maybe<int> result7 = Maybe<int>.Success(123);
+Maybe<int> result8 = Maybe<int>.None();
+Maybe<int> result9 = Maybe<int>.Fail();
+
+Maybe<string> resultA = Maybe<string>.FromValue(s); // Success("abc")
+Maybe<string> resultB = Maybe<string>.FromValue(n); // None
+
+// using RandomSkunk.Result.FactoryExtensions;
+Maybe<string> resultC = s.ToMaybe(); // Success(123)
+Maybe<string> resultD = n.ToMaybe(); // None
 
 // Results that do not have a value:
-Result result8 = Result.Success();
-Result result9 = Result.Fail();
+Result resultE = Result.Success();
+Result resultF = Result.Fail();
+```
+
+#### From Exceptions
+
+`Fail` results can be created directly from an exception.
+
+```c#
+Result<int> Divide(int x, int y)
+{
+    try
+    {
+        return Result<int>.Success(x / y);
+    }
+    catch (DivideByZeroException ex)
+    {
+        return Result<int>.Fail(ex);
+    }
+}
+```
+
+#### From Delegates
+
+The `RandomSkunk.Results` namespace contains extension methods for several delegates with names beginning with "Try". These methods evaluate the delegate inside a try/catch block, very similar to the `Divide` method in the [From Exceptions](#from-exceptions) section above. The supported delegates are `System.Action`, `System.Func<T>`, `RandomSkunk.Results.AsyncAction`, and `RandomSkunk.Results.AsyncFunc<T>`.
+
+```c#
+Action writeFile = () => File.WriteAllText(@"C:\test.txt", "Hello, world!");
+Result result1 = writeFile.TryInvokeAsResult();
+
+Func<IPAddress[]> getHostAddresses = () => Dns.GetHostAddresses("example.com");
+Result<IPAddress[]> result2 = getHostAddresses.TryInvokeAsResult();
+
+Func<string> getEnvironmentVariable = () => Environment.GetEnvironmentVariable("example")!;
+Maybe<string> result3 = getEnvironmentVariable.TryInvokeAsMaybe();
+```
+
+To make it easier to invoke these extension methods, the `Delegates` static class provides methods for creating delegates.
+
+```c#
+Result result1 = await Delegates.AsyncAction(() => File.WriteAllTextAsync(@"C:\test.txt", "Hello, world!"))
+    .TryInvokeAsResultAsync();
+
+Result<string> result2 = await Delegates.AsyncFunc(() => File.ReadAllTextAsync(@"C:\test.txt"))
+    .TryInvokeAsResultAsync();
 ```
 
 ### Handling Results
 
-There are two options for handling a result: by calling the `Match` or `MatchAsync` extension methods, which is safe but indirect; and `GetValue()` or `GetError()` extension methods, which is direct but unsafe.
-
-#### Match methods
-
-There are four variations of match methods for each of the result types, depending on what kind of work needs to be done. All the methods take parameters that are functions (delegates). Two of the methods are synchronous and the other two are asynchronous (`Match` vs `MatchAsync`). Divided the other way, two of the methods have function parameters that return a value, and the other two have function parameters that do not have a return value (i.e. they return `void` or `Task`).
-
-Note that calling the match methods will never throw an exception unless the provided function parameters themselves throw when called.
-
-```c#
-// Synchronous functions with no return value (return void):
-Maybe<int> result = ...
-result.Match(
-    onSuccess: value => Console.WriteLine($"Success: {value}"),
-    onNone: () => Console.WriteLine("None"),
-    onFail: error => Console.WriteLine($"Fail: {error}"));
-
-// Asynchronous functions with no return value (return Task):
-Result<int> result = ...
-await result.MatchAsync(
-    onSuccess: async value => await Console.Out.WriteLineAsync($"Success: {value}"),
-    onFail: async error => await Console.Out.WriteLineAsync($"Fail: {error}"));
-
-// Synchronous functions with a return value:
-Result result = ...
-string message = result.Match(
-    onSuccess: () => "Success",
-    onFail: error => $"Fail: {error}");
-
-// Asynchronous functions with a return value:
-Maybe<Guid> userIdResult = ...
-string message = await userIdResult.MatchAsync(
-    onSuccess: async userId =>
-    {
-        string userName = await GetUserName(userId);
-        return $"Hello, {userName}!";
-    },
-    onNone: () => Task.FromResult("Unknown user"),
-    onFail: error => Task.FromResult("Error"));
-```
-
-#### Unsafe Access
+#### Direct Access
 
 To access the value and error of results directly, add `using RandomSkunk.Results.Unsafe;` to the using directives, then call the `GetValue()` and `GetError()` extension methods on the result. Note that calling these extension methods will throw an `InvalidStateException` if not in the proper state. `IsSuccess` must be true in order to successfully call `GetValue()`, and `IsFail` must be true in order to successfully call `GetError()`.
 
 ```c#
-// Required return value:
-Result<int> result1 = ...
-if (result1.IsFail)
-    Console.WriteLine($"Error: {result1.GetError()}");
-else
-    Console.WriteLine($"Success: {result1.GetValue()}");
+using RandomSkunk.Results.Unsafe;
 
-// Optional return value:
-Maybe<int> result2 = ...
-if (result2.IsSuccess)
-    Console.WriteLine($"Success: {result2.GetValue()}");
-else if (result2.IsNone)
-    Console.WriteLine("None");
-else
-    Console.WriteLine($"Error: {result2.GetError()}");
+void Example(Result<int> result1, Maybe<int> result2, Result result3)
+{
+    if (result1.IsFail)
+        Console.WriteLine($"Error: {result1.GetError()}");
+    else
+        Console.WriteLine($"Success: {result1.GetValue()}");
 
-// No return value:
-Result result3 = ...
-if (result3.IsSuccess)
-    Console.WriteLine("Success");
-else
-    Console.WriteLine($"Error: {result3.GetError()}");
+    if (result2.IsSuccess)
+        Console.WriteLine($"Success: {result2.GetValue()}");
+    else if (result2.IsNone)
+        Console.WriteLine("None");
+    else
+        Console.WriteLine($"Error: {result2.GetError()}");
+
+    if (result3.IsSuccess)
+        Console.WriteLine("Success");
+    else
+        Console.WriteLine($"Error: {result3.GetError()}");
+}
 ```
 
 Each result type also has an enum `Type` property that returns the kind of result: `Success`, `Fail`, or `None`, depending on the result type.
 
 ```c#
-Maybe<int> result = ...
-switch (result.Type)
+void Example(Maybe<int> result)
 {
-    case MaybeType.Success:
-        Console.WriteLine($"Success: {result.GetValue()}");
-        break;
-    case MaybeType.None:
-        Console.WriteLine("None");
-        break;
-    case MaybeType.Fail:
-        Console.WriteLine($"Fail: {result.GetError()}");
-        break;
-}
-```
-
-## Custom Errors and Factory Methods
-
-Custom errors can be created by inheriting from the `Error` class, then passed to a `Fail` factory method.
-
-```c#
-public record class NotFoundError : Error
-{
-    public NotFoundError(int id, string resourceType = "record")
-        : base($"A {resourceType} with the ID {id} could not be found.")
+    switch (result.Type)
     {
-        ErrorCode = 404;
+        case MaybeType.Success:
+            Console.WriteLine($"Success: {result.GetValue()}");
+            break;
+        case MaybeType.None:
+            Console.WriteLine("None");
+            break;
+        case MaybeType.Fail:
+            Console.WriteLine($"Fail: {result.GetError()}");
+            break;
     }
 }
-
-// Create a fail result with our custom error.
-Result<T> result = Result<T>.Fail(new NotFoundError(123));
-
- // errorTitle: "Not Found Error"
-string errorTitle = result.Error.Type;
-
-// errorMessage: "A record with the ID 123 could not be found."
-string errorMessage = result.Error.Message;
-
- // errorCode: 404
-string errorCode = result.Error.ErrorCode;
 ```
 
-To make it easier to create specific fail results, extension methods targeting `IResultFactory`, `IResultFactory<T>`, or `IMaybeFactory<T>` can be created.
-
-```c#
-public static Result<T> NotFound<T>(
-    this ResultFailFactory<T> factory,
-    int id,
-    string resourceType = "record")
-{
-    return factory.Error(
-        new NotFoundError(id, resourceType)
-            { StackTrace = new StackTrace(1).ToString() });
-}
-
-// Create a fail result with our factory extension method.
-Result<T> result = Result<int>.FailWith.NotFound(id, "User");
-```
-
-## Result Extension Methods
-
-There are numerous extension methods for the result types, though most are only applicable to `Result<T>` and `Maybe<T>` (not `Result`).
-
-### Equals
+#### GetValueOr
 
 *Applicable to `Result<T>` and `Maybe<T>` only.*
 
-Compares a result to a value. true if the source result is `Success` and its value equals the specified value.
-
-```c#
-Result<int>.Success(123).Equals(123); // true
-Result<int>.Success(123).Equals(456); // false
-Result<int>.Fail().Equals(123); // false
-
-Maybe<int>.Success(123).Equals(123); // true
-Maybe<int>.Success(123).Equals(456); // false
-Maybe<int>.None().Equals(123); // false
-Maybe<int>.Fail().Equals(123); // false
-```
-
-### GetValueOr
-
-*Applicable to `Result<T>` and `Maybe<T>` only.*
-
-Gets the value of a result if it is `Success`, otherwise returns the specified fallback value.
+Gets the value of the `Success` result, or the specified fallback value if it is a `Fail` result.
 
 ```c#
 Result<int>.Success(123).GetValueOr(456); // 123
@@ -197,11 +149,11 @@ Maybe<int>.None().GetValueOr(456); // 456
 Maybe<int>.Fail().GetValueOr(456); // 456
 ```
 
-### Or
+#### Or
 
 *Applicable to `Result<T>` and `Maybe<T>` only.*
 
-the source result if it is `Success`, otherwise returns a new `Success` result with the specified fallback value.
+Returns the current result if it is a `Success` result; otherwise, returns a new `Success` result with the specified fallback value.
 
 ```c#
 Result<int>.Success(123).Or(456); // Success(123)
@@ -212,11 +164,11 @@ Maybe<int>.None().Or(456); // Success(456)
 Maybe<int>.Fail().Or(456); // Success(456)
 ```
 
-### Else
+#### Else
 
 *Applicable to all three result types.*
 
-the source result if it is `Success`, else returns the specified fallback result.
+Returns the current result if it is a `Success` result, else returns the specified fallback result.
 
 ```c#
 Result<int>.Success(123).Else(Result<int>.Success(456)); // Success(123)
@@ -235,11 +187,13 @@ Maybe<int>.Fail("A").Else(Maybe<int>.None()); // None
 Maybe<int>.Fail("A").Else(Maybe<int>.Fail("B")); // Fail("B")
 ```
 
-### Map / MapAsync
+#### Map / MapAsync
 
 *Applicable to `Result<T>` and `Maybe<T>` only.*
 
-Transforms the source result into a new result. If the source result is `Success`, returns a new `Success` result with its value obtained by evaluating the specified `map` or `mapAsync` function. If the source result is `Fail`, returns a new `Fail` result with the same error as the source. If the source result is `None`, returns `None`.
+Transforms the current result - if `Success` - into a new `Success` result using the specified `onSuccessSelector` function. Otherwise, if the current result is `Fail`, it is transformed into a new `Fail` result with the same error.
+
+*The difference between `Map` and `FlatMap` is in the return value of their `onSuccessSelector` function. The selector for `Map` returns a regular (non-result) value, which is the value of the returned `Success` result. The selector for `FlatMap` returns a result value, which is itself the returned result (and might not be `Success`).*
 
 ```c#
 Result<int>.Success(123).Map(value => value.ToString()); // Success("123")
@@ -250,13 +204,13 @@ Maybe<int>.None().Map(value => value.ToString()); // None
 Maybe<int>.Fail("A").Map(value => value.ToString()); // Fail("A")
 ```
 
-Each of the `Map` and `MapAsync` overloads has an optional `Func<Error, Error> getError` parameter, which allows the caller to replace the error of the returned `Fail` result. This function is evaluated only if the source result is a `Fail` result.
+#### FlatMap / FlatMapAsync
 
-### FlatMap / FlatMapAsync
+*Applicable to all three result types.*
 
-*Applicable to `Result<T>` and `Maybe<T>` only.*
+Transforms the current result - if `Success` - into a new result using the specified `onSuccessSelector` function. Otherwise, if the current result is `Fail`, it is transformed into a new `Fail` result with the same error.
 
-Transforms the source result into a new result. If the source result is `Success`, returns the result obtained by evaluating the specified `flatMap` or `flatMapAsync` function. If the source result is `Fail`, returns a new `Fail` result with the same error as the source. If the source result is `None`, returns `None`.
+*The difference between `Map` and `FlatMap` is in the return value of their `onSuccessSelector` function. The selector for `Map` returns a regular (non-result) value, which is the value of the returned `Success` result. The selector for `FlatMap` returns a result value, which is itself the returned result (and might not be `Success`).*
 
 ```c#
 Result<int>.Success(123).FlatMap(GetSuccessResult); // Success("123")
@@ -282,63 +236,7 @@ Maybe<string> GetNoneResult(bool value) => Maybe<string>.None();
 Maybe<string> GetFailResult(bool value) => Maybe<string>.Fail("B");
 ```
 
-Each of the `FlatMap` and `FlatMapAsync` overloads has an optional `Func<Error, Error> getError` parameter, which allows the caller to replace the error of the returned `Fail` result. This function is evaluated only if the source result is a `Fail` result.
-
-### CrossMap / CrossMapAsync
-
-*Applicable to `Result<T>` and `Maybe<T>` only.*
-
-Transforms the source result into a different type of result.
-
-```c#
-// Result<T> to Result
-Result<int>.Success(123).CrossMap(GetSuccessResult); // Success
-Result<int>.Success(123).CrossMap(GetFailResult); // Fail
-Result<int>.Fail("A").CrossMap(GetSuccessResult); // Fail("A")
-Result<int>.Fail("A").CrossMap(GetFailResult); // Fail("A")
-
-// Result<T> to Maybe<T>
-Result<int>.Success(123).CrossMap(GetSuccessMaybeOfString); // Success("123")
-Result<int>.Success(123).CrossMap(GetNoneMaybeOfString); // None
-Result<int>.Success(123).CrossMap(GetFailMaybeOfString); // Fail("B")
-Result<int>.Fail("A").CrossMap(GetSuccessMaybeOfString); // Fail("A")
-Result<int>.Fail("A").CrossMap(GetNoneMaybeOfString); // Fail("A")
-Result<int>.Fail("A").CrossMap(GetFailMaybeOfString); // Fail("A")
-
-// Maybe<T> to Result
-Maybe<int>.Success(123).CrossMap(GetSuccessResult); // Success
-Maybe<int>.Success(123).CrossMap(GetFailResult); // Fail("B")
-Maybe<int>.None().CrossMap(GetSuccessResult); // Fail(none)
-Maybe<int>.None().CrossMap(GetFailResult); // Fail(none)
-Maybe<int>.Fail("A").CrossMap(GetSuccessResult); // Fail("A")
-Maybe<int>.Fail("A").CrossMap(GetFailResult); // Fail("A")
-
-// Maybe<T> to Result<T>
-Maybe<int>.Success(123).CrossMap(GetSuccessResultOfString); // Success("123")
-Maybe<int>.Success(123).CrossMap(GetFailResultOfString); // Fail("B")
-Maybe<int>.None().CrossMap(GetSuccessResultOfString); // Fail(none)
-Maybe<int>.None().CrossMap(GetFailResultOfString); // Fail(none)
-Maybe<int>.Fail("A").CrossMap(GetSuccessResultOfString); // Fail("A")
-Maybe<int>.Fail("A").CrossMap(GetFailResultOfString); // Fail("A")
-
-Result GetSuccessResult(int value) => Result.Success();
-Result GetFailResult(int value) => Result.Fail("B");
-
-Result<string> GetSuccessResultOfString(int value) => Result<string>.Success(value.ToString());
-Result<string> GetFailResultOfString(int value) => Result<string>.Fail("B");
-
-Maybe<string> GetSuccessMaybeOfString(int value) => Maybe<string>.Success(value.ToString());
-Maybe<string> GetNoneMaybeOfString(int value) => Maybe<string>.None();
-Maybe<string> GetFailMaybeOfString(int value) => Maybe<string>.Fail("B");
-```
-
-Each of the `CrossMap` and `CrossMapAsync` overloads has an optional `Func<Error, Error> getError` parameter, which allows the caller to replace the error of the returned `Fail` result when the source result is a `Fail` result.
-
-The cross-map methods for `Maybe<T>` also have an optional `Func<Error> getNoneError` parameter, which allows the caller to specify the error of the returned `Fail` result when the source result is a `None` result.
-
-### Flatten
-
-*Applicable to `Result<T>` and `Maybe<T>` only.*
+#### Flatten
 
 Flattens a `Result<Result<T>>` into a `Result<T>` or a `Maybe<Maybe<T>>` into a `Maybe<T>`.
 
@@ -350,7 +248,7 @@ Maybe<Maybe<int>> nestedMaybe = ...
 Maybe<int> flattenedMaybe = nestedMaybe.Flatten();
 ```
 
-### Filter / FilterAsync
+#### Filter / FilterAsync
 
 *Applicable to `Maybe<T>` only.*
 
@@ -363,7 +261,7 @@ Maybe<int>.None().Filter(value => value < 150); // None
 Maybe<int>.Fail("A").Filter(value => value < 150); // Fail("A")
 ```
 
-### WithError
+#### WithError
 
 *Applicable to all three result types.*
 
@@ -378,6 +276,33 @@ failResult.WithError(error => new Error("Outer error") { InnerError = error });
 
 // Success
 successResult.WithError(error => new Error("Outer error") { InnerError = error });
+```
+
+### Custom Errors
+
+Custom errors can be created by inheriting from the `Error` record class.
+
+```c#
+public record class NotFoundError : Error
+{
+    public NotFoundError(int id, string resourceType = "record")
+        : base($"A {resourceType} with the ID {id} could not be found.")
+    {
+        ErrorCode = 404;
+    }
+}
+
+// Create a fail result with our custom error.
+Result<int> result = Result<int>.Fail(new NotFoundError(123));
+
+// errorTitle: "Not Found Error"
+string errorTitle = result.GetError().Title;
+
+// errorMessage: "A record with the ID 123 could not be found."
+string errorMessage = result.GetError().Message;
+
+// errorCode: 404
+int? errorCode = result.GetError().ErrorCode;
 ```
 
 ## LINQ Extension Methods

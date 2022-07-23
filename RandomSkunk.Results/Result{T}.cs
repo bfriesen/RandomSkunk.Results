@@ -103,7 +103,8 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
+    /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    ///     </param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
     ///     </param>
@@ -129,18 +130,18 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <c>Fail</c> result is returned instead.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <param name="getNullValueError">An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result when
-    ///     the <paramref name="value"/> parameter is <see langword="null"/>. When <see langword="null"/> or not provided, a
+    /// <param name="onNullValueGetError">An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result
+    ///     when the <paramref name="value"/> parameter is <see langword="null"/>. When <see langword="null"/> or not provided, a
     ///     function that returns an error with error code <see cref="ErrorCodes.BadRequest"/> and a message indicating that the
     ///     value cannot be null is returned instead.</param>
     /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
     ///     result with a generated stack trace.</returns>
-    public static Result<T> FromValue(T? value, Func<Error>? getNullValueError = null) =>
+    public static Result<T> FromValue(T? value, Func<Error>? onNullValueGetError = null) =>
         value is not null
             ? Success(value)
-            : Fail(getNullValueError is not null
-                ? getNullValueError()
-                : Errors.BadRequest("Value cannot be null."));
+            : Fail(onNullValueGetError is not null
+                ? onNullValueGetError()
+                : Errors.BadRequest("Result value cannot be null."));
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>

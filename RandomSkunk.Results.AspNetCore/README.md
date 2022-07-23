@@ -14,14 +14,14 @@ result2.ToActionResult(); // 400 { "status": 400, "title": "Bad Request", "type"
 
 // Result<T>
 Result<int[]> result3 = new[] { 1, 2, 3 }.ToResult();
-result3.ToActionResult(); // 200 { 1, 2, 3 }
+result3.ToActionResult(); // 200 [ 1, 2, 3 ]
 
 Result<int[]> result4 = Result<int[]>.Fail("Forbidden", errorCode: 403);
 result4.ToActionResult(); // 403 { "status": 403, "title": "Forbidden", "type": "Error" }
 
 // Maybe<T>
 Maybe<int[]> result5 = new[] { 4, 5, 6 }.ToMaybe();
-result5.ToActionResult(); // 200 { 4, 5, 6 }
+result5.ToActionResult(); // 200 [ 4, 5, 6 ]
 
 Maybe<int[]> result6 = Maybe<int[]>.None();
 result6.ToActionResult(); // 404 { "status": 404, "title": "Not Found", "type": "Error" }

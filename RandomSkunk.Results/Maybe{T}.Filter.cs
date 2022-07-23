@@ -4,8 +4,8 @@ namespace RandomSkunk.Results;
 public partial struct Maybe<T>
 {
     /// <summary>
-    /// Filter the current result into a <c>None</c> result if it is a <c>Success</c> result and the <paramref name="filter"/>
-    /// function evaluates to <see langword="false"/>.
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the <paramref name="filter"/>
+    /// function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
     /// </summary>
     /// <param name="filter">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     ///     <see langword="false"/>.</param>
@@ -26,8 +26,8 @@ public partial struct Maybe<T>
     }
 
     /// <summary>
-    /// Filter the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>.
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
     /// </summary>
     /// <param name="filterAsync">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     ///     <see langword="false"/>.</param>
