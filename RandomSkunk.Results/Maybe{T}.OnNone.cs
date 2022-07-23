@@ -4,31 +4,31 @@ namespace RandomSkunk.Results;
 public partial struct Maybe<T>
 {
     /// <summary>
-    /// Invokes the <paramref name="onNone"/> function if the current result is a <c>None</c> result.
+    /// Invokes the <paramref name="onNoneCallback"/> function if the current result is a <c>None</c> result.
     /// </summary>
-    /// <param name="onNone">A callback function to invoke if this is a <c>None</c> result.</param>
+    /// <param name="onNoneCallback">A callback function to invoke if this is a <c>None</c> result.</param>
     /// <returns>The current result.</returns>
-    public Maybe<T> OnNone(Action onNone)
+    public Maybe<T> OnNone(Action onNoneCallback)
     {
-        if (onNone is null) throw new ArgumentNullException(nameof(onNone));
+        if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
 
         if (_type == MaybeType.None)
-            onNone();
+            onNoneCallback();
 
         return this;
     }
 
     /// <summary>
-    /// Invokes the <paramref name="onNone"/> function if the current result is a <c>None</c> result.
+    /// Invokes the <paramref name="onNoneCallback"/> function if the current result is a <c>None</c> result.
     /// </summary>
-    /// <param name="onNone">A callback function to invoke if this is a <c>None</c> result.</param>
+    /// <param name="onNoneCallback">A callback function to invoke if this is a <c>None</c> result.</param>
     /// <returns>The current result.</returns>
-    public async Task<Maybe<T>> OnNoneAsync(Func<Task> onNone)
+    public async Task<Maybe<T>> OnNoneAsync(Func<Task> onNoneCallback)
     {
-        if (onNone is null) throw new ArgumentNullException(nameof(onNone));
+        if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
 
         if (_type == MaybeType.None)
-            await onNone().ConfigureAwait(false);
+            await onNoneCallback().ConfigureAwait(false);
 
         return this;
     }

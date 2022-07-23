@@ -6,58 +6,46 @@ namespace RandomSkunk.Results;
 public partial struct Result<T>
 {
     /// <summary>
-    /// Maps the current result to a new result using the specified <paramref name="onSuccess"/> function. The map function is
-    /// evaluated if and only if this is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new result will
-    /// always be the same as this result.
+    /// Maps the current result to a new result using the specified <paramref name="onSuccessSelector"/> function.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    ///     Evaluated only if this is a <c>Success</c> result.</param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    ///     Evaluated only if this is a <c>Fail</c> result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccess"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
-    public Result<TReturn> Map<TReturn>(
-        Func<T, TReturn> onSuccess,
-        Func<Error, Error>? onFail = null)
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
+    ///     evaluated.</exception>
+    public Result<TReturn> Map<TReturn>(Func<T, TReturn> onSuccessSelector)
     {
-        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            ResultType.Success => (onSuccess(_value!) ?? throw FunctionMustNotReturnNull(nameof(onSuccess))).ToResult(),
-            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => (onSuccessSelector(_value!) ?? throw FunctionMustNotReturnNull(nameof(onSuccessSelector))).ToResult(),
+            _ => Result<TReturn>.Fail(Error()),
         };
     }
 
     /// <summary>
-    /// Maps the current result to a new result using the specified <paramref name="onSuccessAsync"/> function. The map function
-    /// is evaluated if and only if this is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new result will
-    /// always be the same as this result.
+    /// Maps the current result to a new result using the specified <paramref name="onSuccessSelector"/> function. The map
+    /// function is evaluated if and only if this is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new
+    /// result will always be the same as this result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    ///     Evaluated only if this is a <c>Success</c> result.</param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    ///     Evaluated only if this is a <c>Fail</c> result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentException">If <paramref name="onSuccessAsync"/> returns <see langword="null"/> when evaluated.
-    ///     </exception>
-    public async Task<Result<TReturn>> MapAsync<TReturn>(
-        Func<T, Task<TReturn>> onSuccessAsync,
-        Func<Error, Error>? onFail = null)
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException">If <paramref name="onSuccessSelector"/> returns <see langword="null"/> when
+    ///     evaluated.</exception>
+    public async Task<Result<TReturn>> MapAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
     {
-        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            ResultType.Success => (await onSuccessAsync(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(onSuccessAsync))).ToResult(),
-            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
+            ResultType.Success => (await onSuccessSelector(_value!).ConfigureAwait(false) ?? throw FunctionMustNotReturnNull(nameof(onSuccessSelector))).ToResult(),
+            _ => Result<TReturn>.Fail(Error()),
         };
     }
 }

@@ -4,31 +4,31 @@ namespace RandomSkunk.Results;
 public partial struct Result
 {
     /// <summary>
-    /// Invokes the <paramref name="onSuccess"/> function if the current result is a <c>Success</c> result.
+    /// Invokes the <paramref name="onSuccessCallback"/> function if the current result is a <c>Success</c> result.
     /// </summary>
-    /// <param name="onSuccess">A callback function to invoke if this is a <c>Success</c> result.</param>
+    /// <param name="onSuccessCallback">A callback function to invoke if this is a <c>Success</c> result.</param>
     /// <returns>The current result.</returns>
-    public Result OnSuccess(Action onSuccess)
+    public Result OnSuccess(Action onSuccessCallback)
     {
-        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_type == ResultType.Success)
-            onSuccess();
+            onSuccessCallback();
 
         return this;
     }
 
     /// <summary>
-    /// Invokes the <paramref name="onSuccess"/> function if the current result is a <c>Success</c> result.
+    /// Invokes the <paramref name="onSuccessCallback"/> function if the current result is a <c>Success</c> result.
     /// </summary>
-    /// <param name="onSuccess">A callback function to invoke if this is a <c>Success</c> result.</param>
+    /// <param name="onSuccessCallback">A callback function to invoke if this is a <c>Success</c> result.</param>
     /// <returns>The current result.</returns>
-    public async Task<Result> OnSuccessAsync(Func<Task> onSuccess)
+    public async Task<Result> OnSuccessAsync(Func<Task> onSuccessCallback)
     {
-        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_type == ResultType.Success)
-            await onSuccess().ConfigureAwait(false);
+            await onSuccessCallback().ConfigureAwait(false);
 
         return this;
     }

@@ -9,7 +9,7 @@ public static class LinqExtensions
 {
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Result{T}.Map{TReturn}(Func{T, TReturn}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Result{T}.Map{TReturn}(Func{T, TReturn})"/> method.
     /// </para>
     /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="selector"/> function. The map
     /// function is only evaluated if the target is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new
@@ -30,7 +30,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Result{TReturn}}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Result{TReturn}})"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
     /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
@@ -81,7 +81,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Maybe{T}.Map{TReturn}(Func{T, TReturn}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Maybe{T}.Map{TReturn}(Func{T, TReturn})"/> method.
     /// </para>
     /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="selector"/> function. The map
     /// function is only evaluated if the target is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new
@@ -102,7 +102,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}})"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
     /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
@@ -153,7 +153,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}}, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}})"/> method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
     /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is
@@ -205,7 +205,8 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Result{TReturn}}, Func{Error}?, Func{Error, Error}?)"/> method.
+    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Result{TReturn}}, Func{Error}?)"/>
+    /// method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
     /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a

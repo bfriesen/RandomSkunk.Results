@@ -4,31 +4,31 @@ namespace RandomSkunk.Results;
 public partial struct Result<T>
 {
     /// <summary>
-    /// Invokes the <paramref name="onFail"/> function if the current result is a <c>Fail</c> result.
+    /// Invokes the <paramref name="onFailCallback"/> function if the current result is a <c>Fail</c> result.
     /// </summary>
-    /// <param name="onFail">A callback function to invoke if this is a <c>Fail</c> result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result.</param>
     /// <returns>The current result.</returns>
-    public Result<T> OnFail(Action<Error> onFail)
+    public Result<T> OnFail(Action<Error> onFailCallback)
     {
-        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+        if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_type == ResultType.Fail)
-            onFail(Error());
+            onFailCallback(Error());
 
         return this;
     }
 
     /// <summary>
-    /// Invokes the <paramref name="onFail"/> function if the current result is a <c>Fail</c> result.
+    /// Invokes the <paramref name="onFailCallback"/> function if the current result is a <c>Fail</c> result.
     /// </summary>
-    /// <param name="onFail">A callback function to invoke if this is a <c>Fail</c> result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result.</param>
     /// <returns>The current result.</returns>
-    public async Task<Result<T>> OnFailAsync(Func<Error, Task> onFail)
+    public async Task<Result<T>> OnFailAsync(Func<Error, Task> onFailCallback)
     {
-        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+        if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_type == ResultType.Fail)
-            await onFail(Error()).ConfigureAwait(false);
+            await onFailCallback(Error()).ConfigureAwait(false);
 
         return this;
     }

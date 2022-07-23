@@ -4,119 +4,58 @@ namespace RandomSkunk.Results;
 public partial struct Maybe<T>
 {
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccess"/> function.
-    /// Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
-    /// <c>None</c> result, return a <c>None</c> result.
-    /// </summary>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSuccess">A function that maps the value of the incoming result to the value of the outgoing result.
-    ///     Evaluated only if this is a <c>Success</c> result.</param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    ///     Evaluated only if this is a <c>Fail</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public Maybe<TReturn> FlatMap<TReturn>(
-        Func<T, Maybe<TReturn>> onSuccess,
-        Func<Error, Error>? onFail = null)
-    {
-        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
-
-        return _type switch
-        {
-            MaybeType.Success => onSuccess(_value!),
-            MaybeType.None => Maybe<TReturn>.None(),
-            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
-        };
-    }
-
-    /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessAsync"/>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
     /// function. Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this
     /// is a <c>None</c> result, return a <c>None</c> result.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the value of the outgoing result.
-    ///     Evaluated only if this is a <c>Success</c> result.</param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned result's error. If
-    ///     <see langword="null"/>, no transformation takes place - a <c>Fail</c> result's error is used for the returned result.
-    ///     Evaluated only if this is a <c>Fail</c> result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<TReturn>> FlatMapAsync<TReturn>(
-        Func<T, Task<Maybe<TReturn>>> onSuccessAsync,
-        Func<Error, Error>? onFail = null)
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public Maybe<TReturn> FlatMap<TReturn>(Func<T, Maybe<TReturn>> onSuccessSelector)
     {
-        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            MaybeType.Success => await onSuccessAsync(_value!).ConfigureAwait(false),
+            MaybeType.Success => onSuccessSelector(_value!),
             MaybeType.None => Maybe<TReturn>.None(),
-            _ => Maybe<TReturn>.Fail(onFail.Evaluate(Error())),
+            _ => Maybe<TReturn>.Fail(Error()),
         };
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccess"/> function.
-    /// Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
-    /// <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
+    /// function. Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this
+    /// is a <c>None</c> result, return a <c>None</c> result.
     /// </summary>
-    /// <param name="onSuccess">A function that maps the value of the incoming result to the outgoing result. Evaluated only if
-    ///     this is a <c>Success</c> result.</param>
-    /// <param name="onNone">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
-    ///         </item>
-    ///         <item>
-    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
-    ///             message similar to "Not Found" will be used instead.
-    ///         </item>
-    ///         <item>
-    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
-    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
-    ///             be used instead.
-    ///         </item>
-    ///     </list>
-    /// </param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>Fail</c> result.
-    ///         </item>
-    ///         <item>
-    ///             If <see langword="null"/> or not provided, no transformation takes place - this <c>Fail</c> result's error is
-    ///             used as the error of the returned <c>Fail</c> result.
-    ///         </item>
-    ///     </list>
-    /// </param>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public Result FlatMap(
-        Func<T, Result> onSuccess,
-        Func<Error>? onNone = null,
-        Func<Error, Error>? onFail = null)
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public async Task<Maybe<TReturn>> FlatMapAsync<TReturn>(Func<T, Task<Maybe<TReturn>>> onSuccessSelector)
     {
-        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            MaybeType.Success => onSuccess(_value!),
-            MaybeType.None => Result.Fail(onNone.EvaluateOnNone()),
-            _ => Result.Fail(onFail.Evaluate(Error())),
+            MaybeType.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
+            MaybeType.None => Maybe<TReturn>.None(),
+            _ => Maybe<TReturn>.Fail(Error()),
         };
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessAsync"/>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
     /// function. Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this
     /// is a <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
-    /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the outgoing result. Evaluated only
-    ///     if this is a <c>Success</c> result.</param>
-    /// <param name="onNone">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's error.
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
+    ///     only if this is a <c>Success</c> result.</param>
+    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
+    ///     error.
     ///     <list type="bullet">
     ///         <item>
     ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
@@ -132,44 +71,29 @@ public partial struct Maybe<T>
     ///         </item>
     ///     </list>
     /// </param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>Fail</c> result.
-    ///         </item>
-    ///         <item>
-    ///             If <see langword="null"/> or not provided, no transformation takes place - this <c>Fail</c> result's error is
-    ///             used as the error of the returned <c>Fail</c> result.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
-    public async Task<Result> FlatMapAsync(
-        Func<T, Task<Result>> onSuccessAsync,
-        Func<Error>? onNone = null,
-        Func<Error, Error>? onFail = null)
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public Result FlatMap(Func<T, Result> onSuccessSelector, Func<Error>? onNoneGetError = null)
     {
-        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            MaybeType.Success => await onSuccessAsync(_value!).ConfigureAwait(false),
-            MaybeType.None => Result.Fail(onNone.EvaluateOnNone()),
-            _ => Result.Fail(onFail.Evaluate(Error())),
+            MaybeType.Success => onSuccessSelector(_value!),
+            MaybeType.None => Result.Fail(onNoneGetError?.Invoke() ?? Errors.NotFound()),
+            _ => Result.Fail(Error()),
         };
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccess"/> function.
-    /// Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
-    /// <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
+    /// function. Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this
+    /// is a <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSuccess">A function that maps the value of the incoming result to the outgoing result. Evaluated only if
-    ///     this is a <c>Success</c> result.</param>
-    /// <param name="onNone">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's error.
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
+    ///     only if this is a <c>Success</c> result.</param>
+    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
+    ///     error.
     ///     <list type="bullet">
     ///         <item>
     ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
@@ -185,44 +109,30 @@ public partial struct Maybe<T>
     ///         </item>
     ///     </list>
     /// </param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>Fail</c> result.
-    ///         </item>
-    ///         <item>
-    ///             If <see langword="null"/> or not provided, no transformation takes place - this <c>Fail</c> result's error is
-    ///             used as the error of the returned <c>Fail</c> result.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/>.</exception>
-    public Result<TReturn> FlatMap<TReturn>(
-        Func<T, Result<TReturn>> onSuccess,
-        Func<Error>? onNone = null,
-        Func<Error, Error>? onFail = null)
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public async Task<Result> FlatMapAsync(Func<T, Task<Result>> onSuccessSelector, Func<Error>? onNoneGetError = null)
     {
-        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            MaybeType.Success => onSuccess(_value!),
-            MaybeType.None => Result<TReturn>.Fail(onNone.EvaluateOnNone()),
-            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
+            MaybeType.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
+            MaybeType.None => Result.Fail(onNoneGetError?.Invoke() ?? Errors.NotFound()),
+            _ => Result.Fail(Error()),
         };
     }
 
     /// <summary>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessAsync"/>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
     /// function. Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this
     /// is a <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="onSuccessAsync">A function that maps the value of the incoming result to the outgoing result. Evaluated only
-    ///     if this is a <c>Success</c> result.</param>
-    /// <param name="onNone">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's error.
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
+    ///     only if this is a <c>Success</c> result.</param>
+    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
+    ///     error.
     ///     <list type="bullet">
     ///         <item>
     ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
@@ -238,32 +148,58 @@ public partial struct Maybe<T>
     ///         </item>
     ///     </list>
     /// </param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned <c>Fail</c> result's
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public Result<TReturn> FlatMap<TReturn>(Func<T, Result<TReturn>> onSuccessSelector, Func<Error>? onNoneGetError = null)
+    {
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        return _type switch
+        {
+            MaybeType.Success => onSuccessSelector(_value!),
+            MaybeType.None => Result<TReturn>.Fail(onNoneGetError?.Invoke() ?? Errors.NotFound()),
+            _ => Result<TReturn>.Fail(Error()),
+        };
+    }
+
+    /// <summary>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="onSuccessSelector"/>
+    /// function. Else if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this
+    /// is a <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
+    /// </summary>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
+    ///     only if this is a <c>Success</c> result.</param>
+    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
     ///     error.
     ///     <list type="bullet">
     ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>Fail</c> result.
+    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
     ///         </item>
     ///         <item>
-    ///             If <see langword="null"/> or not provided, no transformation takes place - this <c>Fail</c> result's error is
-    ///             used as the error of the returned <c>Fail</c> result.
+    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
+    ///             message similar to "Not Found" will be used instead.
+    ///         </item>
+    ///         <item>
+    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
+    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
+    ///             be used instead.
     ///         </item>
     ///     </list>
     /// </param>
     /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessAsync"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public async Task<Result<TReturn>> FlatMapAsync<TReturn>(
-        Func<T, Task<Result<TReturn>>> onSuccessAsync,
-        Func<Error>? onNone = null,
-        Func<Error, Error>? onFail = null)
+        Func<T, Task<Result<TReturn>>> onSuccessSelector,
+        Func<Error>? onNoneGetError = null)
     {
-        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _type switch
         {
-            MaybeType.Success => await onSuccessAsync(_value!).ConfigureAwait(false),
-            MaybeType.None => Result<TReturn>.Fail(onNone.EvaluateOnNone()),
-            _ => Result<TReturn>.Fail(onFail.Evaluate(Error())),
+            MaybeType.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
+            MaybeType.None => Result<TReturn>.Fail(onNoneGetError?.Invoke() ?? Errors.NotFound()),
+            _ => Result<TReturn>.Fail(Error()),
         };
     }
 }

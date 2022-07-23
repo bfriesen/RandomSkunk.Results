@@ -9,7 +9,8 @@ public partial struct Maybe<T>
     /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with error code
     /// <see cref="ErrorCodes.NotFound"/>) is returned.
     /// </summary>
-    /// <param name="onNone">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's error.
+    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
+    ///     error.
     ///     <list type="bullet">
     ///         <item>
     ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
@@ -25,19 +26,7 @@ public partial struct Maybe<T>
     ///         </item>
     ///     </list>
     /// </param>
-    /// <param name="onFail">An optional function that maps a <c>Fail</c> result's error to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>Fail</c> result.
-    ///         </item>
-    ///         <item>
-    ///             If <see langword="null"/> or not provided, no transformation takes place - this <c>Fail</c> result's error is
-    ///             used as the error of the returned <c>Fail</c> result.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
-    public Result<T> AsResult(Func<Error>? onNone = null, Func<Error, Error>? onFail = null) =>
-        FlatMap(value => Result<T>.Success(value), onNone, onFail);
+    public Result<T> AsResult(Func<Error>? onNoneGetError = null) =>
+        FlatMap(value => Result<T>.Success(value), onNoneGetError);
 }
