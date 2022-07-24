@@ -116,9 +116,6 @@ public static class ResultTupleExtensions
             .Append($@"    /// <param name=""sourceResults"">A tuple of results.</param>
     /// <param name=""onAnyNonSuccess"">A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
     ///     </param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
-    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
-    ///     </param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/> or if any of
     ///     the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.</exception>
@@ -130,8 +127,7 @@ public static class ResultTupleExtensions
         this ")
             .AppendTupleDefinitionForTResult(tupleCount)
             .Append(@" sourceResults,
-        Action<Error> onAnyNonSuccess,
-        Func<Error>? getNoneError = null)
+        Action<Error> onAnyNonSuccess)
         where TResult1 : IResult")
             .AppendGenericConstraintsForTResult(tupleCount)
             .Append(@"
@@ -146,7 +142,6 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             var error = GetNonSuccessError(
-                getNoneError,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -169,9 +164,6 @@ public static class ResultTupleExtensions
             .Append($@"    /// <param name=""sourceResults"">A tuple of results.</param>
     /// <param name=""onAnyNonSuccess"">A callback function to invoke if any results in the tuple are <c>non-Success</c> results.
     ///     </param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
-    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
-    ///     </param>
     /// <returns>The same tuple of results.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAnyNonSuccess""/> is <see langword=""null""/> or if any of
     ///     the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.</exception>
@@ -183,8 +175,7 @@ public static class ResultTupleExtensions
         this ")
       .AppendTupleDefinitionForTResult(tupleCount)
             .Append(@" sourceResults,
-        Func<Error, Task> onAnyNonSuccess,
-        Func<Error>? getNoneError = null)
+        Func<Error, Task> onAnyNonSuccess)
         where TResult1 : IResult")
       .AppendGenericConstraintsForTResult(tupleCount)
             .Append(@"
@@ -199,7 +190,6 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             var error = GetNonSuccessError(
-                getNoneError,
                 sourceResults.Item1")
       .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -229,9 +219,6 @@ public static class ResultTupleExtensions
     ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
     ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
     ///     returned containing the error of each <c>non-Success</c> result.</param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
-    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
-    ///     </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
     ///     <see langword=""null""/> or if any of the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.
@@ -245,8 +232,7 @@ public static class ResultTupleExtensions
         Func<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn> onAllSuccess,
-        Func<Error, TReturn> onAnyNonSuccess,
-        Func<Error>? getNoneError = null)
+        Func<Error, TReturn> onAnyNonSuccess)
     {
         if (onAllSuccess is null) throw new ArgumentNullException(nameof(onAllSuccess));
         if (onAnyNonSuccess is null) throw new ArgumentNullException(nameof(onAnyNonSuccess));
@@ -266,7 +252,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                getNoneError,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -294,9 +279,6 @@ public static class ResultTupleExtensions
     ///     function depends on how many results are <c>non-Success</c>. If only one is <c>non-Success</c>, then its error is
     ///     passed to this function. If more than one result is <c>non-Success</c>, then a <see cref=""CompositeError""/> is
     ///     returned containing the error of each <c>non-Success</c> result.</param>
-    /// <param name=""getNoneError"">An optional function that creates the <see cref=""Error""/> for a <c>None</c> result. If null
-    ///     or not provided, a function that returns an error with error code <see cref=""ErrorCodes.NotFound""/> is used instead.
-    ///     </param>
     /// <returns>The result of the matching function evaluation.</returns>
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
     ///     <see langword=""null""/> or if any of the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.
@@ -310,8 +292,7 @@ public static class ResultTupleExtensions
         Func<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", Task<TReturn>> onAllSuccess,
-        Func<Error, Task<TReturn>> onAnyNonSuccess,
-        Func<Error>? getNoneError = null)
+        Func<Error, Task<TReturn>> onAnyNonSuccess)
     {
         if (onAllSuccess is null) throw new ArgumentNullException(nameof(onAllSuccess));
         if (onAnyNonSuccess is null) throw new ArgumentNullException(nameof(onAnyNonSuccess));
@@ -331,7 +312,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                getNoneError,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -389,7 +369,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -447,7 +426,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -502,7 +480,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -557,7 +534,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -613,7 +589,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -669,7 +644,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -725,7 +699,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -781,7 +754,6 @@ public static class ResultTupleExtensions
         else
         {
             var error = GetNonSuccessError(
-                null,
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -798,11 +770,11 @@ public static class ResultTupleExtensions
 
     public static StringBuilder AppendGetNonSuccessErrorMethod(this StringBuilder code)
     {
-        return code.Append(@"    private static Error GetNonSuccessError(Func<Error>? getNoneError, params IResult[] results)
+        return code.Append(@"    private static Error GetNonSuccessError(params IResult[] results)
     {
         var errors = results
             .Where(r => !r.IsSuccess)
-            .Select(r => r.GetNonSuccessError(getNoneError));
+            .Select(r => r.GetNonSuccessError());
 
         return CompositeError.Create(errors);
     }");

@@ -154,7 +154,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     }
 
     /// <inheritdoc/>
-    Error IResult.GetNonSuccessError(Func<Error>? getNoneError) =>
+    Error IResult.GetNonSuccessError() =>
         _type switch
         {
             ResultType.Fail => Error(),

@@ -190,11 +190,11 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     T IResult<T>.GetSuccessValue() => this.GetValue();
 
     /// <inheritdoc/>
-    Error IResult.GetNonSuccessError(Func<Error>? getNoneError) =>
+    Error IResult.GetNonSuccessError() =>
         _type switch
         {
             MaybeType.Fail => this.GetError(),
-            MaybeType.None => getNoneError?.Invoke() ?? Errors.NotFound(),
+            MaybeType.None => Errors.NotFound(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 

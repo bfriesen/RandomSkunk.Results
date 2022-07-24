@@ -9,21 +9,17 @@ public static partial class ResultExtensions
     /// <typeparam name="TResult">The type of result.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
-    /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static TResult OnNonSuccess<TResult>(
         this TResult sourceResult,
-        Action<Error> onNonSuccess,
-        Func<Error>? getNoneError = null)
+        Action<Error> onNonSuccess)
         where TResult : IResult
     {
         if (onNonSuccess is null) throw new ArgumentNullException(nameof(onNonSuccess));
 
         if (!sourceResult.IsSuccess)
         {
-            var error = sourceResult.GetNonSuccessError(getNoneError);
+            var error = sourceResult.GetNonSuccessError();
             onNonSuccess(error);
         }
 
@@ -36,21 +32,17 @@ public static partial class ResultExtensions
     /// <typeparam name="TResult">The type of result.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
-    /// <param name="getNoneError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccessAsync<TResult>(
         this TResult sourceResult,
-        Func<Error, Task> onNonSuccess,
-        Func<Error>? getNoneError = null)
+        Func<Error, Task> onNonSuccess)
         where TResult : IResult
     {
         if (onNonSuccess is null) throw new ArgumentNullException(nameof(onNonSuccess));
 
         if (!sourceResult.IsSuccess)
         {
-            var error = sourceResult.GetNonSuccessError(getNoneError);
+            var error = sourceResult.GetNonSuccessError();
             await onNonSuccess(error).ConfigureAwait(false);
         }
 

@@ -188,7 +188,7 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Result{TReturn}}, Func{Error}?)"/>
+    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Result{TReturn}})"/>
     /// method.
     /// </para>
     /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else

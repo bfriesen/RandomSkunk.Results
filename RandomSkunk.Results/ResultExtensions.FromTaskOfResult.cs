@@ -22,28 +22,9 @@ public static partial class ResultExtensions
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
-    ///         </item>
-    ///         <item>
-    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
-    ///             message similar to "Not Found" will be used instead.
-    ///         </item>
-    ///         <item>
-    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
-    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
-    ///             be used instead.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
-    public static async Task<Result<T>> AsResult<T>(
-        this Task<Maybe<T>> sourceResult,
-        Func<Error>? onNoneGetError = null) =>
-        (await sourceResult.ConfigureAwait(false)).AsResult(onNoneGetError);
+    public static async Task<Result<T>> AsResult<T>(this Task<Maybe<T>> sourceResult) =>
+        (await sourceResult.ConfigureAwait(false)).AsResult();
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
@@ -151,30 +132,12 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
     ///     only if the source is a <c>Success</c> result.</param>
-    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
-    ///         </item>
-    ///         <item>
-    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
-    ///             message similar to "Not Found" will be used instead.
-    ///         </item>
-    ///         <item>
-    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
-    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
-    ///             be used instead.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result> FlatMap<T>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Result> onSuccessSelector,
-        Func<Error>? onNoneGetError = null) =>
-        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector, onNoneGetError);
+        Func<T, Result> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
@@ -192,30 +155,12 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
     ///     only if the source is a <c>Success</c> result.</param>
-    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
-    ///         </item>
-    ///         <item>
-    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
-    ///             message similar to "Not Found" will be used instead.
-    ///         </item>
-    ///         <item>
-    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
-    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
-    ///             be used instead.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result> FlatMapAsync<T>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Result>> onSuccessSelector,
-        Func<Error>? onNoneGetError = null) =>
-        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector, onNoneGetError).ConfigureAwait(false);
+        Func<T, Task<Result>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
@@ -234,30 +179,12 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
     ///     only if the source is a <c>Success</c> result.</param>
-    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
-    ///         </item>
-    ///         <item>
-    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
-    ///             message similar to "Not Found" will be used instead.
-    ///         </item>
-    ///         <item>
-    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
-    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
-    ///             be used instead.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> FlatMap<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Result<TReturn>> onSuccessSelector,
-        Func<Error>? onNoneGetError = null) =>
-        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector, onNoneGetError);
+        Func<T, Result<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
@@ -276,30 +203,12 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The task returning the source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
     ///     only if the source is a <c>Success</c> result.</param>
-    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
-    ///         </item>
-    ///         <item>
-    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
-    ///             message similar to "Not Found" will be used instead.
-    ///         </item>
-    ///         <item>
-    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
-    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
-    ///             be used instead.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Result<TReturn>>> onSuccessSelector,
-        Func<Error>? onNoneGetError = null) =>
-        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector, onNoneGetError).ConfigureAwait(false);
+        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
@@ -921,16 +830,12 @@ public static partial class ResultExtensions
     /// <typeparam name="TResult">The type of result.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccessCallback">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
-    /// <param name="onNoneGetError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccess<TResult>(
         this Task<TResult> sourceResult,
-        Action<Error> onNonSuccessCallback,
-        Func<Error>? onNoneGetError = null)
+        Action<Error> onNonSuccessCallback)
         where TResult : IResult =>
-        (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback, onNoneGetError);
+        (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
@@ -938,16 +843,12 @@ public static partial class ResultExtensions
     /// <typeparam name="TResult">The type of result.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
-    /// <param name="onNoneGetError">An optional function that creates the <see cref="Error"/> that is returned if this is a
-    ///     <c>None</c> result; otherwise this parameter is ignored. If <see langword="null"/> (and applicable), a function that
-    ///     returns an error with message "Not Found" and error code <see cref="ErrorCodes.NotFound"/> is used instead.</param>
     /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccessAsync<TResult>(
         this Task<TResult> sourceResult,
-        Func<Error, Task> onNonSuccess,
-        Func<Error>? onNoneGetError = null)
+        Func<Error, Task> onNonSuccess)
         where TResult : IResult =>
-        await (await sourceResult.ConfigureAwait(false)).OnNonSuccessAsync(onNonSuccess, onNoneGetError);
+        await (await sourceResult.ConfigureAwait(false)).OnNonSuccessAsync(onNonSuccess);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result; otherwise, returns a new <c>Success</c> result

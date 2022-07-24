@@ -130,7 +130,7 @@ public class Tuple_extension_methods
         {
             Error? capturedError = null;
 
-            (resultA, resultB, resultC).OnAnyNonSuccess(error => capturedError = error, null);
+            (resultA, resultB, resultC).OnAnyNonSuccess(error => capturedError = error);
 
             capturedError.Should().NotBeNull();
             capturedError!.Message.Should().Be(expectedError.Message);

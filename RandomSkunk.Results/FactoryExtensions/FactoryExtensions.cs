@@ -6,19 +6,15 @@ namespace RandomSkunk.Results.FactoryExtensions;
 public static class FactoryExtensions
 {
     /// <summary>
-    /// Creates a <c>Success</c> result with the specified non-null value. If the value is <see langword="null"/>, then a
-    /// <c>Fail</c> result is returned instead.
+    /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.BadRequest"/> is returned instead.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="sourceValue">The value. Can be <see langword="null"/>.</param>
-    /// <param name="onNullValueGetError">An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result
-    ///     when the <paramref name="sourceValue"/> parameter is <see langword="null"/>. When <see langword="null"/> or not
-    ///     provided, a function that returns an error with error code <see cref="ErrorCodes.BadRequest"/> and a message
-    ///     indicating that the value cannot be null is used instead.</param>
     /// <returns>A <c>Success</c> result if <paramref name="sourceValue"/> is not <see langword="null"/>; otherwise, a
     ///     <c>Fail</c> result with a generated stack trace.</returns>
-    public static Result<T> ToResult<T>(this T? sourceValue, Func<Error>? onNullValueGetError = null) =>
-        Result<T>.FromValue(sourceValue, onNullValueGetError);
+    public static Result<T> ToResult<T>(this T? sourceValue) =>
+        Result<T>.FromValue(sourceValue);
 
     /// <summary>
     /// Creates a maybe from the specified value.

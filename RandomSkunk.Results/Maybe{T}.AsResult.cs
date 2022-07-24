@@ -9,24 +9,7 @@ public partial struct Maybe<T>
     /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with error code
     /// <see cref="ErrorCodes.NotFound"/>) is returned.
     /// </summary>
-    /// <param name="onNoneGetError">An optional function that maps a <c>None</c> result to the returned <c>Fail</c> result's
-    ///     error.
-    ///     <list type="bullet">
-    ///         <item>
-    ///             This function is evaluated <em>only</em> if this is a <c>None</c> result.
-    ///         </item>
-    ///         <item>
-    ///             When <see langword="null"/> or not provided, an error with error code <see cref="ErrorCodes.NotFound"/> and
-    ///             message similar to "Not Found" will be used instead.
-    ///         </item>
-    ///         <item>
-    ///             When provided, the function should not return <see langword="null"/>. If it does, an error with error code
-    ///             <see cref="ErrorCodes.BadRequest"/> and a message similar to "Function parameter should not return null" will
-    ///             be used instead.
-    ///         </item>
-    ///     </list>
-    /// </param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
-    public Result<T> AsResult(Func<Error>? onNoneGetError = null) =>
-        FlatMap(value => Result<T>.Success(value), onNoneGetError);
+    public Result<T> AsResult() =>
+        FlatMap(value => Result<T>.Success(value));
 }

@@ -126,22 +126,16 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         });
 
     /// <summary>
-    /// Creates a <c>Success</c> result with the specified non-null value. If the value is <see langword="null"/>, then a
-    /// <c>Fail</c> result is returned instead.
+    /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.BadRequest"/> is returned instead.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <param name="onNullValueGetError">An optional function that creates the <see cref="Error"/> of the <c>Fail</c> result
-    ///     when the <paramref name="value"/> parameter is <see langword="null"/>. When <see langword="null"/> or not provided, a
-    ///     function that returns an error with error code <see cref="ErrorCodes.BadRequest"/> and a message indicating that the
-    ///     value cannot be null is returned instead.</param>
     /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
     ///     result with a generated stack trace.</returns>
-    public static Result<T> FromValue(T? value, Func<Error>? onNullValueGetError = null) =>
+    public static Result<T> FromValue(T? value) =>
         value is not null
             ? Success(value)
-            : Fail(onNullValueGetError is not null
-                ? onNullValueGetError()
-                : Errors.BadRequest("Result value cannot be null."));
+            : Fail(Errors.BadRequest("Result value cannot be null."));
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>
@@ -174,7 +168,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     T IResult<T>.GetSuccessValue() => this.GetValue();
 
     /// <inheritdoc/>
-    Error IResult.GetNonSuccessError(Func<Error>? getNoneError) =>
+    Error IResult.GetNonSuccessError() =>
         _type switch
         {
             ResultType.Fail => Error(),

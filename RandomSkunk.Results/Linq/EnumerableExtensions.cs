@@ -445,7 +445,8 @@ public static class EnumerableExtensions
     }
 
     private static Result<T> ToResultOrFailIfNull<T>(this T value) =>
-        value.ToResult(() => Errors.Gone("The matching element was null."));
+        value.ToResult().WithError(error =>
+            error with { ErrorCode = ErrorCodes.Gone, Message = "The matching element was null." });
 
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value) =>
         value is not null
