@@ -248,6 +248,22 @@ public static class LinqExtensions
     ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> Where<T>(this Result<T> sourceResult, Func<T, bool> predicate) =>
+        sourceResult.Filter(predicate);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="Maybe{T}.Filter(Func{T, bool})"/> method.
+    /// </para>
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    ///     <see langword="false"/>.</param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> Where<T>(this Maybe<T> sourceResult, Func<T, bool> predicate) =>
         sourceResult.Filter(predicate);
 }
