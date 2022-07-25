@@ -131,4 +131,10 @@ public static class Errors
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.GatewayTimeout,
         };
+
+    internal static Error ResultIsNone() =>
+        new("This error represents a lack of a value (i.e. None).", "Result is None", true)
+        {
+            ErrorCode = ErrorCodes.ResultIsNone,
+        };
 }

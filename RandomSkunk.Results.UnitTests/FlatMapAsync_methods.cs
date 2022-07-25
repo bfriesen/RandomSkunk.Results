@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class ThenAsync_methods
+public class FlatMapAsync_methods
 {
     public class For_Result_of_T
     {
@@ -169,7 +169,7 @@ public class ThenAsync_methods
 
             actual.IsFail.Should().BeTrue();
 
-            var expectedError = Errors.NotFound();
+            var expectedError = Errors.ResultIsNone();
 
             actual.GetError().Message.Should().Be(expectedError.Message);
             actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
@@ -218,7 +218,7 @@ public class ThenAsync_methods
 
             actual.IsFail.Should().BeTrue();
 
-            var expectedError = Errors.NotFound();
+            var expectedError = Errors.ResultIsNone();
 
             actual.GetError().Message.Should().Be(expectedError.Message);
             actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);

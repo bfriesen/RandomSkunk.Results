@@ -42,4 +42,9 @@ public abstract class ErrorCodes
     /// Indicates that the operation from the upstream service timed out.
     /// </summary>
     public const int GatewayTimeout = 504;
+
+    /// <summary>
+    /// Indicates that the error represents a <see cref="Maybe{T}"/> <c>None</c> result.
+    /// </summary>
+    public const int ResultIsNone = -410;
 }

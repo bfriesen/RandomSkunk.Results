@@ -9,10 +9,10 @@ public partial struct Result<T>
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -36,10 +36,10 @@ public partial struct Result<T>
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -63,10 +63,10 @@ public partial struct Result<T>
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
     ///     only if this is a <c>Success</c> result.</param>
@@ -89,10 +89,10 @@ public partial struct Result<T>
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
     ///     only if this is a <c>Success</c> result.</param>
@@ -111,14 +111,15 @@ public partial struct Result<T>
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the <c>Fail</c> result's error has error code
+    /// <see cref="ErrorCodes.ResultIsNone"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
+    /// result with the same error is returned.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
@@ -129,11 +130,14 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _type switch
-        {
-            ResultType.Success => onSuccessSelector(_value!),
-            _ => Maybe<TReturn>.Fail(Error()),
-        };
+        if (_type == ResultType.Success)
+            return onSuccessSelector(_value!);
+
+        var error = Error();
+        if (error.ErrorCode == ErrorCodes.ResultIsNone)
+            return Maybe<TReturn>.None();
+
+        return Maybe<TReturn>.Fail(error);
     }
 
     /// <summary>
@@ -142,10 +146,10 @@ public partial struct Result<T>
     /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the outgoing result. Evaluated
@@ -156,10 +160,13 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _type switch
-        {
-            ResultType.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            _ => Maybe<TReturn>.Fail(Error()),
-        };
+        if (_type == ResultType.Success)
+            return await onSuccessSelector(_value!).ConfigureAwait(false);
+
+        var error = Error();
+        if (error.ErrorCode == ErrorCodes.ResultIsNone)
+            return Maybe<TReturn>.None();
+
+        return Maybe<TReturn>.Fail(error);
     }
 }

@@ -17,8 +17,8 @@ public static partial class ResultExtensions
     /// <summary>
     /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>: if this is a <c>Success</c> result, then a
     /// <c>Success</c> result with the same value is returned; if this is a <c>Fail</c> result, then a <c>Fail</c> result with
-    /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with a "Not Found" error (error
-    /// code: <see cref="ErrorCodes.NotFound"/>) is returned.
+    /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.ResultIsNone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
@@ -32,10 +32,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -54,10 +54,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -76,10 +76,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -99,10 +99,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -123,10 +123,10 @@ public static partial class ResultExtensions
     /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -146,10 +146,10 @@ public static partial class ResultExtensions
     /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The task returning the source result.</param>
@@ -169,10 +169,10 @@ public static partial class ResultExtensions
     /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -193,10 +193,10 @@ public static partial class ResultExtensions
     /// <c>Fail</c> result with an error indicating that there was no value.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -315,10 +315,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -338,10 +338,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -362,10 +362,10 @@ public static partial class ResultExtensions
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -386,10 +386,10 @@ public static partial class ResultExtensions
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -475,10 +475,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -498,10 +498,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -522,10 +522,10 @@ public static partial class ResultExtensions
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -546,10 +546,10 @@ public static partial class ResultExtensions
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -939,10 +939,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -960,10 +960,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -981,10 +981,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
@@ -1003,10 +1003,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
@@ -1025,10 +1025,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
@@ -1047,10 +1047,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
