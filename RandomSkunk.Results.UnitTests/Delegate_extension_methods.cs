@@ -14,8 +14,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(Exception));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -39,8 +46,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult<InvalidOperationException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -74,8 +88,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult<InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -86,8 +107,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult<InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -124,8 +152,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(Exception));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -150,8 +185,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult<int, InvalidOperationException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -186,8 +228,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -198,8 +247,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsResult<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -236,8 +292,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsMaybe();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(Exception));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -272,8 +335,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsMaybe<int, InvalidOperationException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -318,8 +388,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsMaybe<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -330,8 +407,15 @@ public class Delegate_extension_methods
                 var actual = source.TryInvokeAsMaybe<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -378,8 +462,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(Exception));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -403,8 +494,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync<InvalidOperationException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -438,8 +536,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync<InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -450,8 +555,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync<InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -488,8 +600,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(Exception));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -514,8 +633,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync<int, InvalidOperationException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -550,8 +676,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -562,8 +695,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsResultAsync<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]
@@ -600,8 +740,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsMaybeAsync();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(Exception));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(Exception));
             }
 
             [Fact]
@@ -636,8 +783,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsMaybeAsync<int, InvalidOperationException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -682,8 +836,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsMaybeAsync<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(InvalidOperationException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
             }
 
             [Fact]
@@ -694,8 +855,15 @@ public class Delegate_extension_methods
                 var actual = await source.TryInvokeAsMaybeAsync<int, InvalidOperationException, DivideByZeroException>();
 
                 actual.IsFail.Should().BeTrue();
-                actual.GetError().Message.Should().Be("a");
-                actual.GetError().Title.Should().Be(nameof(DivideByZeroException));
+
+                var error = actual.GetError();
+
+                error.Message.Should().Be(Error._defaultExceptionFailMessage);
+                error.Title.Should().Be(nameof(Error));
+
+                error.InnerError.Should().NotBeNull();
+                error.InnerError!.Message.Should().Be("a");
+                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
             }
 
             [Fact]

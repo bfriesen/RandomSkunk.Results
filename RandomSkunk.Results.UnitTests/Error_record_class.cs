@@ -11,14 +11,19 @@ public class Error_record_class
             var message = "my-message";
             var errorCode = 1;
             var identifier = "my-identifier";
+            var title = "my-title";
 
-            var error = Error.FromException(exception, message, errorCode, identifier);
+            var error = Error.FromException(exception, message, errorCode, identifier, title);
 
-            error.Message.Should().Be($"{message}{Environment.NewLine}{exception.Message}");
-            error.StackTrace.Should().Be(exception.StackTrace);
+            error.Message.Should().Be(message);
             error.ErrorCode.Should().Be(errorCode);
             error.Identifier.Should().Be(identifier);
-            error.Title.Should().Be(exception.GetType().Name);
+            error.Title.Should().Be(title);
+
+            error.InnerError.Should().NotBeNull();
+            error.InnerError!.Message.Should().Be(exception.Message);
+            error.InnerError.StackTrace.Should().Be(exception.StackTrace);
+            error.InnerError.Title.Should().Be(exception.GetType().Name);
         }
 
         [Fact]
@@ -28,12 +33,15 @@ public class Error_record_class
 
             var error = Error.FromException(exception);
 
-            error.Message.Should().Be(exception.Message);
-            error.StackTrace.Should().Be(exception.StackTrace);
+            error.Message.Should().Be(Error._defaultExceptionFailMessage);
             error.ErrorCode.Should().BeNull();
             error.Identifier.Should().BeNull();
-            error.Title.Should().Be(exception.GetType().Name);
-            error.InnerError.Should().BeNull();
+            error.Title.Should().Be(nameof(Error));
+
+            error.InnerError.Should().NotBeNull();
+            error.InnerError!.Message.Should().Be(exception.Message);
+            error.InnerError.StackTrace.Should().Be(exception.StackTrace);
+            error.InnerError.Title.Should().Be(exception.GetType().Name);
         }
 
         [Fact]

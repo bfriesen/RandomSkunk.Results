@@ -5,6 +5,8 @@ namespace RandomSkunk.Results.Dapper;
 /// </summary>
 public record class DbError : Error
 {
+    internal const string _defaultExceptionFailMessage = "A database exception was thrown.";
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DbError"/> class.
     /// </summary>
@@ -12,8 +14,9 @@ public record class DbError : Error
     ///     is used instead.</param>
     /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
-    public DbError(string? message = null, string? title = null)
-        : base(message, title)
+    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
+    public DbError(string? message = null, string? title = null, bool setStackTrace = false)
+        : base(message, title, setStackTrace)
     {
     }
 
@@ -52,38 +55,76 @@ public record class DbError : Error
     /// <param name="errorCode">The optional error code. If <see langword="null"/>, then the
     ///     <see cref="ExternalException.ErrorCode"/> of the exception is used instead.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    ///     </param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
-    public static DbError FromDbException(
+    public static Error FromDbException(
         DbException exception,
-        string? message = null,
+        string message = _defaultExceptionFailMessage,
         int? errorCode = null,
-        string? identifier = null)
+        string? identifier = null,
+        string? title = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
-
-        var exceptionMessage = $"{exception.GetType().Name}: {exception.Message}";
-
-        if (string.IsNullOrWhiteSpace(message))
-            message = exceptionMessage;
-        else
-            message += Environment.NewLine + exceptionMessage;
 
         Error? innerError = null;
         if (exception.InnerException != null)
         {
-            if (exception.InnerException is DbException innerDbException)
-                innerError = FromDbException(innerDbException);
-            else
-                innerError = FromException(exception.InnerException);
+            innerError = CreateInnerError(exception.InnerException);
         }
 
-        return new DbError(message, exception.GetType().Name)
+        return new Error(message ?? _defaultExceptionFailMessage, title, true)
         {
-            StackTrace = exception.StackTrace,
-            ErrorCode = errorCode ?? exception.ErrorCode,
+            ErrorCode = errorCode,
             Identifier = identifier,
             InnerError = innerError,
+        };
+    }
+
+    private static Error CreateInnerError(Exception innerException)
+    {
+        int? errorCode = null;
+        if (innerException is ExternalException externalException)
+            errorCode = externalException.ErrorCode;
+
+        Error? innerError = null;
+        if (innerException.InnerException != null)
+            innerError = CreateInnerError(innerException.InnerException);
+
+        if (innerException is DbException dbException)
+        {
+            return new DbError(dbException.Message, dbException.GetType().Name, true)
+            {
+                StackTrace = dbException.StackTrace,
+                ErrorCode = errorCode,
+                InnerError = innerError,
+#if NET5_0_OR_GREATER
+                IsTransient = dbException.IsTransient,
+                SqlState = dbException.SqlState,
+#endif
+#if NET6_0_OR_GREATER
+                BatchCommand = dbException.BatchCommand,
+#endif
+            };
+        }
+        else
+        {
+            return new Error(innerException.Message, innerException.GetType().Name, true)
+            {
+                StackTrace = innerException.StackTrace,
+                ErrorCode = errorCode,
+                InnerError = innerError,
+            };
+        }
+    }
+
+    private static DbError CreateInnerDbError(DbException exception)
+    {
+        return new DbError(exception.Message, exception.GetType().Name)
+        {
+            StackTrace = exception.StackTrace,
+            ErrorCode = exception.ErrorCode,
 #if NET5_0_OR_GREATER
             IsTransient = exception.IsTransient,
             SqlState = exception.SqlState,

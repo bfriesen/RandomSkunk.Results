@@ -8,6 +8,8 @@ namespace RandomSkunk.Results;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public record class Error
 {
+    internal const string _defaultExceptionFailMessage = "An exception was thrown.";
+
     private static readonly Lazy<Error> _defaultError = new(() => new Error());
 
     private static string _defaultMessage = "An error occurred.";
@@ -23,8 +25,7 @@ public record class Error
     ///     used instead.</param>
     /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. Default is
-    ///     <see langword="false"/>.</param>
+    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     public Error(string? message = null, string? title = null, bool setStackTrace = false)
     {
         _message = message ?? _defaultMessage;
@@ -96,33 +97,43 @@ public record class Error
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    ///     </param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
     public static Error FromException(
         Exception exception,
-        string? message = null,
+        string message = _defaultExceptionFailMessage,
         int? errorCode = null,
-        string? identifier = null)
+        string? identifier = null,
+        string? title = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
 
-        if (string.IsNullOrWhiteSpace(message))
-            message = exception.Message;
-        else
-            message += Environment.NewLine + exception.Message;
+        var innerError = CreateInnerError(exception);
 
-        if (errorCode is null && exception is ExternalException externalException)
+        return new Error(message ?? _defaultExceptionFailMessage, title, true)
+        {
+            ErrorCode = errorCode ?? innerError.ErrorCode,
+            Identifier = identifier,
+            InnerError = innerError,
+        };
+    }
+
+    private static Error CreateInnerError(Exception exception)
+    {
+        int? errorCode = null;
+        if (exception is ExternalException externalException)
             errorCode = externalException.ErrorCode;
 
         Error? innerError = null;
         if (exception.InnerException != null)
-            innerError = FromException(exception.InnerException);
+            innerError = CreateInnerError(exception.InnerException);
 
-        return new Error(message, exception.GetType().Name)
+        return new Error(exception.Message, exception.GetType().Name)
         {
             StackTrace = exception.StackTrace,
             ErrorCode = errorCode,
-            Identifier = identifier,
             InnerError = innerError,
         };
     }

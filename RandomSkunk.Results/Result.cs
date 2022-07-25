@@ -81,16 +81,19 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="errorMessage">The optional error message.</param>
+    /// <param name="errorMessage">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(
         Exception exception,
-        string? errorMessage = null,
+        string errorMessage = _defaultExceptionFailMessage,
         int? errorCode = null,
-        string? errorIdentifier = null) =>
-        Fail(FromException(exception, errorMessage, errorCode, errorIdentifier));
+        string? errorIdentifier = null,
+        string? errorTitle = null) =>
+        Fail(FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
