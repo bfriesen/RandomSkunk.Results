@@ -102,6 +102,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
+    [StackTraceHidden]
     public static Maybe<T> Fail(Error? error = null) => new(none: false, error);
 
     /// <summary>
@@ -114,6 +115,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
+    [StackTraceHidden]
     public static Maybe<T> Fail(
         Exception exception,
         string errorMessage = _defaultExceptionFailMessage,
@@ -134,6 +136,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
     ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
+    [StackTraceHidden]
     public static Maybe<T> Fail(
         string errorMessage,
         int? errorCode = null,

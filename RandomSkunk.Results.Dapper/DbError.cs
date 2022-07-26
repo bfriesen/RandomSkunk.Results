@@ -59,6 +59,7 @@ public record class DbError : Error
     ///     </param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
+    [StackTraceHidden]
     public static Error FromDbException(
         DbException exception,
         string message = _defaultExceptionFailMessage,

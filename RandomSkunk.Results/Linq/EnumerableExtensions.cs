@@ -453,18 +453,23 @@ public static class EnumerableExtensions
             ? value.ToMaybe()
             : Maybe<T>.Fail(Errors.Gone("The matching element was null."));
 
+    [StackTraceHidden]
     private static Error IndexOutOfRange() =>
         Errors.NotFound("Index was out of range. Must be non-negative and less than the size of the collection.");
 
+    [StackTraceHidden]
     private static Error SequenceContainsNoElements() =>
         Errors.NotFound("Sequence contains no elements.");
 
+    [StackTraceHidden]
     private static Error SequenceContainsNoMatchingElements() =>
         Errors.NotFound("Sequence contains no matching elements.");
 
+    [StackTraceHidden]
     private static Error SequenceContainsMoreThanOneElement() =>
         Errors.BadRequest("Sequence contains more than one element.");
 
+    [StackTraceHidden]
     private static Error SequenceContainsMoreThanOneMatchingElement() =>
         Errors.BadRequest("Sequence contains more than one matching element.");
 }

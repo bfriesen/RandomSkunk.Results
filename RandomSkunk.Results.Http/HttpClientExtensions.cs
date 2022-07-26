@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace RandomSkunk.Results.Http;
 
 /// <summary>
@@ -5,11 +7,8 @@ namespace RandomSkunk.Results.Http;
 /// </summary>
 public static class HttpClientExtensions
 {
-    private static readonly Func<HttpRequestException, Error> _defaultGetHttpError =
-        ex => Error.FromException(ex, "The HTTP request failed.", ErrorCodes.BadGateway);
-
-    private static readonly Func<TaskCanceledException, Error> _defaultGetTimeoutError =
-        ex => Error.FromException(ex, "The HTTP request timed out.", ErrorCodes.GatewayTimeout);
+    private static readonly Func<HttpRequestException, Error> _defaultGetHttpError = GetHttpError;
+    private static readonly Func<TaskCanceledException, Error> _defaultGetTimeoutError = GetTimeoutError;
 
     /// <summary>
     /// Sends a DELETE request to the specified Uri with a cancellation token as an asynchronous operation. A
@@ -376,4 +375,12 @@ public static class HttpClientExtensions
         CancellationToken cancellationToken = default) =>
         Delegates.AsyncFunc(() => sourceHttpClient.SendAsync(request, cancellationToken))
             .TryInvokeAsResultAsync(getHttpError ?? _defaultGetHttpError, getTimeoutError ?? _defaultGetTimeoutError);
+
+    [StackTraceHidden]
+    private static Error GetHttpError(HttpRequestException ex) =>
+        Error.FromException(ex, "The HTTP request failed.", ErrorCodes.BadGateway);
+
+    [StackTraceHidden]
+    private static Error GetTimeoutError(TaskCanceledException ex) =>
+        Error.FromException(ex, "The HTTP request timed out.", ErrorCodes.GatewayTimeout);
 }

@@ -80,6 +80,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
+    [StackTraceHidden]
     public static Result<T> Fail(Error? error = null) => new(error);
 
     /// <summary>
@@ -92,6 +93,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
+    [StackTraceHidden]
     public static Result<T> Fail(
         Exception exception,
         string errorMessage = _defaultExceptionFailMessage,
@@ -112,6 +114,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
     ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
+    [StackTraceHidden]
     public static Result<T> Fail(
         string errorMessage,
         int? errorCode = null,

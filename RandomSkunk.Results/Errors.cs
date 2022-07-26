@@ -32,6 +32,7 @@ public static class Errors
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <returns>A Bad Request error.</returns>
+    [StackTraceHidden]
     public static Error BadRequest(
         string errorMessage = BadRequestMessage,
         string? errorIdentifier = null) =>
@@ -47,6 +48,7 @@ public static class Errors
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <returns>A Not Found error.</returns>
+    [StackTraceHidden]
     public static Error NotFound(
         string errorMessage = NotFoundMessage,
         string? errorIdentifier = null) =>
@@ -62,6 +64,7 @@ public static class Errors
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <returns>A error.</returns>
+    [StackTraceHidden]
     public static Error Gone(
         string errorMessage = GoneMessage,
         string? errorIdentifier = null) =>
@@ -78,6 +81,7 @@ public static class Errors
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <returns>A error.</returns>
+    [StackTraceHidden]
     public static Error InternalServerError(
         string errorMessage = InternalServerErrorMessage,
         string? errorIdentifier = null) =>
@@ -93,6 +97,7 @@ public static class Errors
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <returns>A error.</returns>
+    [StackTraceHidden]
     public static Error NotImplemented(
         string errorMessage = NotImplementedMessage,
         string? errorIdentifier = null) =>
@@ -108,6 +113,7 @@ public static class Errors
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <returns>A error.</returns>
+    [StackTraceHidden]
     public static Error BadGateway(
         string errorMessage = BadGatewayMessage,
         string? errorIdentifier = null) =>
@@ -123,6 +129,7 @@ public static class Errors
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <returns>A error.</returns>
+    [StackTraceHidden]
     public static Error GatewayTimeout(
         string errorMessage = GatewayTimeoutMessage,
         string? errorIdentifier = null) =>
@@ -132,6 +139,7 @@ public static class Errors
             ErrorCode = ErrorCodes.GatewayTimeout,
         };
 
+    [StackTraceHidden]
     internal static Error ResultIsNone() =>
         new("This error represents a lack of a value (i.e. None).", "Result is None", true)
         {

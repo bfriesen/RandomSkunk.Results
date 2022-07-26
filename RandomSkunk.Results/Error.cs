@@ -26,13 +26,14 @@ public record class Error
     /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
     /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
+    [StackTraceHidden]
     public Error(string? message = null, string? title = null, bool setStackTrace = false)
     {
         _message = message ?? _defaultMessage;
         _title = title ?? Format.AsSentenceCase(GetType().Name);
 
         if (setStackTrace)
-            _stackTrace = new StackTrace(true).ToString();
+            _stackTrace = FilteredStackTrace.Create();
     }
 
     /// <summary>
@@ -101,6 +102,7 @@ public record class Error
     ///     </param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
+    [StackTraceHidden]
     public static Error FromException(
         Exception exception,
         string message = _defaultExceptionFailMessage,
