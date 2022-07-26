@@ -33,10 +33,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Execute(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Execute(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL that selects a single value.
@@ -63,10 +63,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.ExecuteScalar<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.ExecuteScalar<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL and return an <see cref="IDataReader"/>.
@@ -96,10 +96,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.ExecuteReader(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.ExecuteReader(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Executes a query, returning the data typed as <typeparamref name="T"/>.
@@ -130,10 +130,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query<T>(sql, param, transaction, buffered, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query<T>(sql, param, transaction, buffered, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -162,10 +162,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.QueryFirst<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.QueryFirst<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -195,10 +195,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : struct =>
-        Delegates.Func(() => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -228,10 +228,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : class =>
-        Delegates.Func(() => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsMaybe(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsMaybe(
+            () => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -260,10 +260,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.QuerySingle<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.QuerySingle<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -293,10 +293,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : struct =>
-        Delegates.Func(() => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -326,10 +326,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : class =>
-        Delegates.Func(() => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsMaybe(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsMaybe(
+            () => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a command that returns multiple result sets, and access each in turn.
@@ -355,10 +355,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.QueryMultiple(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.QueryMultiple(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 2 input types. This returns a single type, combined from the raw types via
@@ -394,10 +394,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 3 input types. This returns a single type, combined from the raw types via
@@ -434,10 +434,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 4 input types. This returns a single type, combined from the raw types via
@@ -475,10 +475,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 5 input types. This returns a single type, combined from the raw types via
@@ -517,10 +517,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 6 input types. This returns a single type, combined from the raw types via
@@ -560,10 +560,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 7 input types. If you need more types -> use Query with Type[] parameter. This returns
@@ -604,10 +604,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with an arbitrary number of input types. This returns a single type, combined from the raw
@@ -643,10 +643,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.Func(() => cnn.Query(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResult(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResult(
+            () => cnn.Query(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a query asynchronously using Task.
@@ -675,10 +675,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -705,10 +705,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryFirstAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryFirstAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -736,10 +736,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : struct =>
-        Delegates.AsyncFunc(() => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -767,10 +767,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : class =>
-        Delegates.AsyncFunc(() => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsMaybeAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsMaybeAsync(
+            () => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -797,10 +797,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QuerySingleAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QuerySingleAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -828,10 +828,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : struct =>
-        Delegates.AsyncFunc(() => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -859,10 +859,10 @@ public static class ResultSqlMapper
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null)
         where T : class =>
-        Delegates.AsyncFunc(() => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsMaybeAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsMaybeAsync(
+            () => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a command asynchronously using Task.
@@ -888,10 +888,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.ExecuteAsync(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.ExecuteAsync(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 2 input types. This returns a single type, combined from the raw types
@@ -927,10 +927,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 3 input types. This returns a single type, combined from the raw types
@@ -967,10 +967,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 4 input types. This returns a single type, combined from the raw types
@@ -1008,10 +1008,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 5 input types. This returns a single type, combined from the raw types
@@ -1050,10 +1050,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 6 input types. This returns a single type, combined from the raw types
@@ -1093,10 +1093,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 7 input types. This returns a single type, combined from the raw types
@@ -1137,10 +1137,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with an arbitrary number of input types. This returns a single type, combined
@@ -1176,10 +1176,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryAsync(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryAsync(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute a command that returns multiple result sets, and access each in turn.
@@ -1205,10 +1205,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL and return an <see cref="IDataReader"/>.
@@ -1238,10 +1238,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL and return a <see cref="DbDataReader"/>.
@@ -1267,10 +1267,10 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL that selects a single value.
@@ -1297,8 +1297,8 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<DbException, Error>? dbExceptionHandler = null,
         Func<Exception, Error>? fallbackExceptionHandler = null) =>
-        Delegates.AsyncFunc(() => cnn.ExecuteScalarAsync<T>(sql, param, transaction, commandTimeout, commandType))
-            .TryInvokeAsResultAsync(
-                dbExceptionHandler ?? _defaultDbExceptionHandler,
-                fallbackExceptionHandler);
+        TryCatch<DbException, Exception>.AsResultAsync(
+            () => cnn.ExecuteScalarAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            dbExceptionHandler ?? _defaultDbExceptionHandler,
+            fallbackExceptionHandler);
 }
