@@ -96,7 +96,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     [StackTraceHidden]
     public static Result<T> Fail(
         Exception exception,
-        string errorMessage = _defaultExceptionFailMessage,
+        string errorMessage = _defaultFromExceptionMessage,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorTitle = null) =>

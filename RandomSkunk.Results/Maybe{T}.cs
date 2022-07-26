@@ -118,7 +118,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     [StackTraceHidden]
     public static Maybe<T> Fail(
         Exception exception,
-        string errorMessage = _defaultExceptionFailMessage,
+        string errorMessage = _defaultFromExceptionMessage,
         int? errorCode = null,
         string? errorIdentifier = null,
         string? errorTitle = null) =>

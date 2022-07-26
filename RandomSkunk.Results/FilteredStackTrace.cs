@@ -69,56 +69,21 @@ internal class FilteredStackTrace : StackTrace
 
     private class MethodData
     {
-        private readonly MethodBase _method;
-
-        private bool? _isMarkedAsHidden;
-        private bool? _isXunitTestInvoker;
-        private bool? _isMvcActionMethodExecutor;
-
         public MethodData(MethodBase method)
         {
-            _method = method;
+            IsMarkedAsHidden = GetCustomAttributes(method).Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute))
+                || GetCustomAttributes(method.DeclaringType).Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute));
+
+            IsAspNetCoreMvcActionMethodExecutor = method.Name == "MoveNext"
+                && method.DeclaringType?.FullName?.StartsWith("Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor") == true;
+
+            IsXunitTestInvoker = method.DeclaringType?.FullName == "Xunit.Sdk.TestInvoker`1";
         }
 
-        public bool IsMarkedAsHidden
-        {
-            get
-            {
-                if (!_isMarkedAsHidden.HasValue)
-                {
-                    _isMarkedAsHidden = GetCustomAttributes(_method).Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute))
-                        || GetCustomAttributes(_method.DeclaringType).Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute));
-                }
+        public bool IsMarkedAsHidden { get; }
 
-                return _isMarkedAsHidden.Value;
-            }
-        }
+        public bool IsAspNetCoreMvcActionMethodExecutor { get; }
 
-        public bool IsXunitTestInvoker
-        {
-            get
-            {
-                if (!_isXunitTestInvoker.HasValue)
-                {
-                    _isXunitTestInvoker = _method.DeclaringType?.FullName == "Xunit.Sdk.TestInvoker`1";
-                }
-
-                return _isXunitTestInvoker.Value;
-            }
-        }
-
-        public bool IsAspNetCoreMvcActionMethodExecutor
-        {
-            get
-            {
-                if (!_isMvcActionMethodExecutor.HasValue)
-                {
-                    _isMvcActionMethodExecutor = _method.Name == "MoveNext"
-                        && _method.DeclaringType?.FullName.StartsWith("Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor") == true;
-                }
-
-                return _isMvcActionMethodExecutor.Value;
-            }
-        }
+        public bool IsXunitTestInvoker { get; }
     }
 }

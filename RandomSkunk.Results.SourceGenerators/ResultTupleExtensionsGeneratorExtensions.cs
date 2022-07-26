@@ -770,7 +770,8 @@ public static class ResultTupleExtensions
 
     public static StringBuilder AppendGetNonSuccessErrorMethod(this StringBuilder code)
     {
-        return code.Append(@"    private static Error GetNonSuccessError(params IResult[] results)
+        return code.Append(@"    [StackTraceHidden]
+    private static Error GetNonSuccessError(params IResult[] results)
     {
         var errors = results
             .Where(r => !r.IsSuccess)

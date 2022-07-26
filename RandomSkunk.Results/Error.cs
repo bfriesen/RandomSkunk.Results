@@ -8,11 +8,10 @@ namespace RandomSkunk.Results;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public record class Error
 {
-    internal const string _defaultExceptionFailMessage = "An exception was thrown.";
+    internal const string _defaultMessage = "An error occurred.";
+    internal const string _defaultFromExceptionMessage = "An exception was thrown.";
 
     private static readonly Lazy<Error> _defaultError = new(() => new Error());
-
-    private static string _defaultMessage = "An error occurred.";
 
     private readonly string _message;
     private readonly string _title;
@@ -21,8 +20,7 @@ public record class Error
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
     /// </summary>
-    /// <param name="message">The error message. If <see langword="null"/>, then the value of <see cref="DefaultMessage"/> is
-    ///     used instead.</param>
+    /// <param name="message">The error message. If <see langword="null"/>, then a default message is used instead.</param>
     /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
     /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
@@ -34,16 +32,6 @@ public record class Error
 
         if (setStackTrace)
             _stackTrace = FilteredStackTrace.Create();
-    }
-
-    /// <summary>
-    /// Gets or sets the default error message, to be used when an error message is not specified.
-    /// </summary>
-    /// <exception cref="ArgumentNullException">If the property is set to <see langword="null"/>.</exception>
-    public static string DefaultMessage
-    {
-        get => _defaultMessage;
-        set => _defaultMessage = value ?? throw new ArgumentNullException(nameof(value));
     }
 
     /// <summary>
@@ -98,14 +86,13 @@ public record class Error
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The optional error code.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
-    ///     </param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
     [StackTraceHidden]
     public static Error FromException(
         Exception exception,
-        string message = _defaultExceptionFailMessage,
+        string message = _defaultFromExceptionMessage,
         int? errorCode = null,
         string? identifier = null,
         string? title = null)
@@ -114,7 +101,7 @@ public record class Error
 
         var innerError = CreateInnerError(exception);
 
-        return new Error(message ?? _defaultExceptionFailMessage, title, true)
+        return new Error(message ?? _defaultFromExceptionMessage, title, true)
         {
             ErrorCode = errorCode ?? innerError.ErrorCode,
             Identifier = identifier,

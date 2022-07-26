@@ -33,7 +33,7 @@ public class Error_record_class
 
             var error = Error.FromException(exception);
 
-            error.Message.Should().Be(Error._defaultExceptionFailMessage);
+            error.Message.Should().Be(Error._defaultFromExceptionMessage);
             error.ErrorCode.Should().BeNull();
             error.Identifier.Should().BeNull();
             error.Title.Should().Be(nameof(Error));
