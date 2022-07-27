@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.Json;
 
-internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
+internal sealed class ErrorJsonConverter : JsonConverter<Error>
 {
 #pragma warning disable IDE1006 // Naming Styles
     private static readonly JsonEncodedText Message = JsonEncodedText.Encode("Message");
@@ -11,7 +11,7 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
     private static readonly JsonEncodedText InnerError = JsonEncodedText.Encode("InnerError");
 #pragma warning restore IDE1006 // Naming Styles
 
-    public override ExtendedError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Error? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         var builder = new ExtendedErrorBuilder();
 
@@ -27,7 +27,7 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
         return builder.Build();
     }
 
-    public override void Write(Utf8JsonWriter writer, ExtendedError value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Error value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
         WriteExtendedError(writer, value, options);
@@ -62,7 +62,7 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
         {
             if (reader.ValueTextEquals(InnerError.EncodedUtf8Bytes))
             {
-                builder.InnerError = JsonSerializer.Deserialize<ExtendedError>(ref reader, options);
+                builder.InnerError = JsonSerializer.Deserialize<Error>(ref reader, options);
             }
             else
             {
@@ -76,7 +76,7 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
         }
     }
 
-    private static void WriteExtendedError(Utf8JsonWriter writer, ExtendedError value, JsonSerializerOptions options)
+    private static void WriteExtendedError(Utf8JsonWriter writer, Error value, JsonSerializerOptions options)
     {
         if (value.Message != null)
             writer.WriteString(Message, value.Message);
@@ -138,8 +138,8 @@ internal sealed class ExtendedErrorJsonConverter : JsonConverter<ExtendedError>
 
         public Dictionary<string, object> Extensions => _extensions ??= new Dictionary<string, object>(StringComparer.Ordinal);
 
-        public ExtendedError Build() =>
-            new(Message, Type, Extensions)
+        public Error Build() =>
+            new(Message, Type, false, Extensions)
             {
                 StackTrace = StackTrace,
                 ErrorCode = ErrorCode,

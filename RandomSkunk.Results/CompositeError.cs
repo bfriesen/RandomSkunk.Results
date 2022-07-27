@@ -5,16 +5,19 @@ namespace RandomSkunk.Results;
 /// </summary>
 public record class CompositeError : Error
 {
+    [StackTraceHidden]
     private CompositeError(IReadOnlyList<Error> errors)
-        : base("More than one error occurred.")
+        : base("More than one error occurred.", setStackTrace: true, extensions: GetExtensions(nameof(Errors), errors))
     {
-        Errors = errors;
     }
 
     /// <summary>
     /// Gets the errors that make up this instance of <see cref="CompositeError"/>.
     /// </summary>
-    public IReadOnlyList<Error> Errors { get; }
+    public IReadOnlyList<Error> Errors =>
+        TryGet<IReadOnlyList<Error>>(nameof(Errors), out var errors)
+            ? errors
+            : Array.Empty<Error>();
 
     /// <summary>
     /// Creates an error from the specified sequence of errors.
@@ -24,6 +27,7 @@ public record class CompositeError : Error
     ///     consisting of the specified errors.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="errors"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="errors"/> is empty.</exception>
+    [StackTraceHidden]
     public static Error Create(IEnumerable<Error> errors)
     {
         if (errors is null) throw new ArgumentNullException(nameof(errors));
@@ -37,16 +41,5 @@ public record class CompositeError : Error
             return errorList[0];
 
         return new CompositeError(errorList);
-    }
-
-    /// <inheritdoc/>
-    protected override void PrintAdditionalProperties(StringBuilder sb, string? indention, bool includeStackTrace)
-    {
-        int i = 0;
-        foreach (var error in Errors)
-        {
-            sb.AppendLine().Append(indention).Append("Error[").Append(i++).Append("]:").AppendLine();
-            sb.Append(ToString(error, indention + "   ", includeStackTrace));
-        }
     }
 }
