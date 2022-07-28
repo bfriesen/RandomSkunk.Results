@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace RandomSkunk.Results;
 
@@ -359,20 +361,58 @@ public record class Error
     private class Property
     {
         private readonly PropertyInfo _propertyInfo;
+        private Func<object, object?> _propertyAccessor;
 
         protected Property(PropertyInfo propertyInfo)
         {
             _propertyInfo = propertyInfo;
+
+            if (IsHResultProperty)
+                _propertyAccessor = instance => $"0x{(int)_propertyInfo.GetValue(instance)!:x}";
+            else
+                _propertyAccessor = propertyInfo.GetValue;
+
+            ThreadPool.QueueUserWorkItem(_ => SetOptimizedPropertyAccessor());
         }
 
         public string Name => _propertyInfo.Name;
 
+        private bool IsHResultProperty =>
+            _propertyInfo.Name == nameof(Exception.HResult)
+            && _propertyInfo.DeclaringType == typeof(Exception);
+
         public static Property Create(PropertyInfo propertyInfo) =>
             new(propertyInfo);
 
-        public virtual object? GetValue(object instance)
+        public object? GetValue(object instance) => _propertyAccessor(instance);
+
+        private void SetOptimizedPropertyAccessor()
         {
-            return _propertyInfo.GetValue(instance);
+            var instanceParameter = Expression.Parameter(typeof(object), "instance");
+
+            Expression body = Expression.Property(
+                Expression.Convert(instanceParameter, _propertyInfo.ReflectedType ?? typeof(Exception)),
+                _propertyInfo);
+
+            if (IsHResultProperty)
+            {
+                var toStringMethod = typeof(int).GetMethod(nameof(int.ToString), new[] { typeof(string) })!;
+                var concatMethod = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) })!;
+
+                body =
+                    Expression.Call(
+                        concatMethod,
+                        Expression.Constant("0x", typeof(string)),
+                        Expression.Call(body, toStringMethod, Expression.Constant("x", typeof(string))));
+            }
+            else if (_propertyInfo.PropertyType.IsValueType)
+            {
+                body = Expression.Convert(body, typeof(object));
+            }
+
+            var lambda = Expression.Lambda<Func<object, object?>>(body, instanceParameter);
+
+            _propertyAccessor = lambda.Compile();
         }
     }
 }
