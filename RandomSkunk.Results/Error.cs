@@ -310,7 +310,7 @@ public record class Error
         sb.Append(error.Title).Append(": ").AppendLine(Indent(error.Message, indention));
 
         if (error.ErrorCode.HasValue)
-            sb.Append(indention + "   ").Append("Error Code: ").AppendLine(error.ErrorCode.ToString());
+            sb.Append(indention + "   ").Append("Error Code: ").AppendLine(ErrorCodes.GetDescription(error.ErrorCode.Value));
 
         if (error.Identifier is not null)
             sb.Append(indention + "   ").Append("Identifier: ").AppendLine(error.Identifier);

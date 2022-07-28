@@ -1,12 +1,11 @@
+using System.Collections.Concurrent;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
 /// A class that defines error codes.
 /// </summary>
-/// <remarks>
-/// This class is abstract to allow inheritors to add additional error codes.
-/// </remarks>
-public abstract class ErrorCodes
+public static class ErrorCodes
 {
     /// <summary>
     /// Indicates that the operation cannot be processed due to a client error.
@@ -52,4 +51,43 @@ public abstract class ErrorCodes
     /// Indicates that the error represents a caught exception. The inner error contains information about the exception.
     /// </summary>
     public const int CaughtException = -500;
+
+    private static readonly ConcurrentDictionary<int, string> _descriptions = new(GetErrorCodes(typeof(ErrorCodes)));
+
+    /// <summary>
+    /// Gets a description of an error code.
+    /// </summary>
+    /// <param name="errorCode">The error code.</param>
+    /// <returns>The description of the error code if the error code is known; otherwise a regular string representation of the
+    ///     error code value.</returns>
+    public static string? GetDescription(int errorCode)
+    {
+        if (_descriptions.TryGetValue(errorCode, out var description))
+            return description;
+
+        return errorCode.ToString();
+    }
+
+    /// <summary>
+    /// Registers all error codes defined in the specified type. Each <c>public const int</c> field defined by the type is
+    /// registered as an error code, able to have its description retrieved with the <see cref="GetDescription"/> method.
+    /// </summary>
+    /// <param name="errorCodesType">A type that defines error codes.</param>
+    public static void RegisterErrorCodes(Type errorCodesType)
+    {
+        var errorCodes = GetErrorCodes(errorCodesType);
+
+        foreach (var errorCode in errorCodes)
+            _descriptions.AddOrUpdate(errorCode.Key, errorCode.Value, (k, e) => errorCode.Value);
+    }
+
+    private static IEnumerable<KeyValuePair<int, string>> GetErrorCodes(Type errorCodesType) =>
+        errorCodesType
+            .GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Where(f => f.IsLiteral && f.FieldType == typeof(int))
+            .Select(f =>
+            {
+                var value = (int)f.GetValue(null)!;
+                return new KeyValuePair<int, string>(value, $"{value} ({Format.AsSentenceCase(f.Name)})");
+            });
 }
