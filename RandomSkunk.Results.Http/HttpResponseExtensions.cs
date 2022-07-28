@@ -472,6 +472,7 @@ public static class HttpResponseExtensions
 
     private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails, JsonSerializerOptions options)
     {
+        int? errorCode = null;
         string? stackTrace = null;
         string? identifier = null;
         Error? innerError = null;
@@ -484,6 +485,10 @@ public static class HttpResponseExtensions
 
             switch (extension.Key)
             {
+                case "errorCode":
+                    if (int.TryParse(extension.Value.ToString(), out var errorCodeValue))
+                        errorCode = errorCodeValue;
+                    break;
                 case "errorStackTrace":
                     stackTrace = extension.Value.ToString();
                     break;
@@ -516,7 +521,7 @@ public static class HttpResponseExtensions
         return new Error(problemDetails.Detail, problemDetails.Title, false, extensions)
         {
             StackTrace = stackTrace,
-            ErrorCode = problemDetails.Status,
+            ErrorCode = errorCode,
             Identifier = identifier,
             InnerError = innerError,
         };
