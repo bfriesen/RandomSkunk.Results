@@ -88,7 +88,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
@@ -97,7 +97,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     public static Result<T> Fail(
         Exception exception,
         string errorMessage = _defaultFromExceptionMessage,
-        int? errorCode = null,
+        int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null) =>
         Fail(FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
@@ -106,7 +106,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
-    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.InternalServerError"/>.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
@@ -117,7 +117,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     [StackTraceHidden]
     public static Result<T> Fail(
         string errorMessage,
-        int? errorCode = null,
+        int? errorCode = ErrorCodes.InternalServerError,
         string? errorIdentifier = null,
         string? errorTitle = null,
         Error? innerError = null,
@@ -125,7 +125,6 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         Fail(new Error(errorMessage, errorTitle, setStackTrace: stackTrace is null)
         {
             StackTrace = stackTrace,
-
             ErrorCode = errorCode,
             Identifier = errorIdentifier,
             InnerError = innerError,

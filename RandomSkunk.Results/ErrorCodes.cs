@@ -47,4 +47,9 @@ public abstract class ErrorCodes
     /// Indicates that the error represents a <see cref="Maybe{T}"/> <c>None</c> result.
     /// </summary>
     public const int ResultIsNone = -410;
+
+    /// <summary>
+    /// Indicates that the error represents a caught exception. The inner error contains information about the exception.
+    /// </summary>
+    public const int CaughtException = -500;
 }

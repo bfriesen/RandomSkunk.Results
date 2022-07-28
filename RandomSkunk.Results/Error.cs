@@ -105,7 +105,7 @@ public record class Error
     /// </summary>
     /// <param name="exception">The exception to create the error from.</param>
     /// <param name="message">The error message.</param>
-    /// <param name="errorCode">The optional error code.</param>
+    /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
     /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
@@ -114,7 +114,7 @@ public record class Error
     public static Error FromException(
         Exception exception,
         string message = _defaultFromExceptionMessage,
-        int? errorCode = null,
+        int? errorCode = ErrorCodes.CaughtException,
         string? identifier = null,
         string? title = null)
     {
@@ -124,7 +124,7 @@ public record class Error
 
         return new Error(message ?? _defaultFromExceptionMessage, title, true)
         {
-            ErrorCode = errorCode ?? innerError.ErrorCode,
+            ErrorCode = errorCode,
             Identifier = identifier,
             InnerError = innerError,
         };
@@ -144,7 +144,7 @@ public record class Error
         var extensions = new ReadOnlyDictionary<string, object>(
             properties
                 .Select(p => new { p.Name, Value = p.GetValue(exception) })
-                .Where(p => p.Value is not null)
+                .Where(p => p.Value is not null && (p.Name != nameof(ExternalException.ErrorCode) || !errorCode.HasValue))
                 .ToDictionary(p => p.Name, p => p.Value!));
 
         return new Error(exception.Message, exception.GetType().Name, false, extensions)
