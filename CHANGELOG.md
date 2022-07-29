@@ -7,6 +7,55 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `ErrorCodes` class.
+    - Add `Error.ToString(bool includeStackTrace)` overload.
+    - Add `MapAll` and `FlatMapAll` extension methods for value tuples of results.
+    - Add `Filter` method and LINQ `Where` extension method for `Result<T>`.
+    - Add `Result<DBNull> Result.AsDBNullResult()` method.
+    - Add error code description to output of `Error.ToString()`.
+    - Add `ErrorCodes.GetDescription` and `RegisterErrorCodes` static methods to get and set the description for an error code respectively.
+- RandomSkunk.Results.Dapper:
+    - Add `ResultSqlMapper.GridReader` class.
+
+### Changed
+
+- RandomSkunk.Results:
+    - Return a `Fail` result instead of throwing exception when a supplied delegate parameter returns a null value.
+    - Rename `CrossMap` to `FlatMap`.
+    - Rename `Error.Type` to `Error.Title`.
+    - Exclude stack trace from `Error.ToString()` output.
+    - Stack trace generation happens only in the `Error` constructor.
+    - When generating stack trace, exclude frames with methods decorated with the `[StackTraceHidden]` attribute.
+    - In `Error.FromException`, the exception information is completely contained in the `InnerError` property. The outer error contains information about the callsite.
+    - Replace delegate extensions with `TryCatch`, `TryCatch<TException>` and `TryCatch<TException1, TException2>` classes containing methods with the same functionality.
+    - Move extension properties functionality to the base `Error` class.
+    - Improve output of `Error.ToString`.
+- RandomSkunk.Results.Dapper:
+    - Catch general `Exception` instead of both `DbException` and `Exception` in all `ResultSqlMapper` extension methods.
+    - `TryQueryMultiple` and `TryQueryMultipleAsync` return a `ResultSqlMapper.GridReader` instead of a `SqlMapper.GridReader`.
+- RandomSkunk.Results.Http:
+    - Improve the mapping of error code to HTTP status code. The positive or negative hundreds part of the decimal error code becomes the HTTP status code. Examples:
+        - Error code `9500` maps to HTTP status code `500`.
+        - Error code `-4040404` maps to HTTP status code `404`.
+    - The mapping of error code to HTTP status code can be specified on a per-call basis.
+
+### Removed
+
+- RandomSkunk.Results:
+    - Remove `FailFactory<TResult>` class and result `FailWith` fields.
+    - Remove `ResultExtensions.DefaultOnNoneCallback` static property.
+    - Remove most `Func<Error, Error>? onFail` parameters.
+    - Remove `Func<Error>? onNoneGetError` parameters.
+    - Remove `Error.DefaultMessage` static property.
+    - Remove `ExtendedError` class.
+- RandomSkunk.Results.Http:
+    - Remove `HttpClientExtensions.DefaultGetHttpError` and `HttpClientExtensions.DefaultGetTimeoutError` static properties.
+- RandomSkunk.Results.Dapper:
+    - Remove `DbError` class.
+
 ## [1.0.0-alpha14] - 2022-06-30
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha14) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha14/lib/netstandard2.1/diff/1.0.0-alpha13/))  
