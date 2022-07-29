@@ -3,7 +3,7 @@ namespace RandomSkunk.Results.Dapper;
 /// <summary>
 /// Defines Dapper extensions that return result values.
 /// </summary>
-public static class ResultSqlMapper
+public static partial class ResultSqlMapper
 {
     /// <summary>
     /// Execute parameterized SQL.
@@ -123,9 +123,9 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the data from the
-    ///     first column in assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping is
-    ///     assumed (case insensitive).</returns>
+    /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
+    ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
+    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
     public static Result<T> TryQueryFirst<T>(
         this IDbConnection cnn,
         string sql,
@@ -150,9 +150,9 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the data from the
-    ///     first column in assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping is
-    ///     assumed (case insensitive).</returns>
+    /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
+    ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
+    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
     public static Result<T> TryQueryFirstOrDefault<T>(
         this IDbConnection cnn,
         string sql,
@@ -178,9 +178,9 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the data from the
-    ///     first column in assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping is
-    ///     assumed (case insensitive).</returns>
+    /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
+    ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
+    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
     public static Maybe<T> TryQueryFirstOrNone<T>(
         this IDbConnection cnn,
         string sql,
@@ -206,9 +206,9 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the data from the
-    ///     first column in assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping is
-    ///     assumed (case insensitive).</returns>
+    /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
+    ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
+    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
     public static Result<T> TryQuerySingle<T>(
         this IDbConnection cnn,
         string sql,
@@ -233,9 +233,9 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the data from the
-    ///     first column in assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping is
-    ///     assumed (case insensitive).</returns>
+    /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
+    ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
+    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
     public static Result<T> TryQuerySingleOrDefault<T>(
         this IDbConnection cnn,
         string sql,
@@ -261,9 +261,9 @@ public static class ResultSqlMapper
     /// <param name="commandType">The type of command to execute.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the data from the
-    ///     first column in assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping is
-    ///     assumed (case insensitive).</returns>
+    /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
+    ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
+    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
     public static Maybe<T> TryQuerySingleOrNone<T>(
         this IDbConnection cnn,
         string sql,
@@ -288,8 +288,8 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A <see cref="SqlMapper.GridReader"/> for reading the multiple queries.</returns>
-    public static Result<SqlMapper.GridReader> TryQueryMultiple(
+    /// <returns>A <see cref="GridReader"/> for reading the multiple queries.</returns>
+    public static Result<GridReader> TryQueryMultiple(
         this IDbConnection cnn,
         string sql,
         object? param = null,
@@ -298,7 +298,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryMultiple(sql, param, transaction, commandTimeout, commandType),
+            () => new GridReader(cnn.QueryMultiple(sql, param, transaction, commandTimeout, commandType)),
             exceptionHandler);
 
     /// <summary>
@@ -1023,8 +1023,8 @@ public static class ResultSqlMapper
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>A <see cref="SqlMapper.GridReader"/> for reading the multiple queries.</returns>
-    public static Task<Result<SqlMapper.GridReader>> TryQueryMultipleAsync(
+    /// <returns>A <see cref="GridReader"/> for reading the multiple queries.</returns>
+    public static Task<Result<GridReader>> TryQueryMultipleAsync(
         this IDbConnection cnn,
         string sql,
         object? param = null,
@@ -1033,7 +1033,7 @@ public static class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResultAsync(
-            () => cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType),
+            async () => new GridReader(await cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType)),
             exceptionHandler);
 
     /// <summary>

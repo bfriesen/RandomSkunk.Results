@@ -28,6 +28,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Update="ResultSqlMapper.*.cs">
+			<DependentUpon>ResultSqlMapper.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\RandomSkunk.Results\RandomSkunk.Results.csproj" />
 	</ItemGroup>
 
