@@ -43,7 +43,7 @@ Result resultF = Result.Fail();
 
 #### From Exceptions
 
-`Fail` results can be created directly from an exception.
+`Fail` results can be created directly from an exception. The caught exception is represented by the `Error.InnerError` property of the fail result's error.
 
 ```c#
 Result<int> Divide(int x, int y)
@@ -59,30 +59,16 @@ Result<int> Divide(int x, int y)
 }
 ```
 
-#### From Delegates
+##### TryCatch classes
 
-The `RandomSkunk.Results` namespace contains extension methods for several delegates with names beginning with "Try". These methods evaluate the delegate inside a try/catch block, very similar to the `Divide` method in the [From Exceptions](#from-exceptions) section above. The supported delegates are `System.Action`, `System.Func<T>`, `RandomSkunk.Results.AsyncAction`, and `RandomSkunk.Results.AsyncFunc<T>`.
-
-```c#
-Action writeFile = () => File.WriteAllText(@"C:\test.txt", "Hello, world!");
-Result result1 = writeFile.TryInvokeAsResult();
-
-Func<IPAddress[]> getHostAddresses = () => Dns.GetHostAddresses("example.com");
-Result<IPAddress[]> result2 = getHostAddresses.TryInvokeAsResult();
-
-Func<string> getEnvironmentVariable = () => Environment.GetEnvironmentVariable("example")!;
-Maybe<string> result3 = getEnvironmentVariable.TryInvokeAsMaybe();
-```
-
-To make it easier to invoke these extension methods, the `Delegates` static class provides methods for creating delegates.
+An entire try/catch statement can be replaced with a call to of the `TryCatch` class's methods.
 
 ```c#
-Result result1 = await Delegates.AsyncAction(() => File.WriteAllTextAsync(@"C:\test.txt", "Hello, world!"))
-    .TryInvokeAsResultAsync();
-
-Result<string> result2 = await Delegates.AsyncFunc(() => File.ReadAllTextAsync(@"C:\test.txt"))
-    .TryInvokeAsResultAsync();
+Result<int> Divide(int x, int y) =>
+    TryCatch<DivideByZeroException>.AsResult(() => x / y);
 ```
+
+There are additional classes named "TryCatch" in, but with different number of generic arguments. The generic arguments allow you to specify exactly what type of exceptions to catch and in what order they should be caught. Then non-generic version catches the base `Exception` type.
 
 ### Handling Results
 
@@ -132,6 +118,29 @@ void Example(Maybe<int> result)
             break;
     }
 }
+```
+
+#### Match methods
+
+The match methods map a result to a value using a series of function parameters for each of the possible outcomes of the result (`Success`, `Fail`, or `None`).
+
+```c#
+// Synchronous functions:
+Result result1 = default;
+string message1 = result1.Match(
+    onSuccess: () => "Success",
+    onFail: error => $"Fail: {error}");
+
+// Asynchronous functions:
+Maybe<Guid> result2 = default;
+string message2 = await result2.MatchAsync(
+    onSuccess: async userId =>
+    {
+        string userName = await GetUserName(userId);
+        return $"Hello, {userName}!";
+    },
+    onNone: () => Task.FromResult("Unknown user"),
+    onFail: error => Task.FromResult("Error"));
 ```
 
 #### GetValueOr
@@ -250,7 +259,7 @@ Maybe<int> flattenedMaybe = nestedMaybe.Flatten();
 
 #### Filter / FilterAsync
 
-*Applicable to `Maybe<T>` only.*
+*Applicable to `Maybe<T>` and `Result<T>` only.*
 
 Filters a `Success` result to `None` unless the specified filter function evaluates to true. `None` and `Fail` results are not affected.
 

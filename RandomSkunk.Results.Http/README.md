@@ -54,7 +54,7 @@ public async Task<Result<HttpResponseMessage>> ExampleTrySendAsync(
 There are three extension methods - `GetResultAsync`, `ReadResultFromJsonAsync<T>`, and `ReadMaybeFromJsonAsync<T>` - for creating result objects (`Result`, `Result<T>`, and `Maybe<T>` respectively) from an `HttpResponseMessage`.
 
 ```c#
-public async Task<Result> ExampleResultMethod()
+public async Task<Result> ExampleResultMethod1()
 {
     HttpClient httpClient = new HttpClient();
     HttpResponseMessage response = await httpClient.GetAsync("https://example.com");
@@ -63,7 +63,7 @@ public async Task<Result> ExampleResultMethod()
     return result;
 }
 
-public async Task<Result<T>> ExampleResultMethod<T>()
+public async Task<Result<T>> ExampleResultMethod2<T>()
 {
     HttpClient httpClient = new HttpClient();
     HttpResponseMessage response = await httpClient.GetAsync("https://example.com");
@@ -72,7 +72,7 @@ public async Task<Result<T>> ExampleResultMethod<T>()
     return result;
 }
 
-public async Task<Maybe<T>> ExampleMaybeMethod<T>()
+public async Task<Maybe<T>> ExampleMaybeMethod3<T>()
 {
     HttpClient httpClient = new HttpClient();
     HttpResponseMessage response = await httpClient.GetAsync("https://example.com");
