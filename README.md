@@ -56,10 +56,10 @@ These are the interesting parts of the example app (with links to the code):
             - [AddWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherProfileClient.cs#L23-L31)
             - [EditWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherProfileClient.cs#L33-L40)
     - Razor pages - *each one uses one of the typed HTTP clients to make a request to the server, then handles the result*
-        - [FiveDayForecast](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/Pages/FiveDayForecast.razor#L63-L73)
+        - [FiveDayForecast](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/Pages/FiveDayForecast.razor#L62-L72)
         - WeatherProfiles
-            - [FetchWeatherProfiles](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/Pages/WeatherProfiles.razor#L174-L188)
-            - [SaveProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/Pages/WeatherProfiles.razor#L190-L215)
+            - [FetchWeatherProfiles](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/Pages/WeatherProfiles.razor#L156-L173)
+            - [SaveProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/Pages/WeatherProfiles.razor#L175-L201)
 - ExampleBlazorApp.Server project
     - WeatherRepository - *uses RandomSkunk.Results.Dapper to make queries to the database*
         - [GetMonthlyTemperature](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Repositories/WeatherRepository.cs#L18-L36)
