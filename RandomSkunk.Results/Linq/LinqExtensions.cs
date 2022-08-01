@@ -9,9 +9,9 @@ public static class LinqExtensions
     /// <para>
     /// Alias for the <see cref="Result{T}.Map{TReturn}(Func{T, TReturn})"/> method.
     /// </para>
-    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="selector"/> function. The map
-    /// function is only evaluated if the target is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new
-    /// result will always be the same as the target result.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="selector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -28,9 +28,10 @@ public static class LinqExtensions
     /// <para>
     /// Alias for the <see cref="Maybe{T}.Map{TReturn}(Func{T, TReturn})"/> method.
     /// </para>
-    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="selector"/> function. The map
-    /// function is only evaluated if the target is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new
-    /// result will always be the same as the target result.
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="selector"/> function. If the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c>
+    /// result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new <c>None</c>
+    /// result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -45,10 +46,52 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
+    /// Alias for the <see cref="ResultExtensions.Map{T, TReturn}(Task{Result{T}}, Func{T, TReturn})"/> extension method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="selector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a new
+    /// <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> Select<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, TReturn> selector) =>
+        sourceResult.Map(selector);
+
+    /// <summary>
+    /// <para>
+    /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
+    /// <paramref name="selector"/> function. If the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c>
+    /// result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new <c>None</c>
+    /// result.
+    /// </para>
+    /// Maps <paramref name="sourceResult"/> to a new result using the specified <paramref name="selector"/> function. The map
+    /// function is only evaluated if the target is a <c>Success</c> result, and the <see cref="Result{T}.Type"/> of the new
+    /// result will always be the same as the target result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> Select<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, TReturn> selector) =>
+        sourceResult.Map(selector);
+
+    /// <summary>
+    /// <para>
     /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Result{TReturn}})"/> method.
     /// </para>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
-    /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same
+    /// error.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -65,9 +108,9 @@ public static class LinqExtensions
     /// <para>
     /// Alias for the <see cref="Result{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}})"/> method.
     /// </para>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
-    /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is
-    /// never returned.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. Otherwise, if the <c>Fail</c> result's error has error code <see cref="ErrorCodes.ResultIsNone"/>, then a
+    /// <c>None</c> result is returned. For any other error code, a new <c>Fail</c> result with the same error is returned.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -82,12 +125,12 @@ public static class LinqExtensions
 
     /// <summary>
     /// <para>
-    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Result{TReturn}})"/>
-    /// method.
+    /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Result{TReturn}})"/> method.
     /// </para>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
-    /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
-    /// <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. If the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same error.
+    /// Otherwise, if the current result is <c>None</c>, it is transformed into a new <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.ResultIsNone"/>.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -104,9 +147,9 @@ public static class LinqExtensions
     /// <para>
     /// Alias for the <see cref="Maybe{T}.FlatMap{TReturn}(Func{T, Maybe{TReturn}})"/> method.
     /// </para>
-    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
-    /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
-    /// <c>None</c> result, return a <c>None</c> result.
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. If the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same error.
+    /// Otherwise, if the current result is <c>None</c>, it is transformed into a new <c>None</c> result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -120,6 +163,243 @@ public static class LinqExtensions
         sourceResult.FlatMap(selector);
 
     /// <summary>
+    /// <para>
+    /// Alias for the <see cref="Result{T}.FlatMapAsync{TReturn}(Func{T, Task{Result{TReturn}}})"/> method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same
+    /// error.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Result<T> sourceResult,
+        Func<T, Task<Result<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="Result{T}.FlatMapAsync{TReturn}(Func{T, Task{Maybe{TReturn}}})"/> method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. Otherwise, if the <c>Fail</c> result's error has error code <see cref="ErrorCodes.ResultIsNone"/>, then a
+    /// <c>None</c> result is returned. For any other error code, a new <c>Fail</c> result with the same error is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Result<T> sourceResult,
+        Func<T, Task<Maybe<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="Maybe{T}.FlatMapAsync{TReturn}(Func{T, Task{Result{TReturn}}})"/> method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. If the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same error.
+    /// Otherwise, if the current result is <c>None</c>, it is transformed into a new <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.ResultIsNone"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Maybe<T> sourceResult,
+        Func<T, Task<Result<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="Maybe{T}.FlatMapAsync{TReturn}(Func{T, Task{Maybe{TReturn}}})"/> method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. If the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same error.
+    /// Otherwise, if the current result is <c>None</c>, it is transformed into a new <c>None</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Maybe<T> sourceResult,
+        Func<T, Task<Maybe<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Task{Result{T}}, Func{T, Result{TReturn}})"/> extension
+    /// method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same
+    /// error.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Result<TReturn>> selector) =>
+        sourceResult.FlatMap(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Task{Result{T}}, Func{T, Maybe{TReturn}})"/> extension
+    /// method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same
+    /// error. A <c>None</c> result is never returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Maybe<TReturn>> selector) =>
+        sourceResult.FlatMap(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Task{Maybe{T}}, Func{T, Result{TReturn}})"/> extension
+    /// method.
+    /// </para>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified <paramref name="selector"/>
+    /// function. If the current result is <c>Fail</c>, it is transformed into a new <c>Fail</c> result with the same error.
+    /// Otherwise, if the current result is <c>None</c>, it is transformed into a new <c>Fail</c> result with an error indicating
+    /// that there was no value.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Result<TReturn>> selector) =>
+        sourceResult.FlatMap(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMap{T, TReturn}(Task{Maybe{T}}, Func{T, Maybe{TReturn}})"/> extension
+    /// method.
+    /// </para>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
+    /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
+    /// <c>None</c> result, return a <c>None</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Maybe<TReturn>> selector) =>
+        sourceResult.FlatMap(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMapAsync{T, TReturn}(Task{Result{T}}, Func{T, Task{Result{TReturn}}})"/>
+    /// extension method.
+    /// </para>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
+    /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Result<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMapAsync{T, TReturn}(Task{Result{T}}, Func{T, Task{Maybe{TReturn}}})"/>
+    /// extension method.
+    /// </para>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function.
+    /// Otherwise, if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. A <c>None</c> result is
+    /// never returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Maybe<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMapAsync{T, TReturn}(Task{Maybe{T}}, Func{T, Task{Result{TReturn}}})"/>
+    /// extension method.
+    /// </para>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
+    /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
+    /// <c>None</c> result, return a <c>Fail</c> result with an error indicating that there was no value.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Result<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.FlatMapAsync{T, TReturn}(Task{Maybe{T}}, Func{T, Task{Maybe{TReturn}}})"/>
+    /// extension method.
+    /// </para>
+    /// If this is a <c>Success</c> result, then return the result from evaluating the <paramref name="selector"/> function. Else
+    /// if this is a <c>Fail</c> result, return a <c>Fail</c> result with an equivalent error. Otherwise, if this is a
+    /// <c>None</c> result, return a <c>None</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="selector">A function that maps the value of the incoming result to the value of the outgoing result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="selector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Maybe<TReturn>>> selector) =>
+        sourceResult.FlatMapAsync(selector);
+
+    /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
     /// source and intermediate results.
     /// </summary>
@@ -143,8 +423,8 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).Map(
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
@@ -172,8 +452,8 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).Map(
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
@@ -201,8 +481,8 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).Map(
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
@@ -230,8 +510,356 @@ public static class LinqExtensions
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
 
-        return sourceResult.FlatMap(
-            sourceValue => intermediateSelector(sourceValue).Map(
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
+    ///     <paramref name="intermediateSelector"/>.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Result<T> sourceResult,
+        Func<T, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
+    ///     <paramref name="intermediateSelector"/>.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Result<T> sourceResult,
+        Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
+    ///     </typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Maybe<T> sourceResult,
+        Func<T, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
+    ///     </typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Maybe<T> sourceResult,
+        Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
+    ///     <paramref name="intermediateSelector"/>.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Result<TIntermediate>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
+    ///     <paramref name="intermediateSelector"/>.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Maybe<TIntermediate>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
+    ///     </typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Result<TIntermediate>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
+    ///     </typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Maybe<TIntermediate>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
+    ///     <paramref name="intermediateSelector"/>.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
+    ///     <paramref name="intermediateSelector"/>.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
+    ///     </typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => resultSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <summary>
+    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
+    /// source and intermediate results.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
+    ///     </typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
+    /// <param name="resultSelector">A transform function to apply to the value of the intermediate result.</param>
+    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
+    ///     of that result and the source result to the final result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
+    ///     <paramref name="resultSelector"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<T, TIntermediate, TReturn> resultSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (resultSelector is null) throw new ArgumentNullException(nameof(resultSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => resultSelector(sourceValue, intermediateValue)));
     }
 
@@ -265,5 +893,37 @@ public static class LinqExtensions
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> Where<T>(this Maybe<T> sourceResult, Func<T, bool> predicate) =>
+        sourceResult.Filter(predicate);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.Filter{T}(Task{Result{T}}, Func{T, bool})"/> extension method.
+    /// </para>
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    ///     <see langword="false"/>.</param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<T>> Where<T>(this Task<Result<T>> sourceResult, Func<T, bool> predicate) =>
+        sourceResult.Filter(predicate);
+
+    /// <summary>
+    /// <para>
+    /// Alias for the <see cref="ResultExtensions.Filter{T}(Task{Maybe{T}}, Func{T, bool})"/> extension method.
+    /// </para>
+    /// Filter the specified result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    ///     <see langword="false"/>.</param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Task<Maybe<T>> Where<T>(this Task<Maybe<T>> sourceResult, Func<T, bool> predicate) =>
         sourceResult.Filter(predicate);
 }
