@@ -4,20 +4,20 @@ namespace RandomSkunk.Results;
 public partial struct Result<T>
 {
     /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the <paramref name="filter"/>
-    /// function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
     /// </summary>
-    /// <param name="filter">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="filter"/> is <see langword="null"/>.</exception>
-    public Maybe<T> Filter(Func<T, bool> filter)
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public Maybe<T> Filter(Func<T, bool> predicate)
     {
-        if (filter is null) throw new ArgumentNullException(nameof(filter));
+        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         if (IsSuccess)
         {
-            return filter(_value!)
+            return predicate(_value!)
                 ? AsMaybe()
                 : Maybe<T>.None();
         }
@@ -26,20 +26,20 @@ public partial struct Result<T>
     }
 
     /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the <paramref name="filter"/>
-    /// function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
     /// </summary>
-    /// <param name="filter">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
     ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="filter"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<T>> FilterAsync(Func<T, Task<bool>> filter)
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public async Task<Maybe<T>> FilterAsync(Func<T, Task<bool>> predicate)
     {
-        if (filter is null) throw new ArgumentNullException(nameof(filter));
+        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         if (IsSuccess)
         {
-            return await filter(_value!).ConfigureAwait(false)
+            return await predicate(_value!).ConfigureAwait(false)
                 ? AsMaybe()
                 : Maybe<T>.None();
         }

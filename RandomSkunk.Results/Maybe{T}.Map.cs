@@ -10,10 +10,10 @@ public partial struct Maybe<T>
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
@@ -39,10 +39,10 @@ public partial struct Maybe<T>
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and
-    /// might not be <c>Success</c>).
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing

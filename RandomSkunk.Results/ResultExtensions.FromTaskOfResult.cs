@@ -13,7 +13,7 @@ public static partial class ResultExtensions
     /// example:
     /// <code>
     /// Result resultIn = Result.Success();
-    ///
+    /// 
     /// Maybe&lt;double&gt; resultOut =
     ///     from intValue in Result&lt;int&gt;.Success(2)
     ///     from dbNullValue in resultIn.AsDBNullResult()
@@ -41,9 +41,10 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).AsDBNullResult();
 
     /// <summary>
-    /// Converts this <see cref="Result{T}"/> to an equivalent <see cref="Maybe{T}"/>: if this is a <c>Success</c> result, then a
-    /// <c>Success</c> result with the same value is returned; if this is a <c>Fail</c> result, then a <c>Fail</c> result with
-    /// the same error is returned; a <c>None</c> result is never returned.
+    /// Converts this <see cref="Result{T}"/> to an equivalent <see cref="Maybe{T}"/>. If this is a <c>Success</c> result, then a
+    /// <c>Success</c> result with the same value is returned. Otherwise, if the <c>Fail</c> result's error has error code
+    /// <see cref="ErrorCodes.ResultIsNone"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
+    /// result with the same error is returned.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
@@ -52,9 +53,9 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).AsMaybe();
 
     /// <summary>
-    /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>: if this is a <c>Success</c> result, then a
-    /// <c>Success</c> result with the same value is returned; if this is a <c>Fail</c> result, then a <c>Fail</c> result with
-    /// the same error is returned; if this is a <c>None</c> result, then a <c>Fail</c> result with error code
+    /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>. If this is a <c>Success</c> result, then a
+    /// <c>Success</c> result with the same value is returned. If this is a <c>Fail</c> result, then a <c>Fail</c> result with
+    /// the same error is returned. Otherwise, if this is a <c>None</c> result, then a <c>Fail</c> result with error code
     /// <see cref="ErrorCodes.ResultIsNone"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -62,6 +63,267 @@ public static partial class ResultExtensions
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public static async Task<Result<T>> AsResult<T>(this Task<Maybe<T>> sourceResult) =>
         (await sourceResult.ConfigureAwait(false)).AsResult();
+
+    /// <summary>
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
+    /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
+    public static async Task<Result> Else(this Task<Result> sourceResult, Result fallbackResult) =>
+        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
+
+    /// <summary>
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
+    /// <paramref name="getFallbackResult"/> function.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
+    /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
+    ///     </returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
+    public static async Task<Result> Else(this Task<Result> sourceResult, Func<Result> getFallbackResult) =>
+        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
+
+    /// <summary>
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
+    /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
+    public static async Task<Result<T>> Else<T>(this Task<Result<T>> sourceResult, Result<T> fallbackResult) =>
+        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
+
+    /// <summary>
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
+    /// <paramref name="getFallbackResult"/> function.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
+    /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
+    ///     </returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<T>> Else<T>(this Task<Result<T>> sourceResult, Func<Result<T>> getFallbackResult) =>
+        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
+
+    /// <summary>
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
+    /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
+    public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> sourceResult, Maybe<T> fallbackResult) =>
+        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
+
+    /// <summary>
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
+    /// <paramref name="getFallbackResult"/> function.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
+    /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
+    ///     </returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> sourceResult, Func<Maybe<T>> getFallbackResult) =>
+        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
+
+    /// <summary>
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    ///     <see langword="false"/>.</param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
+    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> Filter<T>(
+        this Task<Result<T>> sourceResult,
+        Func<T, bool> predicate) =>
+        (await sourceResult.ConfigureAwait(false)).Filter(predicate);
+
+    /// <summary>
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    ///     <see langword="false"/>.</param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
+    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> FilterAsync<T>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<bool>> predicate) =>
+        await (await sourceResult.ConfigureAwait(false)).FilterAsync(predicate).ConfigureAwait(false);
+
+    /// <summary>
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    ///     <see langword="false"/>.</param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
+    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> Filter<T>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, bool> predicate) =>
+        (await sourceResult.ConfigureAwait(false)).Filter(predicate);
+
+    /// <summary>
+    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
+    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
+    ///     <see langword="false"/>.</param>
+    /// <returns>The filtered result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
+    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> FilterAsync<T>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<bool>> predicate) =>
+        await (await sourceResult.ConfigureAwait(false)).FilterAsync(predicate).ConfigureAwait(false);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Result> FlatMap(
+        this Task<Result> sourceResult,
+        Func<Result> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Result> FlatMapAsync(
+        this Task<Result> sourceResult,
+        Func<Task<Result>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<TReturn>> FlatMap<TReturn>(
+        this Task<Result> sourceResult,
+        Func<Result<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<TReturn>> FlatMapAsync<TReturn>(
+        this Task<Result> sourceResult,
+        Func<Task<Result<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<TReturn>> FlatMap<TReturn>(
+        this Task<Result> sourceResult,
+        Func<Maybe<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<TReturn>> FlatMapAsync<TReturn>(
+        this Task<Result> sourceResult,
+        Func<Task<Maybe<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
@@ -105,6 +367,52 @@ public static partial class ResultExtensions
     public static async Task<Result> FlatMapAsync<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The task returning the source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<TReturn>> FlatMap<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Result<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
+
+    /// <summary>
+    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
+    /// new <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
+    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
+    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
+    /// <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
+    /// <param name="sourceResult">The task returning the source result.</param>
+    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
+    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
+    /// <returns>The mapped result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<TReturn>> FlatMapAsync<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
@@ -244,151 +552,6 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> FlatMapAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
-
-    /// <summary>
-    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
-    /// </summary>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
-    public static async Task<Result> Else(this Task<Result> sourceResult, Result fallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
-
-    /// <summary>
-    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
-    /// <paramref name="getFallbackResult"/> function.
-    /// </summary>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
-    ///     </returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> Else(this Task<Result> sourceResult, Func<Result> getFallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
-
-    /// <summary>
-    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
-    public static async Task<Result<T>> Else<T>(this Task<Result<T>> sourceResult, Result<T> fallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
-
-    /// <summary>
-    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
-    /// <paramref name="getFallbackResult"/> function.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
-    ///     </returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<T>> Else<T>(this Task<Result<T>> sourceResult, Func<Result<T>> getFallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
-
-    /// <summary>
-    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
-    public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> sourceResult, Maybe<T> fallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
-
-    /// <summary>
-    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
-    /// <paramref name="getFallbackResult"/> function.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either <paramref name="sourceResult"/> or the value returned from <paramref name="getFallbackResult"/>.
-    ///     </returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> sourceResult, Func<Maybe<T>> getFallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
-
-    /// <summary>
-    /// Filter the specified result into a <c>None</c> result if it is a <c>Success</c> result and the <paramref name="filter"/>
-    /// function evaluates to <see langword="false"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="filter">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    ///     <paramref name="filter"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> Filter<T>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, bool> filter) =>
-        (await sourceResult.ConfigureAwait(false)).Filter(filter);
-
-    /// <summary>
-    /// Filter the specified result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="filterAsync"/> function evaluates to <see langword="false"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="filterAsync">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    ///     <paramref name="filterAsync"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> FilterAsync<T>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, Task<bool>> filterAsync) =>
-        await (await sourceResult.ConfigureAwait(false)).FilterAsync(filterAsync).ConfigureAwait(false);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> FlatMap<T, TReturn>(
-        this Task<Result<T>> sourceResult,
-        Func<T, Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> FlatMapAsync<T, TReturn>(
-        this Task<Result<T>> sourceResult,
         Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector).ConfigureAwait(false);
 
@@ -969,134 +1132,4 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException">If <paramref name="onFailGetError"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> WithError<T>(this Task<Maybe<T>> sourceResult, Func<Error, Error> onFailGetError) =>
         (await sourceResult.ConfigureAwait(false)).WithError(onFailGetError);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> FlatMap(
-        this Task<Result> sourceResult,
-        Func<Result> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> FlatMapAsync(
-        this Task<Result> sourceResult,
-        Func<Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> FlatMap<TReturn>(
-        this Task<Result> sourceResult,
-        Func<Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> FlatMapAsync<TReturn>(
-        this Task<Result> sourceResult,
-        Func<Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> FlatMap<TReturn>(
-        this Task<Result> sourceResult,
-        Func<Maybe<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).FlatMap(onSuccessSelector);
-
-    /// <summary>
-    /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
-    ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
-    /// <returns>The mapped result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> FlatMapAsync<TReturn>(
-        this Task<Result> sourceResult,
-        Func<Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).FlatMapAsync(onSuccessSelector);
 }

@@ -142,8 +142,9 @@ public partial struct Result<T>
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
-    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the current result is <c>Fail</c>, it is transformed into a
-    /// new <c>Fail</c> result with the same error. A <c>None</c> result is never returned.
+    /// <paramref name="onSuccessSelector"/> function. Otherwise, if the <c>Fail</c> result's error has error code
+    /// <see cref="ErrorCodes.ResultIsNone"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
+    /// result with the same error is returned.
     /// </summary>
     /// <remarks>
     /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
