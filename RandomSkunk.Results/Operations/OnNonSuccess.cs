@@ -48,4 +48,30 @@ public static partial class ResultExtensions
 
         return sourceResult;
     }
+
+    /// <summary>
+    /// Invokes the <paramref name="onNonSuccessCallback"/> function if the current result is a <c>non-Success</c> result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onNonSuccessCallback">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<TResult> OnNonSuccess<TResult>(
+        this Task<TResult> sourceResult,
+        Action<Error> onNonSuccessCallback)
+        where TResult : IResult =>
+        (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback);
+
+    /// <summary>
+    /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<TResult> OnNonSuccessAsync<TResult>(
+        this Task<TResult> sourceResult,
+        Func<Error, Task> onNonSuccess)
+        where TResult : IResult =>
+        await (await sourceResult.ConfigureAwait(false)).OnNonSuccessAsync(onNonSuccess);
 }
