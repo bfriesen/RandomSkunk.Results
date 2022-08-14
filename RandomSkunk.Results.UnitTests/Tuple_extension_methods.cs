@@ -30,7 +30,7 @@ public class Tuple_extension_methods
                     1 => new Error("b") { ErrorCode = 2 },
                     2 => new Error("c") { ErrorCode = 3 },
                     3 => Errors.ResultIsNone(),
-                    _ => CompositeError.Create(new[] { new Error("a") { ErrorCode = 1 }, new Error("b") { ErrorCode = 2 }, new Error("c") { ErrorCode = 3 } }),
+                    _ => CompositeError.CreateOrGetSingle(new[] { new Error("a") { ErrorCode = 1 }, new Error("b") { ErrorCode = 2 }, new Error("c") { ErrorCode = 3 } }),
                 },
             });
 

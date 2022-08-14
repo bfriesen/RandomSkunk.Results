@@ -777,7 +777,7 @@ public static class ResultTupleExtensions
             .Where(r => !r.IsSuccess)
             .Select(r => r.GetNonSuccessError());
 
-        return CompositeError.Create(errors);
+        return CompositeError.CreateOrGetSingle(errors);
     }");
     }
 

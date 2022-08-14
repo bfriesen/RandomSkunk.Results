@@ -20,7 +20,8 @@ public record class CompositeError : Error
             : Array.Empty<Error>();
 
     /// <summary>
-    /// Creates an error from the specified sequence of errors.
+    /// Creates a composite error from the specified non-empty sequence of errors if it contains more than one error, otherwise
+    /// returns the single error.
     /// </summary>
     /// <param name="errors">A sequence of one or more errors.</param>
     /// <returns>If <paramref name="errors"/> contains a single error, that error; otherwise a <see cref="CompositeError"/>
@@ -28,7 +29,7 @@ public record class CompositeError : Error
     /// <exception cref="ArgumentNullException">If <paramref name="errors"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="errors"/> is empty.</exception>
     [StackTraceHidden]
-    public static Error Create(IEnumerable<Error> errors)
+    public static Error CreateOrGetSingle(IEnumerable<Error> errors)
     {
         if (errors is null) throw new ArgumentNullException(nameof(errors));
 
