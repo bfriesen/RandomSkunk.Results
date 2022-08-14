@@ -1,13 +1,13 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class FilterAsync_methods
+public class Where_Async_methods
 {
     [Fact]
     public async Task When_IsSuccess_and_function_returns_true_Returns_source()
     {
         var source = 1.ToMaybe();
 
-        var actual = await source.FilterAsync(value => Task.FromResult(value == 1));
+        var actual = await source.Where(value => Task.FromResult(value == 1));
 
         actual.Should().Be(source);
     }
@@ -17,7 +17,7 @@ public class FilterAsync_methods
     {
         var source = 1.ToMaybe();
 
-        var actual = await source.FilterAsync(value => Task.FromResult(value == 2));
+        var actual = await source.Where(value => Task.FromResult(value == 2));
 
         actual.Should().Be(Maybe<int>.None());
     }
@@ -27,7 +27,7 @@ public class FilterAsync_methods
     {
         var source = Maybe<int>.Fail();
 
-        var actual = await source.FilterAsync(value => Task.FromResult(value == 1));
+        var actual = await source.Where(value => Task.FromResult(value == 1));
 
         actual.Should().Be(source);
     }
@@ -37,7 +37,7 @@ public class FilterAsync_methods
     {
         var source = Maybe<int>.None();
 
-        var actual = await source.FilterAsync(value => Task.FromResult(value == 1));
+        var actual = await source.Where(value => Task.FromResult(value == 1));
 
         actual.Should().Be(source);
     }
@@ -47,7 +47,7 @@ public class FilterAsync_methods
     {
         var source = Maybe<int>.Fail();
 
-        Func<Task> act = () => source.FilterAsync(null!);
+        Func<Task> act = () => source.Where((Func<int, Task<bool>>)null!);
 
         await act.Should().ThrowExactlyAsync<ArgumentNullException>();
     }

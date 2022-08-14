@@ -203,7 +203,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendMatchAllMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendMatchMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on
@@ -223,7 +223,7 @@ public static class ResultTupleExtensions
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
     ///     <see langword=""null""/> or if any of the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.
     ///     </exception>
-    public static TReturn MatchAll<")
+    public static TReturn Match<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -263,7 +263,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendMatchAllAsyncMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendMatchAsyncMethod(this StringBuilder code, int tupleCount)
     {
             return code.Append(@"    /// <summary>
     /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on
@@ -283,7 +283,7 @@ public static class ResultTupleExtensions
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
     ///     <see langword=""null""/> or if any of the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.
     ///     </exception>
-    public static Task<TReturn> MatchAllAsync<")
+    public static Task<TReturn> MatchAsync<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -323,7 +323,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendMapAllMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendSelectMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -340,7 +340,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the value of the
     ///     outgoing result. Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static Result<TReturn> MapAll<")
+    public static Result<TReturn> Select<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -380,7 +380,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendMapAllAsyncMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendSelectAsyncMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -397,7 +397,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the value of the
     ///     outgoing result. Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static async Task<Result<TReturn>> MapAllAsync<")
+    public static async Task<Result<TReturn>> SelectAsync<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -437,7 +437,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendFlatMapAllResultMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendSelectManyResultMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -453,7 +453,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
     ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static Result FlatMapAll")
+    public static Result SelectMany")
             .AppendTypeDefinitionForT(tupleCount)
             .Append(@"(
         this ")
@@ -491,7 +491,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendFlatMapAllAsyncResultMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendAsyncSelectManyResultMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -507,7 +507,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
     ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static Task<Result> FlatMapAllAsync")
+    public static Task<Result> SelectMany")
             .AppendTypeDefinitionForT(tupleCount)
             .Append(@"(
         this ")
@@ -545,7 +545,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendFlatMapAllResultOfTMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendSelectManyResultOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -562,7 +562,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
     ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static Result<TReturn> FlatMapAll<")
+    public static Result<TReturn> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -600,7 +600,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendFlatMapAllAsyncResultOfTMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendAsyncSelectManyResultOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -617,7 +617,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
     ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static Task<Result<TReturn>> FlatMapAllAsync<")
+    public static Task<Result<TReturn>> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -655,7 +655,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendFlatMapAllMaybeOfTMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendSelectManyMaybeOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -672,7 +672,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
     ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static Maybe<TReturn> FlatMapAll<")
+    public static Maybe<TReturn> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -710,7 +710,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendFlatMapAllAsyncMaybeOfTMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendAsyncSelectManyMaybeOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -727,7 +727,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
     ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
     /// <returns>The mapped result.</returns>
-    public static Task<Maybe<TReturn>> FlatMapAllAsync<")
+    public static Task<Maybe<TReturn>> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")

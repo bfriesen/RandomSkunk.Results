@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>Filter</c> and <c>FilterAsync</c> methods. </content>
+/// <content> Defines the <c>Where</c> methods. </content>
 public partial struct Result<T>
 {
     /// <summary>
@@ -11,7 +11,7 @@ public partial struct Result<T>
     ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public Maybe<T> Filter(Func<T, bool> predicate)
+    public Maybe<T> Where(Func<T, bool> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
@@ -33,7 +33,7 @@ public partial struct Result<T>
     ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<T>> FilterAsync(Func<T, Task<bool>> predicate)
+    public async Task<Maybe<T>> Where(Func<T, Task<bool>> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
@@ -48,7 +48,7 @@ public partial struct Result<T>
     }
 }
 
-/// <content> Defines the <c>Filter</c> and <c>FilterAsync</c> methods. </content>
+/// <content> Defines the <c>Where</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <summary>
@@ -59,7 +59,7 @@ public partial struct Maybe<T>
     ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public Maybe<T> Filter(Func<T, bool> predicate)
+    public Maybe<T> Where(Func<T, bool> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
@@ -81,7 +81,7 @@ public partial struct Maybe<T>
     ///     <see langword="false"/>.</param>
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<T>> FilterAsync(Func<T, Task<bool>> predicate)
+    public async Task<Maybe<T>> Where(Func<T, Task<bool>> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
@@ -96,7 +96,7 @@ public partial struct Maybe<T>
     }
 }
 
-/// <content> Defines the <c>Filter</c> and <c>FilterAsync</c> extension methods. </content>
+/// <content> Defines the <c>Where</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     /// <summary>
@@ -110,10 +110,10 @@ public static partial class ResultExtensions
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
     ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> Filter<T>(
+    public static async Task<Maybe<T>> Where<T>(
         this Task<Result<T>> sourceResult,
         Func<T, bool> predicate) =>
-        (await sourceResult.ConfigureAwait(false)).Filter(predicate);
+        (await sourceResult.ConfigureAwait(false)).Where(predicate);
 
     /// <summary>
     /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
@@ -126,10 +126,10 @@ public static partial class ResultExtensions
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
     ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> FilterAsync<T>(
+    public static async Task<Maybe<T>> Where<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<bool>> predicate) =>
-        await (await sourceResult.ConfigureAwait(false)).FilterAsync(predicate).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).Where(predicate).ConfigureAwait(false);
 
     /// <summary>
     /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
@@ -142,10 +142,10 @@ public static partial class ResultExtensions
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
     ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> Filter<T>(
+    public static async Task<Maybe<T>> Where<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, bool> predicate) =>
-        (await sourceResult.ConfigureAwait(false)).Filter(predicate);
+        (await sourceResult.ConfigureAwait(false)).Where(predicate);
 
     /// <summary>
     /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
@@ -158,8 +158,8 @@ public static partial class ResultExtensions
     /// <returns>The filtered result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
     ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> FilterAsync<T>(
+    public static async Task<Maybe<T>> Where<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<bool>> predicate) =>
-        await (await sourceResult.ConfigureAwait(false)).FilterAsync(predicate).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).Where(predicate).ConfigureAwait(false);
 }

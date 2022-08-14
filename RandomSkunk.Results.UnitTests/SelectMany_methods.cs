@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class FlatMap_methods
+public class SelectMany_methods
 {
     public class For_Result_of_T
     {
@@ -9,7 +9,7 @@ public class FlatMap_methods
         {
             var source = 1.ToResult();
 
-            var actual = source.FlatMap(value => value.ToString().ToResult());
+            var actual = source.SelectMany(value => value.ToString().ToResult());
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -21,7 +21,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.FlatMap(value => value.ToString().ToResult());
+            var actual = source.SelectMany(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -32,7 +32,7 @@ public class FlatMap_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.FlatMap((Func<int, Result<string>>)null!);
+            Action act = () => source.SelectMany((Func<int, Result<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -42,7 +42,7 @@ public class FlatMap_methods
         {
             var source = "a".ToResult();
 
-            var actual = source.FlatMap(value => Result.Fail(value));
+            var actual = source.SelectMany(value => Result.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -54,7 +54,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.FlatMap(value => Result.Success());
+            var actual = source.SelectMany(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -65,7 +65,7 @@ public class FlatMap_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.FlatMap(null!);
+            Action act = () => source.SelectMany((Func<int, Result>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -75,7 +75,7 @@ public class FlatMap_methods
         {
             var source = "a".ToResult();
 
-            var actual = source.FlatMap(value => Maybe<int>.Fail(value));
+            var actual = source.SelectMany(value => Maybe<int>.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -87,7 +87,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.FlatMap(value => value.ToString().ToMaybe());
+            var actual = source.SelectMany(value => value.ToString().ToMaybe());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -98,7 +98,7 @@ public class FlatMap_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.FlatMap((Func<int, Maybe<string>>)null!);
+            Action act = () => source.SelectMany((Func<int, Maybe<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -111,7 +111,7 @@ public class FlatMap_methods
         {
             var source = 1.ToMaybe();
 
-            var actual = source.FlatMap(value => value.ToString().ToMaybe());
+            var actual = source.SelectMany(value => value.ToString().ToMaybe());
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -123,7 +123,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = source.FlatMap(value => value.ToString().ToMaybe());
+            var actual = source.SelectMany(value => value.ToString().ToMaybe());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -134,7 +134,7 @@ public class FlatMap_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = source.FlatMap(value => value.ToString().ToMaybe());
+            var actual = source.SelectMany(value => value.ToString().ToMaybe());
 
             actual.IsNone.Should().BeTrue();
         }
@@ -144,7 +144,7 @@ public class FlatMap_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.FlatMap((Func<int, Maybe<string>>)null!);
+            Action act = () => source.SelectMany((Func<int, Maybe<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -154,7 +154,7 @@ public class FlatMap_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = source.FlatMap(value => Result.Fail(value));
+            var actual = source.SelectMany(value => Result.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -165,7 +165,7 @@ public class FlatMap_methods
         {
             var source = Maybe<string>.None();
 
-            var actual = source.FlatMap(value => Result.Success());
+            var actual = source.SelectMany(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
 
@@ -182,7 +182,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Maybe<string>.Fail(error);
 
-            var actual = source.FlatMap(value => Result.Success());
+            var actual = source.SelectMany(value => Result.Success());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -193,7 +193,7 @@ public class FlatMap_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.FlatMap(null!);
+            Action act = () => source.SelectMany((Func<int, Result>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -203,7 +203,7 @@ public class FlatMap_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = source.FlatMap(value => Result<int>.Fail(value));
+            var actual = source.SelectMany(value => Result<int>.Fail(value));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -214,7 +214,7 @@ public class FlatMap_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = source.FlatMap(value => value.ToString().ToResult());
+            var actual = source.SelectMany(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
 
@@ -231,7 +231,7 @@ public class FlatMap_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = source.FlatMap(value => value.ToString().ToResult());
+            var actual = source.SelectMany(value => value.ToString().ToResult());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -242,7 +242,7 @@ public class FlatMap_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.FlatMap((Func<int, Result<string>>)null!);
+            Action act = () => source.SelectMany((Func<int, Result<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -255,7 +255,7 @@ public class FlatMap_methods
         {
             var source = Result.Success();
 
-            var actual = source.FlatMap(() => Result.Fail("a"));
+            var actual = source.SelectMany(() => Result.Fail("a"));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -266,7 +266,7 @@ public class FlatMap_methods
         {
             var source = Result.Fail("a");
 
-            var actual = source.FlatMap(() => Result.Success());
+            var actual = source.SelectMany(() => Result.Success());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -277,7 +277,7 @@ public class FlatMap_methods
         {
             var source = Result.Fail();
 
-            Action act = () => source.FlatMap(null!);
+            Action act = () => source.SelectMany((Func<Result>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -287,7 +287,7 @@ public class FlatMap_methods
         {
             var source = Result.Success();
 
-            var actual = source.FlatMap(() => Result<int>.Success(1));
+            var actual = source.SelectMany(() => Result<int>.Success(1));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be(1);
@@ -298,7 +298,7 @@ public class FlatMap_methods
         {
             var source = Result.Fail("a");
 
-            var actual = source.FlatMap(() => Result<int>.Success(1));
+            var actual = source.SelectMany(() => Result<int>.Success(1));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -309,7 +309,7 @@ public class FlatMap_methods
         {
             var source = Result.Fail();
 
-            Action act = () => source.FlatMap((Func<Result<string>>)null!);
+            Action act = () => source.SelectMany((Func<Result<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -319,7 +319,7 @@ public class FlatMap_methods
         {
             var source = Result.Success();
 
-            var actual = source.FlatMap(() => Maybe<int>.Success(1));
+            var actual = source.SelectMany(() => Maybe<int>.Success(1));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be(1);
@@ -330,7 +330,7 @@ public class FlatMap_methods
         {
             var source = Result.Fail("a");
 
-            var actual = source.FlatMap(() => Maybe<int>.Success(1));
+            var actual = source.SelectMany(() => Maybe<int>.Success(1));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -341,7 +341,7 @@ public class FlatMap_methods
         {
             var source = Result.Fail();
 
-            Action act = () => source.FlatMap((Func<Maybe<string>>)null!);
+            Action act = () => source.SelectMany((Func<Maybe<string>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

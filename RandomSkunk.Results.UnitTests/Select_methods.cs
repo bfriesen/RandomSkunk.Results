@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class Map_methods
+public class Select_methods
 {
     public class For_Result_of_T
     {
@@ -9,7 +9,7 @@ public class Map_methods
         {
             var source = 1.ToResult();
 
-            var actual = source.Map(value => value.ToString());
+            var actual = source.Select(value => value.ToString());
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -21,18 +21,18 @@ public class Map_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.Map(value => value.ToString());
+            var actual = source.Select(value => value.ToString());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
         }
 
         [Fact]
-        public void Given_null_map_function_Throws_ArgumentNullException()
+        public void Given_null_selector_function_Throws_ArgumentNullException()
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.Map<string>(null!);
+            Action act = () => source.Select<string>(null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -45,7 +45,7 @@ public class Map_methods
         {
             var source = 1.ToMaybe();
 
-            var actual = source.Map(value => value.ToString());
+            var actual = source.Select(value => value.ToString());
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -57,7 +57,7 @@ public class Map_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = source.Map(value => value.ToString());
+            var actual = source.Select(value => value.ToString());
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -68,17 +68,17 @@ public class Map_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = source.Map(value => value.ToString());
+            var actual = source.Select(value => value.ToString());
 
             actual.IsNone.Should().BeTrue();
         }
 
         [Fact]
-        public void Given_null_map_function_Throws_ArgumentNullException()
+        public void Given_null_selector_function_Throws_ArgumentNullException()
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.Map<string>(null!);
+            Action act = () => source.Select<string>(null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

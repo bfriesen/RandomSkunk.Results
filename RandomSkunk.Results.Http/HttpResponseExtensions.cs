@@ -140,7 +140,7 @@ public static class HttpResponseExtensions
         this Result<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.FlatMapAsync(async response =>
+        sourceResponse.SelectMany(async response =>
         {
             var result = await response.GetResultAsync(options, cancellationToken).ConfigureAwait(false);
             response.Dispose();
@@ -175,7 +175,7 @@ public static class HttpResponseExtensions
         this Result<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.FlatMapAsync(response => response.ReadResultFromJsonAsync<T>(options, cancellationToken));
+        sourceResponse.SelectMany(response => response.ReadResultFromJsonAsync<T>(options, cancellationToken));
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
@@ -206,7 +206,7 @@ public static class HttpResponseExtensions
         this Result<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.FlatMapAsync(response => response.ReadMaybeFromJsonAsync<T>(options, cancellationToken));
+        sourceResponse.SelectMany(response => response.ReadMaybeFromJsonAsync<T>(options, cancellationToken));
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content

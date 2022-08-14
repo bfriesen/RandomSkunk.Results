@@ -11,7 +11,7 @@ public partial struct Maybe<T>
     /// </summary>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public Result<T> AsResult() =>
-        FlatMap(value => Result<T>.Success(value));
+        SelectMany(value => Result<T>.Success(value));
 }
 
 /// <content> Defines the <c>AsResult</c> extension method. </content>

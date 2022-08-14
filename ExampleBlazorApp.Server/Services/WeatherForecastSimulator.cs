@@ -26,8 +26,8 @@ public class WeatherForecastSimulator : IWeatherForecastSimulator
         Maybe<MonthlyTemperature> monthlyTemperatureResult = await _weatherRepository.GetMonthlyTemperature(city, DateTime.Now.Month);
 
         // Convert the Maybe<MonthlyTemperature> into a Maybe<IReadOnlyList<WeatherForecast>>
-        // using the Map method. This works very similar to the Select extension method from LINQ.
-        return monthlyTemperatureResult.Map(GenerateFiveDayForecast);
+        // using the Select method. This works very similar to the Select extension method from LINQ.
+        return monthlyTemperatureResult.Select(GenerateFiveDayForecast);
     }
 
     private IReadOnlyList<WeatherForecast> GenerateFiveDayForecast(MonthlyTemperature monthlyTemperature)

@@ -37,7 +37,7 @@ public partial struct Result
     /// </remarks>
     /// <returns>The equivalent <see cref="Result{T}"/> of type <see cref="DBNull"/>.</returns>
     public Result<DBNull> AsDBNullResult() =>
-        FlatMap(() => Result<DBNull>.Success(DBNull.Value));
+        SelectMany(() => Result<DBNull>.Success(DBNull.Value));
 }
 
 /// <content> Defines the <c>AsDBNullResult</c> extension method. </content>

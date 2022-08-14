@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>Map</c> and <c>MapAsync</c> methods. </content>
+/// <content> Defines the <c>Select</c> and <c>SelectAsync</c> methods. </content>
 public partial struct Result<T>
 {
     /// <summary>
@@ -9,17 +9,17 @@ public partial struct Result<T>
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Result<TReturn> Map<TReturn>(Func<T, TReturn> onSuccessSelector)
+    public Result<TReturn> Select<TReturn>(Func<T, TReturn> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -36,17 +36,17 @@ public partial struct Result<T>
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Result<TReturn>> MapAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
+    public async Task<Result<TReturn>> SelectAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -58,7 +58,7 @@ public partial struct Result<T>
     }
 }
 
-/// <content> Defines the <c>Map</c> and <c>MapAsync</c> methods. </content>
+/// <content> Defines the <c>Select</c> and <c>SelectAsync</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <summary>
@@ -68,17 +68,17 @@ public partial struct Maybe<T>
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Maybe<TReturn> Map<TReturn>(Func<T, TReturn> onSuccessSelector)
+    public Maybe<TReturn> Select<TReturn>(Func<T, TReturn> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -97,17 +97,17 @@ public partial struct Maybe<T>
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="onSuccessSelector">A function that maps the value of the incoming result to the value of the outgoing
     ///     result. Evaluated only if this is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<TReturn>> MapAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
+    public async Task<Maybe<TReturn>> SelectAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -120,7 +120,7 @@ public partial struct Maybe<T>
     }
 }
 
-/// <content> Defines the <c>Map</c> and <c>MapAsync</c> extension methods. </content>
+/// <content> Defines the <c>Select</c> and <c>SelectAsync</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     /// <summary>
@@ -129,10 +129,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -141,10 +141,10 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> Map<T, TReturn>(
+    public static async Task<Result<TReturn>> Select<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, TReturn> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).Map(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -152,10 +152,10 @@ public static partial class ResultExtensions
     /// new <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -164,10 +164,10 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> MapAsync<T, TReturn>(
+    public static async Task<Result<TReturn>> SelectAsync<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).MapAsync(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).SelectAsync(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -176,10 +176,10 @@ public static partial class ResultExtensions
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -188,10 +188,10 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> Map<T, TReturn>(
+    public static async Task<Maybe<TReturn>> Select<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, TReturn> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).Map(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new <c>Success</c> result using the specified
@@ -200,10 +200,10 @@ public static partial class ResultExtensions
     /// <c>None</c> result.
     /// </summary>
     /// <remarks>
-    /// The difference between <c>Map</c> and <c>FlatMap</c> is in the return value of their <c>onSuccessSelector</c> function.
-    /// The selector for <c>Map</c> returns a regular (non-result) value, which is the value of the returned <c>Success</c>
-    /// result. The selector for <c>FlatMap</c> returns a result value, which is itself the returned result (and might not be
-    /// <c>Success</c>).
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and might not be <c>Success</c>).
     /// </remarks>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -212,8 +212,8 @@ public static partial class ResultExtensions
     ///     result. Evaluated only if the source is a <c>Success</c> result.</param>
     /// <returns>The mapped result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> MapAsync<T, TReturn>(
+    public static async Task<Maybe<TReturn>> SelectAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).MapAsync(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).SelectAsync(onSuccessSelector).ConfigureAwait(false);
 }

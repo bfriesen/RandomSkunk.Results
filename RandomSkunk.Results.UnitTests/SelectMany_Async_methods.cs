@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class FlatMapAsync_methods
+public class SelectMany_Async_methods
 {
     public class For_Result_of_T
     {
@@ -9,7 +9,7 @@ public class FlatMapAsync_methods
         {
             var source = 1.ToResult();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToResult()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -21,7 +21,7 @@ public class FlatMapAsync_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToResult()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -32,7 +32,7 @@ public class FlatMapAsync_methods
         {
             var source = Result<int>.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync((Func<int, Task<Result<string>>>)null!);
+            Func<Task> act = () => source.SelectMany((Func<int, Task<Result<string>>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -42,7 +42,7 @@ public class FlatMapAsync_methods
         {
             var source = "a".ToResult();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(Result.Fail(value)));
+            var actual = await source.SelectMany(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -54,7 +54,7 @@ public class FlatMapAsync_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(Result.Success()));
+            var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -65,7 +65,7 @@ public class FlatMapAsync_methods
         {
             var source = Result<int>.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync(null!);
+            Func<Task> act = () => source.SelectMany((Func<int, Task<Result>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -75,7 +75,7 @@ public class FlatMapAsync_methods
         {
             var source = "a".ToResult();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(Maybe<int>.Fail(value)));
+            var actual = await source.SelectMany(value => Task.FromResult(Maybe<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -87,7 +87,7 @@ public class FlatMapAsync_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -98,7 +98,7 @@ public class FlatMapAsync_methods
         {
             var source = Result<int>.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync((Func<int, Task<Maybe<string>>>)null!);
+            Func<Task> act = () => source.SelectMany((Func<int, Task<Maybe<string>>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -111,7 +111,7 @@ public class FlatMapAsync_methods
         {
             var source = 1.ToMaybe();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -123,7 +123,7 @@ public class FlatMapAsync_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -134,7 +134,7 @@ public class FlatMapAsync_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToMaybe()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsNone.Should().BeTrue();
         }
@@ -144,7 +144,7 @@ public class FlatMapAsync_methods
         {
             var source = Maybe<int>.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync((Func<int, Task<Maybe<string>>>)null!);
+            Func<Task> act = () => source.SelectMany((Func<int, Task<Maybe<string>>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -154,7 +154,7 @@ public class FlatMapAsync_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(Result.Fail(value)));
+            var actual = await source.SelectMany(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -165,7 +165,7 @@ public class FlatMapAsync_methods
         {
             var source = Maybe<string>.None();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(Result.Success()));
+            var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
 
@@ -182,7 +182,7 @@ public class FlatMapAsync_methods
             var error = new Error();
             var source = Maybe<string>.Fail(error);
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(Result.Success()));
+            var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -193,7 +193,7 @@ public class FlatMapAsync_methods
         {
             var source = Maybe<int>.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync(null!);
+            Func<Task> act = () => source.SelectMany((Func<int, Task<Result>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -203,7 +203,7 @@ public class FlatMapAsync_methods
         {
             var source = "a".ToMaybe();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(Result<int>.Fail(value)));
+            var actual = await source.SelectMany(value => Task.FromResult(Result<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -214,7 +214,7 @@ public class FlatMapAsync_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToResult()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsFail.Should().BeTrue();
 
@@ -231,7 +231,7 @@ public class FlatMapAsync_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = await source.FlatMapAsync(value => Task.FromResult(value.ToString().ToResult()));
+            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -242,7 +242,7 @@ public class FlatMapAsync_methods
         {
             var source = Maybe<int>.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync((Func<int, Task<Result<string>>>)null!);
+            Func<Task> act = () => source.SelectMany((Func<int, Task<Result<string>>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -255,7 +255,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Success();
 
-            var actual = await source.FlatMapAsync(() => Task.FromResult(Result.Fail("a")));
+            var actual = await source.SelectMany(() => Task.FromResult(Result.Fail("a")));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -266,7 +266,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Fail("a");
 
-            var actual = await source.FlatMapAsync(() => Task.FromResult(Result.Success()));
+            var actual = await source.SelectMany(() => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -277,7 +277,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync(null!);
+            Func<Task> act = () => source.SelectMany((Func<Task<Result>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -287,7 +287,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Success();
 
-            var actual = await source.FlatMapAsync(() => Task.FromResult(Result<int>.Success(1)));
+            var actual = await source.SelectMany(() => Task.FromResult(Result<int>.Success(1)));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be(1);
@@ -298,7 +298,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Fail("a");
 
-            var actual = await source.FlatMapAsync(() => Task.FromResult(Result<int>.Success(1)));
+            var actual = await source.SelectMany(() => Task.FromResult(Result<int>.Success(1)));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -309,7 +309,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync((Func<Task<Result<string>>>)null!);
+            Func<Task> act = () => source.SelectMany((Func<Task<Result<string>>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -319,7 +319,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Success();
 
-            var actual = await source.FlatMapAsync(() => Task.FromResult(Maybe<int>.Success(1)));
+            var actual = await source.SelectMany(() => Task.FromResult(Maybe<int>.Success(1)));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be(1);
@@ -330,7 +330,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Fail("a");
 
-            var actual = await source.FlatMapAsync(() => Task.FromResult(Maybe<int>.Success(1)));
+            var actual = await source.SelectMany(() => Task.FromResult(Maybe<int>.Success(1)));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Message.Should().Be("a");
@@ -341,7 +341,7 @@ public class FlatMapAsync_methods
         {
             var source = Result.Fail();
 
-            Func<Task> act = () => source.FlatMapAsync((Func<Task<Maybe<string>>>)null!);
+            Func<Task> act = () => source.SelectMany((Func<Task<Maybe<string>>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }

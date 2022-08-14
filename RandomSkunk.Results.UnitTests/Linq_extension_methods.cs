@@ -1,5 +1,3 @@
-using RandomSkunk.Results.Linq;
-
 namespace RandomSkunk.Results.UnitTests;
 
 public class Linq_extension_methods

@@ -10,7 +10,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static Result<T> Flatten<T>(this Result<Result<T>> sourceResult) =>
-        sourceResult.FlatMap(nestedResult => nestedResult);
+        sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
     /// Flattens the nested result.
@@ -19,7 +19,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static Result Flatten<T>(this Result<Result> sourceResult) =>
-        sourceResult.FlatMap(nestedResult => nestedResult);
+        sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
     /// Flattens the nested result.
@@ -28,7 +28,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static Maybe<T> Flatten<T>(this Result<Maybe<T>> sourceResult) =>
-        sourceResult.FlatMap(nestedResult => nestedResult);
+        sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
     /// Flattens the nested result.
@@ -37,7 +37,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static Maybe<T> Flatten<T>(this Maybe<Maybe<T>> sourceResult) =>
-        sourceResult.FlatMap(nestedResult => nestedResult);
+        sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
     /// Flattens the nested result.
@@ -46,7 +46,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static Result Flatten<T>(this Maybe<Result> sourceResult) =>
-        sourceResult.FlatMap(nestedResult => nestedResult);
+        sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
     /// Flattens the nested result.
@@ -55,7 +55,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static Result<T> Flatten<T>(this Maybe<Result<T>> sourceResult) =>
-        sourceResult.FlatMap(nestedResult => nestedResult);
+        sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
     /// Flattens the nested result.

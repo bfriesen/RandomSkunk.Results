@@ -196,46 +196,46 @@ Maybe<int>.Fail("A").Else(Maybe<int>.None()); // None
 Maybe<int>.Fail("A").Else(Maybe<int>.Fail("B")); // Fail("B")
 ```
 
-#### Map / MapAsync
+#### Select / SelectAsync
 
 *Applicable to `Result<T>` and `Maybe<T>` only.*
 
 Transforms the current result - if `Success` - into a new `Success` result using the specified `onSuccessSelector` function. Otherwise, if the current result is `Fail`, it is transformed into a new `Fail` result with the same error.
 
-*The difference between `Map` and `FlatMap` is in the return value of their `onSuccessSelector` function. The selector for `Map` returns a regular (non-result) value, which is the value of the returned `Success` result. The selector for `FlatMap` returns a result value, which is itself the returned result (and might not be `Success`).*
+*The difference between `Select` and `SelectMany` is in the return value of their `onSuccessSelector` function. The selector for `Select` returns a regular (non-result) value, which is the value of the returned `Success` result. The selector for `SelectMany` returns a result value, which is itself the returned result (and might not be `Success`).*
 
 ```c#
-Result<int>.Success(123).Map(value => value.ToString()); // Success("123")
-Result<int>.Fail("A").Map(value => value.ToString()); // Fail("A")
+Result<int>.Success(123).Select(value => value.ToString()); // Success("123")
+Result<int>.Fail("A").Select(value => value.ToString()); // Fail("A")
 
-Maybe<int>.Success(123).Map(value => value.ToString()); // Success("123")
-Maybe<int>.None().Map(value => value.ToString()); // None
-Maybe<int>.Fail("A").Map(value => value.ToString()); // Fail("A")
+Maybe<int>.Success(123).Select(value => value.ToString()); // Success("123")
+Maybe<int>.None().Select(value => value.ToString()); // None
+Maybe<int>.Fail("A").Select(value => value.ToString()); // Fail("A")
 ```
 
-#### FlatMap / FlatMapAsync
+#### SelectMany
 
 *Applicable to all three result types.*
 
 Transforms the current result - if `Success` - into a new result using the specified `onSuccessSelector` function. Otherwise, if the current result is `Fail`, it is transformed into a new `Fail` result with the same error.
 
-*The difference between `Map` and `FlatMap` is in the return value of their `onSuccessSelector` function. The selector for `Map` returns a regular (non-result) value, which is the value of the returned `Success` result. The selector for `FlatMap` returns a result value, which is itself the returned result (and might not be `Success`).*
+*The difference between `Select` and `SelectMany` is in the return value of their `onSuccessSelector` function. The selector for `Select` returns a regular (non-result) value, which is the value of the returned `Success` result. The selector for `SelectMany` returns a result value, which is itself the returned result (and might not be `Success`).*
 
 ```c#
-Result<int>.Success(123).FlatMap(GetSuccessResult); // Success("123")
-Result<int>.Success(123).FlatMap(GetFailResult); // Fail
-Result<int>.Fail("A").FlatMap(GetSuccessResult); // Fail
-Result<int>.Fail("A").FlatMap(GetFailResult); // Fail
+Result<int>.Success(123).SelectMany(GetSuccessResult); // Success("123")
+Result<int>.Success(123).SelectMany(GetFailResult); // Fail
+Result<int>.Fail("A").SelectMany(GetSuccessResult); // Fail
+Result<int>.Fail("A").SelectMany(GetFailResult); // Fail
 
-Maybe<bool>.Success(true).FlatMap(GetSuccessResult); // Success("true")
-Maybe<bool>.Success(true).FlatMap(GetNoneResult); // None
-Maybe<bool>.Success(true).FlatMap(GetFailResult); // Fail("B")
-Maybe<bool>.None().FlatMap(GetSuccessResult); // None
-Maybe<bool>.None().FlatMap(GetNoneResult); // None
-Maybe<bool>.None().FlatMap(GetFailResult); // None
-Maybe<bool>.Fail("A").FlatMap(GetSuccessResult); // Fail("A")
-Maybe<bool>.Fail("A").FlatMap(GetNoneResult); // Fail("A")
-Maybe<bool>.Fail("A").FlatMap(GetFailResult); // Fail("A")
+Maybe<bool>.Success(true).SelectMany(GetSuccessResult); // Success("true")
+Maybe<bool>.Success(true).SelectMany(GetNoneResult); // None
+Maybe<bool>.Success(true).SelectMany(GetFailResult); // Fail("B")
+Maybe<bool>.None().SelectMany(GetSuccessResult); // None
+Maybe<bool>.None().SelectMany(GetNoneResult); // None
+Maybe<bool>.None().SelectMany(GetFailResult); // None
+Maybe<bool>.Fail("A").SelectMany(GetSuccessResult); // Fail("A")
+Maybe<bool>.Fail("A").SelectMany(GetNoneResult); // Fail("A")
+Maybe<bool>.Fail("A").SelectMany(GetFailResult); // Fail("A")
 
 Result<string> GetSuccessResult(int value) => Result<string>.Success(value.ToString());
 Result<string> GetFailResult(int value) => Result<string>.Fail("B");
@@ -257,17 +257,17 @@ Maybe<Maybe<int>> nestedMaybe = ...
 Maybe<int> flattenedMaybe = nestedMaybe.Flatten();
 ```
 
-#### Filter / FilterAsync
+#### Where
 
 *Applicable to `Maybe<T>` and `Result<T>` only.*
 
 Filters a `Success` result to `None` unless the specified filter function evaluates to true. `None` and `Fail` results are not affected.
 
 ```c#
-Maybe<int>.Success(123).Filter(value => value < 150); // Success(123)
-Maybe<int>.Success(456).Filter(value => value < 150); // None
-Maybe<int>.None().Filter(value => value < 150); // None
-Maybe<int>.Fail("A").Filter(value => value < 150); // Fail("A")
+Maybe<int>.Success(123).Where(value => value < 150); // Success(123)
+Maybe<int>.Success(456).Where(value => value < 150); // None
+Maybe<int>.None().Where(value => value < 150); // None
+Maybe<int>.Fail("A").Where(value => value < 150); // Fail("A")
 ```
 
 #### WithError
@@ -314,9 +314,13 @@ string errorMessage = result.GetError().Message;
 int? errorCode = result.GetError().ErrorCode;
 ```
 
-## LINQ Extension Methods
+## Handling multiple results
 
-In the `RandomSkunk.Results.Linq` namespace, there are aliases for the `Map`, `FlatMap`, and `Filter` extension methods named `Select`, `SelectMany`, and `Where`. These methods allow you to use LINQ to transform results.
+TODO: Complete this section
+
+### LINQ Extension Methods
+
+TODO: Add introduction
 
 ```c#
 using RandomSkunk.Results.Linq;

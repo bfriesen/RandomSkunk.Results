@@ -54,8 +54,8 @@ FROM WeatherData";
         var monthlyTemperaturesResult = await connection.TryQueryAsync<MonthlyTemperature>(sql);
 
         // Convert the Result<IEnumerable<MonthlyTemperator>> into a Result<IReadOnlyList<WeatherProfile>>
-        // using the Map method. This works very similar to the Select extension method from LINQ.
-        return monthlyTemperaturesResult.Map(CreateWeatherProfiles);
+        // using the Select method. This works very similar to the Select extension method from LINQ.
+        return monthlyTemperaturesResult.Select(CreateWeatherProfiles);
     }
 
     public Task<Result> AddWeatherProfile(WeatherProfile weatherProfile)

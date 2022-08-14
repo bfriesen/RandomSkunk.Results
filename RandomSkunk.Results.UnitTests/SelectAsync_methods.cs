@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class MapAsync_methods
+public class SelectAsync_methods
 {
     public class For_Result_of_T
     {
@@ -9,7 +9,7 @@ public class MapAsync_methods
         {
             var source = 1.ToResult();
 
-            var actual = await source.MapAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -21,18 +21,18 @@ public class MapAsync_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = await source.MapAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
         }
 
         [Fact]
-        public async Task Given_null_map_function_Throws_ArgumentNullException()
+        public async Task Given_null_selector_function_Throws_ArgumentNullException()
         {
             var source = Result<int>.Fail();
 
-            Func<Task> act = () => source.MapAsync<string>(null!);
+            Func<Task> act = () => source.SelectAsync<string>(null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -45,7 +45,7 @@ public class MapAsync_methods
         {
             var source = 1.ToMaybe();
 
-            var actual = await source.MapAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsSuccess.Should().BeTrue();
             actual.GetValue().Should().Be("1");
@@ -57,7 +57,7 @@ public class MapAsync_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = await source.MapAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsFail.Should().BeTrue();
             actual.GetError().Should().BeSameAs(error);
@@ -68,17 +68,17 @@ public class MapAsync_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = await source.MapAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsNone.Should().BeTrue();
         }
 
         [Fact]
-        public async Task Given_null_map_function_Throws_ArgumentNullException()
+        public async Task Given_null_selector_function_Throws_ArgumentNullException()
         {
             var source = Maybe<int>.Fail();
 
-            Func<Task> act = () => source.MapAsync<string>(null!);
+            Func<Task> act = () => source.SelectAsync<string>(null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
