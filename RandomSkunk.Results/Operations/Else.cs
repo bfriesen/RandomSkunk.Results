@@ -10,7 +10,7 @@ public partial struct Result
     /// <returns>Either the current result or <paramref name="fallbackResult"/>.</returns>
     public Result Else(Result fallbackResult)
     {
-        return _type == ResultType.Success ? this : fallbackResult;
+        return _outcome == Outcome.Success ? this : fallbackResult;
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public partial struct Result
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return _type == ResultType.Success ? this : getFallbackResult();
+        return _outcome == Outcome.Success ? this : getFallbackResult();
     }
 }
 
@@ -38,7 +38,7 @@ public partial struct Result<T>
     /// <returns>Either the current result or <paramref name="fallbackResult"/>.</returns>
     public Result<T> Else(Result<T> fallbackResult)
     {
-        return _type == ResultType.Success ? this : fallbackResult;
+        return _outcome == Outcome.Success ? this : fallbackResult;
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public partial struct Result<T>
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return _type == ResultType.Success ? this : getFallbackResult();
+        return _outcome == Outcome.Success ? this : getFallbackResult();
     }
 }
 
@@ -66,7 +66,7 @@ public partial struct Maybe<T>
     /// <returns>Either the current result or <paramref name="fallbackResult"/>.</returns>
     public Maybe<T> Else(Maybe<T> fallbackResult)
     {
-        return _type == MaybeType.Success ? this : fallbackResult;
+        return _outcome == MaybeOutcome.Success ? this : fallbackResult;
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public partial struct Maybe<T>
     {
         if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
 
-        return _type == MaybeType.Success ? this : getFallbackResult();
+        return _outcome == MaybeOutcome.Success ? this : getFallbackResult();
     }
 }
 

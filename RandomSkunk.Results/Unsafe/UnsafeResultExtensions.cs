@@ -15,7 +15,7 @@ public static class UnsafeResultExtensions
     ///     <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
     public static Error GetError(this Result sourceResult) =>
-        sourceResult._type == ResultType.Fail
+        sourceResult._outcome == Outcome.Fail
             ? sourceResult.Error()
             : throw CannotAccessErrorUnlessFail();
 
@@ -28,7 +28,7 @@ public static class UnsafeResultExtensions
     ///     <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Success</c> result.</exception>
     public static T GetValue<T>(this Result<T> sourceResult) =>
-        sourceResult._type == ResultType.Success
+        sourceResult._outcome == Outcome.Success
             ? sourceResult._value!
             : throw CannotAccessValueUnlessSuccess(sourceResult.Error());
 
@@ -41,7 +41,7 @@ public static class UnsafeResultExtensions
     ///     <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
     public static Error GetError<T>(this Result<T> sourceResult) =>
-        sourceResult._type == ResultType.Fail
+        sourceResult._outcome == Outcome.Fail
             ? sourceResult.Error()
             : throw CannotAccessErrorUnlessFail();
 
@@ -54,10 +54,10 @@ public static class UnsafeResultExtensions
     ///     <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Success</c> result.</exception>
     public static T GetValue<T>(this Maybe<T> sourceResult) =>
-        sourceResult._type switch
+        sourceResult._outcome switch
         {
-            MaybeType.Success => sourceResult._value!,
-            MaybeType.None => throw CannotAccessValueUnlessSuccess(),
+            MaybeOutcome.Success => sourceResult._value!,
+            MaybeOutcome.None => throw CannotAccessValueUnlessSuccess(),
             _ => throw CannotAccessValueUnlessSuccess(sourceResult.Error()),
         };
 
@@ -70,7 +70,7 @@ public static class UnsafeResultExtensions
     ///     <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
     public static Error GetError<T>(this Maybe<T> sourceResult) =>
-        sourceResult._type == MaybeType.Fail
+        sourceResult._outcome == MaybeOutcome.Fail
             ? sourceResult.Error()
             : throw CannotAccessErrorUnlessFail();
 }

@@ -11,7 +11,7 @@ public partial struct Result<T>
     ///     </returns>
     public T? GetValueOr(T? fallbackValue)
     {
-        return _type == ResultType.Success ? _value! : fallbackValue;
+        return _outcome == Outcome.Success ? _value! : fallbackValue;
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public partial struct Result<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return _type == ResultType.Success ? _value! : getFallbackValue();
+        return _outcome == Outcome.Success ? _value! : getFallbackValue();
     }
 }
 
@@ -41,7 +41,7 @@ public partial struct Maybe<T>
     ///     </returns>
     public T? GetValueOr(T? fallbackValue)
     {
-        return _type == MaybeType.Success ? _value! : fallbackValue;
+        return _outcome == MaybeOutcome.Success ? _value! : fallbackValue;
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public partial struct Maybe<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return _type == MaybeType.Success ? _value! : getFallbackValue();
+        return _outcome == MaybeOutcome.Success ? _value! : getFallbackValue();
     }
 }
 

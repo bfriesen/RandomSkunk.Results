@@ -14,9 +14,9 @@ public partial struct Result
     {
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
 
-        return _type switch
+        return _outcome switch
         {
-            ResultType.Success => onSuccess(),
+            Outcome.Success => onSuccess(),
             _ => this,
         };
     }
@@ -31,9 +31,9 @@ public partial struct Result
     {
         if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
 
-        return _type switch
+        return _outcome switch
         {
-            ResultType.Success => await onSuccessAsync().ConfigureAwait(false),
+            Outcome.Success => await onSuccessAsync().ConfigureAwait(false),
             _ => this,
         };
     }

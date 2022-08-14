@@ -12,7 +12,7 @@ public partial struct Result
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
-        if (_type == ResultType.Success)
+        if (_outcome == Outcome.Success)
             onSuccessCallback();
 
         return this;
@@ -27,7 +27,7 @@ public partial struct Result
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
-        if (_type == ResultType.Success)
+        if (_outcome == Outcome.Success)
             await onSuccessCallback().ConfigureAwait(false);
 
         return this;
@@ -46,7 +46,7 @@ public partial struct Result<T>
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
-        if (_type == ResultType.Success)
+        if (_outcome == Outcome.Success)
             onSuccessCallback(_value!);
 
         return this;
@@ -61,7 +61,7 @@ public partial struct Result<T>
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
-        if (_type == ResultType.Success)
+        if (_outcome == Outcome.Success)
             await onSuccessCallback(_value!).ConfigureAwait(false);
 
         return this;
@@ -80,7 +80,7 @@ public partial struct Maybe<T>
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
-        if (_type == MaybeType.Success)
+        if (_outcome == MaybeOutcome.Success)
             onSuccessCallback(_value!);
 
         return this;
@@ -95,7 +95,7 @@ public partial struct Maybe<T>
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
-        if (_type == MaybeType.Success)
+        if (_outcome == MaybeOutcome.Success)
             await onSuccessCallback(_value!).ConfigureAwait(false);
 
         return this;

@@ -12,7 +12,7 @@ public partial struct Maybe<T>
     {
         if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
 
-        if (_type == MaybeType.None)
+        if (_outcome == MaybeOutcome.None)
             onNoneCallback();
 
         return this;
@@ -27,7 +27,7 @@ public partial struct Maybe<T>
     {
         if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
 
-        if (_type == MaybeType.None)
+        if (_outcome == MaybeOutcome.None)
             await onNoneCallback().ConfigureAwait(false);
 
         return this;

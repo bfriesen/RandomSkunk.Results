@@ -23,9 +23,9 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _type switch
+        return _outcome switch
         {
-            ResultType.Success => onSuccessSelector(_value!).ToResult(),
+            Outcome.Success => onSuccessSelector(_value!).ToResult(),
             _ => Result<TReturn>.Fail(Error()),
         };
     }
@@ -50,9 +50,9 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _type switch
+        return _outcome switch
         {
-            ResultType.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToResult(),
+            Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToResult(),
             _ => Result<TReturn>.Fail(Error()),
         };
     }
@@ -82,10 +82,10 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _type switch
+        return _outcome switch
         {
-            MaybeType.Success => onSuccessSelector(_value!).ToMaybe(),
-            MaybeType.None => Maybe<TReturn>.None(),
+            MaybeOutcome.Success => onSuccessSelector(_value!).ToMaybe(),
+            MaybeOutcome.None => Maybe<TReturn>.None(),
             _ => Maybe<TReturn>.Fail(Error()),
         };
     }
@@ -111,10 +111,10 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _type switch
+        return _outcome switch
         {
-            MaybeType.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
-            MaybeType.None => Maybe<TReturn>.None(),
+            MaybeOutcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
+            MaybeOutcome.None => Maybe<TReturn>.None(),
             _ => Maybe<TReturn>.Fail(Error()),
         };
     }

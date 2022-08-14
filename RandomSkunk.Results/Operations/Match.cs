@@ -21,7 +21,7 @@ public partial struct Result
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _type == ResultType.Success
+        return _outcome == Outcome.Success
             ? onSuccess()
             : onFail(Error());
     }
@@ -45,7 +45,7 @@ public partial struct Result
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _type == ResultType.Success
+        return _outcome == Outcome.Success
             ? onSuccess()
             : onFail(Error());
     }
@@ -73,7 +73,7 @@ public partial struct Result<T>
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _type == ResultType.Success
+        return _outcome == Outcome.Success
             ? onSuccess(_value!)
             : onFail(Error());
     }
@@ -98,7 +98,7 @@ public partial struct Result<T>
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _type == ResultType.Success
+        return _outcome == Outcome.Success
             ? onSuccess(_value!)
             : onFail(Error());
     }
@@ -130,10 +130,10 @@ public partial struct Maybe<T>
         if (onNone is null) throw new ArgumentNullException(nameof(onNone));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _type switch
+        return _outcome switch
         {
-            MaybeType.Success => onSuccess(_value!),
-            MaybeType.None => onNone(),
+            MaybeOutcome.Success => onSuccess(_value!),
+            MaybeOutcome.None => onNone(),
             _ => onFail(Error()),
         };
     }
@@ -162,10 +162,10 @@ public partial struct Maybe<T>
         if (onNone is null) throw new ArgumentNullException(nameof(onNone));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _type switch
+        return _outcome switch
         {
-            MaybeType.Success => onSuccess(_value!),
-            MaybeType.None => onNone(),
+            MaybeOutcome.Success => onSuccess(_value!),
+            MaybeOutcome.None => onNone(),
             _ => onFail(Error()),
         };
     }

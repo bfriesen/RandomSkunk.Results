@@ -14,7 +14,7 @@ public partial struct Result
     {
         if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
 
-        return _type == ResultType.Fail
+        return _outcome == Outcome.Fail
             ? Fail(onFailGetError(Error()))
             : this;
     }
@@ -34,7 +34,7 @@ public partial struct Result<T>
     {
         if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
 
-        return _type == ResultType.Fail
+        return _outcome == Outcome.Fail
             ? Fail(onFailGetError(Error()))
             : this;
     }
@@ -54,7 +54,7 @@ public partial struct Maybe<T>
     {
         if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
 
-        return _type == MaybeType.Fail
+        return _outcome == MaybeOutcome.Fail
             ? Fail(onFailGetError(Error()))
             : this;
     }

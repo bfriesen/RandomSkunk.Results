@@ -9,13 +9,13 @@ namespace RandomSkunk.Results;
 /// <typeparam name="T">The type of the result value.</typeparam>
 public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 {
-    internal readonly MaybeType _type;
+    internal readonly MaybeOutcome _outcome;
     internal readonly T? _value;
     private readonly Error? _error;
 
     private Maybe(T value)
     {
-        _type = MaybeType.Success;
+        _outcome = MaybeOutcome.Success;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
@@ -24,46 +24,40 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     {
         if (none)
         {
-            _type = MaybeType.None;
+            _outcome = MaybeOutcome.None;
             _value = default;
             _error = null;
         }
         else
         {
-            _type = MaybeType.Fail;
+            _outcome = MaybeOutcome.Fail;
             _value = default;
             _error = error ?? new Error(setStackTrace: true);
         }
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="MaybeType.Success"/>, <see cref="MaybeType.None"/>, or
-    /// <see cref="MaybeType.Fail"/>.
-    /// </summary>
-    public MaybeType Type => _type;
-
-    /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _type == MaybeType.Success;
+    public bool IsSuccess => _outcome == MaybeOutcome.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>None</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>None</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsNone => _type == MaybeType.None;
+    public bool IsNone => _outcome == MaybeOutcome.None;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _type == MaybeType.Fail;
+    public bool IsFail => _outcome == MaybeOutcome.Fail;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Maybe{T}"/> struct.
     /// </summary>
-    public bool IsDefault => _type == MaybeType.Fail && _error is null;
+    public bool IsDefault => _outcome == MaybeOutcome.Fail && _error is null;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
@@ -165,7 +159,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 
     /// <inheritdoc/>
     public bool Equals(Maybe<T> other) =>
-        _type == other._type
+        _outcome == other._outcome
         && ((IsSuccess && EqualityComparer<T?>.Default.Equals(_value, other._value))
             || (IsFail && EqualityComparer<Error?>.Default.Equals(_error, other._error))
             || IsNone);
@@ -178,7 +172,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     {
         int hashCode = 1157318437;
         hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(typeof(T));
-        hashCode = (hashCode * -1521134295) + _type.GetHashCode();
+        hashCode = (hashCode * -1521134295) + _outcome.GetHashCode();
         hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
         hashCode = (hashCode * -1521134295) + (IsSuccess ? _value!.GetHashCode() : 0);
         hashCode *= 31;
@@ -197,10 +191,10 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 
     /// <inheritdoc/>
     Error IResult.GetNonSuccessError() =>
-        _type switch
+        _outcome switch
         {
-            MaybeType.Fail => this.GetError(),
-            MaybeType.None => Errors.ResultIsNone(),
+            MaybeOutcome.Fail => this.GetError(),
+            MaybeOutcome.None => Errors.ResultIsNone(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 

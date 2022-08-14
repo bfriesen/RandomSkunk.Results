@@ -7,44 +7,39 @@ namespace RandomSkunk.Results;
 /// </summary>
 public partial struct Result : IResult<DBNull>, IEquatable<Result>
 {
-    internal readonly ResultType _type;
+    internal readonly Outcome _outcome;
     private readonly Error? _error;
 
     private Result(bool success, Error? error = null)
     {
         if (success)
         {
-            _type = ResultType.Success;
+            _outcome = Outcome.Success;
             _error = null;
         }
         else
         {
-            _type = ResultType.Fail;
+            _outcome = Outcome.Fail;
             _error = error ?? new Error(setStackTrace: true);
         }
     }
 
     /// <summary>
-    /// Gets the type of the result: <see cref="ResultType.Success"/> or <see cref="ResultType.Fail"/>.
-    /// </summary>
-    public ResultType Type => _type;
-
-    /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _type == ResultType.Success;
+    public bool IsSuccess => _outcome == Outcome.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _type == ResultType.Fail;
+    public bool IsFail => _outcome == Outcome.Fail;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Result"/> struct.
     /// </summary>
-    public bool IsDefault => _type == ResultType.Fail && _error is null;
+    public bool IsDefault => _outcome == Outcome.Fail && _error is null;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
@@ -127,7 +122,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
 
     /// <inheritdoc/>
     public bool Equals(Result other) =>
-        _type == other._type
+        _outcome == other._outcome
         && (IsSuccess
             || (IsFail && EqualityComparer<Error?>.Default.Equals(_error, other._error)));
 
@@ -139,7 +134,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     public override int GetHashCode()
     {
         int hashCode = 1710757158;
-        hashCode = (hashCode * -1521134295) + _type.GetHashCode();
+        hashCode = (hashCode * -1521134295) + _outcome.GetHashCode();
         hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
         return hashCode;
     }
@@ -153,7 +148,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// <inheritdoc/>
     DBNull IResult<DBNull>.GetSuccessValue()
     {
-        if (_type != ResultType.Success)
+        if (_outcome != Outcome.Success)
             throw Exceptions.CannotAccessValueUnlessSuccess();
 
         return DBNull.Value;
@@ -161,9 +156,9 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
 
     /// <inheritdoc/>
     Error IResult.GetNonSuccessError() =>
-        _type switch
+        _outcome switch
         {
-            ResultType.Fail => Error(),
+            Outcome.Fail => Error(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 
