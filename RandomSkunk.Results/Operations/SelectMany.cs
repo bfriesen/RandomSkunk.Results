@@ -100,7 +100,7 @@ public partial struct Result
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. Otherwise, if the <c>Fail</c> result's error has error code
-    /// <see cref="ErrorCodes.ResultIsNone"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
+    /// <see cref="ErrorCodes.NoneResult"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
     /// result with the same error is returned.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -116,7 +116,7 @@ public partial struct Result
             return onSuccessSelector();
 
         var error = GetError();
-        if (error.ErrorCode == ErrorCodes.ResultIsNone)
+        if (error.ErrorCode == ErrorCodes.NoneResult)
             return Maybe<TReturn>.None();
 
         return Maybe<TReturn>.Fail(error);
@@ -125,7 +125,7 @@ public partial struct Result
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. Otherwise, if the <c>Fail</c> result's error has error code
-    /// <see cref="ErrorCodes.ResultIsNone"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
+    /// <see cref="ErrorCodes.NoneResult"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
     /// result with the same error is returned.
     /// </summary>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
@@ -141,7 +141,7 @@ public partial struct Result
             return await onSuccessSelector().ConfigureAwait(false);
 
         var error = GetError();
-        if (error.ErrorCode == ErrorCodes.ResultIsNone)
+        if (error.ErrorCode == ErrorCodes.NoneResult)
             return Maybe<TReturn>.None();
 
         return Maybe<TReturn>.Fail(error);
@@ -260,7 +260,7 @@ public partial struct Result<T>
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. Otherwise, if the <c>Fail</c> result's error has error code
-    /// <see cref="ErrorCodes.ResultIsNone"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
+    /// <see cref="ErrorCodes.NoneResult"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
     /// result with the same error is returned.
     /// </summary>
     /// <remarks>
@@ -282,7 +282,7 @@ public partial struct Result<T>
             return onSuccessSelector(_value!);
 
         var error = GetError();
-        if (error.ErrorCode == ErrorCodes.ResultIsNone)
+        if (error.ErrorCode == ErrorCodes.NoneResult)
             return Maybe<TReturn>.None();
 
         return Maybe<TReturn>.Fail(error);
@@ -291,7 +291,7 @@ public partial struct Result<T>
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. Otherwise, if the <c>Fail</c> result's error has error code
-    /// <see cref="ErrorCodes.ResultIsNone"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
+    /// <see cref="ErrorCodes.NoneResult"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
     /// result with the same error is returned.
     /// </summary>
     /// <remarks>
@@ -313,7 +313,7 @@ public partial struct Result<T>
             return await onSuccessSelector(_value!).ConfigureAwait(false);
 
         var error = GetError();
-        if (error.ErrorCode == ErrorCodes.ResultIsNone)
+        if (error.ErrorCode == ErrorCodes.NoneResult)
             return Maybe<TReturn>.None();
 
         return Maybe<TReturn>.Fail(error);
@@ -489,7 +489,7 @@ public partial struct Maybe<T>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
     /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
-    /// <c>Fail</c> result with error code <see cref="ErrorCodes.ResultIsNone"/>.
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NoneResult"/>.
     /// </summary>
     /// <remarks>
     /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
@@ -508,7 +508,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             MaybeOutcome.Success => onSuccessSelector(_value!),
-            MaybeOutcome.None => Result.Fail(Errors.ResultIsNone()),
+            MaybeOutcome.None => Result.Fail(Errors.NoneResult()),
             _ => Result.Fail(GetError()),
         };
     }
@@ -517,7 +517,7 @@ public partial struct Maybe<T>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
     /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
-    /// <c>Fail</c> result with error code <see cref="ErrorCodes.ResultIsNone"/>.
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NoneResult"/>.
     /// </summary>
     /// <remarks>
     /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
@@ -536,7 +536,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             MaybeOutcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            MaybeOutcome.None => Result.Fail(Errors.ResultIsNone()),
+            MaybeOutcome.None => Result.Fail(Errors.NoneResult()),
             _ => Result.Fail(GetError()),
         };
     }
@@ -545,7 +545,7 @@ public partial struct Maybe<T>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
     /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
-    /// <c>Fail</c> result with error code <see cref="ErrorCodes.ResultIsNone"/>.
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NoneResult"/>.
     /// </summary>
     /// <remarks>
     /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
@@ -565,7 +565,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             MaybeOutcome.Success => onSuccessSelector(_value!),
-            MaybeOutcome.None => Result<TReturn>.Fail(Errors.ResultIsNone()),
+            MaybeOutcome.None => Result<TReturn>.Fail(Errors.NoneResult()),
             _ => Result<TReturn>.Fail(GetError()),
         };
     }
@@ -574,7 +574,7 @@ public partial struct Maybe<T>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
     /// <paramref name="onSuccessSelector"/> function. If the current result is <c>Fail</c>, it is transformed into a new
     /// <c>Fail</c> result with the same error. Otherwise, if the current result is <c>None</c>, it is transformed into a new
-    /// <c>Fail</c> result with error code <see cref="ErrorCodes.ResultIsNone"/>.
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NoneResult"/>.
     /// </summary>
     /// <remarks>
     /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
@@ -594,7 +594,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             MaybeOutcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            MaybeOutcome.None => Result<TReturn>.Fail(Errors.ResultIsNone()),
+            MaybeOutcome.None => Result<TReturn>.Fail(Errors.NoneResult()),
             _ => Result<TReturn>.Fail(GetError()),
         };
     }

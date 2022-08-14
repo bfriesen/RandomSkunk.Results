@@ -140,9 +140,9 @@ public static class Errors
         };
 
     [StackTraceHidden]
-    internal static Error ResultIsNone() =>
+    internal static Error NoneResult() =>
         new("This error represents a lack of a value (i.e. None).", "Result is None", true)
         {
-            ErrorCode = ErrorCodes.ResultIsNone,
+            ErrorCode = ErrorCodes.NoneResult,
         };
 }

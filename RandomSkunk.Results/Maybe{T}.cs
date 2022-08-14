@@ -214,7 +214,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _outcome switch
         {
             MaybeOutcome.Fail => Error,
-            MaybeOutcome.None => Errors.ResultIsNone(),
+            MaybeOutcome.None => Errors.NoneResult(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 
