@@ -57,7 +57,7 @@ public static class TryCatch
 
         try
         {
-            await sourceDelegate();
+            await sourceDelegate().ConfigureAwait(false);
             return Result.Success();
         }
         catch (Exception ex)
@@ -121,7 +121,7 @@ public static class TryCatch
 
         try
         {
-            var value = await sourceDelegate();
+            var value = await sourceDelegate().ConfigureAwait(false);
             return Result<T>.FromValue(value);
         }
         catch (Exception ex)
@@ -185,7 +185,7 @@ public static class TryCatch
 
         try
         {
-            var value = await sourceDelegate();
+            var value = await sourceDelegate().ConfigureAwait(false);
             return Maybe<T>.FromValue(value);
         }
         catch (Exception ex)

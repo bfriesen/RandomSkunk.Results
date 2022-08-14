@@ -73,5 +73,5 @@ public static partial class ResultExtensions
         this Task<TResult> sourceResult,
         Func<Error, Task> onNonSuccess)
         where TResult : IResult =>
-        await (await sourceResult.ConfigureAwait(false)).OnNonSuccessAsync(onNonSuccess);
+        await (await sourceResult.ConfigureAwait(false)).OnNonSuccessAsync(onNonSuccess).ConfigureAwait(false);
 }

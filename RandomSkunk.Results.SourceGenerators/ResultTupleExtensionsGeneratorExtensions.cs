@@ -419,7 +419,7 @@ public static class ResultTupleExtensions
             var value = await onAllSuccessSelector(
                 sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
-            .Append(@");
+            .Append(@").ConfigureAwait(false);
 
             return Result<TReturn>.Success(value);
         }

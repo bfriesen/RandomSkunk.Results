@@ -82,7 +82,7 @@ public static class TryCatch<TException1, TException2>
 
         try
         {
-            await sourceDelegate();
+            await sourceDelegate().ConfigureAwait(false);
             return Result.Success();
         }
         catch (TException1 ex)
@@ -168,7 +168,7 @@ public static class TryCatch<TException1, TException2>
 
         try
         {
-            var value = await sourceDelegate();
+            var value = await sourceDelegate().ConfigureAwait(false);
             return Result<T>.FromValue(value);
         }
         catch (TException1 ex)
@@ -254,7 +254,7 @@ public static class TryCatch<TException1, TException2>
 
         try
         {
-            var value = await sourceDelegate();
+            var value = await sourceDelegate().ConfigureAwait(false);
             return Maybe<T>.FromValue(value);
         }
         catch (TException1 ex)

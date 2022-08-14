@@ -1033,7 +1033,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResultAsync(
-            async () => new GridReader(await cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType)),
+            async () => new GridReader(await cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(false)),
             exceptionHandler);
 
     /// <summary>

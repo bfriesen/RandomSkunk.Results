@@ -747,7 +747,7 @@ public static partial class ResultExtensions
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
@@ -791,7 +791,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
@@ -835,7 +835,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Transforms the current result - if <c>Success</c> - into a new result using the specified
