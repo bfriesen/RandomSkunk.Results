@@ -26,7 +26,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!).ToResult(),
-            _ => Result<TReturn>.Fail(Error()),
+            _ => Result<TReturn>.Fail(GetError()),
         };
     }
 
@@ -53,7 +53,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToResult(),
-            _ => Result<TReturn>.Fail(Error()),
+            _ => Result<TReturn>.Fail(GetError()),
         };
     }
 }
@@ -86,7 +86,7 @@ public partial struct Maybe<T>
         {
             MaybeOutcome.Success => onSuccessSelector(_value!).ToMaybe(),
             MaybeOutcome.None => Maybe<TReturn>.None(),
-            _ => Maybe<TReturn>.Fail(Error()),
+            _ => Maybe<TReturn>.Fail(GetError()),
         };
     }
 
@@ -115,7 +115,7 @@ public partial struct Maybe<T>
         {
             MaybeOutcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
             MaybeOutcome.None => Maybe<TReturn>.None(),
-            _ => Maybe<TReturn>.Fail(Error()),
+            _ => Maybe<TReturn>.Fail(GetError()),
         };
     }
 }

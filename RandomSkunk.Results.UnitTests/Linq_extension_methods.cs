@@ -25,7 +25,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsFail.Should().BeTrue();
-            result.GetError().Message.Should().Be("A");
+            result.Error.Message.Should().Be("A");
         }
 
         [Fact]
@@ -37,7 +37,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsFail.Should().BeTrue();
-            result.GetError().Message.Should().Be("B");
+            result.Error.Message.Should().Be("B");
         }
 
         [Fact]
@@ -49,7 +49,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsFail.Should().BeTrue();
-            result.GetError().Message.Should().Be("A");
+            result.Error.Message.Should().Be("A");
         }
     }
 
@@ -78,7 +78,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsFail.Should().BeTrue();
-            result.GetError().Message.Should().Be("A");
+            result.Error.Message.Should().Be("A");
         }
 
         [Fact]
@@ -103,7 +103,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsFail.Should().BeTrue();
-            result.GetError().Message.Should().Be("B");
+            result.Error.Message.Should().Be("B");
         }
 
         [Fact]
@@ -140,7 +140,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsFail.Should().BeTrue();
-            result.GetError().Message.Should().Be("A");
+            result.Error.Message.Should().Be("A");
         }
 
         [Fact]

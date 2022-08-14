@@ -1,5 +1,3 @@
-using RandomSkunk.Results.Unsafe;
-
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -9,10 +7,10 @@ namespace RandomSkunk.Results;
 public interface IResult<T> : IResult
 {
     /// <summary>
-    /// Gets the value of the <c>Success</c> result, or throws an <see cref="InvalidStateException"/> if this is not a
-    /// <c>Success</c> result.
+    /// Gets the value from the <c>Success</c> result.
     /// </summary>
-    /// <returns>The value of the <c>Success</c> result.</returns>
-    /// <exception cref="InvalidStateException">If this is not a <c>Success</c> result.</exception>
-    T GetSuccessValue();
+    /// <returns>If this is a <c>Success</c> result, its value; otherwise throws an <see cref="InvalidStateException"/>.
+    ///     </returns>
+    /// <exception cref="InvalidStateException">If the result is not a <c>Success</c> result.</exception>
+    T Value { get; }
 }

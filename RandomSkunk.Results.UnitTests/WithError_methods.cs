@@ -13,7 +13,7 @@ public class WithError_methods
             var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().InnerError.Should().BeSameAs(error);
+            actual.Error.InnerError.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -38,7 +38,7 @@ public class WithError_methods
             var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().InnerError.Should().BeSameAs(error);
+            actual.Error.InnerError.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ public class WithError_methods
             var actual = source.WithError(e => new Error { InnerError = e });
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().InnerError.Should().BeSameAs(error);
+            actual.Error.InnerError.Should().BeSameAs(error);
         }
 
         [Fact]

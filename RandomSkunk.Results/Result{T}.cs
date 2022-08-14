@@ -1,4 +1,3 @@
-using RandomSkunk.Results.Unsafe;
 using static RandomSkunk.Results.Error;
 
 namespace RandomSkunk.Results;
@@ -26,6 +25,27 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         _value = default;
         _error = error ?? new Error(setStackTrace: true);
     }
+
+    /// <summary>
+    /// Gets the value from the <c>Success</c> result.
+    /// </summary>
+    /// <returns>If this is a <c>Success</c> result, its value; otherwise throws an <see cref="InvalidStateException"/>.
+    ///     </returns>
+    /// <exception cref="InvalidStateException">If the result is not a <c>Success</c> result.</exception>
+    public T Value =>
+        _outcome == Outcome.Success
+            ? _value!
+            : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
+
+    /// <summary>
+    /// Gets the error from the <c>Fail</c> result.
+    /// </summary>
+    /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
+    /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
+    public Error Error =>
+        _outcome == Outcome.Fail
+            ? GetError()
+            : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
@@ -152,7 +172,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         int hashCode = 1157318437;
         hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(typeof(T));
         hashCode = (hashCode * -1521134295) + _outcome.GetHashCode();
-        hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
+        hashCode = (hashCode * -1521134295) + (IsFail ? GetError().GetHashCode() : 0);
         hashCode = (hashCode * -1521134295) + (IsSuccess ? _value!.GetHashCode() : 0);
         hashCode *= 29;
         return hashCode;
@@ -165,16 +185,13 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
             error => $"Fail({error.Title}: \"{error.Message}\")");
 
     /// <inheritdoc/>
-    T IResult<T>.GetSuccessValue() => this.GetValue();
-
-    /// <inheritdoc/>
     Error IResult.GetNonSuccessError() =>
         _outcome switch
         {
-            Outcome.Fail => Error(),
+            Outcome.Fail => GetError(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Error Error() => _error ?? DefaultError;
+    private Error GetError() => _error ?? DefaultError;
 }

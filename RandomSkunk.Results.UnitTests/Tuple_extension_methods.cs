@@ -356,7 +356,7 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).Select((a, b, c) => b + c);
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(579);
+            actual.Value.Should().Be(579);
         }
 
         [Theory]
@@ -366,13 +366,13 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).Select((a, b, c) => b + c);
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {
@@ -397,7 +397,7 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectAsync((a, b, c) => Task.FromResult(b + c));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(579);
+            actual.Value.Should().Be(579);
         }
 
         [Theory]
@@ -407,13 +407,13 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectAsync((a, b, c) => Task.FromResult(b + c));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {
@@ -438,8 +438,8 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result.Fail("x", -1));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be("x");
-            actual.GetError().ErrorCode.Should().Be(-1);
+            actual.Error.Message.Should().Be("x");
+            actual.Error.ErrorCode.Should().Be(-1);
         }
 
         [Theory]
@@ -449,13 +449,13 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result.Success());
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {
@@ -475,7 +475,7 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result<int>.Success(b + c));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(579);
+            actual.Value.Should().Be(579);
         }
 
         [Theory]
@@ -485,13 +485,13 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result<int>.Success(b + c));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {
@@ -511,7 +511,7 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Maybe<int>.Success(b + c));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(579);
+            actual.Value.Should().Be(579);
         }
 
         [Theory]
@@ -521,13 +521,13 @@ public class Tuple_extension_methods
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Maybe<int>.Success(b + c));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {
@@ -552,8 +552,8 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result.Fail("x", -1)));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be("x");
-            actual.GetError().ErrorCode.Should().Be(-1);
+            actual.Error.Message.Should().Be("x");
+            actual.Error.ErrorCode.Should().Be(-1);
         }
 
         [Theory]
@@ -563,13 +563,13 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result.Success()));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {
@@ -589,7 +589,7 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result<int>.Success(b + c)));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(579);
+            actual.Value.Should().Be(579);
         }
 
         [Theory]
@@ -599,13 +599,13 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result<int>.Success(b + c)));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {
@@ -625,7 +625,7 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Maybe<int>.Success(b + c)));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(579);
+            actual.Value.Should().Be(579);
         }
 
         [Theory]
@@ -635,13 +635,13 @@ public class Tuple_extension_methods
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Maybe<int>.Success(b + c)));
 
             actual.IsSuccess.Should().BeFalse();
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Should().BeOfType(expectedError.GetType());
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Should().BeOfType(expectedError.GetType());
 
             if (expectedError is CompositeError expectedCompositeError)
             {
-                var compositeError = (CompositeError)actual.GetError();
+                var compositeError = (CompositeError)actual.Error;
                 compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
                 for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
                 {

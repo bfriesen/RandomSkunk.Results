@@ -24,7 +24,7 @@ public class Flatten_extension_methods
             var actual = source.Flatten();
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
     }
 
@@ -50,7 +50,7 @@ public class Flatten_extension_methods
             var actual = source.Flatten();
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]

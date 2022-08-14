@@ -25,6 +25,16 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     }
 
     /// <summary>
+    /// Gets the error from the <c>Fail</c> result.
+    /// </summary>
+    /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
+    /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
+    public Error Error =>
+        _outcome == Outcome.Fail
+            ? GetError()
+            : throw Exceptions.CannotAccessErrorUnlessFail();
+
+    /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
@@ -40,6 +50,12 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// Gets a value indicating whether this is a default instance of the <see cref="Result"/> struct.
     /// </summary>
     public bool IsDefault => _outcome == Outcome.Fail && _error is null;
+
+    /// <inheritdoc/>
+    DBNull IResult<DBNull>.Value =>
+        _outcome == Outcome.Success
+            ? DBNull.Value
+            : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
@@ -135,7 +151,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     {
         int hashCode = 1710757158;
         hashCode = (hashCode * -1521134295) + _outcome.GetHashCode();
-        hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
+        hashCode = (hashCode * -1521134295) + (IsFail ? GetError().GetHashCode() : 0);
         return hashCode;
     }
 
@@ -146,22 +162,13 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
             error => $"Fail({error.Title}: \"{error.Message}\")");
 
     /// <inheritdoc/>
-    DBNull IResult<DBNull>.GetSuccessValue()
-    {
-        if (_outcome != Outcome.Success)
-            throw Exceptions.CannotAccessValueUnlessSuccess();
-
-        return DBNull.Value;
-    }
-
-    /// <inheritdoc/>
     Error IResult.GetNonSuccessError() =>
         _outcome switch
         {
-            Outcome.Fail => Error(),
+            Outcome.Fail => GetError(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Error Error() => _error ?? DefaultError;
+    private Error GetError() => _error ?? DefaultError;
 }

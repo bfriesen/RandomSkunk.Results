@@ -33,10 +33,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
         }
 
         [Fact]
@@ -49,10 +49,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -94,10 +94,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -119,7 +119,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.FirstOrFail(x => x == 20);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
         }
 
         [Fact]
@@ -130,7 +130,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.FirstOrFail(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -162,7 +162,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.FirstOrNone(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
     }
 
@@ -194,10 +194,10 @@ public class Enumerable_extension_methods
             var listResult = list.LastOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
         }
 
         [Fact]
@@ -210,10 +210,10 @@ public class Enumerable_extension_methods
             var listResult = list.LastOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -255,10 +255,10 @@ public class Enumerable_extension_methods
             var listResult = list.LastOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -280,7 +280,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.LastOrFail(x => x == 20);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
         }
 
         [Fact]
@@ -291,7 +291,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.LastOrFail(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -323,7 +323,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.LastOrNone(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
     }
 
@@ -355,10 +355,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
         }
 
         [Fact]
@@ -371,10 +371,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
         }
 
         [Fact]
@@ -387,10 +387,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -432,10 +432,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
         }
 
         [Fact]
@@ -448,10 +448,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -475,10 +475,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrFail(x => x > 4);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
         }
 
         [Fact]
@@ -489,7 +489,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.SingleOrFail(x => x == 20);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
         }
 
         [Fact]
@@ -500,7 +500,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.SingleOrFail(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -534,10 +534,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrNone(x => x > 4);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.BadRequest);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
         }
 
         [Fact]
@@ -548,7 +548,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.SingleOrNone(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
     }
 
@@ -580,10 +580,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.NotFound);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
         }
 
         [Fact]
@@ -596,10 +596,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
 
         [Fact]
@@ -641,10 +641,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.GetError().ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
         }
     }
 }

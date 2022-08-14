@@ -1,4 +1,3 @@
-using RandomSkunk.Results.Unsafe;
 using static RandomSkunk.Results.Error;
 
 namespace RandomSkunk.Results;
@@ -35,6 +34,30 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             _error = error ?? new Error(setStackTrace: true);
         }
     }
+
+    /// <summary>
+    /// Gets the value from the <c>Success</c> result.
+    /// </summary>
+    /// <returns>If this is a <c>Success</c> result, its value; otherwise throws an <see cref="InvalidStateException"/>.
+    ///     </returns>
+    /// <exception cref="InvalidStateException">If the result is not a <c>Success</c> result.</exception>
+    public T Value =>
+        _outcome switch
+        {
+            MaybeOutcome.Success => _value!,
+            MaybeOutcome.None => throw Exceptions.CannotAccessValueUnlessSuccess(),
+            _ => throw Exceptions.CannotAccessValueUnlessSuccess(GetError()),
+        };
+
+    /// <summary>
+    /// Gets the error from the <c>Fail</c> result.
+    /// </summary>
+    /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
+    /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
+    public Error Error =>
+        _outcome == MaybeOutcome.Fail
+            ? GetError()
+            : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
@@ -173,7 +196,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         int hashCode = 1157318437;
         hashCode = (hashCode * -1521134295) + EqualityComparer<Type>.Default.GetHashCode(typeof(T));
         hashCode = (hashCode * -1521134295) + _outcome.GetHashCode();
-        hashCode = (hashCode * -1521134295) + (IsFail ? Error().GetHashCode() : 0);
+        hashCode = (hashCode * -1521134295) + (IsFail ? GetError().GetHashCode() : 0);
         hashCode = (hashCode * -1521134295) + (IsSuccess ? _value!.GetHashCode() : 0);
         hashCode *= 31;
         return hashCode;
@@ -187,17 +210,14 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             error => $"Fail({error.Title}: \"{error.Message}\")");
 
     /// <inheritdoc/>
-    T IResult<T>.GetSuccessValue() => this.GetValue();
-
-    /// <inheritdoc/>
     Error IResult.GetNonSuccessError() =>
         _outcome switch
         {
-            MaybeOutcome.Fail => this.GetError(),
+            MaybeOutcome.Fail => Error,
             MaybeOutcome.None => Errors.ResultIsNone(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal Error Error() => _error ?? DefaultError;
+    private Error GetError() => _error ?? DefaultError;
 }

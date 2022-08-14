@@ -23,7 +23,7 @@ public partial struct Result
 
         return _outcome == Outcome.Success
             ? onSuccess()
-            : onFail(Error());
+            : onFail(GetError());
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public partial struct Result
 
         return _outcome == Outcome.Success
             ? onSuccess()
-            : onFail(Error());
+            : onFail(GetError());
     }
 }
 
@@ -75,7 +75,7 @@ public partial struct Result<T>
 
         return _outcome == Outcome.Success
             ? onSuccess(_value!)
-            : onFail(Error());
+            : onFail(GetError());
     }
 
     /// <summary>
@@ -100,7 +100,7 @@ public partial struct Result<T>
 
         return _outcome == Outcome.Success
             ? onSuccess(_value!)
-            : onFail(Error());
+            : onFail(GetError());
     }
 }
 
@@ -134,7 +134,7 @@ public partial struct Maybe<T>
         {
             MaybeOutcome.Success => onSuccess(_value!),
             MaybeOutcome.None => onNone(),
-            _ => onFail(Error()),
+            _ => onFail(GetError()),
         };
     }
 
@@ -166,7 +166,7 @@ public partial struct Maybe<T>
         {
             MaybeOutcome.Success => onSuccess(_value!),
             MaybeOutcome.None => onNone(),
-            _ => onFail(Error()),
+            _ => onFail(GetError()),
         };
     }
 }

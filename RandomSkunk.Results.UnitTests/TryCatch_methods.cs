@@ -14,7 +14,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -42,7 +42,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -71,7 +71,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -108,7 +108,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -136,7 +136,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -165,7 +165,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -206,7 +206,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -244,7 +244,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -282,7 +282,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -328,7 +328,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -366,7 +366,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -406,7 +406,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -458,7 +458,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -476,7 +476,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -514,7 +514,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -532,7 +532,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -570,7 +570,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -588,7 +588,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -634,7 +634,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -652,7 +652,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -691,7 +691,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -709,7 +709,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -748,7 +748,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));
@@ -766,7 +766,7 @@ public class TryCatch_methods
 
                 actual.IsFail.Should().BeTrue();
 
-                var error = actual.GetError();
+                var error = actual.Error;
 
                 error.Message.Should().Be(Error._defaultFromExceptionMessage);
                 error.Title.Should().Be(nameof(Error));

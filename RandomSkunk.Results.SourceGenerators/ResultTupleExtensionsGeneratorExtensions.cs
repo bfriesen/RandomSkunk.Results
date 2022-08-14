@@ -54,8 +54,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             onAllSuccess(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
 
@@ -97,8 +97,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             await onAllSuccess(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@").ConfigureAwait(false);
         }
 
@@ -245,8 +245,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccess(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -305,8 +305,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccess(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -360,8 +360,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             var value = onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
 
             return Result<TReturn>.Success(value);
@@ -417,8 +417,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             var value = await onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
 
             return Result<TReturn>.Success(value);
@@ -473,8 +473,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -527,8 +527,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -582,8 +582,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -637,8 +637,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -692,8 +692,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -747,8 +747,8 @@ public static class ResultTupleExtensions
             .Append(@")
         {
             return onAllSuccessSelector(
-                sourceResults.Item1.GetSuccessValue()")
-            .AppendItemNGetSuccessValueParameters(tupleCount)
+                sourceResults.Item1.Value")
+            .AppendItemNValueParameters(tupleCount)
             .Append(@");
         }
         else
@@ -909,12 +909,12 @@ public static class ResultTupleExtensions
         return code;
     }
 
-    private static StringBuilder AppendItemNGetSuccessValueParameters(this StringBuilder code, int tupleCount)
+    private static StringBuilder AppendItemNValueParameters(this StringBuilder code, int tupleCount)
     {
         for (int tupleNumber = 2; tupleNumber <= tupleCount; tupleNumber++)
         {
             code.Append($@",
-                sourceResults.Item{tupleNumber}.GetSuccessValue()");
+                sourceResults.Item{tupleNumber}.Value");
         }
 
         return code;

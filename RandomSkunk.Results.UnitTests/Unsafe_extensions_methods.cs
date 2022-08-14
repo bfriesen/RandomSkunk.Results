@@ -10,7 +10,7 @@ public class Unsafe_extensions_methods
             var error = new Error();
             var source = Result.Fail(error);
 
-            var actual = source.GetError();
+            var actual = source.Error;
 
             actual.Should().BeSameAs(error);
         }
@@ -20,7 +20,7 @@ public class Unsafe_extensions_methods
         {
             var source = Result.Success();
 
-            Action act = () => source.GetError();
+            Action act = () => _ = source.Error;
 
             act.Should().ThrowExactly<InvalidStateException>()
                 .WithMessage(CannotAccessErrorUnlessFailMessage);
@@ -35,7 +35,7 @@ public class Unsafe_extensions_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = source.GetError();
+            var actual = source.Error;
 
             actual.Should().BeSameAs(error);
         }
@@ -45,7 +45,7 @@ public class Unsafe_extensions_methods
         {
             var source = 1.ToResult();
 
-            Action act = () => source.GetError();
+            Action act = () => _ = source.Error;
 
             act.Should().ThrowExactly<InvalidStateException>()
                 .WithMessage(CannotAccessErrorUnlessFailMessage);
@@ -56,7 +56,7 @@ public class Unsafe_extensions_methods
         {
             var source = 1.ToResult();
 
-            var actual = source.GetValue();
+            var actual = source.Value;
 
             actual.Should().Be(1);
         }
@@ -66,7 +66,7 @@ public class Unsafe_extensions_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.GetValue();
+            Action act = () => _ = source.Value;
 
             act.Should().ThrowExactly<InvalidStateException>()
                 .WithMessage(CannotAccessValueUnlessSuccessMessage);
@@ -81,7 +81,7 @@ public class Unsafe_extensions_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = source.GetError();
+            var actual = source.Error;
 
             actual.Should().BeSameAs(error);
         }
@@ -91,7 +91,7 @@ public class Unsafe_extensions_methods
         {
             var source = 1.ToMaybe();
 
-            Action act = () => source.GetError();
+            Action act = () => _ = source.Error;
 
             act.Should().ThrowExactly<InvalidStateException>()
                 .WithMessage(CannotAccessErrorUnlessFailMessage);
@@ -102,7 +102,7 @@ public class Unsafe_extensions_methods
         {
             var source = Maybe<int>.None();
 
-            Action act = () => source.GetError();
+            Action act = () => _ = source.Error;
 
             act.Should().ThrowExactly<InvalidStateException>();
         }
@@ -112,7 +112,7 @@ public class Unsafe_extensions_methods
         {
             var source = 1.ToMaybe();
 
-            var actual = source.GetValue();
+            var actual = source.Value;
 
             actual.Should().Be(1);
         }
@@ -122,7 +122,7 @@ public class Unsafe_extensions_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.GetValue();
+            Action act = () => _ = source.Value;
 
             act.Should().ThrowExactly<InvalidStateException>()
                 .WithMessage(CannotAccessValueUnlessSuccessMessage);
@@ -133,7 +133,7 @@ public class Unsafe_extensions_methods
         {
             var source = Maybe<int>.None();
 
-            Action act = () => source.GetValue();
+            Action act = () => _ = source.Value;
 
             act.Should().ThrowExactly<InvalidStateException>()
                 .WithMessage(CannotAccessValueUnlessSuccessMessage);

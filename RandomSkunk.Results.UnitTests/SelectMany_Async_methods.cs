@@ -12,7 +12,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be("1");
+            actual.Value.Should().Be("1");
         }
 
         [Fact]
@@ -24,7 +24,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -45,7 +45,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]
@@ -57,7 +57,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(Maybe<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]
@@ -90,7 +90,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be("1");
+            actual.Value.Should().Be("1");
         }
 
         [Fact]
@@ -126,7 +126,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -157,7 +157,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(Result.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]
@@ -171,9 +171,9 @@ public class SelectMany_Async_methods
 
             var expectedError = Errors.ResultIsNone();
 
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Title.Should().Be(expectedError.Title);
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Title.Should().Be(expectedError.Title);
         }
 
         [Fact]
@@ -185,7 +185,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -206,7 +206,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(Result<int>.Fail(value)));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]
@@ -220,9 +220,9 @@ public class SelectMany_Async_methods
 
             var expectedError = Errors.ResultIsNone();
 
-            actual.GetError().Message.Should().Be(expectedError.Message);
-            actual.GetError().ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.GetError().Title.Should().Be(expectedError.Title);
+            actual.Error.Message.Should().Be(expectedError.Message);
+            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
+            actual.Error.Title.Should().Be(expectedError.Title);
         }
 
         [Fact]
@@ -234,7 +234,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -258,7 +258,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(() => Task.FromResult(Result.Fail("a")));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]
@@ -269,7 +269,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(() => Task.FromResult(Result.Success()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]
@@ -290,7 +290,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(() => Task.FromResult(Result<int>.Success(1)));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(1);
+            actual.Value.Should().Be(1);
         }
 
         [Fact]
@@ -301,7 +301,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(() => Task.FromResult(Result<int>.Success(1)));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]
@@ -322,7 +322,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(() => Task.FromResult(Maybe<int>.Success(1)));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be(1);
+            actual.Value.Should().Be(1);
         }
 
         [Fact]
@@ -333,7 +333,7 @@ public class SelectMany_Async_methods
             var actual = await source.SelectMany(() => Task.FromResult(Maybe<int>.Success(1)));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Message.Should().Be("a");
+            actual.Error.Message.Should().Be("a");
         }
 
         [Fact]

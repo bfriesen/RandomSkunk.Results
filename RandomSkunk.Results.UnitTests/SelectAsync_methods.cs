@@ -12,7 +12,7 @@ public class SelectAsync_methods
             var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be("1");
+            actual.Value.Should().Be("1");
         }
 
         [Fact]
@@ -24,7 +24,7 @@ public class SelectAsync_methods
             var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ public class SelectAsync_methods
             var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsSuccess.Should().BeTrue();
-            actual.GetValue().Should().Be("1");
+            actual.Value.Should().Be("1");
         }
 
         [Fact]
@@ -60,7 +60,7 @@ public class SelectAsync_methods
             var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
 
             actual.IsFail.Should().BeTrue();
-            actual.GetError().Should().BeSameAs(error);
+            actual.Error.Should().BeSameAs(error);
         }
 
         [Fact]
