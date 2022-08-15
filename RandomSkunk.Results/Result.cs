@@ -7,19 +7,22 @@ namespace RandomSkunk.Results;
 /// </summary>
 public partial struct Result : IResult<DBNull>, IEquatable<Result>
 {
-    internal readonly Outcome _outcome;
+    private const int _failOutcome = 0;
+    private const int _successOutcome = 1;
+
+    private readonly int _outcome;
     private readonly Error? _error;
 
     private Result(bool success, Error? error = null)
     {
         if (success)
         {
-            _outcome = Outcome.Success;
+            _outcome = _successOutcome;
             _error = null;
         }
         else
         {
-            _outcome = Outcome.Fail;
+            _outcome = _failOutcome;
             _error = error ?? new Error(setStackTrace: true);
         }
     }
@@ -30,7 +33,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
     public Error Error =>
-        _outcome == Outcome.Fail
+        _outcome == _failOutcome
             ? GetError()
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
@@ -38,22 +41,22 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _outcome == Outcome.Success;
+    public bool IsSuccess => _outcome == _successOutcome;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _outcome == Outcome.Fail;
+    public bool IsFail => _outcome == _failOutcome;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Result"/> struct.
     /// </summary>
-    public bool IsDefault => _outcome == Outcome.Fail && _error is null;
+    public bool IsDefault => _outcome == _failOutcome && _error is null;
 
     /// <inheritdoc/>
     DBNull IResult<DBNull>.Value =>
-        _outcome == Outcome.Success
+        _outcome == _successOutcome
             ? DBNull.Value
             : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
@@ -165,7 +168,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     Error IResult.GetNonSuccessError() =>
         _outcome switch
         {
-            Outcome.Fail => GetError(),
+            _failOutcome => GetError(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 

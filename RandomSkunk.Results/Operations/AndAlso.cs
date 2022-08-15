@@ -16,7 +16,7 @@ public partial struct Result
 
         return _outcome switch
         {
-            Outcome.Success => onSuccess(),
+            _successOutcome => onSuccess(),
             _ => this,
         };
     }
@@ -33,7 +33,7 @@ public partial struct Result
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessAsync().ConfigureAwait(false),
+            _successOutcome => await onSuccessAsync().ConfigureAwait(false),
             _ => this,
         };
     }

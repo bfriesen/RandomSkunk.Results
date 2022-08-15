@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.Outcome;
-
 namespace RandomSkunk.Results.UnitTests;
 
 public class Result_of_T_struct
@@ -9,7 +7,6 @@ public class Result_of_T_struct
     {
         var result = default(Result<int>);
 
-        result._outcome.Should().Be(Fail);
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
         result.IsDefault.Should().BeTrue();
@@ -23,11 +20,10 @@ public class Result_of_T_struct
         {
             var result = 1.ToResult();
 
-            result._outcome.Should().Be(Success);
             result.IsSuccess.Should().BeTrue();
             result.IsFail.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
-            result._value.Should().Be(1);
+            result.Value.Should().Be(1);
         }
 
         [Fact]
@@ -36,7 +32,6 @@ public class Result_of_T_struct
             var error = new Error();
             var result = Result<int>.Fail(error);
 
-            result._outcome.Should().Be(Fail);
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsDefault.Should().BeFalse();

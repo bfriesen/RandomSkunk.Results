@@ -58,7 +58,7 @@ public class TryCatch_methods
                 var actual = TryCatch.AsResult(() => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
         }
 
@@ -87,7 +87,7 @@ public class TryCatch_methods
                 var actual = TryCatch.AsMaybe(() => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
 
             [Fact]
@@ -152,7 +152,7 @@ public class TryCatch_methods
                 var actual = await TryCatch.AsResultAsync(async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
         }
 
@@ -181,7 +181,7 @@ public class TryCatch_methods
                 var actual = await TryCatch.AsMaybeAsync(async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
 
             [Fact]
@@ -260,7 +260,7 @@ public class TryCatch_methods
                 var actual = TryCatch<InvalidOperationException>.AsResult(() => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
 
             [Fact]
@@ -298,7 +298,7 @@ public class TryCatch_methods
                 var actual = TryCatch<InvalidOperationException>.AsMaybe(() => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
 
             [Fact]
@@ -383,7 +383,7 @@ public class TryCatch_methods
                     async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
 
             [Fact]
@@ -423,7 +423,7 @@ public class TryCatch_methods
                     async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
-                actual._value!.Should().Be(1);
+                actual.Value.Should().Be(1);
             }
 
             [Fact]

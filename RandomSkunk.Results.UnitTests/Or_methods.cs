@@ -23,7 +23,7 @@ public class Or_methods
 
             actual.Should().NotBe(source);
             actual.IsSuccess.Should().BeTrue();
-            actual._value.Should().Be(2);
+            actual.Value.Should().Be(2);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ public class Or_methods
 
             actual.Should().NotBe(source);
             actual.IsSuccess.Should().BeTrue();
-            actual._value.Should().Be(2);
+            actual.Value.Should().Be(2);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ public class Or_methods
 
             actual.Should().NotBe(source);
             actual.IsSuccess.Should().BeTrue();
-            actual._value.Should().Be(2);
+            actual.Value.Should().Be(2);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ public class Or_methods
 
             actual.Should().NotBe(source);
             actual.IsSuccess.Should().BeTrue();
-            actual._value.Should().Be(2);
+            actual.Value.Should().Be(2);
         }
 
         [Fact]
@@ -134,7 +134,7 @@ public class Or_methods
 
             actual.Should().NotBe(source);
             actual.IsSuccess.Should().BeTrue();
-            actual._value.Should().Be(2);
+            actual.Value.Should().Be(2);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ public class Or_methods
 
             actual.Should().NotBe(source);
             actual.IsSuccess.Should().BeTrue();
-            actual._value.Should().Be(2);
+            actual.Value.Should().Be(2);
         }
 
         [Fact]

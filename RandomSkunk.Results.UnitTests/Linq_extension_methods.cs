@@ -13,7 +13,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsSuccess.Should().BeTrue();
-            result._value.Should().Be("n2: 2");
+            result.Value.Should().Be("n2: 2");
         }
 
         [Fact]
@@ -65,7 +65,7 @@ public class Linq_extension_methods
                          select s;
 
             result.IsSuccess.Should().BeTrue();
-            result._value.Should().Be("n2: 2");
+            result.Value.Should().Be("n2: 2");
         }
 
         [Fact]

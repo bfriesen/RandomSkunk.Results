@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.Outcome;
-
 namespace RandomSkunk.Results.UnitTests;
 
 public class Result_struct
@@ -9,7 +7,6 @@ public class Result_struct
     {
         var result = default(Result);
 
-        result._outcome.Should().Be(Fail);
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
         result.IsDefault.Should().BeTrue();
@@ -23,7 +20,6 @@ public class Result_struct
         {
             var result = Result.Success();
 
-            result._outcome.Should().Be(Success);
             result.IsSuccess.Should().BeTrue();
             result.IsFail.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
@@ -35,7 +31,6 @@ public class Result_struct
             var error = new Error();
             var result = Result.Fail(error);
 
-            result._outcome.Should().Be(Fail);
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsDefault.Should().BeFalse();

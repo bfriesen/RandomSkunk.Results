@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.MaybeOutcome;
-
 namespace RandomSkunk.Results.UnitTests;
 
 public class Maybe_of_T_struct
@@ -9,7 +7,6 @@ public class Maybe_of_T_struct
     {
         var result = default(Maybe<int>);
 
-        result._outcome.Should().Be(Fail);
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
         result.IsDefault.Should().BeTrue();
@@ -23,12 +20,11 @@ public class Maybe_of_T_struct
         {
             var result = 1.ToMaybe();
 
-            result._outcome.Should().Be(Success);
             result.IsSuccess.Should().BeTrue();
             result.IsFail.Should().BeFalse();
             result.IsNone.Should().BeFalse();
             result.IsDefault.Should().BeFalse();
-            result._value.Should().Be(1);
+            result.Value.Should().Be(1);
         }
 
         [Fact]
@@ -37,7 +33,6 @@ public class Maybe_of_T_struct
             var error = new Error();
             var result = Maybe<int>.Fail(error);
 
-            result._outcome.Should().Be(Fail);
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsNone.Should().BeFalse();
@@ -50,7 +45,6 @@ public class Maybe_of_T_struct
         {
             var result = Maybe<int>.None();
 
-            result._outcome.Should().Be(None);
             result.IsNone.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsFail.Should().BeFalse();

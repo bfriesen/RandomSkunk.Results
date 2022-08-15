@@ -8,13 +8,17 @@ namespace RandomSkunk.Results;
 /// <typeparam name="T">The type of the result value.</typeparam>
 public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 {
-    internal readonly MaybeOutcome _outcome;
-    internal readonly T? _value;
+    private const int _failOutcome = 0;
+    private const int _successOutcome = 1;
+    private const int _noneOutcome = 2;
+
+    private readonly int _outcome;
+    private readonly T? _value;
     private readonly Error? _error;
 
     private Maybe(T value)
     {
-        _outcome = MaybeOutcome.Success;
+        _outcome = _successOutcome;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
@@ -23,13 +27,13 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     {
         if (none)
         {
-            _outcome = MaybeOutcome.None;
+            _outcome = _noneOutcome;
             _value = default;
             _error = null;
         }
         else
         {
-            _outcome = MaybeOutcome.Fail;
+            _outcome = _failOutcome;
             _value = default;
             _error = error ?? new Error(setStackTrace: true);
         }
@@ -44,8 +48,8 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     public T Value =>
         _outcome switch
         {
-            MaybeOutcome.Success => _value!,
-            MaybeOutcome.None => throw Exceptions.CannotAccessValueUnlessSuccess(),
+            _successOutcome => _value!,
+            _noneOutcome => throw Exceptions.CannotAccessValueUnlessSuccess(),
             _ => throw Exceptions.CannotAccessValueUnlessSuccess(GetError()),
         };
 
@@ -55,7 +59,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
     public Error Error =>
-        _outcome == MaybeOutcome.Fail
+        _outcome == _failOutcome
             ? GetError()
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
@@ -63,24 +67,24 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _outcome == MaybeOutcome.Success;
+    public bool IsSuccess => _outcome == _successOutcome;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>None</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>None</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsNone => _outcome == MaybeOutcome.None;
+    public bool IsNone => _outcome == _noneOutcome;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _outcome == MaybeOutcome.Fail;
+    public bool IsFail => _outcome == _failOutcome;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Maybe{T}"/> struct.
     /// </summary>
-    public bool IsDefault => _outcome == MaybeOutcome.Fail && _error is null;
+    public bool IsDefault => _outcome == _failOutcome && _error is null;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
@@ -213,8 +217,8 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     Error IResult.GetNonSuccessError() =>
         _outcome switch
         {
-            MaybeOutcome.Fail => Error,
-            MaybeOutcome.None => Errors.NoneResult(),
+            _failOutcome => Error,
+            _noneOutcome => Errors.NoneResult(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 

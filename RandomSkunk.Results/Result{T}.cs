@@ -8,20 +8,23 @@ namespace RandomSkunk.Results;
 /// <typeparam name="T">The type of the result value.</typeparam>
 public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
 {
-    internal readonly Outcome _outcome;
-    internal readonly T? _value;
+    private const int _failOutcome = 0;
+    private const int _successOutcome = 1;
+
+    private readonly int _outcome;
+    private readonly T? _value;
     private readonly Error? _error;
 
     private Result(T value)
     {
-        _outcome = Outcome.Success;
+        _outcome = _successOutcome;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
 
     private Result(Error? error)
     {
-        _outcome = Outcome.Fail;
+        _outcome = _failOutcome;
         _value = default;
         _error = error ?? new Error(setStackTrace: true);
     }
@@ -33,7 +36,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     ///     </returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Success</c> result.</exception>
     public T Value =>
-        _outcome == Outcome.Success
+        _outcome == _successOutcome
             ? _value!
             : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
@@ -43,7 +46,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
     public Error Error =>
-        _outcome == Outcome.Fail
+        _outcome == _failOutcome
             ? GetError()
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
@@ -51,18 +54,18 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _outcome == Outcome.Success;
+    public bool IsSuccess => _outcome == _successOutcome;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _outcome == Outcome.Fail;
+    public bool IsFail => _outcome == _failOutcome;
 
     /// <summary>
     /// Gets a value indicating whether this is a default instance of the <see cref="Result{T}"/> struct.
     /// </summary>
-    public bool IsDefault => _outcome == Outcome.Fail && _error is null;
+    public bool IsDefault => _outcome == _failOutcome && _error is null;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
@@ -188,7 +191,7 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     Error IResult.GetNonSuccessError() =>
         _outcome switch
         {
-            Outcome.Fail => GetError(),
+            _failOutcome => GetError(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 

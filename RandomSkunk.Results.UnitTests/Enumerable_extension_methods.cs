@@ -17,10 +17,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(1);
+            seqResult.Value.Should().Be(1);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(1);
+            listResult.Value.Should().Be(1);
         }
 
         [Fact]
@@ -65,10 +65,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrNone();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(1);
+            seqResult.Value.Should().Be(1);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(1);
+            listResult.Value.Should().Be(1);
         }
 
         [Fact]
@@ -108,7 +108,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.FirstOrFail(x => x > 4);
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(5);
+            seqResult.Value.Should().Be(5);
         }
 
         [Fact]
@@ -141,7 +141,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.FirstOrNone(x => x > 4);
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(5);
+            seqResult.Value.Should().Be(5);
         }
 
         [Fact]
@@ -178,10 +178,10 @@ public class Enumerable_extension_methods
             var listResult = list.LastOrFail();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(10);
+            seqResult.Value.Should().Be(10);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(10);
+            listResult.Value.Should().Be(10);
         }
 
         [Fact]
@@ -226,10 +226,10 @@ public class Enumerable_extension_methods
             var listResult = list.LastOrNone();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(10);
+            seqResult.Value.Should().Be(10);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(10);
+            listResult.Value.Should().Be(10);
         }
 
         [Fact]
@@ -269,7 +269,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.LastOrFail(x => x < 6);
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(5);
+            seqResult.Value.Should().Be(5);
         }
 
         [Fact]
@@ -302,7 +302,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.LastOrNone(x => x < 6);
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(5);
+            seqResult.Value.Should().Be(5);
         }
 
         [Fact]
@@ -339,10 +339,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrFail();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(1);
+            seqResult.Value.Should().Be(1);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(1);
+            listResult.Value.Should().Be(1);
         }
 
         [Fact]
@@ -403,10 +403,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrNone();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(1);
+            seqResult.Value.Should().Be(1);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(1);
+            listResult.Value.Should().Be(1);
         }
 
         [Fact]
@@ -462,7 +462,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.SingleOrFail(x => x > 4);
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(5);
+            seqResult.Value.Should().Be(5);
         }
 
         [Fact]
@@ -511,7 +511,7 @@ public class Enumerable_extension_methods
             var seqResult = seq.SingleOrNone(x => x > 4);
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(5);
+            seqResult.Value.Should().Be(5);
         }
 
         [Fact]
@@ -564,10 +564,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(1);
+            seqResult.Value.Should().Be(1);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(1);
+            listResult.Value.Should().Be(1);
         }
 
         [Fact]
@@ -612,10 +612,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrNone();
 
             seqResult.IsSuccess.Should().BeTrue();
-            seqResult._value!.Should().Be(1);
+            seqResult.Value.Should().Be(1);
 
             listResult.IsSuccess.Should().BeTrue();
-            listResult._value!.Should().Be(1);
+            listResult.Value.Should().Be(1);
         }
 
         [Fact]
