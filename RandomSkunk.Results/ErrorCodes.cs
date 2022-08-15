@@ -13,6 +13,17 @@ public static class ErrorCodes
     public const int BadRequest = 400;
 
     /// <summary>
+    /// Indicates that the client request was not completed because it lacks valid authentication credentials for the
+    /// requested resource.
+    /// </summary>
+    public const int Unauthorized = 401;
+
+    /// <summary>
+    /// Indicates that the server understands the request but refuses to authorize it.
+    /// </summary>
+    public const int Forbidden = 403;
+
+    /// <summary>
     /// Indicates that the target resource cannot be found.
     /// </summary>
     public const int NotFound = 404;

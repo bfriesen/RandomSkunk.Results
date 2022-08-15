@@ -8,6 +8,12 @@ public static class Errors
     internal const string BadRequestTitle = "Bad Request";
     internal const string BadRequestMessage = "The operation cannot be processed due to a client error.";
 
+    internal const string UnauthorizedTitle = "Unauthorized";
+    internal const string UnauthorizedMessage = "The operation was not completed because no credentials or invalid credentials were provided.";
+
+    internal const string ForbiddenTitle = "Forbidden";
+    internal const string ForbiddenMessage = "The operation was not completed because the provided credentials, while valid, do not grant sufficient privileges.";
+
     internal const string NotFoundTitle = "Not Found";
     internal const string NotFoundMessage = "The target resource cannot be found.";
 
@@ -40,6 +46,39 @@ public static class Errors
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadRequest,
+        };
+
+    /// <summary>
+    /// Creates an <see cref="Error"/> indicating that the client request was not completed because it lacks valid authentication
+    /// credentials for the requested resource.
+    /// </summary>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <returns>An Unauthorized error.</returns>
+    [StackTraceHidden]
+    public static Error Unauthorized(
+        string errorMessage = UnauthorizedMessage,
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? UnauthorizedMessage, UnauthorizedTitle, true)
+        {
+            Identifier = errorIdentifier,
+            ErrorCode = ErrorCodes.Unauthorized,
+        };
+
+    /// <summary>
+    /// Creates an <see cref="Error"/> indicating that the server understands the request but refuses to authorize it.
+    /// </summary>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <returns>A Forbidden error.</returns>
+    [StackTraceHidden]
+    public static Error Forbidden(
+        string errorMessage = ForbiddenMessage,
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? ForbiddenMessage, ForbiddenTitle, true)
+        {
+            Identifier = errorIdentifier,
+            ErrorCode = ErrorCodes.Forbidden,
         };
 
     /// <summary>
