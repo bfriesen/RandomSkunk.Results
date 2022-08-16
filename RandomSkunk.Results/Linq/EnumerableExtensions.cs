@@ -1,4 +1,6 @@
-namespace RandomSkunk.Results.Linq;
+using RandomSkunk.Results;
+
+namespace System.Linq;
 
 /// <summary>
 /// Provides extension methods for obtaining a single element from a sequence as a result object.
@@ -21,13 +23,13 @@ public static class EnumerableExtensions
         if (sourceSequence is IList<T> list)
         {
             if (list.Count > 0)
-                return list[0].ToResultOrFailIfNull();
+                return list[0].ToResultOrFailIfNull("The first element was null.");
         }
         else
         {
             using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (enumerator.MoveNext())
-                return enumerator.Current.ToResultOrFailIfNull();
+                return enumerator.Current.ToResultOrFailIfNull("The first element was null.");
         }
 
         return Result<T>.Fail(SequenceContainsNoElements());
@@ -49,13 +51,13 @@ public static class EnumerableExtensions
         if (sourceSequence is IList<T> list)
         {
             if (list.Count > 0)
-                return list[0].ToMaybeOrFailIfNull();
+                return list[0].ToMaybeOrFailIfNull("The first element was null.");
         }
         else
         {
             using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (enumerator.MoveNext())
-                return enumerator.Current.ToMaybeOrFailIfNull();
+                return enumerator.Current.ToMaybeOrFailIfNull("The first element was null.");
         }
 
         return Maybe<T>.None();
@@ -79,7 +81,10 @@ public static class EnumerableExtensions
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         foreach (var item in sourceSequence)
-            if (predicate(item)) return item.ToResultOrFailIfNull();
+        {
+            if (predicate(item))
+                return item.ToResultOrFailIfNull("The first matching element was null.");
+        }
 
         return Result<T>.Fail(SequenceContainsNoMatchingElements());
     }
@@ -101,7 +106,10 @@ public static class EnumerableExtensions
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         foreach (var item in sourceSequence)
-            if (predicate(item)) return item.ToMaybeOrFailIfNull();
+        {
+            if (predicate(item))
+                return item.ToMaybeOrFailIfNull("The first matching element was null.");
+        }
 
         return Maybe<T>.None();
     }
@@ -123,7 +131,7 @@ public static class EnumerableExtensions
         {
             int count = list.Count;
             if (count > 0)
-                return list[count - 1].ToResultOrFailIfNull();
+                return list[count - 1].ToResultOrFailIfNull("The last element was null.");
         }
         else
         {
@@ -135,7 +143,7 @@ public static class EnumerableExtensions
                 {
                     current = enumerator.Current;
                 } while (enumerator.MoveNext());
-                return current.ToResultOrFailIfNull();
+                return current.ToResultOrFailIfNull("The last element was null.");
             }
         }
 
@@ -159,7 +167,7 @@ public static class EnumerableExtensions
         {
             int count = list.Count;
             if (count > 0)
-                return list[count - 1].ToMaybeOrFailIfNull();
+                return list[count - 1].ToMaybeOrFailIfNull("The last element was null.");
         }
         else
         {
@@ -171,7 +179,7 @@ public static class EnumerableExtensions
                 {
                     current = enumerator.Current;
                 } while (enumerator.MoveNext());
-                return current.ToMaybeOrFailIfNull();
+                return current.ToMaybeOrFailIfNull("The last element was null.");
             }
         }
 
@@ -197,7 +205,7 @@ public static class EnumerableExtensions
 
         var result = Result<T>.Fail(SequenceContainsNoMatchingElements());
         foreach (T item in sourceSequence)
-            if (predicate(item)) result = item.ToResultOrFailIfNull();
+            if (predicate(item)) result = item.ToResultOrFailIfNull("The last matching element was null.");
 
         return result;
     }
@@ -220,7 +228,7 @@ public static class EnumerableExtensions
 
         var result = Maybe<T>.None();
         foreach (T item in sourceSequence)
-            if (predicate(item)) result = item.ToMaybeOrFailIfNull();
+            if (predicate(item)) result = item.ToMaybeOrFailIfNull("The last matching element was null.");
 
         return result;
     }
@@ -241,11 +249,13 @@ public static class EnumerableExtensions
 
         if (sourceSequence is IList<T> list)
         {
-            switch (list.Count)
+            var count = list.Count;
+            return count switch
             {
-                case 0: return Result<T>.Fail(SequenceContainsNoElements());
-                case 1: return list[0].ToResultOrFailIfNull();
-            }
+                0 => Result<T>.Fail(SequenceContainsNoElements()),
+                1 => list[0].ToResultOrFailIfNull("The single element was null."),
+                _ => Result<T>.Fail(SequenceContainsMoreThanOneElement(count)),
+            };
         }
         else
         {
@@ -253,12 +263,13 @@ public static class EnumerableExtensions
             if (!enumerator.MoveNext())
                 return Result<T>.Fail(SequenceContainsNoElements());
 
-            T current = enumerator.Current;
-            if (!enumerator.MoveNext())
-                return current.ToResultOrFailIfNull();
-        }
+            T value = enumerator.Current;
 
-        return Result<T>.Fail(SequenceContainsMoreThanOneElement());
+            if (enumerator.MoveNext())
+                return Result<T>.Fail(SequenceContainsMoreThanOneElement());
+
+            return value.ToResultOrFailIfNull("The single element was null.");
+        }
     }
 
     /// <summary>
@@ -277,11 +288,13 @@ public static class EnumerableExtensions
 
         if (sourceSequence is IList<T> list)
         {
-            switch (list.Count)
+            var count = list.Count;
+            return count switch
             {
-                case 0: return Maybe<T>.None();
-                case 1: return list[0].ToMaybeOrFailIfNull();
-            }
+                0 => Maybe<T>.None(),
+                1 => list[0].ToMaybeOrFailIfNull("The single element was null."),
+                _ => Maybe<T>.Fail(SequenceContainsMoreThanOneElement(count)),
+            };
         }
         else
         {
@@ -291,7 +304,7 @@ public static class EnumerableExtensions
 
             T current = enumerator.Current;
             if (!enumerator.MoveNext())
-                return current.ToMaybeOrFailIfNull();
+                return current.ToMaybeOrFailIfNull("The single element was null.");
         }
 
         return Maybe<T>.Fail(SequenceContainsMoreThanOneElement());
@@ -316,12 +329,12 @@ public static class EnumerableExtensions
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         Result<T> result = default;
-        long count = 0;
+        ulong count = 0;
         foreach (var item in sourceSequence)
         {
             if (predicate(item))
             {
-                result = item.ToResultOrFailIfNull();
+                result = item.ToResultOrFailIfNull("The single matching element was null.");
                 count = checked(count + 1);
             }
         }
@@ -330,7 +343,7 @@ public static class EnumerableExtensions
         {
             0 => Result<T>.Fail(SequenceContainsNoMatchingElements()),
             1 => result,
-            _ => Result<T>.Fail(SequenceContainsMoreThanOneMatchingElement()),
+            _ => Result<T>.Fail(SequenceContainsMoreThanOneMatchingElement(count)),
         };
     }
 
@@ -352,12 +365,12 @@ public static class EnumerableExtensions
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         Maybe<T> result = default;
-        long count = 0;
+        ulong count = 0;
         foreach (var item in sourceSequence)
         {
             if (predicate(item))
             {
-                result = item.ToMaybeOrFailIfNull();
+                result = item.ToMaybeOrFailIfNull("The single matching element was null.");
                 count = checked(count + 1);
             }
         }
@@ -366,7 +379,7 @@ public static class EnumerableExtensions
         {
             0 => Maybe<T>.None(),
             1 => result,
-            _ => Maybe<T>.Fail(SequenceContainsMoreThanOneMatchingElement()),
+            _ => Maybe<T>.Fail(SequenceContainsMoreThanOneMatchingElement(count)),
         };
     }
 
@@ -389,7 +402,7 @@ public static class EnumerableExtensions
             if (sourceSequence is IList<T> list)
             {
                 if (index < list.Count)
-                    return list[index].ToResultOrFailIfNull();
+                    return list[index].ToResultOrFailIfNull("The element at index {0} was null.", index);
             }
             else
             {
@@ -397,7 +410,7 @@ public static class EnumerableExtensions
                 while (enumerator.MoveNext())
                 {
                     if (index == 0)
-                        return enumerator.Current.ToResultOrFailIfNull();
+                        return enumerator.Current.ToResultOrFailIfNull("The element at index {0} was null.", index);
 
                     index--;
                 }
@@ -426,7 +439,7 @@ public static class EnumerableExtensions
             if (sourceSequence is IList<T> list)
             {
                 if (index < list.Count)
-                    return list[index].ToMaybeOrFailIfNull();
+                    return list[index].ToMaybeOrFailIfNull("The element at index {0} was null.", index);
             }
             else
             {
@@ -434,7 +447,7 @@ public static class EnumerableExtensions
                 while (enumerator.MoveNext())
                 {
                     if (index == 0)
-                        return enumerator.Current.ToMaybeOrFailIfNull();
+                        return enumerator.Current.ToMaybeOrFailIfNull("The element at index {0} was null.", index);
 
                     index--;
                 }
@@ -444,14 +457,16 @@ public static class EnumerableExtensions
         return Maybe<T>.None();
     }
 
-    private static Result<T> ToResultOrFailIfNull<T>(this T value) =>
+    [StackTraceHidden]
+    private static Result<T> ToResultOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
         value.ToResult().WithError(error =>
-            error with { ErrorCode = ErrorCodes.Gone, Message = "The matching element was null." });
+            error with { ErrorCode = ErrorCodes.Gone, Message = string.Format(errorMessageFormat, errorMessageArgs) });
 
-    private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value) =>
+    [StackTraceHidden]
+    private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
         value is not null
             ? value.ToMaybe()
-            : Maybe<T>.Fail(Errors.Gone("The matching element was null."));
+            : Maybe<T>.Fail(Errors.Gone(string.Format(errorMessageFormat, errorMessageArgs)));
 
     [StackTraceHidden]
     private static Error IndexOutOfRange() =>
@@ -466,10 +481,12 @@ public static class EnumerableExtensions
         Errors.NotFound("Sequence contains no matching elements.");
 
     [StackTraceHidden]
-    private static Error SequenceContainsMoreThanOneElement() =>
-        Errors.BadRequest("Sequence contains more than one element.");
+    private static Error SequenceContainsMoreThanOneElement(int? count = null) =>
+        Errors.BadRequest(count is null
+            ? "Sequence contains more than one element."
+            : $"Sequence contains {count} elements, when it should contain exactly one.");
 
     [StackTraceHidden]
-    private static Error SequenceContainsMoreThanOneMatchingElement() =>
-        Errors.BadRequest("Sequence contains more than one matching element.");
+    private static Error SequenceContainsMoreThanOneMatchingElement(ulong count) =>
+        Errors.BadRequest($"Sequence contains {count} matching elements, when it should contain exactly one.");
 }

@@ -1,4 +1,3 @@
-using RandomSkunk.Results.Linq;
 using System.Linq;
 
 namespace RandomSkunk.Results.UnitTests;
