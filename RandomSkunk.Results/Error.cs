@@ -12,8 +12,8 @@ namespace RandomSkunk.Results;
 [JsonConverter(typeof(ErrorJsonConverter))]
 public record class Error
 {
-    internal const string _defaultMessage = "An error occurred.";
-    internal const string _defaultFromExceptionMessage = "An exception was thrown.";
+    internal const string DefaultMessage = "An error occurred.";
+    internal const string DefaultFromExceptionMessage = "An exception was thrown.";
 
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
     private static readonly Lazy<Error> _defaultError = new(() => new Error());
@@ -39,7 +39,7 @@ public record class Error
         bool setStackTrace = false,
         IReadOnlyDictionary<string, object>? extensions = null)
     {
-        _message = message ?? _defaultMessage;
+        _message = message ?? DefaultMessage;
         _title = title ?? Format.AsSentenceCase(GetType().Name);
         _extensions = extensions ?? _emptyExtensions.Value;
 
@@ -113,7 +113,7 @@ public record class Error
     [StackTraceHidden]
     public static Error FromException(
         Exception exception,
-        string message = _defaultFromExceptionMessage,
+        string message = DefaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? identifier = null,
         string? title = null)
@@ -122,7 +122,7 @@ public record class Error
 
         var innerError = CreateInnerError(exception);
 
-        return new Error(message ?? _defaultFromExceptionMessage, title, true)
+        return new Error(message ?? DefaultFromExceptionMessage, title, true)
         {
             ErrorCode = errorCode,
             Identifier = identifier,

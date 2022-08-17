@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.Error;
-
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -24,6 +22,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
         {
             _outcome = _failOutcome;
             _error = error ?? new Error(setStackTrace: true);
+            FailResult.InvokeOnCreated(_error);
         }
     }
 
@@ -105,11 +104,11 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     [StackTraceHidden]
     public static Result Fail(
         Exception exception,
-        string errorMessage = _defaultFromExceptionMessage,
+        string errorMessage = Error.DefaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null) =>
-        Fail(FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
+        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -173,5 +172,5 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
         };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private Error GetError() => _error ?? DefaultError;
+    private Error GetError() => _error ?? Error.DefaultError;
 }
