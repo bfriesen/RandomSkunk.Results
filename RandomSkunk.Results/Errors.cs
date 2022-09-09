@@ -102,7 +102,7 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <returns>A error.</returns>
+    /// <returns>A Gone error.</returns>
     [StackTraceHidden]
     public static Error Gone(
         string errorMessage = GoneMessage,
@@ -119,7 +119,7 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <returns>A error.</returns>
+    /// <returns>An Internal Server Error error.</returns>
     [StackTraceHidden]
     public static Error InternalServerError(
         string errorMessage = InternalServerErrorMessage,
@@ -135,7 +135,7 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <returns>A error.</returns>
+    /// <returns>A Not Implemented error.</returns>
     [StackTraceHidden]
     public static Error NotImplemented(
         string errorMessage = NotImplementedMessage,
@@ -151,7 +151,7 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <returns>A error.</returns>
+    /// <returns>A Bad Gateway error.</returns>
     [StackTraceHidden]
     public static Error BadGateway(
         string errorMessage = BadGatewayMessage,
@@ -167,7 +167,7 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <returns>A error.</returns>
+    /// <returns>A Gateway Timeout error.</returns>
     [StackTraceHidden]
     public static Error GatewayTimeout(
         string errorMessage = GatewayTimeoutMessage,
