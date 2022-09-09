@@ -15,10 +15,9 @@ public static partial class ResultExtensions
     /// <summary>
     /// Flattens the nested result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
-    public static Result Flatten<T>(this Result<Result> sourceResult) =>
+    public static Result Flatten(this Result<Result> sourceResult) =>
         sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
@@ -42,10 +41,9 @@ public static partial class ResultExtensions
     /// <summary>
     /// Flattens the nested result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
-    public static Result Flatten<T>(this Maybe<Result> sourceResult) =>
+    public static Result Flatten(this Maybe<Result> sourceResult) =>
         sourceResult.SelectMany(nestedResult => nestedResult);
 
     /// <summary>
@@ -69,11 +67,10 @@ public static partial class ResultExtensions
     /// <summary>
     /// Flattens the nested result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
-    public static async Task<Result> Flatten<T>(this Task<Result<Result>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten<T>();
+    public static async Task<Result> Flatten(this Task<Result<Result>> sourceResult) =>
+        (await sourceResult.ConfigureAwait(false)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
@@ -96,11 +93,10 @@ public static partial class ResultExtensions
     /// <summary>
     /// Flattens the nested result.
     /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
-    public static async Task<Result> Flatten<T>(this Task<Maybe<Result>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten<T>();
+    public static async Task<Result> Flatten(this Task<Maybe<Result>> sourceResult) =>
+        (await sourceResult.ConfigureAwait(false)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
