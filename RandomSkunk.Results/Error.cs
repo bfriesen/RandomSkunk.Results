@@ -16,7 +16,7 @@ public record class Error
     internal const string DefaultFromExceptionMessage = "An exception was thrown.";
 
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
-    private static readonly Lazy<Error> _defaultError = new(() => new Error());
+    private static readonly Lazy<Error> _defaultError = new(() => new Error() { StackTrace = "The error from a default result struct does not have a stack trace." });
     private static readonly Lazy<IReadOnlyDictionary<string, object>> _emptyExtensions = new(() => new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
 
     private readonly string _message;
