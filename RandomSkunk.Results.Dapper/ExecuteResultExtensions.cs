@@ -29,7 +29,7 @@ public static class ExecuteResultExtensions
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
     /// <param name="affectedRows">The expected number of affected rows.</param>
-    /// <returns>A result representing a database query that affected one row.</returns>
+    /// <returns>A result representing a database query that affected N rows.</returns>
     public static Result EnsureNRowsAffected(this Result<int> sourceResult, int affectedRows) =>
         sourceResult.SelectMany(affectedRowCount =>
             affectedRowCount == affectedRows
@@ -42,7 +42,7 @@ public static class ExecuteResultExtensions
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
     /// <param name="affectedRows">The expected number of affected rows.</param>
-    /// <returns>A result representing a database query that affected one row.</returns>
+    /// <returns>A result representing a database query that affected N rows.</returns>
     public static async Task<Result> EnsureNRowsAffected(this Task<Result<int>> sourceResult, int affectedRows) =>
         (await sourceResult.ConfigureAwait(false)).EnsureNRowsAffected(affectedRows);
 }
