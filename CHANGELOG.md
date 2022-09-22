@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [1.0.0-alpha16] - 2022-09-22
+
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha16) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha16/lib/netstandard2.1/diff/1.0.0-alpha15/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha16) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha16/lib/netstandard2.1/diff/1.0.0-alpha15/))  
+[RandomSkunk.Results.Dapper API](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha16) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha16/lib/netstandard2.1/diff/1.0.0-alpha15/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha16) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha16/lib/netstandard2.1/diff/1.0.0-alpha15/))
+
+### Added
+
+- RandomSkunk.Results:
+    - Add extension methods for async linq-to-results.
+    - Add `Unauthorized` and `Forbidden` properties to `Errors` and `ErrorCodes` classes.
+    - Add `FailResult.OnCreated` callback, which is called whenever a fail result is created.
+    - Add `TryGetError` method for each result type.
+    - Add `TryCatch` overloads with 3, 4, and 5 exceptions.
+
+### Changed
+
+- RandomSkunk.Results:
+    - Rename `Map` and `FlatMap` methods to `Select` and `SelectMany`.
+    - Rename `MapAll` and `FlatMapAll` extension methods to `Select` and `SelectMany`.
+    - Rename `CompositeError.Create` method to `CreateOrGetSingle`.
+    - Replace `GetValue()` and `GetError()` extension methods with `Value` and `Error` properties.
+    - Change namespace of enumerable extensions (e.g. `FirstOrNone` or `SingleOrFail`) to `System.Linq` to improve discoverability.
+
+### Removed
+
+- RandomSkunk.Results:
+    - Remove RandomSkunk.Results.Linq namespace.
+    - Remove RandomSkunk.Results.Unsafe namespace.
+    - Remove `Type` property from `Result`, `Result<T>`, and `Maybe<T>`.
+    - Remove unnecessary generic parameter from some `Flatten` extension methods.
+
 ## [1.0.0-alpha15] - 2022-07-28
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha15) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha15/lib/netstandard2.1/diff/1.0.0-alpha14/))  
@@ -367,7 +400,9 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha14...HEAD
+[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha16...HEAD
+[1.0.0-alpha16]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha15...v1.0.0-alpha16
+[1.0.0-alpha15]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha14...v1.0.0-alpha15
 [1.0.0-alpha14]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha13...v1.0.0-alpha14
 [1.0.0-alpha13]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha12...v1.0.0-alpha13
 [1.0.0-alpha12]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha11...v1.0.0-alpha12
