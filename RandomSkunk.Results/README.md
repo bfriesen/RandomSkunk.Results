@@ -74,49 +74,27 @@ There are additional classes named "TryCatch" in, but with different number of g
 
 #### Direct Access
 
-To access the value and error of results directly, add `using RandomSkunk.Results.Unsafe;` to the using directives, then call the `GetValue()` and `GetError()` extension methods on the result. Note that calling these extension methods will throw an `InvalidStateException` if not in the proper state. `IsSuccess` must be true in order to successfully call `GetValue()`, and `IsFail` must be true in order to successfully call `GetError()`.
+To access the value and error of results directly, then access the `Value` and `Error` properties of the result. Note that accessing these properties will throw an `InvalidStateException` if not in the proper state: `IsSuccess` must be true in order to successfully access `Value`, and `IsFail` must be true in order to successfully access `Error`.
 
 ```c#
-using RandomSkunk.Results.Unsafe;
-
 void Example(Result<int> result1, Maybe<int> result2, Result result3)
 {
     if (result1.IsFail)
-        Console.WriteLine($"Error: {result1.GetError()}");
+        Console.WriteLine($"Error: {result1.Error}");
     else
-        Console.WriteLine($"Success: {result1.GetValue()}");
+        Console.WriteLine($"Success: {result1.Value}");
 
     if (result2.IsSuccess)
-        Console.WriteLine($"Success: {result2.GetValue()}");
+        Console.WriteLine($"Success: {result2.Value}");
     else if (result2.IsNone)
         Console.WriteLine("None");
     else
-        Console.WriteLine($"Error: {result2.GetError()}");
+        Console.WriteLine($"Error: {result2.Error}");
 
     if (result3.IsSuccess)
         Console.WriteLine("Success");
     else
-        Console.WriteLine($"Error: {result3.GetError()}");
-}
-```
-
-Each result type also has an enum `Type` property that returns the kind of result: `Success`, `Fail`, or `None`, depending on the result type.
-
-```c#
-void Example(Maybe<int> result)
-{
-    switch (result.Type)
-    {
-        case MaybeType.Success:
-            Console.WriteLine($"Success: {result.GetValue()}");
-            break;
-        case MaybeType.None:
-            Console.WriteLine("None");
-            break;
-        case MaybeType.Fail:
-            Console.WriteLine($"Fail: {result.GetError()}");
-            break;
-    }
+        Console.WriteLine($"Error: {result3.Error}");
 }
 ```
 
@@ -305,22 +283,32 @@ public record class NotFoundError : Error
 Result<int> result = Result<int>.Fail(new NotFoundError(123));
 
 // errorTitle: "Not Found Error"
-string errorTitle = result.GetError().Title;
+string errorTitle = result.Error.Title;
 
 // errorMessage: "A record with the ID 123 could not be found."
-string errorMessage = result.GetError().Message;
+string errorMessage = result.Error.Message;
 
 // errorCode: 404
-int? errorCode = result.GetError().ErrorCode;
+int? errorCode = result.Error.ErrorCode;
 ```
 
 ## Handling multiple results
 
-TODO: Complete this section
+If you have multiple results and need to do something based on whether they all succeeded or any did not succeed, wrap up the results in a value tuple and call one of the result tuple extensions: `Match`, `OnAllSuccess`, `OnAnyNonSuccess`, `Select`, or `SelectMany`.
+
+```c#
+Result<int> result1 = default;
+Maybe<int> result2 = default;
+Result<string> result3 = default;
+
+(result1, result2, result3)
+    .OnAllSuccess((r1, r2, r3) => Console.WriteLine($"Success: {r1}, {r2}, {r3}"))
+    .OnAnyNonSuccess(error => Console.WriteLine($"Fail: {error}"));
+```
 
 ### LINQ Extension Methods
 
-TODO: Add introduction
+The easiest way to perform a sequence of result operations is by using LINQ-to-Results. This uses regular .NET LINQ syntax to compose the sequence of operations. The main advantage to this is that any non-success result will short-circuits the entire sequence - later operations are only evaluated if all earlier operations succeed.
 
 ```c#
 using RandomSkunk.Results.Linq;
