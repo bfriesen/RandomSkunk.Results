@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results.Http:
+    - Add `HttpClient.TryGetByteArrayAsync` extension method.
+
 ## [1.0.0-alpha16] - 2022-09-22
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha16) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha16/lib/netstandard2.1/diff/1.0.0-alpha15/))  

@@ -141,9 +141,8 @@ public static class HttpClientExtensions
     ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of cancellation.
-    /// </param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPatchAsync(
         this HttpClient sourceHttpClient,
@@ -179,13 +178,10 @@ public static class HttpClientExtensions
     ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
-    /// <param name="options">
-    /// Options to control the behavior during deserialization. The default options are those specified by
-    /// <see cref="JsonSerializerDefaults.Web"/>.
-    /// </param>
-    /// <param name="cancellationToken">
-    /// A cancellation token that can be used by other objects or threads to receive notice of cancellation.
-    /// </param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
     public static Task<Result<HttpResponseMessage>> TryPatchAsJsonAsync<TValue>(
         this HttpClient sourceHttpClient,
@@ -387,6 +383,65 @@ public static class HttpClientExtensions
             () => sourceHttpClient.SendAsync(request, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
+
+#if NET5_0_OR_GREATER
+    /// <summary>
+    /// Sends a GET request to the specified Uri and return the response body as a byte array in an asynchronous operation.
+    /// </summary>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
+    /// <param name="requestUri">The Uri the request is sent to.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
+    ///     </para>
+    /// </param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
+    /// <returns>The task object representing the asynchronous operation.</returns>
+    public static Task<Result<byte[]>> TryGetByteArrayAsync(
+        this HttpClient sourceHttpClient,
+        string? requestUri,
+        Func<HttpRequestException, Error>? getHttpError = null,
+        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        CancellationToken cancellationToken = default) =>
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+            () => sourceHttpClient.GetByteArrayAsync(requestUri, cancellationToken),
+            getHttpError ?? _defaultGetHttpError,
+            getTimeoutError ?? _defaultGetTimeoutError);
+#else
+    // The different signature for lower targets is because before .NET 5, HttpClient.GetByteArrayAsync didn't have
+    // an overload with a cancellation token, and it didn't throw a TaskCanceledException due to request timeout.
+
+    /// <summary>
+    /// Sends a GET request to the specified Uri and return the response body as a byte array in an asynchronous operation.
+    /// </summary>
+    /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
+    /// <param name="requestUri">The Uri the request is sent to.</param>
+    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
+    ///     <c>Fail</c> result's error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
+    /// <returns>The task object representing the asynchronous operation.</returns>
+    public static Task<Result<byte[]>> TryGetByteArrayAsync(
+        this HttpClient sourceHttpClient,
+        string? requestUri,
+        Func<HttpRequestException, Error>? getHttpError = null) =>
+        TryCatch<HttpRequestException>.AsResultAsync(
+            () => sourceHttpClient.GetByteArrayAsync(requestUri),
+            getHttpError ?? _defaultGetHttpError);
+#endif
 
     [StackTraceHidden]
     private static Error GetHttpError(HttpRequestException ex) =>
