@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Add first-class support for `Result` in LINQ-to-Results query syntax.
+    - Add optional `setStackTrace` parameter (default: true) to factory methods in `Errors` static class.
 - RandomSkunk.Results.Http:
     - Add `HttpClient.TryGetByteArrayAsync` extension method.
 
