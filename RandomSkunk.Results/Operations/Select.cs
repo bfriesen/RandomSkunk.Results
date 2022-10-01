@@ -87,12 +87,12 @@ public partial struct Maybe<T>
     }
 }
 
-#pragma warning disable CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-
 /// <content> Defines the <c>Select</c> and <c>SelectAsync</c> extension methods. </content>
 public static partial class ResultExtensions
 {
+    #pragma warning disable CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
+    #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+
     /// <inheritdoc cref="Result{T}.Select{TReturn}(Func{T, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
@@ -101,9 +101,7 @@ public static partial class ResultExtensions
         Func<T, TReturn> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
 
-    /// <inheritdoc cref="Result{T}.Select{TReturn}(Func{T, TReturn})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="Select{T, TReturn}(Task{Result{T}}, Func{T, TReturn})"/>
     public static async Task<Result<TReturn>> SelectAsync<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
@@ -117,16 +115,13 @@ public static partial class ResultExtensions
         Func<T, TReturn> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
 
-    /// <inheritdoc cref="Maybe{T}.Select{TReturn}(Func{T, TReturn})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="Select{T, TReturn}(Task{Maybe{T}}, Func{T, TReturn})"/>
     public static async Task<Maybe<TReturn>> SelectAsync<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).SelectAsync(onSuccessSelector).ConfigureAwait(false);
 
-    /// <inheritdoc cref="Result{T}.Select{TReturn}(Func{T, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="Select{T, TReturn}(Task{Result{T}}, Func{T, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Result<TReturn> Select<TReturn>(
         this IResult<DBNull> sourceResult,
@@ -155,14 +150,13 @@ public static partial class ResultExtensions
         return Result<TReturn>.Fail(sourceResult.GetNonSuccessError());
     }
 
-    /// <inheritdoc cref="Result{T}.Select{TReturn}(Func{T, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="Select{T, TReturn}(Task{Result{T}}, Func{T, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> Select<TReturn>(
         this Task<IResult<DBNull>> sourceResult,
         Func<DBNull, TReturn> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
-}
 
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-#pragma warning restore CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
+    #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+    #pragma warning restore CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
+}

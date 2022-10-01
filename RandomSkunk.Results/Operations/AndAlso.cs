@@ -21,12 +21,7 @@ public partial struct Result
         };
     }
 
-    /// <summary>
-    /// Combines this result with another result if this is a <c>Success</c> result; otherwise, return this <c>Fail</c> result.
-    /// </summary>
-    /// <param name="onSuccessAsync">A function returning another <see cref="Result"/> that is only evaluated if this is a
-    ///     <c>Success</c> result.</param>
-    /// <returns>The combined result.</returns>
+    /// <inheritdoc cref="AndAlso(Func{Result})"/>
     public async Task<Result> AndAlsoAsync(Func<Task<Result>> onSuccessAsync)
     {
         if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));

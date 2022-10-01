@@ -13,12 +13,7 @@ public static partial class ResultExtensions
         where TDisposable : IDisposable =>
         new DisposableResult<TDisposable>(sourceResult);
 
-    /// <summary>
-    /// Gets an object that, when disposed, disposes the source result's value.
-    /// </summary>
-    /// <typeparam name="TDisposable">The <see cref="IDisposable"/> type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <returns>An <see cref="IDisposable"/> object.</returns>
+    /// <inheritdoc cref="AsDisposable{TDisposable}(Result{TDisposable})"/>
     public static IDisposable AsDisposable<TDisposable>(this Maybe<TDisposable> sourceResult)
         where TDisposable : IDisposable =>
         new DisposableMaybe<TDisposable>(sourceResult);
@@ -33,12 +28,7 @@ public static partial class ResultExtensions
         where TAsyncDisposable : IAsyncDisposable =>
         new AsyncDisposableResult<TAsyncDisposable>(sourceResult);
 
-    /// <summary>
-    /// Gets an object that, when disposed, disposes the source result's value.
-    /// </summary>
-    /// <typeparam name="TAsyncDisposable">The <see cref="IAsyncDisposable"/> type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <returns>An <see cref="IAsyncDisposable"/> object.</returns>
+    /// <inheritdoc cref="AsAsyncDisposable{TAsyncDisposable}(Result{TAsyncDisposable})"/>
     public static IAsyncDisposable AsAsyncDisposable<TAsyncDisposable>(this Maybe<TAsyncDisposable> sourceResult)
         where TAsyncDisposable : IAsyncDisposable =>
         new AsyncDisposableMaybe<TAsyncDisposable>(sourceResult);

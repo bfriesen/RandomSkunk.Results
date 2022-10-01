@@ -25,14 +25,7 @@ public partial struct Result<T>
         return AsMaybe();
     }
 
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Where(Func{T, bool})"/>
     public async Task<Maybe<T>> Where(Func<T, Task<bool>> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
@@ -51,14 +44,7 @@ public partial struct Result<T>
 /// <content> Defines the <c>Where</c> methods. </content>
 public partial struct Maybe<T>
 {
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result{T}.Where(Func{T, bool})"/>
     public Maybe<T> Where(Func<T, bool> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
@@ -73,14 +59,7 @@ public partial struct Maybe<T>
         return this;
     }
 
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result{T}.Where(Func{T, bool})"/>
     public async Task<Maybe<T>> Where(Func<T, Task<bool>> predicate)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
@@ -99,67 +78,33 @@ public partial struct Maybe<T>
 /// <content> Defines the <c>Where</c> extension methods. </content>
 public static partial class ResultExtensions
 {
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
+    #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+
+    /// <inheritdoc cref="Result{T}.Where(Func{T, bool})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> Where<T>(
         this Task<Result<T>> sourceResult,
         Func<T, bool> predicate) =>
         (await sourceResult.ConfigureAwait(false)).Where(predicate);
 
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Where{T}(Task{Result{T}},Func{T, bool})"/>
     public static async Task<Maybe<T>> Where<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<bool>> predicate) =>
         await (await sourceResult.ConfigureAwait(false)).Where(predicate).ConfigureAwait(false);
 
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Where{T}(Task{Result{T}},Func{T, bool})"/>
     public static async Task<Maybe<T>> Where<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, bool> predicate) =>
         (await sourceResult.ConfigureAwait(false)).Where(predicate);
 
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="sourceResult"/> is <see langword="null"/> or if
-    ///     <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Where{T}(Task{Result{T}},Func{T, bool})"/>
     public static async Task<Maybe<T>> Where<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<bool>> predicate) =>
         await (await sourceResult.ConfigureAwait(false)).Where(predicate).ConfigureAwait(false);
+
+    #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
 }

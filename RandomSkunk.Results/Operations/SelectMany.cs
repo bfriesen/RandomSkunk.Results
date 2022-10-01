@@ -504,12 +504,12 @@ public partial struct Maybe<T>
     }
 }
 
-#pragma warning disable CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
-#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-
 /// <content> Defines the <c>SelectMany</c> methods. </content>
 public static partial class ResultExtensions
 {
+    #pragma warning disable CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
+    #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+
     /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
     /// <param name="sourceResult">The source result.</param>
     public static async Task<Result> SelectMany(
@@ -517,8 +517,7 @@ public static partial class ResultExtensions
         Func<Result> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany(Task{Result}, Func{Result})"/>
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Task<Result>> onSuccessSelector) =>
@@ -531,8 +530,7 @@ public static partial class ResultExtensions
         Func<Result<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(Task{Result}, Func{Result{TReturn}})"/>
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Result<TReturn>>> onSuccessSelector) =>
@@ -545,8 +543,7 @@ public static partial class ResultExtensions
         Func<Maybe<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(Task{Result},Func{Maybe{TReturn}})"/>
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Maybe<TReturn>>> onSuccessSelector) =>
@@ -560,9 +557,7 @@ public static partial class ResultExtensions
         Func<T, Result> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result{T}.SelectMany(Func{T, Result})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T}(Task{Result{T}},Func{T, Result})"/>
     public static async Task<Result> SelectMany<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result>> onSuccessSelector) =>
@@ -576,9 +571,7 @@ public static partial class ResultExtensions
         Func<T, Result<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TReturn}(Task{Result{T}},Func{T, Result{TReturn}})"/>
     public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
@@ -592,9 +585,7 @@ public static partial class ResultExtensions
         Func<T, Maybe<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TReturn}(Task{Result{T}},Func{T, Maybe{TReturn}})"/>
     public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
@@ -608,9 +599,7 @@ public static partial class ResultExtensions
         Func<T, Result> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany(Func{T, Result})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T}(Task{Maybe{T}},Func{T, Result})"/>
     public static async Task<Result> SelectMany<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result>> onSuccessSelector) =>
@@ -624,9 +613,7 @@ public static partial class ResultExtensions
         Func<T, Result<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TReturn}(Task{Maybe{T}},Func{T, Result{TReturn}})"/>
     public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
@@ -640,9 +627,7 @@ public static partial class ResultExtensions
         Func<T, Maybe<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TReturn}(Task{Maybe{T}},Func{T, Maybe{TReturn}})"/>
     public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
@@ -680,9 +665,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TIntermediate, TReturn}(Task{Result{T}},Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
@@ -696,9 +679,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TIntermediate, TReturn}(Task{Result{T}},Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
@@ -744,9 +725,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TIntermediate, TReturn}(Task{Maybe{T}},Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
@@ -760,9 +739,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T,TIntermediate, TReturn}(Task{Maybe{T}},Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
@@ -801,8 +778,7 @@ public static partial class ResultExtensions
         return Result.Fail(sourceResult.GetNonSuccessError());
     }
 
-    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany(IResult{DBNull}, Func{DBNull, Result})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result> SelectMany(
         this IResult<DBNull> sourceResult,
@@ -826,16 +802,14 @@ public static partial class ResultExtensions
         return Result.Fail(sourceResult.GetNonSuccessError());
     }
 
-    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany(IResult{DBNull}, Func{DBNull, Result})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result> SelectMany(
         this Task<IResult<DBNull>> sourceResult,
         Func<DBNull, Result> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany(IResult{DBNull}, Func{DBNull, Result})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result> SelectMany(
         this Task<IResult<DBNull>> sourceResult,
@@ -867,8 +841,7 @@ public static partial class ResultExtensions
         return Result<TReturn>.Fail(sourceResult.GetNonSuccessError());
     }
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result{TReturn}})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this IResult<DBNull> sourceResult,
@@ -892,15 +865,14 @@ public static partial class ResultExtensions
         return Result<TReturn>.Fail(sourceResult.GetNonSuccessError());
     }
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result{TReturn}})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<IResult<DBNull>> sourceResult,
         Func<DBNull, Result<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result{TReturn}})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -932,8 +904,7 @@ public static partial class ResultExtensions
         return Maybe<TReturn>.Fail(sourceResult.GetNonSuccessError());
     }
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull},Func{DBNull,Maybe{TReturn}})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this IResult<DBNull> sourceResult,
@@ -957,16 +928,14 @@ public static partial class ResultExtensions
         return Maybe<TReturn>.Fail(sourceResult.GetNonSuccessError());
     }
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull},Func{DBNull,Maybe{TReturn}})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<IResult<DBNull>> sourceResult,
         Func<DBNull, Maybe<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull},Func{DBNull,Maybe{TReturn}})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -990,8 +959,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result}, Func{DBNull, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TReturn>(
         this IResult<DBNull> sourceResult,
@@ -1007,8 +975,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result}, Func{DBNull, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -1024,8 +991,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result}, Func{DBNull, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -1041,8 +1007,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result}, Func{DBNull, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Result<TReturn> SelectMany<TIntermediate, TReturn>(
         this IResult<DBNull> sourceResult,
@@ -1058,8 +1023,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result}, Func{DBNull, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         this IResult<DBNull> sourceResult,
@@ -1075,8 +1039,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result}, Func{DBNull, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -1092,8 +1055,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TReturn}(IResult{DBNull}, Func{DBNull, Result}, Func{DBNull, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -1126,8 +1088,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TIntermediate, TReturn}(IResult{DBNull}, Func{DBNull, Maybe{TIntermediate}}, Func{DBNull, TIntermediate, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
         this IResult<DBNull> sourceResult,
@@ -1143,8 +1104,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TIntermediate, TReturn}(IResult{DBNull}, Func{DBNull, Maybe{TIntermediate}}, Func{DBNull, TIntermediate, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -1160,8 +1120,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{TIntermediate, TReturn}(IResult{DBNull}, Func{DBNull, Maybe{TIntermediate}}, Func{DBNull, TIntermediate, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
         this Task<IResult<DBNull>> sourceResult,
@@ -1193,8 +1152,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T, TReturn}(Result{T}, Func{T, Result}, Func{T, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Result<T> sourceResult,
@@ -1209,8 +1167,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T, TReturn}(Result{T}, Func{T, Result}, Func{T, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
@@ -1225,8 +1182,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T, TReturn}(Result{T}, Func{T, Result}, Func{T, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
@@ -1257,8 +1213,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T, TReturn}(Maybe{T}, Func{T, Result}, Func{T, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Maybe<T> sourceResult,
@@ -1273,8 +1228,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T, TReturn}(Maybe{T}, Func{T, Result}, Func{T, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
@@ -1289,8 +1243,7 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
-    /// <param name="sourceResult">The source result.</param>
+    /// <inheritdoc cref="SelectMany{T, TReturn}(Maybe{T}, Func{T, Result}, Func{T, DBNull, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
@@ -1305,7 +1258,6 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
-#pragma warning restore CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
-
+    #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+    #pragma warning restore CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
 }
