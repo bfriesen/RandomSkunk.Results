@@ -8,13 +8,7 @@ public partial struct Result
     /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
     /// <c>Fail</c> result with the same error.
     /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onSuccessSelector">The result funtion to invoke given a <c>Success</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public Result SelectMany(Func<Result> onSuccessSelector)
@@ -28,20 +22,7 @@ public partial struct Result
         };
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany(Func{Result})"/>
     public async Task<Result> SelectMany(Func<Task<Result>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -58,15 +39,9 @@ public partial struct Result
     /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
     /// <c>Fail</c> result with the same error.
     /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
     /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
     ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onSuccessSelector">The result funtion to invoke given a <c>Success</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public Result<TReturn> SelectMany<TReturn>(Func<Result<TReturn>> onSuccessSelector)
@@ -80,22 +55,7 @@ public partial struct Result
         };
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TReturn}(Func{Result{TReturn}})"/>
     public async Task<Result<TReturn>> SelectMany<TReturn>(Func<Task<Result<TReturn>>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -112,15 +72,9 @@ public partial struct Result
     /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
     /// <c>Fail</c> result with the same error.
     /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
     /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
     ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onSuccessSelector">The result funtion to invoke given a <c>Success</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public Maybe<TReturn> SelectMany<TReturn>(Func<Maybe<TReturn>> onSuccessSelector)
@@ -137,22 +91,7 @@ public partial struct Result
         return Maybe<TReturn>.Fail(error);
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
     public async Task<Maybe<TReturn>> SelectMany<TReturn>(Func<Task<Maybe<TReturn>>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -198,22 +137,7 @@ public partial struct Result<T>
         };
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
     public async Task<Result<TReturn>> SelectMany<TReturn>(Func<T, Task<Result<TReturn>>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -230,12 +154,6 @@ public partial struct Result<T>
     /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
     /// form as a <c>Fail</c> result with the same error.
     /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
@@ -250,20 +168,7 @@ public partial struct Result<T>
         };
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany(Func{T, Result})"/>
     public async Task<Result> SelectMany(Func<T, Task<Result>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -305,22 +210,7 @@ public partial struct Result<T>
         return Maybe<TReturn>.Fail(error);
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
     public async Task<Maybe<TReturn>> SelectMany<TReturn>(Func<T, Task<Maybe<TReturn>>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -344,7 +234,7 @@ public partial struct Result<T>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
     /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    /// <returns>A <see cref="Result{T}"/> whose value is the result of invoking the transform function
     ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
@@ -370,7 +260,7 @@ public partial struct Result<T>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
     /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    /// <returns>A <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
     ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
@@ -387,20 +277,7 @@ public partial struct Result<T>
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
-    ///     the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -413,20 +290,7 @@ public partial struct Result<T>
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
-    ///     the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -472,23 +336,7 @@ public partial struct Maybe<T>
         };
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>None</c>
-    /// result.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
     public async Task<Maybe<TReturn>> SelectMany<TReturn>(Func<T, Task<Maybe<TReturn>>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -507,12 +355,6 @@ public partial struct Maybe<T>
     /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>Fail</c>
     /// result with error code <see cref="ErrorCodes.NoneResult"/>.
     /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
@@ -528,21 +370,7 @@ public partial struct Maybe<T>
         };
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NoneResult"/>.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany(Func{T, Result})"/>
     public async Task<Result> SelectMany(Func<T, Task<Result>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -584,23 +412,7 @@ public partial struct Maybe<T>
         };
     }
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NoneResult"/>.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
     public async Task<Result<TReturn>> SelectMany<TReturn>(Func<T, Task<Result<TReturn>>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -622,7 +434,7 @@ public partial struct Maybe<T>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
     /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    /// <returns>A <see cref="Result{T}"/> whose value is the result of invoking the transform function
     ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
@@ -648,7 +460,7 @@ public partial struct Maybe<T>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
     /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
+    /// <returns>A <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
     ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
@@ -665,20 +477,7 @@ public partial struct Maybe<T>
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
-    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
-    ///     </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
-    ///     the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -691,20 +490,7 @@ public partial struct Maybe<T>
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
-    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
-    ///     </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
-    ///     the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     public Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -718,427 +504,153 @@ public partial struct Maybe<T>
     }
 }
 
+#pragma warning disable CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+
 /// <content> Defines the <c>SelectMany</c> methods. </content>
 public static partial class ResultExtensions
 {
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
+    /// <param name="sourceResult">The source result.</param>
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Result> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
+    /// <param name="sourceResult">The source result.</param>
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Task<Result>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Result<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Result<TReturn>>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Maybe<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// invoking the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Maybe<TReturn>>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
+    /// <inheritdoc cref="Result{T}.SelectMany(Func{T, Result})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> SelectMany<T>(
-        this Task<Result<T>> sourceResult,
-        Func<T, Result> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> SelectMany<T>(
-        this Task<Result<T>> sourceResult,
-        Func<T, Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
-        this Task<Result<T>> sourceResult,
-        Func<T, Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
-        this Task<Result<T>> sourceResult,
-        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
-        this Task<Result<T>> sourceResult,
-        Func<T, Maybe<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
-        this Task<Result<T>> sourceResult,
-        Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NoneResult"/>.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> SelectMany<T>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, Result> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NoneResult"/>.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> SelectMany<T>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NoneResult"/>.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NoneResult"/>.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>None</c>
-    /// result.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, Maybe<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is transformed to the new
-    /// form as a <c>Fail</c> result with the same error; a <c>None</c> result is transformed to the new form as a <c>None</c>
-    /// result.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="sourceResult">The task returning the source result.</param>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
-        this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
-
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
-    /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    public static async Task<Result> SelectMany<T>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Result> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Result{T}.SelectMany(Func{T, Result})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Result> SelectMany<T>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Result>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Result<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Maybe<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany(Func{T, Result})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Result> SelectMany<T>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Result> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany(Func{T, Result})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Result> SelectMany<T>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Result>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Result<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TReturn}(Func{T, Result{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Maybe<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TReturn}(Func{T, Maybe{TReturn}})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
@@ -1152,22 +664,9 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
@@ -1181,22 +680,9 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
@@ -1210,22 +696,9 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
@@ -1239,22 +712,9 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
-    ///     </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
@@ -1268,22 +728,9 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
-    ///     </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
@@ -1297,22 +744,9 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
-    ///     </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
@@ -1326,22 +760,9 @@ public static partial class ResultExtensions
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
-    /// <typeparam name="TIntermediate">The type of the intermediate result collected by <paramref name="intermediateSelector"/>.
-    ///     </typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>An <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of <paramref name="sourceResult"/> and then mapping the values
-    ///     of that result and the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
@@ -1354,4 +775,537 @@ public static partial class ResultExtensions
             sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
+
+    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Result SelectMany(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Result> onSuccessSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (sourceResult is Result result)
+            return result.SelectMany(() => onSuccessSelector(DBNull.Value));
+
+        if (sourceResult is Result<DBNull> resultOfDBNull)
+            return resultOfDBNull.SelectMany(onSuccessSelector);
+
+        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+            return maybeOfDBNull.SelectMany(onSuccessSelector);
+
+        if (sourceResult.IsSuccess)
+            return onSuccessSelector(sourceResult.Value);
+
+        return Result.Fail(sourceResult.GetNonSuccessError());
+    }
+
+    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Result> SelectMany(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Task<Result>> onSuccessSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (sourceResult is Result result)
+            return await result.SelectMany(() => onSuccessSelector(DBNull.Value)).ConfigureAwait(false);
+
+        if (sourceResult is Result<DBNull> resultOfDBNull)
+            return await resultOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+            return await maybeOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+        if (sourceResult.IsSuccess)
+            return await onSuccessSelector(sourceResult.Value).ConfigureAwait(false);
+
+        return Result.Fail(sourceResult.GetNonSuccessError());
+    }
+
+    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Result> SelectMany(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Result> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Result.SelectMany(Func{Result})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Result> SelectMany(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Task<Result>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Result<TReturn> SelectMany<TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Result<TReturn>> onSuccessSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (sourceResult is Result result)
+            return result.SelectMany(() => onSuccessSelector(DBNull.Value));
+
+        if (sourceResult is Result<DBNull> resultOfDBNull)
+            return resultOfDBNull.SelectMany(onSuccessSelector);
+
+        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+            return maybeOfDBNull.SelectMany(onSuccessSelector);
+
+        if (sourceResult.IsSuccess)
+            return onSuccessSelector(sourceResult.Value);
+
+        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError());
+    }
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Result<TReturn>> SelectMany<TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Task<Result<TReturn>>> onSuccessSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (sourceResult is Result result)
+            return await result.SelectMany(() => onSuccessSelector(DBNull.Value)).ConfigureAwait(false);
+
+        if (sourceResult is Result<DBNull> resultOfDBNull)
+            return await resultOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+            return await maybeOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+        if (sourceResult.IsSuccess)
+            return await onSuccessSelector(sourceResult.Value).ConfigureAwait(false);
+
+        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError());
+    }
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Result<TReturn>> SelectMany<TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Result<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Result{TReturn}})"/>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Result<TReturn>> SelectMany<TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Task<Result<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Maybe<TReturn> SelectMany<TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Maybe<TReturn>> onSuccessSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (sourceResult is Result result)
+            return result.SelectMany(() => onSuccessSelector(DBNull.Value));
+
+        if (sourceResult is Result<DBNull> resultOfDBNull)
+            return resultOfDBNull.SelectMany(onSuccessSelector);
+
+        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+            return maybeOfDBNull.SelectMany(onSuccessSelector);
+
+        if (sourceResult.IsSuccess)
+            return onSuccessSelector(sourceResult.Value);
+
+        return Maybe<TReturn>.Fail(sourceResult.GetNonSuccessError());
+    }
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Task<Maybe<TReturn>>> onSuccessSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (sourceResult is Result result)
+            return await result.SelectMany(() => onSuccessSelector(DBNull.Value)).ConfigureAwait(false);
+
+        if (sourceResult is Result<DBNull> resultOfDBNull)
+            return await resultOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+            return await maybeOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+        if (sourceResult.IsSuccess)
+            return await onSuccessSelector(sourceResult.Value).ConfigureAwait(false);
+
+        return Maybe<TReturn>.Fail(sourceResult.GetNonSuccessError());
+    }
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Maybe<TReturn>> onSuccessSelector) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+
+    /// <inheritdoc cref="Result.SelectMany{TReturn}(Func{Maybe{TReturn}})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Task<Maybe<TReturn>>> onSuccessSelector) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Result<TReturn> SelectMany<TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Result> intermediateSelector,
+        Func<DBNull, DBNull, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Task<Result>> intermediateSelector,
+        Func<DBNull, DBNull, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Result> intermediateSelector,
+        Func<DBNull, DBNull, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Task<Result>> intermediateSelector,
+        Func<DBNull, DBNull, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Result<TReturn> SelectMany<TIntermediate, TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Result<TIntermediate>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Result<TIntermediate>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Maybe<TReturn> SelectMany<TIntermediate, TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Maybe<TIntermediate>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
+        this IResult<DBNull> sourceResult,
+        Func<DBNull, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Maybe<TIntermediate>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Maybe{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
+        this Task<IResult<DBNull>> sourceResult,
+        Func<DBNull, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<DBNull, TIntermediate, TReturn> returnSelector)
+    {
+        if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Result<TReturn> SelectMany<T, TReturn>(
+        this Result<T> sourceResult,
+        Func<T, Result> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Result<T> sourceResult,
+        Func<T, Task<Result>> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Result> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Result{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Result<T>> sourceResult,
+        Func<T, Task<Result>> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Result<TReturn> SelectMany<T, TReturn>(
+        this Maybe<T> sourceResult,
+        Func<T, Result> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Maybe<T> sourceResult,
+        Func<T, Task<Result>> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Result> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            sourceValue => intermediateSelector(sourceValue).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+    /// <inheritdoc cref="Maybe{T}.SelectMany{TIntermediate, TReturn}(Func{T, Result{TIntermediate}}, Func{T, TIntermediate, TReturn})"/>
+    /// <param name="sourceResult">The source result.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static Task<Result<TReturn>> SelectMany<T, TReturn>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, Task<Result>> intermediateSelector,
+        Func<T, DBNull, TReturn> returnSelector)
+    {
+        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
+        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
+
+        return sourceResult.SelectMany(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+                intermediateValue => returnSelector(sourceValue, intermediateValue)));
+    }
+
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
+#pragma warning restore CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
+
 }

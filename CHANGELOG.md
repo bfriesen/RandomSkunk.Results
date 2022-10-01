@@ -9,8 +9,14 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
+- RandomSkunk.Results:
+    - Add first-class support for `Result` in LINQ-to-Results query syntax.
 - RandomSkunk.Results.Http:
     - Add `HttpClient.TryGetByteArrayAsync` extension method.
+
+### Removed
+- RandomSkunk.Results:
+    - Remove `Result.AsDBNullResult()` method.
 
 ## [1.0.0-alpha16] - 2022-09-22
 
