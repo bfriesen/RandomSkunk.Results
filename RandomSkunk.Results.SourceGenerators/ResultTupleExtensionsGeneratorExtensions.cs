@@ -326,20 +326,19 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendSelectMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Result{T}""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form as a <c>Success</c> result by passing their values to the
+    /// <paramref name=""onAllSuccessSelector""/> function; if <em>any</em> results are <c>NonSuccess</c>, they are transformed to
+    /// the new form as a <c>Fail</c> result with a <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's
+    /// error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
     /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the value of the
-    ///     outgoing result. Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static Result<TReturn> Select<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
@@ -383,20 +382,19 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendSelectAsyncMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Result{T}""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form as a <c>Success</c> result by passing their values to the
+    /// <paramref name=""onAllSuccessSelector""/> function; if <em>any</em> results are <c>NonSuccess</c>, they are transformed to
+    /// the new form as a <c>Fail</c> result with a <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's
+    /// error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
     /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the value of the
-    ///     outgoing result. Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static async Task<Result<TReturn>> SelectAsync<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
@@ -440,19 +438,17 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendSelectManyResultMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Result""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
+    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
+    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
-    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static Result SelectMany")
             .AppendTypeDefinitionForT(tupleCount)
             .Append(@"(
@@ -494,19 +490,17 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendAsyncSelectManyResultMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Result""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
+    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
+    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
-    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static Task<Result> SelectMany")
             .AppendTypeDefinitionForT(tupleCount)
             .Append(@"(
@@ -548,20 +542,18 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendSelectManyResultOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Result{T}""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
+    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
+    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
     /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
-    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static Result<TReturn> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
@@ -603,20 +595,18 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendAsyncSelectManyResultOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Result{T}""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
+    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
+    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
     /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
-    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static Task<Result<TReturn>> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
@@ -658,20 +648,18 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendSelectManyMaybeOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Maybe{T}""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
+    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
+    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
     /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
-    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static Maybe<TReturn> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
@@ -713,20 +701,18 @@ public static class ResultTupleExtensions
     public static StringBuilder AppendAsyncSelectManyMaybeOfTMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
-    /// Transforms the tuple of results - only if all are <c>Success</c> - into a new <c>Success</c> result using the specified
-    /// <paramref name=""onAllSuccessSelector""/> function. Otherwise, if any of the tuple's results are <c>Non-Success</c>, a new
-    /// <c>Fail</c> result is returned. The error of the <c>Fail</c> result depends on how many of the tuple's results are
-    /// <c>NonSuccess</c>. If only one of the tuple's results is <c>Non-Success</c>, then that result's error is the error of the
-    /// returned <c>Fail</c> result. Otherwise, a <see cref=""CompositeError""/> containing each of the <c>Non-Success</c> errors
-    /// is returned.
+    /// Projects the tuple of results into a new <see cref=""Maybe{T}""/> form: if <em>all</em> results are <c>Success</c>, they
+    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
+    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
+    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
     /// </summary>
     /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
             .AppendTypeParamDocsForT(tupleCount)
             .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
     /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A function that maps the values of the results in the tuple to the outgoing result.
-    ///     Evaluated only if all results in the tuple are a <c>Success</c>.</param>
-    /// <returns>The mapped result.</returns>
+    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
+    ///     <c>Success</c>.</param>
+    /// <returns>The projected result.</returns>
     public static Task<Maybe<TReturn>> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
