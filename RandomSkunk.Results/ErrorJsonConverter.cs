@@ -1,4 +1,4 @@
-namespace RandomSkunk.Results.Json;
+namespace RandomSkunk.Results;
 
 internal sealed class ErrorJsonConverter : JsonConverter<Error>
 {
