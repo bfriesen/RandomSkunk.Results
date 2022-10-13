@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `GetValueOrDefault()` method to `Result<T>` and `Maybe<T>`.
+
 ### Changed
 
 - RandomSkunk.Results:
