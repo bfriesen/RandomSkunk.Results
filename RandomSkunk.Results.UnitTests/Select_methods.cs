@@ -32,7 +32,7 @@ public class Select_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.Select<string>(null!);
+            Action act = () => source.Select((Func<int, string>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -78,7 +78,7 @@ public class Select_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.Select<string>(null!);
+            Action act = () => source.Select((Func<int, string>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

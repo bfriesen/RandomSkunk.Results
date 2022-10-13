@@ -39,7 +39,7 @@ public static class HttpClientExtensions
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
             () => sourceHttpClient.DeleteAsync(requestUri, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
@@ -73,7 +73,7 @@ public static class HttpClientExtensions
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
             () => sourceHttpClient.GetAsync(requestUri, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
@@ -151,7 +151,7 @@ public static class HttpClientExtensions
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
             () => sourceHttpClient.PatchAsync(requestUri, content, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
@@ -229,7 +229,7 @@ public static class HttpClientExtensions
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
             () => sourceHttpClient.PostAsync(requestUri, content, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
@@ -305,7 +305,7 @@ public static class HttpClientExtensions
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
             () => sourceHttpClient.PutAsync(requestUri, content, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
@@ -379,7 +379,7 @@ public static class HttpClientExtensions
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
             () => sourceHttpClient.SendAsync(request, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
@@ -413,7 +413,7 @@ public static class HttpClientExtensions
         Func<HttpRequestException, Error>? getHttpError = null,
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResultAsync(
+        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
             () => sourceHttpClient.GetByteArrayAsync(requestUri, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
@@ -438,7 +438,7 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         Func<HttpRequestException, Error>? getHttpError = null) =>
-        TryCatch<HttpRequestException>.AsResultAsync(
+        TryCatch<HttpRequestException>.AsResult(
             () => sourceHttpClient.GetByteArrayAsync(requestUri),
             getHttpError ?? _defaultGetHttpError);
 #endif

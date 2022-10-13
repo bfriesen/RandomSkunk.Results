@@ -272,7 +272,7 @@ public class Tuple_extension_methods
         }
     }
 
-    public class For_MatchAsync
+    public class For_Async_Match
     {
         public static IEnumerable<object[]> NonSuccessResults => NonSuccessResultsWithExpectedError;
 
@@ -286,7 +286,7 @@ public class Tuple_extension_methods
             (DBNull?, int?, int?) capturedValues = default;
             Error? capturedError = null;
 
-            var returnedValue = await (resultA, resultB, resultC).MatchAsync(
+            var returnedValue = await (resultA, resultB, resultC).Match(
                 (a, b, c) =>
                 {
                     capturedValues = (a, b, c);
@@ -310,7 +310,7 @@ public class Tuple_extension_methods
             (DBNull?, int?, int?) capturedValues = default;
             Error? capturedError = null;
 
-            var returnedValue = await (resultA, resultB, resultC).MatchAsync(
+            var returnedValue = await (resultA, resultB, resultC).Match(
                 (a, b, c) =>
                 {
                     capturedValues = (a, b, c);
@@ -383,7 +383,7 @@ public class Tuple_extension_methods
         }
     }
 
-    public class For_SelectAsync
+    public class For_Async_Select
     {
         public static IEnumerable<object[]> NonSuccessResults => NonSuccessResultsWithExpectedError;
 
@@ -394,7 +394,7 @@ public class Tuple_extension_methods
             var resultB = Result<int>.Success(123);
             var resultC = Maybe<int>.Success(456);
 
-            var actual = await (resultA, resultB, resultC).SelectAsync((a, b, c) => Task.FromResult(b + c));
+            var actual = await (resultA, resultB, resultC).Select((a, b, c) => Task.FromResult(b + c));
 
             actual.IsSuccess.Should().BeTrue();
             actual.Value.Should().Be(579);
@@ -404,7 +404,7 @@ public class Tuple_extension_methods
         [MemberData(nameof(NonSuccessResults))]
         public async Task When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
         {
-            var actual = await (resultA, resultB, resultC).SelectAsync((a, b, c) => Task.FromResult(b + c));
+            var actual = await (resultA, resultB, resultC).Select((a, b, c) => Task.FromResult(b + c));
 
             actual.IsSuccess.Should().BeFalse();
             actual.Error.Message.Should().Be(expectedError.Message);

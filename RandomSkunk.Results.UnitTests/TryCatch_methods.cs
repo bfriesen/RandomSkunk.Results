@@ -10,7 +10,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_Returns_Fail_result()
             {
-                var actual = TryCatch.AsResult(() => throw new Exception("a"));
+                static void ThrowException() => throw new Exception("a");
+
+                var actual = TryCatch.AsResult(ThrowException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -38,7 +40,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_Returns_Fail_result()
             {
-                var actual = TryCatch.AsResult<int>(() => throw new Exception("a"));
+                static int ThrowException() => throw new Exception("a");
+
+                var actual = TryCatch.AsResult(ThrowException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -67,7 +71,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_Returns_Fail_result()
             {
-                var actual = TryCatch.AsMaybe<int>(() => throw new Exception("a"));
+                static int ThrowException() => throw new Exception("a");
+
+                var actual = TryCatch.AsMaybe(ThrowException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -93,18 +99,20 @@ public class TryCatch_methods
             [Fact]
             public void When_source_returns_null_Returns_None_result()
             {
-                var actual = TryCatch.AsMaybe<string>(() => null!);
+                static string? GetNull() => null;
+
+                var actual = TryCatch.AsMaybe(GetNull);
 
                 actual.IsNone.Should().BeTrue();
             }
         }
 
-        public class For_ToResultAsync
+        public class For_Async_ToResult
         {
             [Fact]
             public async Task When_source_throws_Returns_Fail_result()
             {
-                var actual = await TryCatch.AsResultAsync(async () => throw new Exception("a"));
+                var actual = await TryCatch.AsResult(async () => throw new Exception("a"));
 
                 actual.IsFail.Should().BeTrue();
 
@@ -121,18 +129,18 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch.AsResultAsync(async () => { });
+                var actual = await TryCatch.AsResult(async () => { });
 
                 actual.IsSuccess.Should().BeTrue();
             }
         }
 
-        public class For_ToResultAsync_of_T
+        public class For_Async_ToResult_of_T
         {
             [Fact]
             public async Task When_source_throws_Returns_Fail_result()
             {
-                var actual = await TryCatch.AsResultAsync<int>(async () => throw new Exception("a"));
+                var actual = await TryCatch.AsResult<int>(async () => throw new Exception("a"));
 
                 actual.IsFail.Should().BeTrue();
 
@@ -149,19 +157,19 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch.AsResultAsync(async () => 1);
+                var actual = await TryCatch.AsResult(async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
                 actual.Value.Should().Be(1);
             }
         }
 
-        public class For_ToMaybeAsync_of_T
+        public class For_Async_ToMaybe_of_T
         {
             [Fact]
             public async Task When_source_throws_Returns_Fail_result()
             {
-                var actual = await TryCatch.AsMaybeAsync<int>(async () => throw new Exception("a"));
+                var actual = await TryCatch.AsMaybe<int>(async () => throw new Exception("a"));
 
                 actual.IsFail.Should().BeTrue();
 
@@ -178,7 +186,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch.AsMaybeAsync(async () => 1);
+                var actual = await TryCatch.AsMaybe(async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
                 actual.Value.Should().Be(1);
@@ -187,7 +195,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_returns_null_Returns_None_result()
             {
-                var actual = await TryCatch.AsMaybeAsync<string>(async () => null!);
+                var actual = await TryCatch.AsMaybe<string>(async () => null!);
 
                 actual.IsNone.Should().BeTrue();
             }
@@ -201,8 +209,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException>.AsResult(
-                    () => throw new InvalidOperationException("a"));
+                static void ThrowInvalidOperationException() => throw new InvalidOperationException("a");
+
+                var actual = TryCatch<InvalidOperationException>.AsResult(ThrowInvalidOperationException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -227,8 +236,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Action act = () => TryCatch<InvalidOperationException>.AsResult(
-                    () => throw new ApplicationException());
+                static void ThrowApplicationException() => throw new ApplicationException();
+
+                Action act = () => TryCatch<InvalidOperationException>.AsResult(ThrowApplicationException);
 
                 act.Should().ThrowExactly<ApplicationException>();
             }
@@ -239,8 +249,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException>.AsResult<int>(
-                    () => throw new InvalidOperationException("a"));
+                static int ThrowInvalidOperationException() => throw new InvalidOperationException("a");
+
+                var actual = TryCatch<InvalidOperationException>.AsResult(ThrowInvalidOperationException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -266,8 +277,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Action act = () => TryCatch<InvalidOperationException>.AsResult<int>(
-                    () => throw new ApplicationException());
+                static int ThrowApplicationException() => throw new ApplicationException();
+
+                Action act = () => TryCatch<InvalidOperationException>.AsResult(ThrowApplicationException);
 
                 act.Should().ThrowExactly<ApplicationException>();
             }
@@ -278,7 +290,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException>.AsMaybe<int>(() => throw new InvalidOperationException("a"));
+                static int ThrowInvalidOperationException() => throw new InvalidOperationException("a");
+
+                var actual = TryCatch<InvalidOperationException>.AsMaybe(ThrowInvalidOperationException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -304,7 +318,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_returns_null_Returns_None_result()
             {
-                var actual = TryCatch<InvalidOperationException>.AsMaybe<string>(() => null!);
+                static string? GetNull() => null;
+
+                var actual = TryCatch<InvalidOperationException>.AsMaybe(GetNull);
 
                 actual.IsNone.Should().BeTrue();
             }
@@ -312,18 +328,20 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Action act = () => TryCatch<InvalidOperationException>.AsMaybe<int>(() => throw new ApplicationException());
+                static int ThrowApplicationException() => throw new ApplicationException();
+
+                Action act = () => TryCatch<InvalidOperationException>.AsMaybe(ThrowApplicationException);
 
                 act.Should().ThrowExactly<ApplicationException>();
             }
         }
 
-        public class For_ToResultAsync
+        public class For_Async_ToResult
         {
             [Fact]
             public async Task When_source_throws_exception_argument_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException>.AsResultAsync(
+                var actual = await TryCatch<InvalidOperationException>.AsResult(
                     async () => throw new InvalidOperationException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -341,7 +359,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch<InvalidOperationException>.AsResultAsync(async () => { });
+                var actual = await TryCatch<InvalidOperationException>.AsResult(async () => { });
 
                 actual.IsSuccess.Should().BeTrue();
             }
@@ -349,19 +367,19 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Func<Task> act = async () => await TryCatch<InvalidOperationException>.AsResultAsync(
+                Func<Task> act = async () => await TryCatch<InvalidOperationException>.AsResult(
                     async () => throw new ApplicationException());
 
                 await act.Should().ThrowExactlyAsync<ApplicationException>();
             }
         }
 
-        public class For_ToResultAsync_of_T
+        public class For_Async_ToResult_of_T
         {
             [Fact]
             public async Task When_source_throws_exception_argument_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException>.AsResultAsync<int>(
+                var actual = await TryCatch<InvalidOperationException>.AsResult<int>(
                     async () => throw new InvalidOperationException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -379,7 +397,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch<InvalidOperationException>.AsResultAsync(
+                var actual = await TryCatch<InvalidOperationException>.AsResult(
                     async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
@@ -389,19 +407,19 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Func<Task> act = async () => await TryCatch<InvalidOperationException>.AsResultAsync<int>(
+                Func<Task> act = async () => await TryCatch<InvalidOperationException>.AsResult<int>(
                     async () => throw new ApplicationException());
 
                 await act.Should().ThrowExactlyAsync<ApplicationException>();
             }
         }
 
-        public class For_ToMaybeAsync_of_T
+        public class For_Async_ToMaybe_of_T
         {
             [Fact]
             public async Task When_source_throws_exception_argument_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException>.AsMaybeAsync<int>(
+                var actual = await TryCatch<InvalidOperationException>.AsMaybe<int>(
                     async () => throw new InvalidOperationException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -419,7 +437,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch<InvalidOperationException>.AsMaybeAsync(
+                var actual = await TryCatch<InvalidOperationException>.AsMaybe(
                     async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
@@ -429,7 +447,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_returns_null_Returns_None_result()
             {
-                var actual = await TryCatch<InvalidOperationException>.AsMaybeAsync<string>(
+                var actual = await TryCatch<InvalidOperationException>.AsMaybe<string>(
                     async () => null!);
 
                 actual.IsNone.Should().BeTrue();
@@ -438,7 +456,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Func<Task> act = async () => await TryCatch<InvalidOperationException>.AsMaybeAsync<int>(
+                Func<Task> act = async () => await TryCatch<InvalidOperationException>.AsMaybe<int>(
                     async () => throw new ApplicationException());
 
                 await act.Should().ThrowExactlyAsync<ApplicationException>();
@@ -453,8 +471,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_1_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
-                    () => throw new InvalidOperationException("a"));
+                static void ThrowInvalidOperationException() => throw new InvalidOperationException("a");
+
+                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(ThrowInvalidOperationException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -471,8 +490,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_2_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
-                    () => throw new DivideByZeroException("a"));
+                static void ThrowDivideByZeroException() => throw new DivideByZeroException("a");
+
+                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(ThrowDivideByZeroException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -497,8 +517,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Action act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
-                    () => throw new ApplicationException());
+                static void ThrowApplicationException() => throw new ApplicationException();
+
+                Action act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(ThrowApplicationException);
 
                 act.Should().ThrowExactly<ApplicationException>();
             }
@@ -509,8 +530,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_1_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult<int>(
-                    () => throw new InvalidOperationException("a"));
+                static int ThrowInvalidOperationException() => throw new InvalidOperationException("a");
+
+                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(ThrowInvalidOperationException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -527,8 +549,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_2_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult<int>(
-                    () => throw new DivideByZeroException("a"));
+                static int ThrowDivideByZeroException() => throw new DivideByZeroException("a");
+
+                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(ThrowDivideByZeroException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -553,8 +576,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Action act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResult<int>(
-                    () => throw new ApplicationException());
+                static int ThrowApplicationException() => throw new ApplicationException();
+
+                Action act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(ThrowApplicationException);
 
                 act.Should().ThrowExactly<ApplicationException>();
             }
@@ -565,8 +589,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_1_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<int>(
-                    () => throw new InvalidOperationException("a"));
+                static int ThrowInvalidOperationException() => throw new InvalidOperationException("a");
+
+                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe(ThrowInvalidOperationException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -583,8 +608,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_throws_exception_argument_2_Returns_Fail_result()
             {
-                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<int>(
-                    () => throw new DivideByZeroException("a"));
+                static int ThrowDivideByZeroException() => throw new DivideByZeroException("a");
+
+                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe(ThrowDivideByZeroException);
 
                 actual.IsFail.Should().BeTrue();
 
@@ -609,7 +635,9 @@ public class TryCatch_methods
             [Fact]
             public void When_source_returns_null_Returns_None_result()
             {
-                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<string>(() => null!);
+                static string? GetNull() => null;
+
+                var actual = TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe(GetNull);
 
                 actual.IsNone.Should().BeTrue();
             }
@@ -618,18 +646,18 @@ public class TryCatch_methods
             public void When_source_throws_other_exception_Exception_is_not_caught()
             {
                 Action act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<int>(
-                    () => throw new ApplicationException());
+                    (Func<int>)(() => throw new ApplicationException()));
 
                 act.Should().ThrowExactly<ApplicationException>();
             }
         }
 
-        public class For_ToResultAsync
+        public class For_Async_ToResult
         {
             [Fact]
             public async Task When_source_throws_exception_argument_1_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
                     async () => throw new InvalidOperationException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -647,7 +675,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_exception_argument_2_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
                     async () => throw new DivideByZeroException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -665,7 +693,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
                     async () => { });
 
                 actual.IsSuccess.Should().BeTrue();
@@ -674,19 +702,19 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Func<Task> act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync(
+                Func<Task> act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
                     async () => throw new ApplicationException());
 
                 await act.Should().ThrowExactlyAsync<ApplicationException>();
             }
         }
 
-        public class For_ToResultAsync_of_T
+        public class For_Async_ToResult_of_T
         {
             [Fact]
             public async Task When_source_throws_exception_argument_1_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync<int>(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResult<int>(
                     async () => throw new InvalidOperationException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -704,7 +732,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_exception_argument_2_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync<int>(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResult<int>(
                     async () => throw new DivideByZeroException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -722,7 +750,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsResult(
                     async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
@@ -731,19 +759,19 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Func<Task> act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResultAsync<int>(
+                Func<Task> act = () => TryCatch<InvalidOperationException, DivideByZeroException>.AsResult<int>(
                     async () => throw new ApplicationException());
 
                 await act.Should().ThrowExactlyAsync<ApplicationException>();
             }
         }
 
-        public class For_ToMaybeAsync_of_T
+        public class For_Async_ToMaybe_of_T
         {
             [Fact]
             public async Task When_source_throws_exception_argument_1_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybeAsync<int>(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<int>(
                     async () => throw new InvalidOperationException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -761,7 +789,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_exception_argument_2_Returns_Fail_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybeAsync<int>(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<int>(
                     async () => throw new DivideByZeroException("a"));
 
                 actual.IsFail.Should().BeTrue();
@@ -779,7 +807,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_does_not_throw_Returns_Success_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybeAsync(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe(
                     async () => 1);
 
                 actual.IsSuccess.Should().BeTrue();
@@ -788,7 +816,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_returns_null_Returns_None_result()
             {
-                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybeAsync<string>(
+                var actual = await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<string>(
                     async () => null!);
 
                 actual.IsNone.Should().BeTrue();
@@ -797,7 +825,7 @@ public class TryCatch_methods
             [Fact]
             public async Task When_source_throws_other_exception_Exception_is_not_caught()
             {
-                Func<Task> act = async () => await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybeAsync<int>(
+                Func<Task> act = async () => await TryCatch<InvalidOperationException, DivideByZeroException>.AsMaybe<int>(
                     async () => throw new ApplicationException());
 
                 await act.Should().ThrowExactlyAsync<ApplicationException>();

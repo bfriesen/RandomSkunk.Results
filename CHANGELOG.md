@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning].
 ### Changed
 
 - RandomSkunk.Results:
-    - Rename methods ending with "Async" where possible.
+    - Remove "Async" suffix from methods.
     - Change value of `ErrorCodes.NoneResult` from -410 to -404.
 
 ### Removed

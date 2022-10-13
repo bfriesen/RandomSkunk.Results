@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>Select</c> and <c>SelectAsync</c> methods. </content>
+/// <content> Defines the <c>Select</c> methods. </content>
 public partial struct Result<T>
 {
     /// <summary>
@@ -30,7 +30,7 @@ public partial struct Result<T>
     }
 
     /// <inheritdoc cref="Select{TReturn}(Func{T, TReturn})"/>
-    public async Task<Result<TReturn>> SelectAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
+    public async Task<Result<TReturn>> Select<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -42,7 +42,7 @@ public partial struct Result<T>
     }
 }
 
-/// <content> Defines the <c>Select</c> and <c>SelectAsync</c> methods. </content>
+/// <content> Defines the <c>Select</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <summary>
@@ -74,7 +74,7 @@ public partial struct Maybe<T>
     }
 
     /// <inheritdoc cref="Select{TReturn}(Func{T, TReturn})"/>
-    public async Task<Maybe<TReturn>> SelectAsync<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
+    public async Task<Maybe<TReturn>> Select<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -87,7 +87,7 @@ public partial struct Maybe<T>
     }
 }
 
-/// <content> Defines the <c>Select</c> and <c>SelectAsync</c> extension methods. </content>
+/// <content> Defines the <c>Select</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     #pragma warning disable CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
@@ -102,10 +102,10 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
 
     /// <inheritdoc cref="Select{T, TReturn}(Task{Result{T}}, Func{T, TReturn})"/>
-    public static async Task<Result<TReturn>> SelectAsync<T, TReturn>(
+    public static async Task<Result<TReturn>> Select<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectAsync(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector).ConfigureAwait(false);
 
     /// <inheritdoc cref="Maybe{T}.Select{TReturn}(Func{T, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -116,10 +116,10 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
 
     /// <inheritdoc cref="Select{T, TReturn}(Task{Maybe{T}}, Func{T, TReturn})"/>
-    public static async Task<Maybe<TReturn>> SelectAsync<T, TReturn>(
+    public static async Task<Maybe<TReturn>> Select<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectAsync(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector).ConfigureAwait(false);
 
     /// <inheritdoc cref="Select{T, TReturn}(Task{Result{T}}, Func{T, TReturn})"/>
     [EditorBrowsable(EditorBrowsableState.Never)]

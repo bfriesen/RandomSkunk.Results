@@ -577,7 +577,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -602,7 +602,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryFirstAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -628,7 +628,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : struct =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -654,7 +654,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : class =>
-        TryCatch.AsMaybeAsync(
+        TryCatch.AsMaybe(
             () => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -679,7 +679,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QuerySingleAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -705,7 +705,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : struct =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -731,7 +731,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : class =>
-        TryCatch.AsMaybeAsync(
+        TryCatch.AsMaybe(
             () => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -755,7 +755,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.ExecuteAsync(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -789,7 +789,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
             exceptionHandler);
 
@@ -824,7 +824,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
             exceptionHandler);
 
@@ -860,7 +860,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
             exceptionHandler);
 
@@ -897,7 +897,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
             exceptionHandler);
 
@@ -935,7 +935,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
             exceptionHandler);
 
@@ -974,7 +974,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
             exceptionHandler);
 
@@ -1008,7 +1008,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.QueryAsync(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
             exceptionHandler);
 
@@ -1032,7 +1032,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             async () => new GridReader(await cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(false)),
             exceptionHandler);
 
@@ -1060,7 +1060,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -1084,7 +1084,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -1109,7 +1109,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
-        TryCatch.AsResultAsync(
+        TryCatch.AsResult(
             () => cnn.ExecuteScalarAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 }

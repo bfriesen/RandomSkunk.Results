@@ -65,14 +65,14 @@ public class Result_struct
         }
     }
 
-    public class MatchAsync
+    public class Async_Match
     {
         [Fact]
         public async Task When_IsSuccess_Returns_success_function_evaluation()
         {
             var result = Result.Success();
 
-            var actual = await result.MatchAsync(
+            var actual = await result.Match(
                 () => Task.FromResult(1),
                 error => Task.FromResult(-1));
 
@@ -84,7 +84,7 @@ public class Result_struct
         {
             var result = Result.Fail();
 
-            var actual = await result.MatchAsync(
+            var actual = await result.Match(
                 () => Task.FromResult(1),
                 error => Task.FromResult(-1));
 

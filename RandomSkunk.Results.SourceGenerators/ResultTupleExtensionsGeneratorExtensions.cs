@@ -263,7 +263,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendMatchAsyncMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendAsyncMatchMethod(this StringBuilder code, int tupleCount)
     {
             return code.Append(@"    /// <summary>
     /// Evaluates either the <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> function depending on
@@ -283,7 +283,7 @@ public static class ResultTupleExtensions
     /// <exception cref=""ArgumentNullException"">If <paramref name=""onAllSuccess""/> or <paramref name=""onAnyNonSuccess""/> is
     ///     <see langword=""null""/> or if any of the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.
     ///     </exception>
-    public static Task<TReturn> MatchAsync<")
+    public static Task<TReturn> Match<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -379,7 +379,7 @@ public static class ResultTupleExtensions
 ");
     }
 
-    public static StringBuilder AppendSelectAsyncMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendAsyncSelectMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Projects the tuple of results into a new <see cref=""Result{T}""/> form: if <em>all</em> results are <c>Success</c>, they
@@ -395,7 +395,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
     ///     <c>Success</c>.</param>
     /// <returns>The projected result.</returns>
-    public static async Task<Result<TReturn>> SelectAsync<")
+    public static async Task<Result<TReturn>> Select<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")

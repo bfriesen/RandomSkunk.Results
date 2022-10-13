@@ -9,7 +9,7 @@ public class SelectAsync_methods
         {
             var source = 1.ToResult();
 
-            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.Select(value => Task.FromResult(value.ToString()));
 
             actual.IsSuccess.Should().BeTrue();
             actual.Value.Should().Be("1");
@@ -21,7 +21,7 @@ public class SelectAsync_methods
             var error = new Error();
             var source = Result<int>.Fail(error);
 
-            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.Select(value => Task.FromResult(value.ToString()));
 
             actual.IsFail.Should().BeTrue();
             actual.Error.Should().BeSameAs(error);
@@ -32,7 +32,7 @@ public class SelectAsync_methods
         {
             var source = Result<int>.Fail();
 
-            Func<Task> act = () => source.SelectAsync<string>(null!);
+            Func<Task> act = () => source.Select((Func<int, Task<string>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
@@ -45,7 +45,7 @@ public class SelectAsync_methods
         {
             var source = 1.ToMaybe();
 
-            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.Select(value => Task.FromResult(value.ToString()));
 
             actual.IsSuccess.Should().BeTrue();
             actual.Value.Should().Be("1");
@@ -57,7 +57,7 @@ public class SelectAsync_methods
             var error = new Error();
             var source = Maybe<int>.Fail(error);
 
-            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.Select(value => Task.FromResult(value.ToString()));
 
             actual.IsFail.Should().BeTrue();
             actual.Error.Should().BeSameAs(error);
@@ -68,7 +68,7 @@ public class SelectAsync_methods
         {
             var source = Maybe<int>.None();
 
-            var actual = await source.SelectAsync(value => Task.FromResult(value.ToString()));
+            var actual = await source.Select(value => Task.FromResult(value.ToString()));
 
             actual.IsNone.Should().BeTrue();
         }
@@ -78,7 +78,7 @@ public class SelectAsync_methods
         {
             var source = Maybe<int>.Fail();
 
-            Func<Task> act = () => source.SelectAsync<string>(null!);
+            Func<Task> act = () => source.Select((Func<int, Task<string>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }

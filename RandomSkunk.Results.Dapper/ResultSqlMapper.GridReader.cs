@@ -115,7 +115,7 @@ public static partial class ResultSqlMapper
         ///     the first column is assumed, otherwise an instance is created per row, and a direct column-name===member-name
         ///     mapping is assumed (case insensitive).</returns>
         public Task<Result<IEnumerable<T>>> TryReadAsync<T>(bool buffered = true) =>
-            TryCatch.AsResultAsync(() => _gridReader.ReadAsync<T>(buffered));
+            TryCatch.AsResult(() => _gridReader.ReadAsync<T>(buffered));
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -125,7 +125,7 @@ public static partial class ResultSqlMapper
         ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Result<T>> TryReadFirstAsync<T>() =>
-            TryCatch.AsResultAsync(() => _gridReader.ReadFirstAsync<T>());
+            TryCatch.AsResult(() => _gridReader.ReadFirstAsync<T>());
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -136,7 +136,7 @@ public static partial class ResultSqlMapper
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Result<T>> TryReadFirstOrDefaultAsync<T>()
             where T : struct =>
-            TryCatch.AsResultAsync(() => _gridReader.ReadFirstOrDefaultAsync<T>());
+            TryCatch.AsResult(() => _gridReader.ReadFirstOrDefaultAsync<T>());
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -147,7 +147,7 @@ public static partial class ResultSqlMapper
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Maybe<T>> TryReadFirstOrNoneAsync<T>()
             where T : class =>
-            TryCatch.AsMaybeAsync(() => _gridReader.ReadFirstOrDefaultAsync<T>());
+            TryCatch.AsMaybe(() => _gridReader.ReadFirstOrDefaultAsync<T>());
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -157,7 +157,7 @@ public static partial class ResultSqlMapper
         ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Result<T>> TryReadSingleAsync<T>() =>
-            TryCatch.AsResultAsync(() => _gridReader.ReadSingleAsync<T>());
+            TryCatch.AsResult(() => _gridReader.ReadSingleAsync<T>());
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -168,7 +168,7 @@ public static partial class ResultSqlMapper
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Result<T>> TryReadSingleOrDefaultAsync<T>()
             where T : struct =>
-            TryCatch.AsResultAsync(() => _gridReader.ReadSingleOrDefaultAsync<T>());
+            TryCatch.AsResult(() => _gridReader.ReadSingleOrDefaultAsync<T>());
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -179,6 +179,6 @@ public static partial class ResultSqlMapper
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Maybe<T>> TryReadSingleOrNoneAsync<T>()
             where T : class =>
-            TryCatch.AsMaybeAsync(() => _gridReader.ReadSingleOrDefaultAsync<T>());
+            TryCatch.AsMaybe(() => _gridReader.ReadSingleOrDefaultAsync<T>());
     }
 }

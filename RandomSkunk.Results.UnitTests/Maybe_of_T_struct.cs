@@ -94,14 +94,14 @@ public class Maybe_of_T_struct
         }
     }
 
-    public class MatchAsync
+    public class Async_Match
     {
         [Fact]
         public async Task When_IsSuccess_Returns_Success_function_evaluation()
         {
             var result = 1.ToMaybe();
 
-            var actual = await result.MatchAsync(
+            var actual = await result.Match(
                 value => Task.FromResult(value + 1),
                 () => Task.FromResult(0),
                 error => Task.FromResult(-1));
@@ -114,7 +114,7 @@ public class Maybe_of_T_struct
         {
             var result = Maybe<int>.Fail();
 
-            var actual = await result.MatchAsync(
+            var actual = await result.Match(
                 value => Task.FromResult(value + 1),
                 () => Task.FromResult(0),
                 error => Task.FromResult(-1));
@@ -127,7 +127,7 @@ public class Maybe_of_T_struct
         {
             var result = Maybe<int>.None();
 
-            var actual = await result.MatchAsync(
+            var actual = await result.Match(
                 value => Task.FromResult(value + 1),
                 () => Task.FromResult(0),
                 error => Task.FromResult(-1));

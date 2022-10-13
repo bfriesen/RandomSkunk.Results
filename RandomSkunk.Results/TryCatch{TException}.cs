@@ -51,7 +51,7 @@ public static class TryCatch<TException>
     ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
-    public static async Task<Result> AsResultAsync(
+    public static async Task<Result> AsResult(
         Func<Task> sourceDelegate,
         Func<TException, Error>? exceptionHandler = null)
     {
@@ -117,7 +117,7 @@ public static class TryCatch<TException>
     ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
-    public static async Task<Result<T>> AsResultAsync<T>(
+    public static async Task<Result<T>> AsResult<T>(
         Func<Task<T>> sourceDelegate,
         Func<TException, Error>? exceptionHandler = null)
     {
@@ -183,7 +183,7 @@ public static class TryCatch<TException>
     ///     result's error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
-    public static async Task<Maybe<T>> AsMaybeAsync<T>(
+    public static async Task<Maybe<T>> AsMaybe<T>(
         Func<Task<T>> sourceDelegate,
         Func<TException, Error>? exceptionHandler = null)
     {

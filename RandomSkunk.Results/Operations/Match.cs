@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>Match</c> and <c>MatchAsync</c> methods. </content>
+/// <content> Defines the <c>Match</c> methods. </content>
 public partial struct Result
 {
     /// <summary>
@@ -27,7 +27,7 @@ public partial struct Result
     }
 
     /// <inheritdoc cref="Match{TReturn}(Func{TReturn}, Func{Error, TReturn})"/>
-    public Task<TReturn> MatchAsync<TReturn>(
+    public Task<TReturn> Match<TReturn>(
         Func<Task<TReturn>> onSuccess,
         Func<Error, Task<TReturn>> onFail)
     {
@@ -40,7 +40,7 @@ public partial struct Result
     }
 }
 
-/// <content> Defines the <c>Match</c> and <c>MatchAsync</c> methods. </content>
+/// <content> Defines the <c>Match</c> methods. </content>
 public partial struct Result<T>
 {
     /// <summary>
@@ -68,7 +68,7 @@ public partial struct Result<T>
     }
 
     /// <inheritdoc cref="Match{TReturn}(Func{T, TReturn}, Func{Error, TReturn})"/>
-    public Task<TReturn> MatchAsync<TReturn>(
+    public Task<TReturn> Match<TReturn>(
         Func<T, Task<TReturn>> onSuccess,
         Func<Error, Task<TReturn>> onFail)
     {
@@ -81,7 +81,7 @@ public partial struct Result<T>
     }
 }
 
-/// <content> Defines the <c>Match</c> and <c>MatchAsync</c> methods. </content>
+/// <content> Defines the <c>Match</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <summary>
@@ -116,7 +116,7 @@ public partial struct Maybe<T>
     }
 
     /// <inheritdoc cref="Match{TReturn}(Func{T, TReturn}, Func{TReturn}, Func{Error, TReturn})"/>
-    public Task<TReturn> MatchAsync<TReturn>(
+    public Task<TReturn> Match<TReturn>(
         Func<T, Task<TReturn>> onSuccess,
         Func<Task<TReturn>> onNone,
         Func<Error, Task<TReturn>> onFail)
@@ -134,7 +134,7 @@ public partial struct Maybe<T>
     }
 }
 
-/// <content> Defines the <c>Match</c> and <c>MatchAsync</c> extension methods. </content>
+/// <content> Defines the <c>Match</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
@@ -150,11 +150,11 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail);
 
     /// <inheritdoc cref="Match{T}(Task{Result}, Func{T}, Func{Error, T})"/>
-    public static async Task<TReturn> MatchAsync<TReturn>(
+    public static async Task<TReturn> Match<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<TReturn>> onSuccess,
         Func<Error, Task<TReturn>> onFail) =>
-        await (await sourceResult.ConfigureAwait(false)).MatchAsync(onSuccess, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail).ConfigureAwait(false);
 
     /// <inheritdoc cref="Result{T}.Match{TReturn}(Func{T, TReturn}, Func{Error, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -166,11 +166,11 @@ public static partial class ResultExtensions
             (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail);
 
     /// <inheritdoc cref="Match{T, TReturn}(Task{Result{T}}, Func{T, TReturn}, Func{Error, TReturn})"/>
-    public static async Task<TReturn> MatchAsync<T, TReturn>(
+    public static async Task<TReturn> Match<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccess,
         Func<Error, Task<TReturn>> onFail) =>
-            await (await sourceResult.ConfigureAwait(false)).MatchAsync(onSuccess, onFail).ConfigureAwait(false);
+            await (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail).ConfigureAwait(false);
 
     /// <inheritdoc cref="Maybe{T}.Match{TReturn}(Func{T, TReturn}, Func{TReturn}, Func{Error, TReturn})"/>
     /// <typeparam name="T">The type of the source result value.</typeparam>
@@ -183,12 +183,12 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onNone, onFail);
 
     /// <inheritdoc cref="Match{T, TReturn}(Task{Maybe{T}}, Func{T, TReturn}, Func{TReturn}, Func{Error, TReturn})"/>
-    public static async Task<TReturn> MatchAsync<T, TReturn>(
+    public static async Task<TReturn> Match<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccess,
         Func<Task<TReturn>> onNone,
         Func<Error, Task<TReturn>> onFail) =>
-        await (await sourceResult.ConfigureAwait(false)).MatchAsync(onSuccess, onNone, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onNone, onFail).ConfigureAwait(false);
 
     #pragma warning restore CS1712 // Type parameter has no matching typeparam tag in the XML comment (but other type parameters do)
     #pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
