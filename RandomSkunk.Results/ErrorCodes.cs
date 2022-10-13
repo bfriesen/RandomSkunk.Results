@@ -56,7 +56,7 @@ public static class ErrorCodes
     /// <summary>
     /// Indicates that the error represents a <see cref="Maybe{T}"/> <c>None</c> result.
     /// </summary>
-    public const int NoneResult = -410;
+    public const int NoneResult = -404;
 
     /// <summary>
     /// Indicates that the error represents a caught exception. The inner error contains information about the exception.
