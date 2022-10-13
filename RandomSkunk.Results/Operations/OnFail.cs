@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>OnFail</c> and <c>OnFailAsync</c> methods. </content>
+/// <content> Defines the <c>OnFail</c> methods. </content>
 public partial struct Result
 {
     /// <summary>
@@ -19,7 +19,7 @@ public partial struct Result
     }
 
     /// <inheritdoc cref="OnFail(Action{Error})"/>
-    public async Task<Result> OnFailAsync(Func<Error, Task> onFailCallback)
+    public async Task<Result> OnFail(Func<Error, Task> onFailCallback)
     {
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
@@ -30,7 +30,7 @@ public partial struct Result
     }
 }
 
-/// <content> Defines the <c>OnFail</c> and <c>OnFailAsync</c> methods. </content>
+/// <content> Defines the <c>OnFail</c> methods. </content>
 public partial struct Result<T>
 {
     /// <inheritdoc cref="Result.OnFail(Action{Error})"/>
@@ -45,7 +45,7 @@ public partial struct Result<T>
     }
 
     /// <inheritdoc cref="Result.OnFail(Action{Error})"/>
-    public async Task<Result<T>> OnFailAsync(Func<Error, Task> onFailCallback)
+    public async Task<Result<T>> OnFail(Func<Error, Task> onFailCallback)
     {
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
@@ -56,7 +56,7 @@ public partial struct Result<T>
     }
 }
 
-/// <content> Defines the <c>OnFail</c> and <c>OnFailAsync</c> methods. </content>
+/// <content> Defines the <c>OnFail</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <inheritdoc cref="Result.OnFail(Action{Error})"/>
@@ -71,7 +71,7 @@ public partial struct Maybe<T>
     }
 
     /// <inheritdoc cref="Result.OnFail(Action{Error})"/>
-    public async Task<Maybe<T>> OnFailAsync(Func<Error, Task> onFailCallback)
+    public async Task<Maybe<T>> OnFail(Func<Error, Task> onFailCallback)
     {
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
@@ -82,7 +82,7 @@ public partial struct Maybe<T>
     }
 }
 
-/// <content> Defines the <c>OnFail</c> and <c>OnFailAsync</c> extension methods. </content>
+/// <content> Defines the <c>OnFail</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     /// <inheritdoc cref="OnFail{T}(Task{Result{T}}, Action{Error})"/>
@@ -90,8 +90,8 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback);
 
     /// <inheritdoc cref="OnFail{T}(Task{Result{T}}, Action{Error})"/>
-    public static async Task<Result> OnFailAsync(this Task<Result> sourceResult, Func<Error, Task> onFailCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnFailAsync(onFailCallback).ConfigureAwait(false);
+    public static async Task<Result> OnFail(this Task<Result> sourceResult, Func<Error, Task> onFailCallback) =>
+        await (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback).ConfigureAwait(false);
 
     /// <summary>
     /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
@@ -104,14 +104,14 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback);
 
     /// <inheritdoc cref="OnFail{T}(Task{Result{T}}, Action{Error})"/>
-    public static async Task<Result<T>> OnFailAsync<T>(this Task<Result<T>> sourceResult, Func<Error, Task> onFailCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnFailAsync(onFailCallback).ConfigureAwait(false);
+    public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> sourceResult, Func<Error, Task> onFailCallback) =>
+        await (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback).ConfigureAwait(false);
 
     /// <inheritdoc cref="OnFail{T}(Task{Result{T}}, Action{Error})"/>
     public static async Task<Maybe<T>> OnFail<T>(this Task<Maybe<T>> sourceResult, Action<Error> onFailCallback) =>
         (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback);
 
     /// <inheritdoc cref="OnFail{T}(Task{Result{T}}, Action{Error})"/>
-    public static async Task<Maybe<T>> OnFailAsync<T>(this Task<Maybe<T>> sourceResult, Func<Error, Task> onFailCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnFailAsync(onFailCallback).ConfigureAwait(false);
+    public static async Task<Maybe<T>> OnFail<T>(this Task<Maybe<T>> sourceResult, Func<Error, Task> onFailCallback) =>
+        await (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback).ConfigureAwait(false);
 }

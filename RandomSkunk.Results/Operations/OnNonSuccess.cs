@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>OnNonSuccess</c> and <c>OnNonSuccessAsync</c> extension methods. </content>
+/// <content> Defines the <c>OnNonSuccess</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     /// <summary>
@@ -27,7 +27,7 @@ public static partial class ResultExtensions
     }
 
     /// <inheritdoc cref="OnNonSuccess{TResult}(TResult, Action{Error})"/>
-    public static async Task<TResult> OnNonSuccessAsync<TResult>(
+    public static async Task<TResult> OnNonSuccess<TResult>(
         this TResult sourceResult,
         Func<Error, Task> onNonSuccessCallback)
         where TResult : IResult
@@ -51,9 +51,9 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback);
 
     /// <inheritdoc cref="OnNonSuccess{TResult}(TResult, Action{Error})"/>
-    public static async Task<TResult> OnNonSuccessAsync<TResult>(
+    public static async Task<TResult> OnNonSuccess<TResult>(
         this Task<TResult> sourceResult,
         Func<Error, Task> onNonSuccessCallback)
         where TResult : IResult =>
-        await (await sourceResult.ConfigureAwait(false)).OnNonSuccessAsync(onNonSuccessCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback).ConfigureAwait(false);
 }

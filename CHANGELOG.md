@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Changed
+
+- RandomSkunk.Results:
+    - Rename methods ending with "Async" where possible.
+
 ## [1.0.0-alpha17] - 2022-10-02
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha17) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha17/lib/netstandard2.1/diff/1.0.0-alpha16/))  

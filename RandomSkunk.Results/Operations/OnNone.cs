@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>OnNone</c> and <c>OnNoneAsync</c> methods. </content>
+/// <content> Defines the <c>OnNone</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <summary>
@@ -19,7 +19,7 @@ public partial struct Maybe<T>
     }
 
     /// <inheritdoc cref="OnNone(Action)"/>
-    public async Task<Maybe<T>> OnNoneAsync(Func<Task> onNoneCallback)
+    public async Task<Maybe<T>> OnNone(Func<Task> onNoneCallback)
     {
         if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
 
@@ -30,7 +30,7 @@ public partial struct Maybe<T>
     }
 }
 
-/// <content> Defines the <c>OnNone</c> and <c>OnNoneAsync</c> extension methods. </content>
+/// <content> Defines the <c>OnNone</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     /// <summary>
@@ -44,6 +44,6 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).OnNone(onNoneCallback);
 
     /// <inheritdoc cref="OnNone{T}(Task{Maybe{T}}, Action)"/>
-    public static async Task<Maybe<T>> OnNoneAsync<T>(this Task<Maybe<T>> sourceResult, Func<Task> onNoneCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnNoneAsync(onNoneCallback).ConfigureAwait(false);
+    public static async Task<Maybe<T>> OnNone<T>(this Task<Maybe<T>> sourceResult, Func<Task> onNoneCallback) =>
+        await (await sourceResult.ConfigureAwait(false)).OnNone(onNoneCallback).ConfigureAwait(false);
 }

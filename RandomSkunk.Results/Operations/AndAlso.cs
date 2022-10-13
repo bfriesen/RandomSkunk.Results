@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>AndAlso</c> and <c>AndAlsoAsync</c> methods. </content>
+/// <content> Defines the <c>AndAlso</c> methods. </content>
 public partial struct Result
 {
     /// <summary>
@@ -22,13 +22,13 @@ public partial struct Result
     }
 
     /// <inheritdoc cref="AndAlso(Func{Result})"/>
-    public async Task<Result> AndAlsoAsync(Func<Task<Result>> onSuccessAsync)
+    public async Task<Result> AndAlso(Func<Task<Result>> onSuccess)
     {
-        if (onSuccessAsync is null) throw new ArgumentNullException(nameof(onSuccessAsync));
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
 
         return _outcome switch
         {
-            _successOutcome => await onSuccessAsync().ConfigureAwait(false),
+            _successOutcome => await onSuccess().ConfigureAwait(false),
             _ => this,
         };
     }

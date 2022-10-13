@@ -8,7 +8,7 @@ public static class ResultErrorHandlingExtensions
 {
     public static Task<TResult> OnNonSuccessLogAndAlert<TResult>(this TResult sourceResult, IJSRuntime js)
         where TResult : IResult =>
-        sourceResult.OnNonSuccessAsync(async error =>
+        sourceResult.OnNonSuccess(async error =>
         {
             await js.InvokeVoidAsync("console.log", error.ToString());
             await js.InvokeVoidAsync("alert", error.Message);

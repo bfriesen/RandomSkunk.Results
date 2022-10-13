@@ -21,9 +21,9 @@ public class ResultTupleExtensionsGenerator : ISourceGenerator
         {
             code.AppendBeginRegion(tupleCount)
                 .AppendOnAllSuccessMethod(tupleCount)
-                .AppendOnAllSuccessAsyncMethod(tupleCount)
+                .AppendAsyncOnAllSuccessMethod(tupleCount)
                 .AppendOnAnyNonSuccessMethod(tupleCount)
-                .AppendOnAnyNonSuccessAsyncMethod(tupleCount)
+                .AppendAsyncOnAnyNonSuccessMethod(tupleCount)
                 .AppendMatchMethod(tupleCount)
                 .AppendMatchAsyncMethod(tupleCount)
                 .AppendSelectMethod(tupleCount)

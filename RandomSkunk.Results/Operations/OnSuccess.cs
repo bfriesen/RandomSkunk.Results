@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results;
 
-/// <content> Defines the <c>OnSuccess</c> and <c>OnSuccessAsync</c> methods. </content>
+/// <content> Defines the <c>OnSuccess</c> methods. </content>
 public partial struct Result
 {
     /// <summary>
@@ -19,7 +19,7 @@ public partial struct Result
     }
 
     /// <inheritdoc cref="OnSuccess(Action)"/>
-    public async Task<Result> OnSuccessAsync(Func<Task> onSuccessCallback)
+    public async Task<Result> OnSuccess(Func<Task> onSuccessCallback)
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
@@ -30,7 +30,7 @@ public partial struct Result
     }
 }
 
-/// <content> Defines the <c>OnSuccess</c> and <c>OnSuccessAsync</c> methods. </content>
+/// <content> Defines the <c>OnSuccess</c> methods. </content>
 public partial struct Result<T>
 {
     /// <inheritdoc cref="Result.OnSuccess(Action)"/>
@@ -45,7 +45,7 @@ public partial struct Result<T>
     }
 
     /// <inheritdoc cref="Result.OnSuccess(Action)"/>
-    public async Task<Result<T>> OnSuccessAsync(Func<T, Task> onSuccessCallback)
+    public async Task<Result<T>> OnSuccess(Func<T, Task> onSuccessCallback)
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
@@ -56,7 +56,7 @@ public partial struct Result<T>
     }
 }
 
-/// <content> Defines the <c>OnSuccess</c> and <c>OnSuccessAsync</c> methods. </content>
+/// <content> Defines the <c>OnSuccess</c> methods. </content>
 public partial struct Maybe<T>
 {
     /// <inheritdoc cref="Result.OnSuccess(Action)"/>
@@ -71,7 +71,7 @@ public partial struct Maybe<T>
     }
 
     /// <inheritdoc cref="Result.OnSuccess(Action)"/>
-    public async Task<Maybe<T>> OnSuccessAsync(Func<T, Task> onSuccessCallback)
+    public async Task<Maybe<T>> OnSuccess(Func<T, Task> onSuccessCallback)
     {
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
@@ -82,7 +82,7 @@ public partial struct Maybe<T>
     }
 }
 
-/// <content> Defines the <c>OnSuccess</c> and <c>OnSuccessAsync</c> extension methods. </content>
+/// <content> Defines the <c>OnSuccess</c> extension methods. </content>
 public static partial class ResultExtensions
 {
     /// <summary>
@@ -96,22 +96,22 @@ public static partial class ResultExtensions
         (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback);
 
     /// <inheritdoc cref="OnSuccess{T}(Task{Maybe{T}}, Action{T})"/>
-    public static async Task<Maybe<T>> OnSuccessAsync<T>(this Task<Maybe<T>> sourceResult, Func<T, Task> onSuccessCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnSuccessAsync(onSuccessCallback).ConfigureAwait(false);
+    public static async Task<Maybe<T>> OnSuccess<T>(this Task<Maybe<T>> sourceResult, Func<T, Task> onSuccessCallback) =>
+        await (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback).ConfigureAwait(false);
 
     /// <inheritdoc cref="OnSuccess{T}(Task{Maybe{T}}, Action{T})"/>
     public static async Task<Result> OnSuccess(this Task<Result> sourceResult, Action onSuccessCallback) =>
         (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback);
 
     /// <inheritdoc cref="OnSuccess{T}(Task{Maybe{T}}, Action{T})"/>
-    public static async Task<Result> OnSuccessAsync(this Task<Result> sourceResult, Func<Task> onSuccessCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnSuccessAsync(onSuccessCallback).ConfigureAwait(false);
+    public static async Task<Result> OnSuccess(this Task<Result> sourceResult, Func<Task> onSuccessCallback) =>
+        await (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback).ConfigureAwait(false);
 
     /// <inheritdoc cref="OnSuccess{T}(Task{Maybe{T}}, Action{T})"/>
     public static async Task<Result<T>> OnSuccess<T>(this Task<Result<T>> sourceResult, Action<T> onSuccessCallback) =>
         (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback);
 
     /// <inheritdoc cref="OnSuccess{T}(Task{Maybe{T}}, Action{T})"/>
-    public static async Task<Result<T>> OnSuccessAsync<T>(this Task<Result<T>> sourceResult, Func<T, Task> onSuccessCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnSuccessAsync(onSuccessCallback).ConfigureAwait(false);
+    public static async Task<Result<T>> OnSuccess<T>(this Task<Result<T>> sourceResult, Func<T, Task> onSuccessCallback) =>
+        await (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback).ConfigureAwait(false);
 }

@@ -64,7 +64,7 @@ public static class ResultTupleExtensions
 
 ");
 
-    public static StringBuilder AppendOnAllSuccessAsyncMethod(this StringBuilder code, int tupleCount) =>
+    public static StringBuilder AppendAsyncOnAllSuccessMethod(this StringBuilder code, int tupleCount) =>
         code.Append(@"    /// <summary>
     /// Invokes the <paramref name=""onAllSuccess""/> function if all results in the tuple are <c>Success</c> results.
     /// </summary>
@@ -77,7 +77,7 @@ public static class ResultTupleExtensions
     ///     the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.</exception>
     public static async Task<")
             .AppendTupleDefinitionForT(tupleCount)
-            .Append("> OnAllSuccessAsync")
+            .Append("> OnAllSuccess")
             .AppendTypeDefinitionForT(tupleCount)
             .Append(@"(
         this ")
@@ -154,7 +154,7 @@ public static class ResultTupleExtensions
 
 ");
 
-    public static StringBuilder AppendOnAnyNonSuccessAsyncMethod(this StringBuilder code, int tupleCount)
+    public static StringBuilder AppendAsyncOnAnyNonSuccessMethod(this StringBuilder code, int tupleCount)
     {
         return code.Append(@"    /// <summary>
     /// Invokes the <paramref name=""onAnyNonSuccess""/> function if any results in the tuple are <c>non-Success</c> results.
@@ -169,7 +169,7 @@ public static class ResultTupleExtensions
     ///     the <paramref name=""sourceResults""/> tuple's items are <see langword=""null""/>.</exception>
     public static async Task<")
       .AppendTupleDefinitionForTResult(tupleCount)
-            .Append(@"> OnAnyNonSuccessAsync")
+            .Append(@"> OnAnyNonSuccess")
       .AppendTypeDefinitionForTResult(tupleCount)
             .Append(@"(
         this ")

@@ -66,7 +66,7 @@ public class Tuple_extension_methods
         }
     }
 
-    public class For_OnAllSuccessAsync
+    public class For_Async_OnAllSuccess
     {
         public static IEnumerable<object[]> NonSuccessResults => NonSuccessResultsWithoutExpectedError;
 
@@ -79,7 +79,7 @@ public class Tuple_extension_methods
 
             (DBNull?, int?, int?) capturedValues = default;
 
-            await (resultA, resultB, resultC).OnAllSuccessAsync(
+            await (resultA, resultB, resultC).OnAllSuccess(
                 (a, b, c) =>
                 {
                     capturedValues = (a, b, c);
@@ -95,7 +95,7 @@ public class Tuple_extension_methods
         {
             (DBNull?, int?, int?) capturedValues = default;
 
-            await (resultA, resultB, resultC).OnAllSuccessAsync(
+            await (resultA, resultB, resultC).OnAllSuccess(
                 (a, b, c) =>
                 {
                     capturedValues = (a, b, c);
@@ -150,7 +150,7 @@ public class Tuple_extension_methods
         }
     }
 
-    public class For_OnAnyNonSuccessAsync
+    public class For_Async_OnAnyNonSuccess
     {
         public static IEnumerable<object[]> NonSuccessResults => NonSuccessResultsWithExpectedError;
 
@@ -163,7 +163,7 @@ public class Tuple_extension_methods
 
             Error? capturedError = null;
 
-            await (resultA, resultB, resultC).OnAnyNonSuccessAsync(error =>
+            await (resultA, resultB, resultC).OnAnyNonSuccess(error =>
             {
                 capturedError = error;
                 return Task.CompletedTask;
@@ -178,7 +178,7 @@ public class Tuple_extension_methods
         {
             Error? capturedError = null;
 
-            await (resultA, resultB, resultC).OnAnyNonSuccessAsync(error =>
+            await (resultA, resultB, resultC).OnAnyNonSuccess(error =>
             {
                 capturedError = error;
                 return Task.CompletedTask;
