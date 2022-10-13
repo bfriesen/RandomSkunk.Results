@@ -80,7 +80,7 @@ public static class TryCatch
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result<T> AsResult<T>(
-        Func<T> sourceDelegate,
+        Func<T?> sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
@@ -144,7 +144,7 @@ public static class TryCatch
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> AsMaybe<T>(
-        Func<T> sourceDelegate,
+        Func<T?> sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));

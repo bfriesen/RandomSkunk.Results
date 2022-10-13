@@ -139,7 +139,7 @@ public static class TryCatch<TException1, TException2, TException3>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result<T> AsResult<T>(
-        Func<T> sourceDelegate,
+        Func<T?> sourceDelegate,
         Func<TException1, Error>? exception1Handler = null,
         Func<TException2, Error>? exception2Handler = null,
         Func<TException3, Error>? exception3Handler = null)
@@ -243,7 +243,7 @@ public static class TryCatch<TException1, TException2, TException3>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> AsMaybe<T>(
-        Func<T> sourceDelegate,
+        Func<T?> sourceDelegate,
         Func<TException1, Error>? exception1Handler = null,
         Func<TException2, Error>? exception2Handler = null,
         Func<TException3, Error>? exception3Handler = null)
