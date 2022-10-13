@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results.Http:
     - Fix bug in `ReadMaybeFromJsonAsync<T>` extension method that occurred when the response contained problem problem details with error code `ErrorCodes.NoneResult`. Instead of reading it as a `None` result as expected, it would read it as a `Fail` result.
+- RandomSkunk.Results.AspNetCore:
+    - Fix bug in `Maybe<T>.ToActionResult()` extension method that occurred with `None` results. Instead of returning of returning a `NotFoundResult`, return an `ObjectResult` with a `ProblemDetails` value, where the problem details has an `errorCode` of `ErrorCodes.NoneResult`. This makes the HTTP response able to be read correctly with the RandomSkunk.Results.Http package.
 
 ## [1.0.0-alpha17] - 2022-10-02
 

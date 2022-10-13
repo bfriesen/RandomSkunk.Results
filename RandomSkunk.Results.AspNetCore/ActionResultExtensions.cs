@@ -84,7 +84,7 @@ public static class ActionResultExtensions
 
         return sourceResult.Match(
             onSuccess: value => new ObjectResult(value) { StatusCode = successStatusCode },
-            onNone: () => new NotFoundResult(),
+            onNone: () => GetNoneActionResult(getHttpStatusCode),
             onFail: error => GetFailActionResult(error, getHttpStatusCode));
     }
 
@@ -155,5 +155,11 @@ public static class ActionResultExtensions
         {
             StatusCode = httpStatusCode ?? ErrorCodes.InternalServerError,
         };
+    }
+
+    private static IActionResult GetNoneActionResult(Func<int, int>? getHttpStatusCode)
+    {
+        var error = new Error { ErrorCode = ErrorCodes.NoneResult };
+        return GetFailActionResult(error, getHttpStatusCode);
     }
 }
