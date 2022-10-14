@@ -196,9 +196,8 @@ public static class Errors
             ErrorCode = ErrorCodes.GatewayTimeout,
         };
 
-    [StackTraceHidden]
     internal static Error NoneResult() =>
-        new("This error represents a lack of a value (i.e. None).", "Result is None", true)
+        new("This error represents a lack of a value (i.e. None).", "Result is None")
         {
             ErrorCode = ErrorCodes.NoneResult,
         };
