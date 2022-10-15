@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- RandomSkunk.Results:
+    - Fix doc comment issues by removing all uses of `<inheritdoc cref='...'/>` tags.
+
 ## [1.0.0-alpha18] - 2022-10-13
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha18) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha18/lib/netstandard2.1/diff/1.0.0-alpha17/))  

@@ -4,56 +4,74 @@ namespace RandomSkunk.Results;
 public static partial class ResultExtensions
 {
     /// <summary>
+    /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
+    /// <returns>The current result.</returns>
+    public static TResult OnNonSuccess<TResult>(
+        this TResult sourceResult,
+        Action<Error> onNonSuccess)
+        where TResult : IResult
+    {
+        if (onNonSuccess is null) throw new ArgumentNullException(nameof(onNonSuccess));
+
+        if (!sourceResult.IsSuccess)
+        {
+            var error = sourceResult.GetNonSuccessError();
+            onNonSuccess(error);
+        }
+
+        return sourceResult;
+    }
+
+    /// <summary>
+    /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if this is a <c>non-Success</c> result.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<TResult> OnNonSuccess<TResult>(
+        this TResult sourceResult,
+        Func<Error, Task> onNonSuccess)
+        where TResult : IResult
+    {
+        if (onNonSuccess is null) throw new ArgumentNullException(nameof(onNonSuccess));
+
+        if (!sourceResult.IsSuccess)
+        {
+            var error = sourceResult.GetNonSuccessError();
+            await onNonSuccess(error).ConfigureAwait(false);
+        }
+
+        return sourceResult;
+    }
+
+    /// <summary>
     /// Invokes the <paramref name="onNonSuccessCallback"/> function if the current result is a <c>non-Success</c> result.
     /// </summary>
     /// <typeparam name="TResult">The type of result.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="onNonSuccessCallback">A callback function to invoke if this is a <c>non-Success</c> result.</param>
+    /// <param name="onNonSuccessCallback">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
     /// <returns>The current result.</returns>
-    public static TResult OnNonSuccess<TResult>(
-        this TResult sourceResult,
-        Action<Error> onNonSuccessCallback)
-        where TResult : IResult
-    {
-        if (onNonSuccessCallback is null) throw new ArgumentNullException(nameof(onNonSuccessCallback));
-
-        if (!sourceResult.IsSuccess)
-        {
-            var error = sourceResult.GetNonSuccessError();
-            onNonSuccessCallback(error);
-        }
-
-        return sourceResult;
-    }
-
-    /// <inheritdoc cref="OnNonSuccess{TResult}(TResult, Action{Error})"/>
-    public static async Task<TResult> OnNonSuccess<TResult>(
-        this TResult sourceResult,
-        Func<Error, Task> onNonSuccessCallback)
-        where TResult : IResult
-    {
-        if (onNonSuccessCallback is null) throw new ArgumentNullException(nameof(onNonSuccessCallback));
-
-        if (!sourceResult.IsSuccess)
-        {
-            var error = sourceResult.GetNonSuccessError();
-            await onNonSuccessCallback(error).ConfigureAwait(false);
-        }
-
-        return sourceResult;
-    }
-
-    /// <inheritdoc cref="OnNonSuccess{TResult}(TResult, Action{Error})"/>
     public static async Task<TResult> OnNonSuccess<TResult>(
         this Task<TResult> sourceResult,
         Action<Error> onNonSuccessCallback)
         where TResult : IResult =>
         (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback);
 
-    /// <inheritdoc cref="OnNonSuccess{TResult}(TResult, Action{Error})"/>
+    /// <summary>
+    /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
+    /// </summary>
+    /// <typeparam name="TResult">The type of result.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onNonSuccess">A callback function to invoke if the source is a <c>non-Success</c> result.</param>
+    /// <returns>The current result.</returns>
     public static async Task<TResult> OnNonSuccess<TResult>(
         this Task<TResult> sourceResult,
-        Func<Error, Task> onNonSuccessCallback)
+        Func<Error, Task> onNonSuccess)
         where TResult : IResult =>
-        await (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccess).ConfigureAwait(false);
 }
