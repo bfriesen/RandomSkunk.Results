@@ -1486,7 +1486,11 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return onSuccessSelector(sourceResult.Value);
 
-        return Maybe<TReturn>.Fail(sourceResult.GetNonSuccessError());
+        var error = sourceResult.GetNonSuccessError();
+        if (error.ErrorCode == ErrorCodes.NoneResult)
+            return Maybe<TReturn>.None();
+
+        return Maybe<TReturn>.Fail(error);
     }
 
     /// <summary>
@@ -1520,7 +1524,11 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return await onSuccessSelector(sourceResult.Value).ConfigureAwait(false);
 
-        return Maybe<TReturn>.Fail(sourceResult.GetNonSuccessError());
+        var error = sourceResult.GetNonSuccessError();
+        if (error.ErrorCode == ErrorCodes.NoneResult)
+            return Maybe<TReturn>.None();
+
+        return Maybe<TReturn>.Fail(error);
     }
 
     /// <summary>
