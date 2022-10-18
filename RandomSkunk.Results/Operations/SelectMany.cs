@@ -325,6 +325,7 @@ public partial struct Result<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Result<TReturn> SelectMany<TIntermediate, TReturn>(
         Func<T, Result<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -351,6 +352,7 @@ public partial struct Result<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Maybe<TReturn> SelectMany<TIntermediate, TReturn>(
         Func<T, Maybe<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -377,6 +379,7 @@ public partial struct Result<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -403,6 +406,7 @@ public partial struct Result<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -591,6 +595,7 @@ public partial struct Maybe<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Result<TReturn> SelectMany<TIntermediate, TReturn>(
         Func<T, Result<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -617,6 +622,7 @@ public partial struct Maybe<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Maybe<TReturn> SelectMany<TIntermediate, TReturn>(
         Func<T, Maybe<TIntermediate>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -643,6 +649,7 @@ public partial struct Maybe<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -669,6 +676,7 @@ public partial struct Maybe<T>
     ///     the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
@@ -1043,6 +1051,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
@@ -1072,6 +1081,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
@@ -1101,6 +1111,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
@@ -1130,6 +1141,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
@@ -1159,6 +1171,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Result<TIntermediate>> intermediateSelector,
@@ -1188,6 +1201,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Maybe<TIntermediate>> intermediateSelector,
@@ -1217,6 +1231,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
@@ -1246,6 +1261,7 @@ public static partial class ResultExtensions
     ///     of that result and the source result to the final result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<T, TIntermediate, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
