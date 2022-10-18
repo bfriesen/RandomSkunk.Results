@@ -4,6 +4,7 @@ namespace RandomSkunk.Results;
 /// Defines a result with an optional value.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
+/// <content> This struct is partial - additional methods are defined in the code files from the Operations folder. </content>
 public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 {
     private const int _failOutcome = 0;

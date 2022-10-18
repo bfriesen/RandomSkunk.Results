@@ -3,6 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result without a value.
 /// </summary>
+/// <content> This struct is partial - additional methods are defined in the code files from the Operations folder. </content>
 public partial struct Result : IResult<DBNull>, IEquatable<Result>
 {
     private const int _failOutcome = 0;
