@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [1.0.0-alpha19] - 2022-10-18
+
+[RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha19) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha19/lib/netstandard2.1/diff/1.0.0-alpha18/))  
+[RandomSkunk.Results.AspNetCore API](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha19) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.AspNetCore/1.0.0-alpha19/lib/netstandard2.1/diff/1.0.0-alpha18/))  
+[RandomSkunk.Results.Dapper API](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha19) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Dapper/1.0.0-alpha19/lib/netstandard2.1/diff/1.0.0-alpha18/))  
+[RandomSkunk.Results.Http API](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha19) ([diff](https://www.fuget.org/packages/RandomSkunk.Results.Http/1.0.0-alpha19/lib/netstandard2.1/diff/1.0.0-alpha18/))
+
 ### Added
 
 - RandomSkunk.Results
@@ -459,7 +466,8 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha18...HEAD
+[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha19...HEAD
+[1.0.0-alpha19]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha18...v1.0.0-alpha19
 [1.0.0-alpha18]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha17...v1.0.0-alpha18
 [1.0.0-alpha17]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha16...v1.0.0-alpha17
 [1.0.0-alpha16]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha15...v1.0.0-alpha16
