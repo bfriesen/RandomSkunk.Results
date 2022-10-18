@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results
+    - Add `IEnumerable<T>.ForEach` result extension methods.
+
 ### Fixed
 
 - RandomSkunk.Results:

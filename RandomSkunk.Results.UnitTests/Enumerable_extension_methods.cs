@@ -1,9 +1,70 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace RandomSkunk.Results.UnitTests;
 
 public class Enumerable_extension_methods
 {
+    public class For_ForEach
+    {
+        [Fact]
+        public void When_all_elements_produce_Success_results_Returns_Success()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var result = sequence.ForEach(i => Result.Success());
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var valuesEvaluated = new List<int>();
+
+            var result = sequence.ForEach(i =>
+            {
+                valuesEvaluated.Add(i);
+                return i < 5 ? Result.Success() : Result.Fail();
+            });
+
+            result.IsFail.Should().BeTrue();
+            valuesEvaluated.Should().BeEquivalentTo(Enumerable.Range(1, 5), options => options.WithStrictOrdering());
+        }
+    }
+
+    public class For_Async_ForEach
+    {
+        [Fact]
+        public async Task When_all_elements_produce_Success_results_Returns_Success()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var result = await sequence.ForEach(i => Task.FromResult(Result.Success()));
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var valuesEvaluated = new List<int>();
+
+            var result = await sequence.ForEach(i =>
+            {
+                valuesEvaluated.Add(i);
+                return Task.FromResult(i < 5 ? Result.Success() : Result.Fail());
+            });
+
+            result.IsFail.Should().BeTrue();
+            valuesEvaluated.Should().BeEquivalentTo(Enumerable.Range(1, 5), options => options.WithStrictOrdering());
+        }
+    }
+
     public class For_First
     {
         [Fact]
