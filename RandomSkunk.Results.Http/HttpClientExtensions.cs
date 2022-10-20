@@ -118,7 +118,7 @@ public static class HttpClientExtensions
         return returnResult;
     }
 
-#if NETSTANDARD2_1_OR_GREATER || NET6_0_OR_GREATER
+#if !NETSTANDARD2_0
 
     /// <summary>
     /// Sends a PATCH request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -152,7 +152,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
-            () => sourceHttpClient.PatchAsync(requestUri, content, cancellationToken),
+            () => sourceHttpClient.PatchAsync(requestUri, content!, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
 
@@ -230,7 +230,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
-            () => sourceHttpClient.PostAsync(requestUri, content, cancellationToken),
+            () => sourceHttpClient.PostAsync(requestUri, content!, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
 
@@ -306,7 +306,7 @@ public static class HttpClientExtensions
         Func<TaskCanceledException, Error>? getTimeoutError = null,
         CancellationToken cancellationToken = default) =>
         TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
-            () => sourceHttpClient.PutAsync(requestUri, content, cancellationToken),
+            () => sourceHttpClient.PutAsync(requestUri, content!, cancellationToken),
             getHttpError ?? _defaultGetHttpError,
             getTimeoutError ?? _defaultGetTimeoutError);
 
