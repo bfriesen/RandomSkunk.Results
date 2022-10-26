@@ -90,7 +90,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
     ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
-    ///     instead.</param>
+    ///     instead to determine whether to set the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
     public static Result Fail(Error? error = null, bool? setStackTrace = null) => new(success: false, error, setStackTrace);
@@ -106,7 +106,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     ///     </param>
     /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
     ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
-    ///     instead.</param>
+    ///     instead to determine whether to set the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
     public static Result Fail(
@@ -129,7 +129,7 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
     ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
-    ///     instead.</param>
+    ///     instead to determine whether to set the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
     public static Result Fail(
