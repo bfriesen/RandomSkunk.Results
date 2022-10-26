@@ -1,0 +1,8 @@
+Result introduction.linq
+Result{T} introduction.linq
+Maybe{T} introduction.linq
+Result default values.linq
+Create results from value.linq
+Create results from value extension methods.linq
+Fail result callback.linq
+Fail result error replacement function.linq
