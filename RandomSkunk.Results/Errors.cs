@@ -172,6 +172,21 @@ public static class Errors
             ErrorCode = ErrorCodes.GatewayTimeout,
         };
 
+    /// <summary>
+    /// Creates an <see cref="Error"/> indicating that a value was <see langword="null"/> when it was not expected to be.
+    /// </summary>
+    /// <param name="errorMessage">The error message.</param>
+    /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <returns>A Unexpected Null Value error.</returns>
+    public static Error UnexpectedNullValue(
+        string errorMessage = UnexpectedNullValueMessage,
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? UnexpectedNullValueMessage, UnexpectedNullValueTitle)
+        {
+            Identifier = errorIdentifier,
+            ErrorCode = ErrorCodes.UnexpectedNullValue,
+        };
+
     internal static Error NoneResult() =>
         new("This error represents a lack of a value (i.e. None).", "Result is None")
         {

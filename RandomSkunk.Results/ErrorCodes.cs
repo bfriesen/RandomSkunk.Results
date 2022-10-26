@@ -63,6 +63,11 @@ public static class ErrorCodes
     /// </summary>
     public const int CaughtException = -500;
 
+    /// <summary>
+    /// Indicates that the error represents an unexpected null value.
+    /// </summary>
+    public const int UnexpectedNullValue = -1404;
+
     private static readonly ConcurrentDictionary<int, string> _descriptions = new(GetErrorCodes(typeof(ErrorCodes)));
 
     /// <summary>

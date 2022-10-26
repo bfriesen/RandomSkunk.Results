@@ -100,7 +100,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_When_not_empty_and_first_is_null_Returns_Fail_410()
+        public void OrFail_When_not_empty_and_first_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -109,10 +109,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -145,7 +145,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_first_is_null_Returns_Fail_410()
+        public void OrNone_When_not_empty_and_first_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -154,10 +154,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -183,14 +183,14 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_Given_predicate_When_matched_and_null_Returns_Fail_410()
+        public void OrFail_Given_predicate_When_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
 
             var seqResult = seq.FirstOrFail(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -215,14 +215,14 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_first_matched_and_null_Returns_Fail_410()
+        public void OrNone_Given_predicate_When_first_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
 
             var seqResult = seq.FirstOrNone(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
     }
 
@@ -261,7 +261,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_When_not_empty_and_last_is_null_Returns_Fail_410()
+        public void OrFail_When_not_empty_and_last_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -270,10 +270,10 @@ public class Enumerable_extension_methods
             var listResult = list.LastOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -306,7 +306,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_last_is_null_Returns_Fail_410()
+        public void OrNone_When_not_empty_and_last_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -315,10 +315,10 @@ public class Enumerable_extension_methods
             var listResult = list.LastOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -344,14 +344,14 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_Given_predicate_When_matched_and_null_Returns_Fail_410()
+        public void OrFail_Given_predicate_When_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
 
             var seqResult = seq.LastOrFail(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -376,14 +376,14 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_last_matched_and_null_Returns_Fail_410()
+        public void OrNone_Given_predicate_When_last_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
 
             var seqResult = seq.LastOrNone(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
     }
 
@@ -438,7 +438,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_When_not_empty_and_single_is_null_Returns_Fail_410()
+        public void OrFail_When_not_empty_and_single_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 1);
             var list = seq.ToList();
@@ -447,10 +447,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -499,7 +499,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_single_is_null_Returns_Fail_410()
+        public void OrNone_When_not_empty_and_single_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 1);
             var list = seq.ToList();
@@ -508,10 +508,10 @@ public class Enumerable_extension_methods
             var listResult = list.SingleOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -553,14 +553,14 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_Given_predicate_When_single_matched_and_null_Returns_Fail_410()
+        public void OrFail_Given_predicate_When_single_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 1);
 
             var seqResult = seq.SingleOrFail(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -601,14 +601,14 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_single_matched_and_null_Returns_Fail_410()
+        public void OrNone_Given_predicate_When_single_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 1);
 
             var seqResult = seq.SingleOrNone(x => x is null);
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
     }
 
@@ -647,7 +647,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_When_element_at_matched_and_null_Returns_Fail_410()
+        public void OrFail_When_element_at_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -656,10 +656,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrFail();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
 
         [Fact]
@@ -692,7 +692,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_element_at_matched_and_null_Returns_Fail_410()
+        public void OrNone_When_element_at_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -701,10 +701,10 @@ public class Enumerable_extension_methods
             var listResult = list.FirstOrNone();
 
             seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
 
             listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.Gone);
+            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
         }
     }
 }
