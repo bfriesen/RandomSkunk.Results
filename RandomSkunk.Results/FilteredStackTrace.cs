@@ -36,6 +36,12 @@ internal class FilteredStackTrace : StackTrace
                     _skipFramesAfterThisIndex = frameIndex - 4;
                     break;
                 }
+
+                if (methodData.IsLinqPadExecutionModelClrQueryRunner)
+                {
+                    _skipFramesAfterThisIndex = frameIndex - 1;
+                    break;
+                }
             }
         }
     }
@@ -78,6 +84,9 @@ internal class FilteredStackTrace : StackTrace
                 && method.DeclaringType?.FullName?.StartsWith("Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor") == true;
 
             IsXunitTestInvoker = method.DeclaringType?.FullName == "Xunit.Sdk.TestInvoker`1";
+
+            IsLinqPadExecutionModelClrQueryRunner = method.Name == "Run"
+                && method.DeclaringType?.FullName == "LINQPad.ExecutionModel.ClrQueryRunner";
         }
 
         public bool IsMarkedAsHidden { get; }
@@ -85,5 +94,7 @@ internal class FilteredStackTrace : StackTrace
         public bool IsAspNetCoreMvcActionMethodExecutor { get; }
 
         public bool IsXunitTestInvoker { get; }
+
+        public bool IsLinqPadExecutionModelClrQueryRunner { get; }
     }
 }
