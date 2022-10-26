@@ -17,7 +17,7 @@ public record class Error
 
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
     private static readonly Lazy<Error> _defaultError = new(() => new Error() { StackTrace = "The error from a default result struct does not have a stack trace." });
-    private static readonly Lazy<IReadOnlyDictionary<string, object>> _emptyExtensions = new(() => new ReadOnlyDictionary<string, object>(new Dictionary<string, object>()));
+    private static readonly IReadOnlyDictionary<string, object> _emptyExtensions = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
 
     private readonly string _message;
     private readonly string _title;
@@ -41,7 +41,7 @@ public record class Error
     {
         _message = message ?? DefaultMessage;
         _title = title ?? Format.AsSentenceCase(GetType().Name);
-        _extensions = extensions ?? _emptyExtensions.Value;
+        _extensions = extensions ?? _emptyExtensions;
 
         if (setStackTrace)
             _stackTrace = FilteredStackTrace.Create();
@@ -53,7 +53,7 @@ public record class Error
     public string Message
     {
         get => _message;
-        init => _message = value ?? throw new ArgumentNullException(nameof(value));
+        init => _message = value ?? DefaultMessage;
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public record class Error
     public string Title
     {
         get => _title;
-        init => _title = value ?? throw new ArgumentNullException(nameof(value));
+        init => _title = value ?? Format.AsSentenceCase(GetType().Name);
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public record class Error
     public IReadOnlyDictionary<string, object> Extensions
     {
         get => _extensions;
-        init => _extensions = value ?? throw new ArgumentNullException(nameof(value));
+        init => _extensions = value ?? _emptyExtensions;
     }
 
     /// <summary>
@@ -280,7 +280,7 @@ public record class Error
             for (var e = error; e is not null; e = e.InnerError)
             {
                 if (first) first = false;
-                else sb.AppendLine("   --- End of inner exception stack trace ---");
+                else sb.AppendLine("   --- End of inner error stack trace ---");
 
                 if (!string.IsNullOrWhiteSpace(e.StackTrace))
                     sb.AppendLine(e.StackTrace);
