@@ -276,7 +276,7 @@ public record class Error
 
         AppendError(sb, this, null);
 
-        while (sb.Length > 0 && char.IsWhiteSpace(sb[sb.Length - 1]))
+        while (sb.Length > 0 && char.IsWhiteSpace(sb[^1]))
             sb.Length--;
 
         return sb.ToString();
