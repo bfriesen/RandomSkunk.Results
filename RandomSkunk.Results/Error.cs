@@ -16,7 +16,7 @@ public record class Error
     internal const string DefaultFromExceptionMessage = "An exception was thrown.";
 
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
-    private static readonly Lazy<Error> _defaultError = new(() => new Error() { StackTrace = "The error from a default result struct does not have a stack trace." });
+    private static readonly Lazy<Error> _defaultError = new(() => new Error());
     private static readonly IReadOnlyDictionary<string, object> _emptyExtensions = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
 
     private readonly string _message;
@@ -97,6 +97,15 @@ public record class Error
     /// Gets the optional <see cref="Error"/> instance that caused the current error.
     /// </summary>
     public Error? InnerError { get; init; }
+
+    /// <summary>
+    /// Gets a value indicating whether the current error contains sensitive information.
+    /// </summary>
+    /// <remarks>
+    /// This value is used to determines whether the <see cref="ToString()"/> method outputs the full or abbreviated
+    /// representation of the error.
+    /// </remarks>
+    public bool IsSensitive { get; init; }
 
     internal static Error DefaultError => _defaultError.Value;
 
@@ -241,22 +250,33 @@ public record class Error
     /// Returns a string that represents the current error.
     /// </summary>
     /// <remarks>
-    /// For security reasons, the error's stack trace is excluded. To include the stack trace, pass <see langword="true"/> to the
-    /// <see cref="ToString(bool)"/> overload.
+    /// If the <see cref="IsSensitive"/> is <see langword="true"/>, then a simplified value containing only the
+    /// <see cref="Title"/> and <see cref="ErrorCode"/> (if present) is returned. Otherwise, the full representation is returned.
     /// </remarks>
     /// <returns>A string that represents the current error.</returns>
-    public sealed override string? ToString() => ToString(false);
-
-    /// <summary>
-    /// Returns a string that represents the current error.
-    /// </summary>
-    /// <param name="includeStackTrace">Whether to include the error's stack trace in the returned string.</param>
-    /// <returns>A string that represents the current error.</returns>
-    public string? ToString(bool includeStackTrace)
+    public sealed override string ToString()
     {
+        if (IsSensitive)
+        {
+            if (ErrorCode.HasValue)
+            {
+                if (ErrorCodes.TryGetDescription(ErrorCode.Value, out var description))
+                {
+                    if (description == $"{ErrorCode} ({Title})")
+                        return description;
+
+                    return $"{Title}: {description}";
+                }
+
+                return $"{Title}: {ErrorCode}";
+            }
+
+            return Title;
+        }
+
         var sb = new StringBuilder();
 
-        AppendError(sb, this, includeStackTrace, null);
+        AppendError(sb, this, null);
 
         while (sb.Length > 0 && char.IsWhiteSpace(sb[sb.Length - 1]))
             sb.Length--;
@@ -264,7 +284,7 @@ public record class Error
         return sb.ToString();
     }
 
-    private static void AppendError(StringBuilder sb, Error error, bool includeStackTrace, string? indention)
+    private static void AppendError(StringBuilder sb, Error error, string? indention)
     {
         AppendSummary(sb, error, indention);
 
@@ -274,8 +294,6 @@ public record class Error
             AppendSummary(sb, innerError, indention is null ? "      " : indention);
         }
 
-        if (includeStackTrace)
-        {
             var first = true;
             for (var e = error; e is not null; e = e.InnerError)
             {
@@ -285,21 +303,20 @@ public record class Error
                 if (!string.IsNullOrWhiteSpace(e.StackTrace))
                     sb.AppendLine(e.StackTrace);
             }
-        }
 
         foreach (var extensionProperty in error.Extensions)
         {
             if (extensionProperty.Value is Error propertyError)
             {
                 sb.Append(" ---> ").Append(extensionProperty.Key).Append(": ");
-                AppendError(sb, propertyError, includeStackTrace, indention is null ? "      " : indention);
+                AppendError(sb, propertyError, indention is null ? "      " : indention);
             }
             else if (extensionProperty.Value is IEnumerable<Error> propertyErrors)
             {
                 foreach (var x in propertyErrors.Select((e, i) => new { e, i }))
                 {
                     sb.Append(" ---> ").Append(extensionProperty.Key).Append('[').Append(x.i).Append("]: ");
-                    AppendError(sb, x.e, includeStackTrace, indention is null ? "      " : indention);
+                    AppendError(sb, x.e, indention is null ? "      " : indention);
                 }
             }
         }
@@ -329,8 +346,8 @@ public record class Error
     }
 
     /// <summary>
-    /// Gets an extensions dictionary containing the specified items. If an item value is <see langword="null"/>, the item is
-    /// not added to the dictionary.
+    /// Gets an extensions dictionary containing the specified items. If an item value is <see langword="null"/>, the item is not
+    /// added to the dictionary.
     /// </summary>
     /// <param name="extensions">A collection of extension items. If an item value is <see langword="null"/>, the item is not
     /// added to the dictionary.</param>
