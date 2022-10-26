@@ -45,6 +45,24 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     }
 
     /// <summary>
+    /// Gets a value indicating whether this is a <c>Success</c> result.
+    /// </summary>
+    /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
+    public bool IsSuccess => _outcome == _successOutcome;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>None</c> result.
+    /// </summary>
+    /// <returns><see langword="true"/> if this is a <c>None</c> result; otherwise, <see langword="false"/>.</returns>
+    public bool IsNone => _outcome == _noneOutcome;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>Fail</c> result.
+    /// </summary>
+    /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
+    public bool IsFail => _outcome == _failOutcome;
+
+    /// <summary>
     /// Gets the value from the <c>Success</c> result.
     /// </summary>
     /// <returns>If this is a <c>Success</c> result, its value; otherwise throws an <see cref="InvalidStateException"/>.
@@ -67,24 +85,6 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _outcome == _failOutcome
             ? GetError()
             : throw Exceptions.CannotAccessErrorUnlessFail();
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>Success</c> result.
-    /// </summary>
-    /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _outcome == _successOutcome;
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>None</c> result.
-    /// </summary>
-    /// <returns><see langword="true"/> if this is a <c>None</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsNone => _outcome == _noneOutcome;
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>Fail</c> result.
-    /// </summary>
-    /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _outcome == _failOutcome;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.

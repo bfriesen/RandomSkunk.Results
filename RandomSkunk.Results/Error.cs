@@ -19,10 +19,10 @@ public record class Error
     private static readonly Lazy<Error> _defaultError = new(() => new Error());
     private static readonly IReadOnlyDictionary<string, object> _emptyExtensions = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
 
-    private readonly string _message;
     private readonly string _title;
-    private readonly string? _stackTrace;
+    private readonly string _message;
     private readonly string? _identifier;
+    private readonly string? _stackTrace;
     private readonly IReadOnlyDictionary<string, object> _extensions;
 
     /// <summary>
@@ -37,18 +37,9 @@ public record class Error
         string? title = null,
         IReadOnlyDictionary<string, object>? extensions = null)
     {
-        _message = string.IsNullOrWhiteSpace(message) ? DefaultMessage : message!;
         _title = string.IsNullOrWhiteSpace(title) ? Format.AsSentenceCase(GetType().Name) : title!;
+        _message = string.IsNullOrWhiteSpace(message) ? DefaultMessage : message!;
         _extensions = extensions ?? _emptyExtensions;
-    }
-
-    /// <summary>
-    /// Gets the error message.
-    /// </summary>
-    public string Message
-    {
-        get => _message;
-        init => _message = string.IsNullOrWhiteSpace(value) ? _message : value;
     }
 
     /// <summary>
@@ -61,12 +52,12 @@ public record class Error
     }
 
     /// <summary>
-    /// Gets the optional stack trace.
+    /// Gets the error message.
     /// </summary>
-    public string? StackTrace
+    public string Message
     {
-        get => _stackTrace;
-        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value;
+        get => _message;
+        init => _message = string.IsNullOrWhiteSpace(value) ? _message : value;
     }
 
     /// <summary>
@@ -84,6 +75,24 @@ public record class Error
     }
 
     /// <summary>
+    /// Gets a value indicating whether the current error contains sensitive information.
+    /// </summary>
+    /// <remarks>
+    /// This value is used to determines whether the <see cref="ToString()"/> method outputs the full or abbreviated
+    /// representation of the error.
+    /// </remarks>
+    public bool IsSensitive { get; init; }
+
+    /// <summary>
+    /// Gets the optional stack trace.
+    /// </summary>
+    public string? StackTrace
+    {
+        get => _stackTrace;
+        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value;
+    }
+
+    /// <summary>
     /// Gets additional properties for the error.
     /// </summary>
     public IReadOnlyDictionary<string, object> Extensions
@@ -96,15 +105,6 @@ public record class Error
     /// Gets the optional <see cref="Error"/> instance that caused the current error.
     /// </summary>
     public Error? InnerError { get; init; }
-
-    /// <summary>
-    /// Gets a value indicating whether the current error contains sensitive information.
-    /// </summary>
-    /// <remarks>
-    /// This value is used to determines whether the <see cref="ToString()"/> method outputs the full or abbreviated
-    /// representation of the error.
-    /// </remarks>
-    public bool IsSensitive { get; init; }
 
     internal static Error DefaultError => _defaultError.Value;
 

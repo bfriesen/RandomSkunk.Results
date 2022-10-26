@@ -35,6 +35,18 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     }
 
     /// <summary>
+    /// Gets a value indicating whether this is a <c>Success</c> result.
+    /// </summary>
+    /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
+    public bool IsSuccess => _outcome == _successOutcome;
+
+    /// <summary>
+    /// Gets a value indicating whether this is a <c>Fail</c> result.
+    /// </summary>
+    /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
+    public bool IsFail => _outcome == _failOutcome;
+
+    /// <summary>
     /// Gets the value from the <c>Success</c> result.
     /// </summary>
     /// <returns>If this is a <c>Success</c> result, its value; otherwise throws an <see cref="InvalidStateException"/>.
@@ -54,18 +66,6 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         _outcome == _failOutcome
             ? GetError()
             : throw Exceptions.CannotAccessErrorUnlessFail();
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>Success</c> result.
-    /// </summary>
-    /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _outcome == _successOutcome;
-
-    /// <summary>
-    /// Gets a value indicating whether this is a <c>Fail</c> result.
-    /// </summary>
-    /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _outcome == _failOutcome;
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.

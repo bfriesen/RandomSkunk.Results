@@ -33,16 +33,6 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     }
 
     /// <summary>
-    /// Gets the error from the <c>Fail</c> result.
-    /// </summary>
-    /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
-    /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
-    public Error Error =>
-        _outcome == _failOutcome
-            ? GetError()
-            : throw Exceptions.CannotAccessErrorUnlessFail();
-
-    /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
@@ -53,6 +43,16 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
     public bool IsFail => _outcome == _failOutcome;
+
+    /// <summary>
+    /// Gets the error from the <c>Fail</c> result.
+    /// </summary>
+    /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
+    /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
+    public Error Error =>
+        _outcome == _failOutcome
+            ? GetError()
+            : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <inheritdoc/>
     DBNull IResult<DBNull>.Value =>
