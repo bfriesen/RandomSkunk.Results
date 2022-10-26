@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>7f657c31-de12-4708-951a-8179fa2ca8ae</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>
+    </Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\DisallowNullAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\NotNullAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\NotNullWhenAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\RequiresUnreferencedCodeAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\UnconditionalSuppressMessageAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics\StackTraceHiddenAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)System.Runtime.CompilerServices\IsExternalInit.cs" />
+  </ItemGroup>
+</Project>

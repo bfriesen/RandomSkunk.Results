@@ -33,7 +33,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleBlazorApp.Client", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleBlazorApp.Server", "ExampleBlazorApp.Server\ExampleBlazorApp.Server.csproj", "{43AC1C8A-FBF8-4454-A8E4-57C0D346E3C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomSkunk.Results.SourceGenerators", "RandomSkunk.Results.SourceGenerators\RandomSkunk.Results.SourceGenerators.csproj", "{2307C283-230A-49FC-A74F-E778F87ED267}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.SourceGenerators", "RandomSkunk.Results.SourceGenerators\RandomSkunk.Results.SourceGenerators.csproj", "{2307C283-230A-49FC-A74F-E778F87ED267}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Polyfill", "Polyfill\Polyfill.shproj", "{7F657C31-DE12-4708-951A-8179FA2CA8AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,5 +91,10 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C3DE90D3-8E7B-4980-9D98-432245EEF3E4}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Polyfill\Polyfill.projitems*{7f657c31-de12-4708-951a-8179fa2ca8ae}*SharedItemsImports = 13
+		Polyfill\Polyfill.projitems*{a1236493-5bd7-48e0-9ff9-bc538985f24d}*SharedItemsImports = 5
+		Polyfill\Polyfill.projitems*{ae4b494a-8a45-4ce3-b7a5-308a4a45bff4}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal
