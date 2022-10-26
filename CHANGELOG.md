@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add [StackTraceBoundary] attribute, which lets an app define a "cutting off" point for a stack trace.
+
 ### Removed
 
 - RandomSkunk.Results:

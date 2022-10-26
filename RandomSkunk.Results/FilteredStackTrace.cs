@@ -19,10 +19,16 @@ internal class FilteredStackTrace : StackTrace
             {
                 var methodData = _methodDataLookup.GetValue(method, m => new MethodData(m));
 
-                if (methodData.IsMarkedAsHidden)
+                if (methodData.IsMarkedWithStackTraceHidden)
                 {
                     _skipFramesBeforeThisIndex = frameIndex + 1;
                     continue;
+                }
+
+                if (methodData.IsMarkedWithStackTraceBoundary)
+                {
+                    _skipFramesAfterThisIndex = frameIndex;
+                    break;
                 }
 
                 if (methodData.IsAspNetCoreMvcActionMethodExecutor)
@@ -77,8 +83,13 @@ internal class FilteredStackTrace : StackTrace
     {
         public MethodData(MethodBase method)
         {
-            IsMarkedAsHidden = GetCustomAttributes(method).Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute))
-                || GetCustomAttributes(method.DeclaringType).Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute));
+            var methodAttributes = GetCustomAttributes(method);
+            var declaringTypeAttributes = GetCustomAttributes(method.DeclaringType);
+
+            IsMarkedWithStackTraceHidden = methodAttributes.Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute))
+                || declaringTypeAttributes.Any(a => a.AttributeType == typeof(StackTraceHiddenAttribute));
+
+            IsMarkedWithStackTraceBoundary = methodAttributes.Any(a => a.AttributeType == typeof(StackTraceBoundaryAttribute));
 
             IsAspNetCoreMvcActionMethodExecutor = method.Name == "MoveNext"
                 && method.DeclaringType?.FullName?.StartsWith("Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor") == true;
@@ -89,7 +100,9 @@ internal class FilteredStackTrace : StackTrace
                 && method.DeclaringType?.FullName == "LINQPad.ExecutionModel.ClrQueryRunner";
         }
 
-        public bool IsMarkedAsHidden { get; }
+        public bool IsMarkedWithStackTraceHidden { get; }
+
+        public bool IsMarkedWithStackTraceBoundary { get; }
 
         public bool IsAspNetCoreMvcActionMethodExecutor { get; }
 
