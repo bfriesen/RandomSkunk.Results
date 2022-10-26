@@ -29,7 +29,7 @@ public class Maybe_of_T_struct
         public void Fail_Returns_Fail_result_with_specified_error()
         {
             var error = new Error();
-            var result = Maybe<int>.Fail(error);
+            var result = Maybe<int>.Fail(error, false);
 
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();

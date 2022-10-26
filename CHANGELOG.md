@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning].
     - Remove `Error.ToString(bool includeStackTrace)` overload.
     - Remove `FailResult.OnCreated` property.
 
+### Changed
+
+- RandomSkunk.Results:
+    - Make stack trace generation consistent.
+
 ## [1.0.0-alpha19] - 2022-10-18
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha19) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha19/lib/netstandard2.1/diff/1.0.0-alpha18/))  

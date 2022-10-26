@@ -25,7 +25,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             _successOutcome => onSuccessSelector(_value!).ToResult(),
-            _ => Result<TReturn>.Fail(GetError()),
+            _ => Result<TReturn>.Fail(GetError(), false),
         };
     }
 
@@ -51,7 +51,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             _successOutcome => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToResult(),
-            _ => Result<TReturn>.Fail(GetError()),
+            _ => Result<TReturn>.Fail(GetError(), false),
         };
     }
 }
@@ -83,7 +83,7 @@ public partial struct Maybe<T>
         {
             _successOutcome => onSuccessSelector(_value!).ToMaybe(),
             _noneOutcome => Maybe<TReturn>.None(),
-            _ => Maybe<TReturn>.Fail(GetError()),
+            _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
 
@@ -111,7 +111,7 @@ public partial struct Maybe<T>
         {
             _successOutcome => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
             _noneOutcome => Maybe<TReturn>.None(),
-            _ => Maybe<TReturn>.Fail(GetError()),
+            _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
 }
@@ -238,7 +238,7 @@ public static partial class ResultExtensions
             if (result.IsSuccess)
                 return onSuccessSelector(DBNull.Value).ToResult();
 
-            return Result<TReturn>.Fail(result.Error);
+            return Result<TReturn>.Fail(result.Error, false);
         }
 
         if (sourceResult is Result<DBNull> resultOfDBNull)
@@ -250,7 +250,7 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return onSuccessSelector(sourceResult.Value).ToResult();
 
-        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError());
+        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError(), false);
     }
 
     /// <summary>

@@ -32,19 +32,19 @@ public static class Errors
     internal const string GatewayTimeoutTitle = "Gateway Timeout";
     internal const string GatewayTimeoutMessage = "The operation from the upstream service timed out.";
 
+    internal const string UnexpectedNullValueTitle = "Unexpected Null Value";
+    internal const string UnexpectedNullValueMessage = "The value was null when it was not expected to be.";
+
     /// <summary>
     /// Creates an <see cref="Error"/> indicating that the operation cannot be processed due to a client error.
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>A Bad Request error.</returns>
-    [StackTraceHidden]
     public static Error BadRequest(
         string errorMessage = BadRequestMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? BadRequestMessage, BadRequestTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? BadRequestMessage, BadRequestTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadRequest,
@@ -56,14 +56,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>An Unauthorized error.</returns>
-    [StackTraceHidden]
     public static Error Unauthorized(
         string errorMessage = UnauthorizedMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? UnauthorizedMessage, UnauthorizedTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? UnauthorizedMessage, UnauthorizedTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Unauthorized,
@@ -74,14 +71,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>A Forbidden error.</returns>
-    [StackTraceHidden]
     public static Error Forbidden(
         string errorMessage = ForbiddenMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? ForbiddenMessage, ForbiddenTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? ForbiddenMessage, ForbiddenTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Forbidden,
@@ -92,14 +86,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>A Not Found error.</returns>
-    [StackTraceHidden]
     public static Error NotFound(
         string errorMessage = NotFoundMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? NotFoundMessage, NotFoundTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? NotFoundMessage, NotFoundTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotFound,
@@ -110,14 +101,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>A Gone error.</returns>
-    [StackTraceHidden]
     public static Error Gone(
         string errorMessage = GoneMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? GoneMessage, GoneTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? GoneMessage, GoneTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Gone,
@@ -129,14 +117,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>An Internal Server Error error.</returns>
-    [StackTraceHidden]
     public static Error InternalServerError(
         string errorMessage = InternalServerErrorMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? InternalServerErrorMessage, InternalServerErrorTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? InternalServerErrorMessage, InternalServerErrorTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.InternalServerError,
@@ -147,14 +132,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>A Not Implemented error.</returns>
-    [StackTraceHidden]
     public static Error NotImplemented(
         string errorMessage = NotImplementedMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? NotImplementedMessage, NotImplementedTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? NotImplementedMessage, NotImplementedTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotImplemented,
@@ -165,14 +147,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>A Bad Gateway error.</returns>
-    [StackTraceHidden]
     public static Error BadGateway(
         string errorMessage = BadGatewayMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? BadGatewayMessage, BadGatewayTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? BadGatewayMessage, BadGatewayTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadGateway,
@@ -183,14 +162,11 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <returns>A Gateway Timeout error.</returns>
-    [StackTraceHidden]
     public static Error GatewayTimeout(
         string errorMessage = GatewayTimeoutMessage,
-        string? errorIdentifier = null,
-        bool setStackTrace = true) =>
-        new(errorMessage ?? GatewayTimeoutMessage, GatewayTimeoutTitle, setStackTrace)
+        string? errorIdentifier = null) =>
+        new(errorMessage ?? GatewayTimeoutMessage, GatewayTimeoutTitle)
         {
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.GatewayTimeout,

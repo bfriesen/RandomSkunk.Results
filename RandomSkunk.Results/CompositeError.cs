@@ -5,9 +5,8 @@ namespace RandomSkunk.Results;
 /// </summary>
 public record class CompositeError : Error
 {
-    [StackTraceHidden]
     private CompositeError(IReadOnlyList<Error> errors)
-        : base("More than one error occurred.", setStackTrace: true, extensions: GetExtensions(nameof(Errors), errors))
+        : base("More than one error occurred.", extensions: GetExtensions(nameof(Errors), errors))
     {
     }
 
@@ -28,7 +27,6 @@ public record class CompositeError : Error
     ///     consisting of the specified errors.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="errors"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="errors"/> is empty.</exception>
-    [StackTraceHidden]
     public static Error CreateOrGetSingle(IEnumerable<Error> errors)
     {
         if (errors is null) throw new ArgumentNullException(nameof(errors));

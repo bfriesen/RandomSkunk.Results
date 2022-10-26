@@ -21,11 +21,16 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         _error = null;
     }
 
-    private Result(Error? error)
+    private Result(Error? error, bool? setStackTrace)
     {
         _outcome = _failOutcome;
         _value = default;
-        _error = FailResult.InvokeReplaceErrorIfSet(error ?? new Error(setStackTrace: true));
+
+        _error = error ?? new Error();
+        if (_error.StackTrace is null && (setStackTrace ?? FailResult.SetStackTrace))
+            _error = _error with { StackTrace = FilteredStackTrace.Create() };
+
+        _error = FailResult.InvokeReplaceErrorIfSet(_error);
         FailResult.InvokeCallbackIfSet(_error);
     }
 
@@ -92,9 +97,12 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
+    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
+    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
+    ///     instead.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
-    public static Result<T> Fail(Error? error = null) => new(error);
+    public static Result<T> Fail(Error? error = null, bool? setStackTrace = null) => new(error, setStackTrace);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -105,6 +113,9 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
+    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
+    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
+    ///     instead.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
     public static Result<T> Fail(
@@ -112,8 +123,9 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         string errorMessage = Error.DefaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
-        string? errorTitle = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
+        string? errorTitle = null,
+        bool? setStackTrace = null) =>
+        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle), setStackTrace);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -124,8 +136,9 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
-    /// <param name="stackTrace">The optional stack trace. If <see langword="null"/>, then a generated stack trace is used.
-    ///     </param>
+    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
+    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
+    ///     instead.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
     public static Result<T> Fail(
@@ -134,14 +147,15 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         string? errorIdentifier = null,
         string? errorTitle = null,
         Error? innerError = null,
-        string? stackTrace = null) =>
-        Fail(new Error(errorMessage, errorTitle, setStackTrace: stackTrace is null)
-        {
-            StackTrace = stackTrace,
-            ErrorCode = errorCode,
-            Identifier = errorIdentifier,
-            InnerError = innerError,
-        });
+        bool? setStackTrace = null) =>
+        Fail(
+            new Error(errorMessage, errorTitle)
+            {
+                ErrorCode = errorCode,
+                Identifier = errorIdentifier,
+                InnerError = innerError,
+            },
+            setStackTrace);
 
     /// <summary>
     /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>

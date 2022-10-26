@@ -27,7 +27,7 @@ public class Result_struct
         public void Fail_Returns_fail_result_with_specified_error()
         {
             var error = new Error();
-            var result = Result.Fail(error);
+            var result = Result.Fail(error, false);
 
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();

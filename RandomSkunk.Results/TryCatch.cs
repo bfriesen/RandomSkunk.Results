@@ -194,6 +194,5 @@ public static class TryCatch
         }
     }
 
-    [StackTraceHidden]
     internal static Error GetErrorFromException(Exception ex) => Error.FromException(ex);
 }

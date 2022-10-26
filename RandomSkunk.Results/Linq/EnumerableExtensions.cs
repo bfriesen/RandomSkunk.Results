@@ -544,25 +544,20 @@ public static class EnumerableExtensions
             ? value.ToMaybe()
             : Maybe<T>.Fail(Errors.Gone(string.Format(errorMessageFormat, errorMessageArgs)));
 
-    [StackTraceHidden]
     private static Error IndexOutOfRange() =>
         Errors.NotFound("Index was out of range. Must be non-negative and less than the size of the collection.");
 
-    [StackTraceHidden]
     private static Error SequenceContainsNoElements() =>
         Errors.NotFound("Sequence contains no elements.");
 
-    [StackTraceHidden]
     private static Error SequenceContainsNoMatchingElements() =>
         Errors.NotFound("Sequence contains no matching elements.");
 
-    [StackTraceHidden]
     private static Error SequenceContainsMoreThanOneElement(int? count = null) =>
         Errors.BadRequest(count is null
             ? "Sequence contains more than one element."
             : $"Sequence contains {count} elements, when it should contain exactly one.");
 
-    [StackTraceHidden]
     private static Error SequenceContainsMoreThanOneMatchingElement(ulong count) =>
         Errors.BadRequest($"Sequence contains {count} matching elements, when it should contain exactly one.");
 }

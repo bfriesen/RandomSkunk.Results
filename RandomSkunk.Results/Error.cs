@@ -22,6 +22,7 @@ public record class Error
     private readonly string _message;
     private readonly string _title;
     private readonly string? _stackTrace;
+    private readonly string? _identifier;
     private readonly IReadOnlyDictionary<string, object> _extensions;
 
     /// <summary>
@@ -30,21 +31,15 @@ public record class Error
     /// <param name="message">The error message. If <see langword="null"/>, then a default message is used instead.</param>
     /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
     ///     </param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location.</param>
     /// <param name="extensions">Any additional properties for the error.</param>
-    [StackTraceHidden]
     public Error(
         string? message = null,
         string? title = null,
-        bool setStackTrace = false,
         IReadOnlyDictionary<string, object>? extensions = null)
     {
-        _message = message ?? DefaultMessage;
-        _title = title ?? Format.AsSentenceCase(GetType().Name);
+        _message = string.IsNullOrWhiteSpace(message) ? DefaultMessage : message!;
+        _title = string.IsNullOrWhiteSpace(title) ? Format.AsSentenceCase(GetType().Name) : title!;
         _extensions = extensions ?? _emptyExtensions;
-
-        if (setStackTrace)
-            _stackTrace = FilteredStackTrace.Create();
     }
 
     /// <summary>
@@ -53,7 +48,16 @@ public record class Error
     public string Message
     {
         get => _message;
-        init => _message = value ?? DefaultMessage;
+        init => _message = string.IsNullOrWhiteSpace(value) ? _message : value;
+    }
+
+    /// <summary>
+    /// Gets the title for the error.
+    /// </summary>
+    public string Title
+    {
+        get => _title;
+        init => _title = string.IsNullOrWhiteSpace(value) ? Format.AsSentenceCase(GetType().Name) : value;
     }
 
     /// <summary>
@@ -62,7 +66,7 @@ public record class Error
     public string? StackTrace
     {
         get => _stackTrace;
-        init => _stackTrace = value ?? _stackTrace;
+        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value;
     }
 
     /// <summary>
@@ -73,15 +77,10 @@ public record class Error
     /// <summary>
     /// Gets the optional identifier of the error.
     /// </summary>
-    public string? Identifier { get; init; }
-
-    /// <summary>
-    /// Gets the title for the error.
-    /// </summary>
-    public string Title
+    public string? Identifier
     {
-        get => _title;
-        init => _title = value ?? Format.AsSentenceCase(GetType().Name);
+        get => _identifier;
+        init => _identifier = string.IsNullOrWhiteSpace(value) ? _identifier : value;
     }
 
     /// <summary>
@@ -119,7 +118,6 @@ public record class Error
     /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
-    [StackTraceHidden]
     public static Error FromException(
         Exception exception,
         string message = DefaultFromExceptionMessage,
@@ -131,7 +129,7 @@ public record class Error
 
         var innerError = CreateInnerError(exception);
 
-        return new Error(message ?? DefaultFromExceptionMessage, title, true)
+        return new Error(message ?? DefaultFromExceptionMessage, title)
         {
             ErrorCode = errorCode,
             Identifier = identifier,
@@ -156,7 +154,7 @@ public record class Error
                 .Where(p => p.Value is not null && (p.Name != nameof(ExternalException.ErrorCode) || !errorCode.HasValue))
                 .ToDictionary(p => p.Name, p => p.Value!));
 
-        return new Error(exception.Message, exception.GetType().Name, false, extensions)
+        return new Error(exception.Message, exception.GetType().Name, extensions)
         {
             StackTrace = exception.StackTrace,
             ErrorCode = errorCode,
@@ -294,15 +292,15 @@ public record class Error
             AppendSummary(sb, innerError, indention is null ? "      " : indention);
         }
 
-            var first = true;
-            for (var e = error; e is not null; e = e.InnerError)
-            {
-                if (first) first = false;
-                else sb.AppendLine("   --- End of inner error stack trace ---");
+        var first = true;
+        for (var e = error; e is not null; e = e.InnerError)
+        {
+            if (first) first = false;
+            else sb.AppendLine("   --- End of inner error stack trace ---");
 
-                if (!string.IsNullOrWhiteSpace(e.StackTrace))
-                    sb.AppendLine(e.StackTrace);
-            }
+            if (!string.IsNullOrWhiteSpace(e.StackTrace))
+                sb.AppendLine(e.StackTrace);
+        }
 
         foreach (var extensionProperty in error.Extensions)
         {
@@ -350,7 +348,7 @@ public record class Error
     /// added to the dictionary.
     /// </summary>
     /// <param name="extensions">A collection of extension items. If an item value is <see langword="null"/>, the item is not
-    /// added to the dictionary.</param>
+    ///     added to the dictionary.</param>
     /// <returns>An extensions dictionary.</returns>
     protected static IReadOnlyDictionary<string, object> GetExtensions(params (string Key, object Value)[] extensions) =>
         new ReadOnlyDictionary<string, object>(extensions.Where(x => x.Value is not null).ToDictionary(x => x.Key, x => x.Value));

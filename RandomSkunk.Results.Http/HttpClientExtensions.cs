@@ -443,11 +443,9 @@ public static class HttpClientExtensions
             getHttpError ?? _defaultGetHttpError);
 #endif
 
-    [StackTraceHidden]
     private static Error GetHttpError(HttpRequestException ex) =>
         Error.FromException(ex, "The HTTP request failed.", ErrorCodes.BadGateway);
 
-    [StackTraceHidden]
     private static Error GetTimeoutError(TaskCanceledException ex) =>
         Error.FromException(ex, "The HTTP request timed out.", ErrorCodes.GatewayTimeout);
 }

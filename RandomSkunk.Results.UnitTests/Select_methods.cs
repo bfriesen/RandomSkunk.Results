@@ -19,7 +19,7 @@ public class Select_methods
         public void When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error);
+            var source = Result<int>.Fail(error, false);
 
             var actual = source.Select(value => value.ToString());
 
@@ -55,7 +55,7 @@ public class Select_methods
         public void When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error);
+            var source = Maybe<int>.Fail(error, false);
 
             var actual = source.Select(value => value.ToString());
 

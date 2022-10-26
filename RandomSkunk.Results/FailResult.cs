@@ -9,6 +9,11 @@ public static class FailResult
     private static Func<Error, Error>? _replaceError;
 
     /// <summary>
+    /// Gets or sets a value indicating whether to set the stack trace of fail result errors.
+    /// </summary>
+    public static bool SetStackTrace { get; set; } = true;
+
+    /// <summary>
     /// Sets the callback function that will be invoked whenever a <c>Fail</c> result is created.
     /// </summary>
     /// <param name="onFailCallback">The callback function.</param>

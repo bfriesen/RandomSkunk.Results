@@ -8,7 +8,7 @@ public class TryGetError_methods
         public void Given_Fail_result_Returns_true_with_out_parameter_set()
         {
             var expectedError = new Error();
-            var result = Result.Fail(expectedError);
+            var result = Result.Fail(expectedError, false);
 
             var returnValue = result.TryGetError(out var error);
 
@@ -34,7 +34,7 @@ public class TryGetError_methods
         public void Given_Fail_result_Returns_true_with_out_parameter_set()
         {
             var expectedError = new Error();
-            var result = Result<int>.Fail(expectedError);
+            var result = Result<int>.Fail(expectedError, false);
 
             var returnValue = result.TryGetError(out var error);
 
@@ -60,7 +60,7 @@ public class TryGetError_methods
         public void Given_Fail_result_Returns_true_with_out_parameter_set()
         {
             var expectedError = new Error();
-            var result = Maybe<int>.Fail(expectedError);
+            var result = Maybe<int>.Fail(expectedError, false);
 
             var returnValue = result.TryGetError(out var error);
 
