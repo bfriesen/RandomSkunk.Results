@@ -92,6 +92,11 @@ public static class ErrorCodes
             _descriptions.AddOrUpdate(errorCode.Key, errorCode.Value, (k, e) => errorCode.Value);
     }
 
+    internal static bool TryGetDescription(int errorCode, [NotNullWhen(true)]out string? description)
+    {
+        return _descriptions.TryGetValue(errorCode, out description);
+    }
+
     private static IEnumerable<KeyValuePair<int, string>> GetErrorCodes(Type errorCodesType) =>
         errorCodesType
             .GetFields(BindingFlags.Public | BindingFlags.Static)

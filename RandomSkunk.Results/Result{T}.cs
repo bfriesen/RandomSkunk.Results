@@ -25,8 +25,8 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     {
         _outcome = _failOutcome;
         _value = default;
-        _error = error ?? new Error(setStackTrace: true);
-        FailResult.InvokeOnCreated(_error);
+        _error = FailResult.InvokeReplaceErrorIfSet(error ?? new Error(setStackTrace: true));
+        FailResult.InvokeCallbackIfSet(_error);
     }
 
     /// <summary>

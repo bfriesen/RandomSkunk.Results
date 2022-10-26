@@ -34,8 +34,8 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         {
             _outcome = _failOutcome;
             _value = default;
-            _error = error ?? new Error(setStackTrace: true);
-            FailResult.InvokeOnCreated(_error);
+            _error = FailResult.InvokeReplaceErrorIfSet(error ?? new Error(setStackTrace: true));
+            FailResult.InvokeCallbackIfSet(_error);
         }
     }
 

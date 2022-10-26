@@ -12,12 +12,14 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add [StackTraceBoundary] attribute, which lets an app define a "cutting off" point for a stack trace.
     - Add `Error.IsSensitive` property. This property determines whether the `Error.ToString()` method results in a full representation of the error or an abbreviated representation.
+    - Add `FailResult.SetCallbackFunction` and `FailResult.SetReplaceErrorFunction` methods. Functions passed to these methods are invoked whenver a `Fail` result is created.
 
 ### Removed
 
 - RandomSkunk.Results:
     - Remove `IsDefault` property from each result type.
     - Remove `Error.ToString(bool includeStackTrace)` overload.
+    - Remove `FailResult.OnCreated` property.
 
 ## [1.0.0-alpha19] - 2022-10-18
 
