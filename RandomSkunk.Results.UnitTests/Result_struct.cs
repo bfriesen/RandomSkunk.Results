@@ -9,7 +9,6 @@ public class Result_struct
 
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
-        result.IsDefault.Should().BeTrue();
         result.Error.Should().BeSameAs(Error.DefaultError);
     }
 
@@ -22,7 +21,6 @@ public class Result_struct
 
             result.IsSuccess.Should().BeTrue();
             result.IsFail.Should().BeFalse();
-            result.IsDefault.Should().BeFalse();
         }
 
         [Fact]
@@ -33,7 +31,6 @@ public class Result_struct
 
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
-            result.IsDefault.Should().BeFalse();
             result.Error.Should().BeSameAs(error);
         }
     }

@@ -49,11 +49,6 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
     public bool IsFail => _outcome == _failOutcome;
 
-    /// <summary>
-    /// Gets a value indicating whether this is a default instance of the <see cref="Result"/> struct.
-    /// </summary>
-    public bool IsDefault => _outcome == _failOutcome && _error is null;
-
     /// <inheritdoc/>
     DBNull IResult<DBNull>.Value =>
         _outcome == _successOutcome

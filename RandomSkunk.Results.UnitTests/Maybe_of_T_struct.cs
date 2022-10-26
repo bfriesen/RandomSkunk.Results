@@ -9,7 +9,6 @@ public class Maybe_of_T_struct
 
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
-        result.IsDefault.Should().BeTrue();
         result.Error.Should().BeSameAs(Error.DefaultError);
     }
 
@@ -23,7 +22,6 @@ public class Maybe_of_T_struct
             result.IsSuccess.Should().BeTrue();
             result.IsFail.Should().BeFalse();
             result.IsNone.Should().BeFalse();
-            result.IsDefault.Should().BeFalse();
             result.Value.Should().Be(1);
         }
 
@@ -36,7 +34,6 @@ public class Maybe_of_T_struct
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsNone.Should().BeFalse();
-            result.IsDefault.Should().BeFalse();
             result.Error.Should().BeSameAs(error);
         }
 
@@ -48,7 +45,6 @@ public class Maybe_of_T_struct
             result.IsNone.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
             result.IsFail.Should().BeFalse();
-            result.IsDefault.Should().BeFalse();
         }
     }
 
