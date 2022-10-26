@@ -15,7 +15,7 @@ public partial struct Result<T>
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        return _outcome == _successOutcome && comparer.Equals(_value!, otherValue);
+        return _outcome == Outcome.Success && comparer.Equals(_value!, otherValue);
     }
 
     /// <summary>
@@ -30,7 +30,7 @@ public partial struct Result<T>
     {
         if (comparison is null) throw new ArgumentNullException(nameof(comparison));
 
-        return _outcome == _successOutcome && comparison(_value!);
+        return _outcome == Outcome.Success && comparison(_value!);
     }
 }
 
@@ -49,7 +49,7 @@ public partial struct Maybe<T>
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        return _outcome == _successOutcome && comparer.Equals(_value!, otherValue);
+        return _outcome == Outcome.Success && comparer.Equals(_value!, otherValue);
     }
 
     /// <summary>
@@ -64,6 +64,6 @@ public partial struct Maybe<T>
     {
         if (comparison is null) throw new ArgumentNullException(nameof(comparison));
 
-        return _outcome == _successOutcome && comparison(_value!);
+        return _outcome == Outcome.Success && comparison(_value!);
     }
 }

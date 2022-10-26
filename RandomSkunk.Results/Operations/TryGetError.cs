@@ -11,7 +11,7 @@ public partial struct Result
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise <see langword="false"/>.</returns>
     public bool TryGetError([NotNullWhen(true)] out Error? error)
     {
-        if (_outcome == _failOutcome)
+        if (_outcome == Outcome.Fail)
         {
             error = GetError();
             return true;
@@ -33,7 +33,7 @@ public partial struct Result<T>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise <see langword="false"/>.</returns>
     public bool TryGetError([NotNullWhen(true)] out Error? error)
     {
-        if (_outcome == _failOutcome)
+        if (_outcome == Outcome.Fail)
         {
             error = GetError();
             return true;
@@ -55,7 +55,7 @@ public partial struct Maybe<T>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise <see langword="false"/>.</returns>
     public bool TryGetError([NotNullWhen(true)] out Error? error)
     {
-        if (_outcome == _failOutcome)
+        if (_outcome == Outcome.Fail)
         {
             error = GetError();
             return true;

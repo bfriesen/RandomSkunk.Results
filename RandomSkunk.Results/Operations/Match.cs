@@ -21,7 +21,7 @@ public partial struct Result
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _outcome == _successOutcome
+        return _outcome == Outcome.Success
             ? onSuccess()
             : onFail(GetError());
     }
@@ -45,7 +45,7 @@ public partial struct Result
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _outcome == _successOutcome
+        return _outcome == Outcome.Success
             ? onSuccess()
             : onFail(GetError());
     }
@@ -73,7 +73,7 @@ public partial struct Result<T>
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _outcome == _successOutcome
+        return _outcome == Outcome.Success
             ? onSuccess(_value!)
             : onFail(GetError());
     }
@@ -98,7 +98,7 @@ public partial struct Result<T>
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        return _outcome == _successOutcome
+        return _outcome == Outcome.Success
             ? onSuccess(_value!)
             : onFail(GetError());
     }
@@ -132,8 +132,8 @@ public partial struct Maybe<T>
 
         return _outcome switch
         {
-            _successOutcome => onSuccess(_value!),
-            _noneOutcome => onNone(),
+            Outcome.Success => onSuccess(_value!),
+            Outcome.None => onNone(),
             _ => onFail(GetError()),
         };
     }
@@ -164,8 +164,8 @@ public partial struct Maybe<T>
 
         return _outcome switch
         {
-            _successOutcome => onSuccess(_value!),
-            _noneOutcome => onNone(),
+            Outcome.Success => onSuccess(_value!),
+            Outcome.None => onNone(),
             _ => onFail(GetError()),
         };
     }

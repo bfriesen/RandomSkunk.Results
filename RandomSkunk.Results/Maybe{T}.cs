@@ -7,17 +7,13 @@ namespace RandomSkunk.Results;
 /// <content> This struct is partial - additional methods are defined in the code files from the Operations folder. </content>
 public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 {
-    private const int _failOutcome = 0;
-    private const int _successOutcome = 1;
-    private const int _noneOutcome = 2;
-
-    private readonly int _outcome;
+    private readonly Outcome _outcome;
     private readonly T? _value;
     private readonly Error? _error;
 
     private Maybe(T value)
     {
-        _outcome = _successOutcome;
+        _outcome = Outcome.Success;
         _value = value ?? throw new ArgumentNullException(nameof(value));
         _error = null;
     }
@@ -26,13 +22,13 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     {
         if (none)
         {
-            _outcome = _noneOutcome;
+            _outcome = Outcome.None;
             _value = default;
             _error = null;
         }
         else
         {
-            _outcome = _failOutcome;
+            _outcome = Outcome.Fail;
             _value = default;
 
             _error = error ?? new Error();
@@ -44,23 +40,25 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         }
     }
 
+    private enum Outcome { Fail, Success, None }
+
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsSuccess => _outcome == _successOutcome;
+    public bool IsSuccess => _outcome == Outcome.Success;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>None</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>None</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsNone => _outcome == _noneOutcome;
+    public bool IsNone => _outcome == Outcome.None;
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Fail</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
-    public bool IsFail => _outcome == _failOutcome;
+    public bool IsFail => _outcome == Outcome.Fail;
 
     /// <summary>
     /// Gets the value from the <c>Success</c> result.
@@ -71,8 +69,8 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     public T Value =>
         _outcome switch
         {
-            _successOutcome => _value!,
-            _noneOutcome => throw Exceptions.CannotAccessValueUnlessSuccess(),
+            Outcome.Success => _value!,
+            Outcome.None => throw Exceptions.CannotAccessValueUnlessSuccess(),
             _ => throw Exceptions.CannotAccessValueUnlessSuccess(GetError()),
         };
 
@@ -82,7 +80,7 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
     /// <exception cref="InvalidStateException">If the result is not a <c>Fail</c> result.</exception>
     public Error Error =>
-        _outcome == _failOutcome
+        _outcome == Outcome.Fail
             ? GetError()
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
@@ -226,8 +224,8 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     Error IResult.GetNonSuccessError() =>
         _outcome switch
         {
-            _failOutcome => Error,
-            _noneOutcome => Errors.NoneResult(),
+            Outcome.Fail => Error,
+            Outcome.None => Errors.NoneResult(),
             _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
         };
 
