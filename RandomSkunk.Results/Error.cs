@@ -255,23 +255,42 @@ public record class Error
     public sealed override string ToString()
     {
         if (IsSensitive)
+            return ToStringAbbreviated();
+
+        return ToStringFull();
+    }
+
+    private string ToStringAbbreviated()
+    {
+        var sb = new StringBuilder();
+
+        if (ErrorCode.HasValue)
         {
-            if (ErrorCode.HasValue)
+            if (ErrorCodes.TryGetDescription(ErrorCode.Value, out var description))
             {
-                if (ErrorCodes.TryGetDescription(ErrorCode.Value, out var description))
-                {
-                    if (description == $"{ErrorCode} ({Title})")
-                        return description;
-
-                    return $"{Title}: {description}";
-                }
-
-                return $"{Title}: {ErrorCode}";
+                if (description == $"{ErrorCode} ({Title})")
+                    sb.Append(description);
+                else
+                    sb.Append($"{Title}: {description}");
             }
-
-            return Title;
+            else
+            {
+                sb.Append($"{Title}: {ErrorCode}");
+            }
         }
 
+        sb.Append(Title);
+
+        if (!string.IsNullOrWhiteSpace(Identifier))
+        {
+            sb.Append(" - ").Append(Identifier);
+        }
+
+        return sb.ToString();
+    }
+
+    private string ToStringFull()
+    {
         var sb = new StringBuilder();
 
         AppendError(sb, this, null);
