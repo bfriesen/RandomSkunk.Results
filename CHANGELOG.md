@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add Truncate methods for `Result<T>` and `Maybe<T>`.
+
 ## [1.0.0-alpha20] - 2022-10-26
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha20) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha20/lib/netstandard2.1/diff/1.0.0-alpha19/))  
