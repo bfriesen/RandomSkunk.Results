@@ -40,16 +40,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Bad Request error.</param>
     /// <returns>A Bad Request error.</returns>
     public static Error BadRequest(
         string errorMessage = BadRequestMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? BadRequestMessage,
             Title = BadRequestTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadRequest,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -58,16 +67,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Unauthorized error.</param>
     /// <returns>An Unauthorized error.</returns>
     public static Error Unauthorized(
         string errorMessage = UnauthorizedMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? UnauthorizedMessage,
             Title = UnauthorizedTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Unauthorized,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -75,16 +93,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Forbidden error.</param>
     /// <returns>A Forbidden error.</returns>
     public static Error Forbidden(
         string errorMessage = ForbiddenMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? ForbiddenMessage,
             Title = ForbiddenTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Forbidden,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -92,16 +119,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Not Found error.</param>
     /// <returns>A Not Found error.</returns>
     public static Error NotFound(
         string errorMessage = NotFoundMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? NotFoundMessage,
             Title = NotFoundTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotFound,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -109,16 +145,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Gone error.</param>
     /// <returns>A Gone error.</returns>
     public static Error Gone(
         string errorMessage = GoneMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? GoneMessage,
             Title = GoneTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Gone,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -127,16 +172,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Internal Server Error error.</param>
     /// <returns>An Internal Server Error error.</returns>
     public static Error InternalServerError(
         string errorMessage = InternalServerErrorMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? InternalServerErrorMessage,
             Title = InternalServerErrorTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.InternalServerError,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -144,16 +198,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Not Implemented error.</param>
     /// <returns>A Not Implemented error.</returns>
     public static Error NotImplemented(
         string errorMessage = NotImplementedMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? NotImplementedMessage,
             Title = NotImplementedTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotImplemented,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -161,16 +224,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Bad Gateway error.</param>
     /// <returns>A Bad Gateway error.</returns>
     public static Error BadGateway(
         string errorMessage = BadGatewayMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? BadGatewayMessage,
             Title = BadGatewayTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadGateway,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -178,16 +250,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Gateway Timeout error.</param>
     /// <returns>A Gateway Timeout error.</returns>
     public static Error GatewayTimeout(
         string errorMessage = GatewayTimeoutMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? GatewayTimeoutMessage,
             Title = GatewayTimeoutTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.GatewayTimeout,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     /// <summary>
@@ -195,16 +276,25 @@ public static class Errors
     /// </summary>
     /// <param name="errorMessage">The error message.</param>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
+    /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Unexpected Null Value error.</param>
     /// <returns>A Unexpected Null Value error.</returns>
     public static Error UnexpectedNullValue(
         string errorMessage = UnexpectedNullValueMessage,
-        string? errorIdentifier = null) =>
+        string? errorIdentifier = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
+        Error? innerError = null) =>
         new()
         {
             Message = errorMessage ?? UnexpectedNullValueMessage,
             Title = UnexpectedNullValueTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.UnexpectedNullValue,
+            IsSensitive = isSensitive,
+            Extensions = extensions!,
+            InnerError = innerError,
         };
 
     internal static Error NoneResult() =>
