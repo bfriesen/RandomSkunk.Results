@@ -6,8 +6,9 @@ namespace RandomSkunk.Results;
 public record class CompositeError : Error
 {
     private CompositeError(IReadOnlyList<Error> errors)
-        : base("More than one error occurred.", extensions: GetExtensions(nameof(Errors), errors))
     {
+        Message = "More than one error occurred.";
+        Extensions = GetExtensions(nameof(Errors), errors);
     }
 
     /// <summary>

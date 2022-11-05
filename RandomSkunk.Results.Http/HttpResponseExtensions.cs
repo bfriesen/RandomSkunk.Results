@@ -520,8 +520,11 @@ public static class HttpResponseExtensions
             extensions["problemDetailsInstance"] = problemDetails.Instance;
         }
 
-        return new Error(problemDetails.Detail, problemDetails.Title, extensions)
+        return new Error
         {
+            Message = problemDetails.Detail!,
+            Title = problemDetails.Title!,
+            Extensions = extensions!,
             StackTrace = stackTrace,
             ErrorCode = errorCode,
             Identifier = identifier,

@@ -40,7 +40,12 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         }
     }
 
-    private enum Outcome { Fail, Success, None }
+    private enum Outcome
+    {
+        Fail,
+        Success,
+        None,
+    }
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
@@ -173,8 +178,10 @@ public partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         Error? innerError = null,
         bool? setStackTrace = null) =>
         Fail(
-            new Error(errorMessage, errorTitle)
+            new Error
             {
+                Message = errorMessage,
+                Title = errorTitle!,
                 ErrorCode = errorCode,
                 Identifier = errorIdentifier,
                 InnerError = innerError,

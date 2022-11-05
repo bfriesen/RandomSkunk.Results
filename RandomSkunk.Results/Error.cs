@@ -15,6 +15,7 @@ public record class Error
     internal const string DefaultMessage = "An error occurred.";
     internal const string DefaultFromExceptionMessage = "An exception was thrown.";
 
+    private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
     private static readonly Lazy<Error> _defaultError = new(() => new Error());
     private static readonly IReadOnlyDictionary<string, object> _emptyExtensions = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
@@ -28,18 +29,11 @@ public record class Error
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
     /// </summary>
-    /// <param name="message">The error message. If <see langword="null"/>, then a default message is used instead.</param>
-    /// <param name="title">The title for the error. If <see langword="null"/>, then the name of the error type is used instead.
-    ///     </param>
-    /// <param name="extensions">Any additional properties for the error.</param>
-    public Error(
-        string? message = null,
-        string? title = null,
-        IReadOnlyDictionary<string, object>? extensions = null)
+    public Error()
     {
-        _title = string.IsNullOrWhiteSpace(title) ? Format.AsSentenceCase(GetType().Name) : title!;
-        _message = string.IsNullOrWhiteSpace(message) ? DefaultMessage : message!;
-        _extensions = extensions ?? _emptyExtensions;
+        _message = DefaultMessage;
+        _title = _defaultTitleCache.GetOrAdd(GetType(), type => Format.AsSentenceCase(type.Name));
+        _extensions = _emptyExtensions;
     }
 
     /// <summary>
@@ -48,7 +42,7 @@ public record class Error
     public string Title
     {
         get => _title;
-        init => _title = string.IsNullOrWhiteSpace(value) ? Format.AsSentenceCase(GetType().Name) : value;
+        init => _title = string.IsNullOrWhiteSpace(value) ? _title : value;
     }
 
     /// <summary>
@@ -129,8 +123,10 @@ public record class Error
 
         var innerError = CreateInnerError(exception);
 
-        return new Error(message ?? DefaultFromExceptionMessage, title)
+        return new Error
         {
+            Message = message ?? DefaultFromExceptionMessage,
+            Title = title!,
             ErrorCode = errorCode,
             Identifier = identifier,
             InnerError = innerError,
@@ -154,8 +150,11 @@ public record class Error
                 .Where(p => p.Value is not null && (p.Name != nameof(ExternalException.ErrorCode) || !errorCode.HasValue))
                 .ToDictionary(p => p.Name, p => p.Value!));
 
-        return new Error(exception.Message, exception.GetType().Name, extensions)
+        return new Error
         {
+            Message = exception.Message,
+            Title = exception.GetType().Name,
+            Extensions = extensions,
             StackTrace = exception.StackTrace,
             ErrorCode = errorCode,
             InnerError = innerError,

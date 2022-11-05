@@ -29,7 +29,11 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
         }
     }
 
-    private enum Outcome { Fail, Success }
+    private enum Outcome
+    {
+        Fail,
+        Success,
+    }
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
@@ -139,8 +143,10 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
         Error? innerError = null,
         bool? setStackTrace = null) =>
         Fail(
-            new Error(errorMessage, errorTitle)
+            new Error
             {
+                Message = errorMessage,
+                Title = errorTitle!,
                 ErrorCode = errorCode,
                 Identifier = errorIdentifier,
                 InnerError = innerError,

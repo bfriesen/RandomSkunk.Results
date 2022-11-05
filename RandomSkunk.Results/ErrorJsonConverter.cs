@@ -139,8 +139,11 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
         public Dictionary<string, object> Extensions => _extensions ??= new Dictionary<string, object>(StringComparer.Ordinal);
 
         public Error Build() =>
-            new(Message, Type, Extensions)
+            new()
             {
+                Message = Message!,
+                Title = Type!,
+                Extensions = Extensions,
                 StackTrace = StackTrace,
                 ErrorCode = ErrorCode,
                 Identifier = Identifier,

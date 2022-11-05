@@ -26,11 +26,11 @@ public class Tuple_extension_methods
                 testData[2],
                 index switch
                 {
-                    0 => new Error("a") { ErrorCode = 1 },
-                    1 => new Error("b") { ErrorCode = 2 },
-                    2 => new Error("c") { ErrorCode = 3 },
+                    0 => new Error { Message = "a", ErrorCode = 1 },
+                    1 => new Error { Message = "b", ErrorCode = 2 },
+                    2 => new Error { Message = "c", ErrorCode = 3 },
                     3 => Errors.NoneResult(),
-                    _ => CompositeError.CreateOrGetSingle(new[] { new Error("a") { ErrorCode = 1 }, new Error("b") { ErrorCode = 2 }, new Error("c") { ErrorCode = 3 } }),
+                    _ => CompositeError.CreateOrGetSingle(new[] { new Error { Message = "a", ErrorCode = 1 }, new Error { Message = "b", ErrorCode = 2 }, new Error { Message = "c", ErrorCode = 3 } }),
                 },
             });
 

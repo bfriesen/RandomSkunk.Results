@@ -44,8 +44,10 @@ public static class Errors
     public static Error BadRequest(
         string errorMessage = BadRequestMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? BadRequestMessage, BadRequestTitle)
+        new()
         {
+            Message = errorMessage ?? BadRequestMessage,
+            Title = BadRequestTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadRequest,
         };
@@ -60,8 +62,10 @@ public static class Errors
     public static Error Unauthorized(
         string errorMessage = UnauthorizedMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? UnauthorizedMessage, UnauthorizedTitle)
+        new()
         {
+            Message = errorMessage ?? UnauthorizedMessage,
+            Title = UnauthorizedTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Unauthorized,
         };
@@ -75,8 +79,10 @@ public static class Errors
     public static Error Forbidden(
         string errorMessage = ForbiddenMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? ForbiddenMessage, ForbiddenTitle)
+        new()
         {
+            Message = errorMessage ?? ForbiddenMessage,
+            Title = ForbiddenTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Forbidden,
         };
@@ -90,8 +96,10 @@ public static class Errors
     public static Error NotFound(
         string errorMessage = NotFoundMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? NotFoundMessage, NotFoundTitle)
+        new()
         {
+            Message = errorMessage ?? NotFoundMessage,
+            Title = NotFoundTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotFound,
         };
@@ -105,8 +113,10 @@ public static class Errors
     public static Error Gone(
         string errorMessage = GoneMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? GoneMessage, GoneTitle)
+        new()
         {
+            Message = errorMessage ?? GoneMessage,
+            Title = GoneTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Gone,
         };
@@ -121,8 +131,10 @@ public static class Errors
     public static Error InternalServerError(
         string errorMessage = InternalServerErrorMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? InternalServerErrorMessage, InternalServerErrorTitle)
+        new()
         {
+            Message = errorMessage ?? InternalServerErrorMessage,
+            Title = InternalServerErrorTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.InternalServerError,
         };
@@ -136,8 +148,10 @@ public static class Errors
     public static Error NotImplemented(
         string errorMessage = NotImplementedMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? NotImplementedMessage, NotImplementedTitle)
+        new()
         {
+            Message = errorMessage ?? NotImplementedMessage,
+            Title = NotImplementedTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotImplemented,
         };
@@ -151,8 +165,10 @@ public static class Errors
     public static Error BadGateway(
         string errorMessage = BadGatewayMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? BadGatewayMessage, BadGatewayTitle)
+        new()
         {
+            Message = errorMessage ?? BadGatewayMessage,
+            Title = BadGatewayTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadGateway,
         };
@@ -166,8 +182,10 @@ public static class Errors
     public static Error GatewayTimeout(
         string errorMessage = GatewayTimeoutMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? GatewayTimeoutMessage, GatewayTimeoutTitle)
+        new()
         {
+            Message = errorMessage ?? GatewayTimeoutMessage,
+            Title = GatewayTimeoutTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.GatewayTimeout,
         };
@@ -181,15 +199,19 @@ public static class Errors
     public static Error UnexpectedNullValue(
         string errorMessage = UnexpectedNullValueMessage,
         string? errorIdentifier = null) =>
-        new(errorMessage ?? UnexpectedNullValueMessage, UnexpectedNullValueTitle)
+        new()
         {
+            Message = errorMessage ?? UnexpectedNullValueMessage,
+            Title = UnexpectedNullValueTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.UnexpectedNullValue,
         };
 
     internal static Error NoneResult() =>
-        new("This error represents a lack of a value (i.e. None).", "Result is None")
+        new()
         {
+            Message = "This error represents a lack of a value (i.e. None).",
+            Title = "Result is None",
             ErrorCode = ErrorCodes.NoneResult,
         };
 }

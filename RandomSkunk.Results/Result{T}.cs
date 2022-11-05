@@ -31,7 +31,11 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         FailResult.InvokeCallbackIfSet(_error);
     }
 
-    private enum Outcome { Fail, Success }
+    private enum Outcome
+    {
+        Fail,
+        Success,
+    }
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
@@ -148,8 +152,10 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
         Error? innerError = null,
         bool? setStackTrace = null) =>
         Fail(
-            new Error(errorMessage, errorTitle)
+            new Error
             {
+                Message = errorMessage,
+                Title = errorTitle!,
                 ErrorCode = errorCode,
                 Identifier = errorIdentifier,
                 InnerError = innerError,
