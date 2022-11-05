@@ -1,0 +1,6 @@
+Create results from value.linq
+Create results from value extension methods.linq
+Fail results.linq
+Create results with TryCatch.linq
+Result default values.linq
+About Stack Traces.linq
