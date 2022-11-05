@@ -39,6 +39,11 @@ public record class Error
     /// <summary>
     /// Gets the title for the error.
     /// </summary>
+    /// <remarks>
+    /// The default value for this property is derived from the name of the type of this <see cref="Error"/> (most likely
+    /// "Error"). If this property is initialized to <see langword="null"/>, nothing happens - the value remains the default
+    /// title.
+    /// </remarks>
     public string Title
     {
         get => _title;
@@ -48,6 +53,10 @@ public record class Error
     /// <summary>
     /// Gets the error message.
     /// </summary>
+    /// <remarks>
+    /// The default value for this property is "An error occurred.". If this property is initialized to <see langword="null"/>,
+    /// nothing happens - the value remains the default message.
+    /// </remarks>
     public string Message
     {
         get => _message;
@@ -83,12 +92,16 @@ public record class Error
     public string? StackTrace
     {
         get => _stackTrace;
-        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value;
+        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value.TrimEnd();
     }
 
     /// <summary>
     /// Gets additional properties for the error.
     /// </summary>
+    /// <remarks>
+    /// The default value for this property is an empty dictionary. If this property is initialized to <see langword="null"/>,
+    /// nothing happens - the value remains an empty dictionary.
+    /// </remarks>
     public IReadOnlyDictionary<string, object> Extensions
     {
         get => _extensions;
@@ -277,8 +290,10 @@ public record class Error
                 sb.Append($"{Title}: {ErrorCode}");
             }
         }
-
-        sb.Append(Title);
+        else
+        {
+            sb.Append(Title);
+        }
 
         if (!string.IsNullOrWhiteSpace(Identifier))
         {
@@ -293,9 +308,6 @@ public record class Error
         var sb = new StringBuilder();
 
         AppendError(sb, this, null);
-
-        while (sb.Length > 0 && char.IsWhiteSpace(sb[^1]))
-            sb.Length--;
 
         return sb.ToString();
     }
@@ -318,6 +330,8 @@ public record class Error
 
             if (!string.IsNullOrWhiteSpace(e.StackTrace))
                 sb.AppendLine(e.StackTrace);
+            else
+                sb.AppendLine("   Stack trace not available.");
         }
 
         foreach (var extensionProperty in error.Extensions)
