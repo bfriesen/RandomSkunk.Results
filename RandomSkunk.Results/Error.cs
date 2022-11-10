@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -156,33 +158,62 @@ public record class Error
         if (exception is ExternalException externalException)
             errorCode = externalException.ErrorCode;
 
+#if NET5_0_OR_GREATER
+        if (exception is HttpRequestException { StatusCode: not null } httpRequestException)
+            errorCode = (int)httpRequestException.StatusCode;
+#endif
+
         var properties = _propertiesByExceptionType.GetOrAdd(exception.GetType(), GetPropertiesForExceptionType);
-        var extensions = new ReadOnlyDictionary<string, object>(
+        var extensions =
             properties
-                .Select(p => new { p.Name, Value = p.GetValue(exception) })
-                .Where(p => p.Value is not null && (p.Name != nameof(ExternalException.ErrorCode) || !errorCode.HasValue))
-                .ToDictionary(p => p.Name, p => p.Value!));
+                .Select(p => new { p.Name, Value = FormatValue(p.GetValue(exception))!, p.DeclaringType })
+                .Where(p => p.Value is not null
+#if NET5_0_OR_GREATER
+                    && (!errorCode.HasValue
+                        || p.Name != nameof(HttpRequestException.StatusCode)
+                        || !typeof(HttpRequestException).IsAssignableFrom(p.DeclaringType))
+#endif
+                    && (!errorCode.HasValue
+                        || p.Name != nameof(ExternalException.ErrorCode)
+                        || !typeof(ExternalException).IsAssignableFrom(p.DeclaringType)))
+                .ToDictionary(p => $"{(p.DeclaringType is null ? null : p.DeclaringType.Name + ".")}{p.Name}", p => p.Value);
+
+        var dataEntries = exception.Data.OfType<DictionaryEntry>()
+            .Select(x => new { x.Key, Value = FormatValue(x.Value)! })
+            .Where(x => x.Value is not null);
+        foreach (var dataEntry in dataEntries)
+            extensions.Add($"Exception.Data.{dataEntry.Key}", dataEntry.Value);
 
         return new Error
         {
             Message = exception.Message,
             Title = exception.GetType().Name,
-            Extensions = extensions,
+            Extensions = new ReadOnlyDictionary<string, object>(extensions),
             StackTrace = exception.StackTrace,
             ErrorCode = errorCode,
             InnerError = innerError,
         };
     }
 
-    private static IEnumerable<Property> GetPropertiesForExceptionType(Type type)
+    private static object? FormatValue(object? value)
     {
-        var properties = type.GetProperties()
+        if (value is null)
+            return null;
+        if (value is DateTime dateTime)
+            return dateTime.ToString("O");
+        if (value is DateTimeOffset dateTimeOffset)
+            return dateTimeOffset.ToString("O");
+        return value.ToString()!;
+    }
+
+    private static IEnumerable<Property> GetPropertiesForExceptionType(Type exceptionType)
+    {
+        var properties = exceptionType.GetProperties()
             .Where(p => p.Name switch
             {
                 nameof(Exception.TargetSite) => false,
                 nameof(Exception.Message) => false,
                 nameof(Exception.Data) => false,
-                nameof(Exception.Source) => false,
                 nameof(Exception.StackTrace) => false,
                 nameof(Exception.InnerException) => false,
                 _ => !typeof(Exception).IsAssignableFrom(p.PropertyType) && !typeof(IEnumerable<Exception>).IsAssignableFrom(p.PropertyType),
@@ -423,6 +454,8 @@ public record class Error
         }
 
         public string Name => _propertyInfo.Name;
+
+        public Type? DeclaringType => _propertyInfo.DeclaringType;
 
         private bool IsHResultProperty =>
             _propertyInfo.Name == nameof(Exception.HResult)
