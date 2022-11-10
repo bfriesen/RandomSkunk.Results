@@ -1,2 +1,0 @@
-Projection Methods
-LINQ-to-Results

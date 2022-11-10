@@ -1,6 +1,4 @@
 Basics
 Creating results
 Handling results
-Projecting results
-Other operations
 Fail result hooks
