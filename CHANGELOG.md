@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Add Truncate methods for `Result<T>` and `Maybe<T>`.
+    - Add overloads for `ForEach` methods that take a function with an `index` parameter.
 
 ### Changed
 

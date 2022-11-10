@@ -12,7 +12,7 @@ public class Enumerable_extension_methods
         {
             var sequence = Enumerable.Range(1, 10);
 
-            var result = sequence.ForEach(i => Result.Success());
+            var result = sequence.ForEach(value => Result.Success());
 
             result.IsSuccess.Should().BeTrue();
         }
@@ -24,14 +24,14 @@ public class Enumerable_extension_methods
 
             var valuesEvaluated = new List<int>();
 
-            var result = sequence.ForEach(i =>
+            var result = sequence.ForEach(value =>
             {
-                valuesEvaluated.Add(i);
-                return i < 5 ? Result.Success() : Result.Fail();
+                valuesEvaluated.Add(value);
+                return value < 5 ? Result.Success() : Result.Fail();
             });
 
             result.IsFail.Should().BeTrue();
-            valuesEvaluated.Should().BeEquivalentTo(Enumerable.Range(1, 5), options => options.WithStrictOrdering());
+            valuesEvaluated.Should().Equal(Enumerable.Range(1, 5));
         }
     }
 
@@ -42,7 +42,7 @@ public class Enumerable_extension_methods
         {
             var sequence = Enumerable.Range(1, 10);
 
-            var result = await sequence.ForEach(i => Task.FromResult(Result.Success()));
+            var result = await sequence.ForEach(value => Task.FromResult(Result.Success()));
 
             result.IsSuccess.Should().BeTrue();
         }
@@ -54,14 +54,94 @@ public class Enumerable_extension_methods
 
             var valuesEvaluated = new List<int>();
 
-            var result = await sequence.ForEach(i =>
+            var result = await sequence.ForEach(value =>
             {
-                valuesEvaluated.Add(i);
-                return Task.FromResult(i < 5 ? Result.Success() : Result.Fail());
+                valuesEvaluated.Add(value);
+                return Task.FromResult(value < 5 ? Result.Success() : Result.Fail());
             });
 
             result.IsFail.Should().BeTrue();
-            valuesEvaluated.Should().BeEquivalentTo(Enumerable.Range(1, 5), options => options.WithStrictOrdering());
+            valuesEvaluated.Should().Equal(Enumerable.Range(1, 5));
+        }
+    }
+
+    public class For_ForEach_with_index
+    {
+        [Fact]
+        public void When_all_elements_produce_Success_results_Returns_Success()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var indices = new List<int>();
+
+            var result = sequence.ForEach((value, index) =>
+            {
+                indices.Add(index);
+                return Result.Success();
+            });
+
+            result.IsSuccess.Should().BeTrue();
+            indices.Should().Equal(Enumerable.Range(0, 10));
+        }
+
+        [Fact]
+        public void When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var valuesEvaluated = new List<int>();
+            var indices = new List<int>();
+
+            var result = sequence.ForEach((value, index) =>
+            {
+                valuesEvaluated.Add(value);
+                indices.Add(index);
+                return value < 5 ? Result.Success() : Result.Fail();
+            });
+
+            result.IsFail.Should().BeTrue();
+            valuesEvaluated.Should().Equal(Enumerable.Range(1, 5));
+            indices.Should().Equal(Enumerable.Range(0, 5));
+        }
+    }
+
+    public class For_Async_ForEach_with_index
+    {
+        [Fact]
+        public async Task When_all_elements_produce_Success_results_Returns_Success()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var indices = new List<int>();
+
+            var result = await sequence.ForEach((value, index) =>
+            {
+                indices.Add(index);
+                return Task.FromResult(Result.Success());
+            });
+
+            result.IsSuccess.Should().BeTrue();
+            indices.Should().Equal(Enumerable.Range(0, 10));
+        }
+
+        [Fact]
+        public async Task When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
+        {
+            var sequence = Enumerable.Range(1, 10);
+
+            var valuesEvaluated = new List<int>();
+            var indices = new List<int>();
+
+            var result = await sequence.ForEach((value, index) =>
+            {
+                valuesEvaluated.Add(value);
+                indices.Add(index);
+                return Task.FromResult(value < 5 ? Result.Success() : Result.Fail());
+            });
+
+            result.IsFail.Should().BeTrue();
+            valuesEvaluated.Should().Equal(Enumerable.Range(1, 5));
+            indices.Should().Equal(Enumerable.Range(0, 5));
         }
     }
 

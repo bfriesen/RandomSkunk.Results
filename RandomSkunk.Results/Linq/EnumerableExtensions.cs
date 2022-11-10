@@ -31,6 +31,30 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Performs the specified result action on each element and index of the sequence.
+    /// <para/>
+    /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
+    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// immediately.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> containing the elements to perform the action on.</param>
+    /// <param name="action">The action to perform on each element and index of the sequence.</param>
+    /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
+    ///     <c>Fail</c> result produced by an element.</returns>
+    public static Result ForEach<T>(this IEnumerable<T> sourceSequence, Func<T, int, Result> action)
+    {
+        var i = 0;
+        foreach (var item in sourceSequence)
+        {
+            var result = action(item, i++);
+            if (result.IsFail) return result;
+        }
+
+        return Result.Success();
+    }
+
+    /// <summary>
     /// Performs the specified result action on each element of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
@@ -54,6 +78,30 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Performs the specified result action on each element and index of the sequence.
+    /// <para/>
+    /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
+    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// immediately.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> containing the elements to perform the action on.</param>
+    /// <param name="action">The action to perform on each element and index of the sequence.</param>
+    /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
+    ///     <c>Fail</c> result produced by an element.</returns>
+    public static async Task<Result> ForEach<T>(this IEnumerable<T> sourceSequence, Func<T, int, Task<Result>> action)
+    {
+        var i = 0;
+        foreach (var item in sourceSequence)
+        {
+            var result = await action(item, i++).ConfigureAwait(false);
+            if (result.IsFail) return result;
+        }
+
+        return Result.Success();
+    }
+
+    /// <summary>
     /// Performs the specified result action on each element of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
@@ -69,6 +117,21 @@ public static class EnumerableExtensions
         (await sourceSequence.ConfigureAwait(false)).ForEach(action);
 
     /// <summary>
+    /// Performs the specified result action on each element and index of the sequence.
+    /// <para/>
+    /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
+    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// immediately.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> containing the elements to perform the action on.</param>
+    /// <param name="action">The action to perform on each element and index of the sequence.</param>
+    /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
+    ///     <c>Fail</c> result produced by an element.</returns>
+    public static async Task<Result> ForEach<T>(this Task<IEnumerable<T>> sourceSequence, Func<T, int, Result> action) =>
+        (await sourceSequence.ConfigureAwait(false)).ForEach(action);
+
+    /// <summary>
     /// Performs the specified result action on each element of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
@@ -81,6 +144,21 @@ public static class EnumerableExtensions
     /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result> ForEach<T>(this Task<IEnumerable<T>> sourceSequence, Func<T, Task<Result>> action) =>
+        await (await sourceSequence.ConfigureAwait(false)).ForEach(action).ConfigureAwait(false);
+
+    /// <summary>
+    /// Performs the specified result action on each element and index of the sequence.
+    /// <para/>
+    /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
+    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// immediately.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
+    /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> containing the elements to perform the action on.</param>
+    /// <param name="action">The action to perform on each element and index of the sequence.</param>
+    /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
+    ///     <c>Fail</c> result produced by an element.</returns>
+    public static async Task<Result> ForEach<T>(this Task<IEnumerable<T>> sourceSequence, Func<T, int, Task<Result>> action) =>
         await (await sourceSequence.ConfigureAwait(false)).ForEach(action).ConfigureAwait(false);
 
     /// <summary>
