@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning].
 ### Added
 
 - RandomSkunk.Results
-    - Add `[TryCatchAsResult]` and `[assembly: AssemblyTryCatchAsResult]` attributes.
+    - Add `[TryCatch]` and `[assembly: TryCatchThirdParty]` attributes.
 
 - RandomSkunk.Results.Analyzers (new package)
     - Add try/catch source generator.

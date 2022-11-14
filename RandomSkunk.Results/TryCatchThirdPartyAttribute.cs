@@ -1,40 +1,40 @@
 namespace RandomSkunk.Results;
 
 [AttributeUsage(AttributeTargets.Assembly)]
-public class AssemblyTryCatchAsResultAttribute : Attribute
+public class TryCatchThirdPartyAttribute : Attribute
 {
-    public AssemblyTryCatchAsResultAttribute(Type targetType)
+    public TryCatchThirdPartyAttribute(Type targetType)
     {
         TargetType = targetType;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, string methodName)
+    public TryCatchThirdPartyAttribute(Type targetType, string methodName)
     {
         TargetType = targetType;
         MethodName = methodName;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, Type tException)
+    public TryCatchThirdPartyAttribute(Type targetType, Type tException)
     {
         TargetType = targetType;
         TException1 = tException;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, string methodName, Type tException)
+    public TryCatchThirdPartyAttribute(Type targetType, string methodName, Type tException)
     {
         TargetType = targetType;
         MethodName = methodName;
         TException1 = tException;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, Type tException1, Type tException2)
+    public TryCatchThirdPartyAttribute(Type targetType, Type tException1, Type tException2)
     {
         TargetType = targetType;
         TException1 = tException1;
         TException2 = tException2;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, string methodName, Type tException1, Type tException2)
+    public TryCatchThirdPartyAttribute(Type targetType, string methodName, Type tException1, Type tException2)
     {
         TargetType = targetType;
         MethodName = methodName;
@@ -42,7 +42,7 @@ public class AssemblyTryCatchAsResultAttribute : Attribute
         TException2 = tException2;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, Type tException1, Type tException2, Type tException3)
+    public TryCatchThirdPartyAttribute(Type targetType, Type tException1, Type tException2, Type tException3)
     {
         TargetType = targetType;
         TException1 = tException1;
@@ -50,7 +50,7 @@ public class AssemblyTryCatchAsResultAttribute : Attribute
         TException3 = tException3;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, string methodName, Type tException1, Type tException2, Type tException3)
+    public TryCatchThirdPartyAttribute(Type targetType, string methodName, Type tException1, Type tException2, Type tException3)
     {
         TargetType = targetType;
         MethodName = methodName;
@@ -59,7 +59,7 @@ public class AssemblyTryCatchAsResultAttribute : Attribute
         TException3 = tException3;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, Type tException1, Type tException2, Type tException3, Type tException4)
+    public TryCatchThirdPartyAttribute(Type targetType, Type tException1, Type tException2, Type tException3, Type tException4)
     {
         TargetType = targetType;
         TException1 = tException1;
@@ -68,7 +68,7 @@ public class AssemblyTryCatchAsResultAttribute : Attribute
         TException4 = tException4;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, string methodName, Type tException1, Type tException2, Type tException3, Type tException4)
+    public TryCatchThirdPartyAttribute(Type targetType, string methodName, Type tException1, Type tException2, Type tException3, Type tException4)
     {
         TargetType = targetType;
         MethodName = methodName;
@@ -78,7 +78,7 @@ public class AssemblyTryCatchAsResultAttribute : Attribute
         TException4 = tException4;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, Type tException1, Type tException2, Type tException3, Type tException4, Type tException5)
+    public TryCatchThirdPartyAttribute(Type targetType, Type tException1, Type tException2, Type tException3, Type tException4, Type tException5)
     {
         TargetType = targetType;
         TException1 = tException1;
@@ -88,7 +88,7 @@ public class AssemblyTryCatchAsResultAttribute : Attribute
         TException5 = tException5;
     }
 
-    public AssemblyTryCatchAsResultAttribute(Type targetType, string methodName, Type tException1, Type tException2, Type tException3, Type tException4, Type tException5)
+    public TryCatchThirdPartyAttribute(Type targetType, string methodName, Type tException1, Type tException2, Type tException3, Type tException4, Type tException5)
     {
         TargetType = targetType;
         MethodName = methodName;

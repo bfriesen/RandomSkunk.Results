@@ -1,31 +1,32 @@
 namespace RandomSkunk.Results;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct | AttributeTargets.Method)]
-public class TryCatchAsResultAttribute : Attribute
+public class TryCatchAttribute : Attribute
 {
-    public TryCatchAsResultAttribute()
+    public TryCatchAttribute()
     {
     }
 
-    public TryCatchAsResultAttribute(Type tException)
+    public TryCatchAttribute(Type tException)
     {
         TException1 = tException;
     }
 
-    public TryCatchAsResultAttribute(Type tException1, Type tException2)
+    public TryCatchAttribute
+        (Type tException1, Type tException2)
     {
         TException1 = tException1;
         TException2 = tException2;
     }
 
-    public TryCatchAsResultAttribute(Type tException1, Type tException2, Type tException3)
+    public TryCatchAttribute(Type tException1, Type tException2, Type tException3)
     {
         TException1 = tException1;
         TException2 = tException2;
         TException3 = tException3;
     }
 
-    public TryCatchAsResultAttribute(Type tException1, Type tException2, Type tException3, Type tException4)
+    public TryCatchAttribute(Type tException1, Type tException2, Type tException3, Type tException4)
     {
         TException1 = tException1;
         TException2 = tException2;
@@ -33,7 +34,7 @@ public class TryCatchAsResultAttribute : Attribute
         TException4 = tException4;
     }
 
-    public TryCatchAsResultAttribute(Type tException1, Type tException2, Type tException3, Type tException4, Type tException5)
+    public TryCatchAttribute(Type tException1, Type tException2, Type tException3, Type tException4, Type tException5)
     {
         TException1 = tException1;
         TException2 = tException2;

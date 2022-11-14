@@ -12,44 +12,36 @@ using System.Threading;
 namespace RandomSkunk.Results.Analyzers;
 
 /// <summary>
-/// Defines a source generator that creates a "Try" adapter for types decorated with a [TryCatchAsResult] attribute.
+/// Defines a source generator that creates a "Try" adapter for types decorated with a [TryCatch] attribute.
 /// </summary>
 [Generator]
-public class TryCatchAsResultGenerator : IIncrementalGenerator
+public class TryCatchGenerator : IIncrementalGenerator
 {
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-#if DEBUG && FOOBAR
-        if (!System.Diagnostics.Debugger.IsAttached)
-            System.Diagnostics.Debugger.Launch();
-#endif
-
         var decoratedMemberSymbolData = context.SyntaxProvider.CreateSyntaxProvider(
-                predicate: IsDecoratedWithTryCatchAsResult,
-                transform: GetSymbolDataFromSyntax)
+            predicate: IsDecoratedWithTryCatchAttribute,
+            transform: GetTargetDataFromDecoratedMember)
             .Where(item => item is (not null, not null))
             .Collect();
 
         var decoratedAssemblySymbolData = context.CompilationProvider.Select((compilation, cancellationToken) =>
-        {
-            var symbolData = compilation.Assembly.GetAttributes()
-                .Where(a =>
-                    a.AttributeClass?.Name == "AssemblyTryCatchAsResultAttribute"
-                    && a.AttributeClass?.ContainingNamespace?.ToString() == "RandomSkunk.Results")
-                .Select(a => GetSymbolDataFromCompilation(a));
-            return symbolData;
-        });
+            compilation.Assembly.GetAttributes()
+                .Where(IsTryCatchThirdPartyAttribute)
+                .Select(GetTargetDataFromAssemblyAttribute)
+                .Where(item => item is (not null, not null))
+                .ToImmutableArray());
 
         var sourceBuilder = decoratedMemberSymbolData.Combine(decoratedAssemblySymbolData)
-            .Select((d, _) => d.Left.Concat(d.Right).ToArray())
+            .Select((d, _) => d.Left.Concat(d.Right).ToImmutableArray())
             .Select(GetSourceBuilder);
 
         context.RegisterSourceOutput(sourceBuilder, (context, builder) =>
             context.AddSource("TryExtensions.g.cs", builder.Build(context.CancellationToken)));
     }
 
-    private static bool IsDecoratedWithTryCatchAsResult(SyntaxNode syntaxNode, CancellationToken cancellationToken)
+    private static bool IsDecoratedWithTryCatchAttribute(SyntaxNode syntaxNode, CancellationToken cancellationToken)
     {
         SyntaxList<AttributeListSyntax> attributeLists;
 
@@ -60,14 +52,14 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
         else
             return false;
 
-        var tryCatchAsResultAttribute = attributeLists.SelectMany(x => x.Attributes)
-            .Where(x => x.Name.ToString() is "TryCatchAsResult" or "TryCatchAsResultAttribute")
+        var tryCatchtAttribute = attributeLists.SelectMany(x => x.Attributes)
+            .Where(x => x.Name.ToString() is "TryCatch" or "TryCatchAttribute")
             .FirstOrDefault();
 
-        return tryCatchAsResultAttribute is not null;
+        return tryCatchtAttribute is not null;
     }
 
-    private static SymbolData GetSymbolDataFromSyntax(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+    private static TargetData GetTargetDataFromDecoratedMember(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
         var symbol = context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken);
 
@@ -75,24 +67,24 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
             return default;
 
         var attribute = symbol.GetAttributes().FirstOrDefault(a =>
-            a.AttributeClass?.Name == "TryCatchAsResultAttribute"
+            a.AttributeClass?.Name == "TryCatchAttribute"
             && a.AttributeClass?.ContainingNamespace?.ToString() == "RandomSkunk.Results");
 
         if (attribute is null)
             return default;
 
-        var attributeProxy = new TryCatchAsResultAttributeProxy();
+        var tryCatchInfo = new TryCatchInfo();
 
         foreach (var namedArgument in attribute.NamedArguments)
         {
             if (namedArgument.Key == "AsMaybe")
-                attributeProxy.AsMaybe = (bool)namedArgument.Value.Value!;
+                tryCatchInfo.AsMaybe = (bool)namedArgument.Value.Value!;
         }
 
         if (attribute.ConstructorArguments.Length == 0)
         {
-            attributeProxy.TExceptions = Array.Empty<INamedTypeSymbol>();
-            return new(symbol, attributeProxy);
+            tryCatchInfo.TExceptions = Array.Empty<INamedTypeSymbol>();
+            return new(symbol, tryCatchInfo);
         }
 
         if (attribute.ConstructorArguments.Any(a => a.IsNull || a.Value is not INamedTypeSymbol type))
@@ -112,11 +104,17 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                 return default;
         }
 
-        attributeProxy.TExceptions = namedTypes;
-        return new(symbol, attributeProxy);
+        tryCatchInfo.TExceptions = namedTypes;
+        return new(symbol, tryCatchInfo);
     }
 
-    private static SymbolData GetSymbolDataFromCompilation(AttributeData attribute)
+    private static bool IsTryCatchThirdPartyAttribute(AttributeData a)
+    {
+        return a.AttributeClass?.Name == "TryCatchThirdPartyAttribute"
+            && a.AttributeClass?.ContainingNamespace?.ToString() == "RandomSkunk.Results";
+    }
+
+    private static TargetData GetTargetDataFromAssemblyAttribute(AttributeData attribute)
     {
         var targetTypeArgument = attribute.ConstructorArguments[0];
         if (targetTypeArgument.IsNull || targetTypeArgument.Value is not INamedTypeSymbol targetType)
@@ -129,21 +127,21 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
             methodName = (string?)methodNameArgument.Value;
         }
 
-        var symbol = new SymbolProxy(targetType, methodName);
+        var target = new AttributeTarget(targetType, methodName);
 
-        var attributeProxy = new TryCatchAsResultAttributeProxy();
+        var tryCatchInfo = new TryCatchInfo();
 
         foreach (var namedArgument in attribute.NamedArguments)
         {
             if (namedArgument.Key == "AsMaybe")
-                attributeProxy.AsMaybe = (bool)namedArgument.Value.Value!;
+                tryCatchInfo.AsMaybe = (bool)namedArgument.Value.Value!;
         }
 
         if (attribute.ConstructorArguments.Length == 1
             || (attribute.ConstructorArguments.Length == 2 && attribute.ConstructorArguments[1].Type!.Name == "String"))
         {
-            attributeProxy.TExceptions = Array.Empty<INamedTypeSymbol>();
-            return new(symbol, attributeProxy);
+            tryCatchInfo.TExceptions = Array.Empty<INamedTypeSymbol>();
+            return new(target, tryCatchInfo);
         }
 
         var nonExceptionArgs = attribute.ConstructorArguments[1].Type!.Name == "String" ? 2 : 1;
@@ -165,33 +163,33 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                 return default;
         }
 
-        attributeProxy.TExceptions = namedTypes;
+        tryCatchInfo.TExceptions = namedTypes;
 
-        return new(symbol, attributeProxy);
+        return new(target, tryCatchInfo);
     }
 
-    private static SourceBuilder GetSourceBuilder(IEnumerable<SymbolData> items, CancellationToken cancellationToken)
+    private static SourceBuilder GetSourceBuilder(ImmutableArray<TargetData> items, CancellationToken cancellationToken)
     {
         var builder = new SourceBuilder();
 
         foreach (var item in items)
         {
-            if (item.Symbol is SymbolProxy fakeSymbol)
+            if (item.Target is AttributeTarget target)
             {
-                var allMembers = fakeSymbol.TargetType.GetMembers();
+                var allMembers = target.Type.GetMembers();
                 var methods = allMembers.Where(symbol => IsPublicMethod(symbol, allMembers)).Select(symbol => (IMethodSymbol)symbol);
 
-                if (fakeSymbol.MethodName is null)
+                if (target.MethodName is null)
                 {
-                    builder.Add(fakeSymbol.TargetType, methods, item.AttributeProxy);
+                    builder.AddTryCatchDefinition(target.Type, methods, item.TryCatchInfo);
                 }
                 else
                 {
-                    foreach (var method in methods.Where(m => m.Name == fakeSymbol.MethodName))
-                        builder.Add(method, item.AttributeProxy);
+                    foreach (var method in methods.Where(m => m.Name == target.MethodName))
+                        builder.AddTryCatchDefinition(method, item.TryCatchInfo);
                 }
             }
-            else if (item.Symbol is ISymbol symbol)
+            else if (item.Target is ISymbol symbol)
             {
                 if (symbol.Kind == SymbolKind.NamedType)
                 {
@@ -200,12 +198,12 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                     var allMembers = namedType.GetMembers();
                     var methods = allMembers.Where(symbol => IsPublicMethod(symbol, allMembers)).Select(symbol => (IMethodSymbol)symbol);
 
-                    builder.Add(namedType, methods, item.AttributeProxy);
+                    builder.AddTryCatchDefinition(namedType, methods, item.TryCatchInfo);
                 }
                 else if (symbol.Kind == SymbolKind.Method)
                 {
                     var method = (IMethodSymbol)symbol;
-                    builder.Add(method, item.AttributeProxy);
+                    builder.AddTryCatchDefinition(method, item.TryCatchInfo);
                 }
             }
         }
@@ -261,11 +259,11 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
         return true;
     }
 
-    private record struct SymbolData(object Symbol, TryCatchAsResultAttributeProxy AttributeProxy);
+    private record struct TargetData(object Target, TryCatchInfo TryCatchInfo);
 
-    private record struct MethodData(IMethodSymbol Method, TryCatchAsResultAttributeProxy AttributeProxy);
+    private record struct MethodData(IMethodSymbol Method, TryCatchInfo TryCatchInfo);
 
-    private class TryCatchAsResultAttributeProxy
+    private class TryCatchInfo
     {
         public bool AsMaybe { get; set; }
 
@@ -274,35 +272,38 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
 
     private class SourceBuilder
     {
-        private readonly Dictionary<(string? Namespace, string Name, string? TypeParameters), (INamedTypeSymbol TargetType, List<MethodData> Methods)> _methodData = new();
+        private readonly Dictionary<
+            (string? TargetTypeNamespace, string TargetTypeName, string? TargetTypeTypeParameters),
+            (INamedTypeSymbol TargetType, List<MethodData> Methods)> _tryCatchDefinitions = new();
 
-        public void Add(INamedTypeSymbol targetType, IEnumerable<IMethodSymbol> methods, TryCatchAsResultAttributeProxy attributeProxy)
+        public void AddTryCatchDefinition(INamedTypeSymbol targetType, IEnumerable<IMethodSymbol> methods, TryCatchInfo tryCatchInfo)
         {
             var key = (targetType.ContainingNamespace?.ToString(), targetType.Name, GetGenericParameters(targetType));
-            if (_methodData.ContainsKey(key))
+            if (_tryCatchDefinitions.ContainsKey(key))
             {
-                var (_, existingMethodData) = _methodData[key];
+                var (_, existingMethodData) = _tryCatchDefinitions[key];
+
                 foreach (var method in methods)
                 {
                     if (!existingMethodData.Any(existingData => method.Equals(existingData.Method, SymbolEqualityComparer.Default)))
-                        existingMethodData.Add(new MethodData(method, attributeProxy));
+                        existingMethodData.Add(new MethodData(method, tryCatchInfo));
                 }
             }
             else
             {
-                _methodData[key] = (targetType, methods.Select(method => new MethodData(method, attributeProxy)).ToList());
+                _tryCatchDefinitions[key] = (targetType, methods.Select(method => new MethodData(method, tryCatchInfo)).ToList());
             }
         }
 
-        public void Add(IMethodSymbol method, TryCatchAsResultAttributeProxy attributeProxy)
+        public void AddTryCatchDefinition(IMethodSymbol method, TryCatchInfo tryCatchInfo)
         {
             var targetType = method.ContainingType;
             var key = (targetType.ContainingNamespace?.ToString(), targetType.Name, GetGenericParameters(targetType));
-            if (_methodData.ContainsKey(key))
+            if (_tryCatchDefinitions.ContainsKey(key))
             {
-                var (_, existingMethodData) = _methodData[key];
+                var (_, existingMethodData) = _tryCatchDefinitions[key];
 
-                var methodData = new MethodData(method, attributeProxy);
+                var methodData = new MethodData(method, tryCatchInfo);
                 var index = existingMethodData.FindIndex(existingData => method.Equals(existingData.Method, SymbolEqualityComparer.Default));
 
                 if (index == -1)
@@ -312,38 +313,36 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
             }
             else
             {
-                _methodData[key] = (targetType, new List<MethodData> { new MethodData(method, attributeProxy) });
+                _tryCatchDefinitions[key] = (targetType, new List<MethodData> { new MethodData(method, tryCatchInfo) });
             }
         }
 
         public string Build(CancellationToken cancellationToken)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("using RandomSkunk.Results;");
-            sb.AppendLine("using System.Threading.Tasks;");
-            sb.AppendLine();
 
-            foreach (var itemsByNamespace in _methodData.GroupBy(item => item.Key.Namespace))
+            foreach (var tryCatchDefinitionsByNamespace in _tryCatchDefinitions.GroupBy(item => item.Key.TargetTypeNamespace))
             {
-                sb.AppendLine($"namespace {itemsByNamespace.Key}");
+                sb.AppendLine($"namespace {tryCatchDefinitionsByNamespace.Key}");
                 sb.AppendLine("{");
 
-                foreach (var item in itemsByNamespace)
+                foreach (var tryCatchDefinition in tryCatchDefinitionsByNamespace)
                 {
-                    var targetTypeName = item.Key.Name;
+                    var targetTypeName = tryCatchDefinition.Key.TargetTypeName;
                     var variableName = GetVariableName(targetTypeName);
-                    var targetTypeFull = targetTypeName + item.Key.TypeParameters;
-                    var targetTypeDocComments = targetTypeFull.Replace('<', '{').Replace('>', '}');
+                    var targetTypeTypeParameters = tryCatchDefinition.Key.TargetTypeTypeParameters;
+                    var targetType = targetTypeName + targetTypeTypeParameters;
+                    var targetTypeDocComments = targetType.Replace('<', '{').Replace('>', '}');
 
-                    AppendDocComments(sb, item.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
-                    sb.AppendLine($"    public struct Try{targetTypeFull}");
-                    AppendGenericConstraints(sb, item.Value.TargetType.Arity, item.Value.TargetType.TypeParameters);
+                    AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
+                    sb.AppendLine($"    public struct Try{targetType}");
+                    AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
                     sb.AppendLine("    {");
                     sb.AppendLine("        /// <summary>");
                     sb.AppendLine($"        /// Initializes a new instance of the <see cref=\"Try{targetTypeDocComments}\"/> class.");
                     sb.AppendLine("        /// </summary>");
                     sb.AppendLine($"        /// <param name=\"{variableName}\">The backing instance of <see cref=\"{targetTypeDocComments}\"/>.</param>");
-                    sb.AppendLine($"        public Try{targetTypeName}({targetTypeFull} {variableName})");
+                    sb.AppendLine($"        public Try{targetTypeName}({targetType} {variableName})");
                     sb.AppendLine("        {");
                     sb.AppendLine($"            {targetTypeName} = {variableName};");
                     sb.AppendLine("        }");
@@ -351,11 +350,11 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                     sb.AppendLine("        /// <summary>");
                     sb.AppendLine($"        /// Gets the backing instance of <see cref=\"{targetTypeDocComments}\"/>.");
                     sb.AppendLine("        /// </summary>");
-                    sb.AppendLine($"        public {targetTypeFull} {targetTypeName} {{ get; }}");
+                    sb.AppendLine($"        public {targetType} {targetTypeName} {{ get; }}");
                     sb.AppendLine();
 
                     var first = true;
-                    foreach (var methodData in item.Value.Methods)
+                    foreach (var methodData in tryCatchDefinition.Value.Methods)
                     {
                         if (first) first = false;
                         else sb.AppendLine();
@@ -367,7 +366,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
 
                         if (IsExactType(returnType, typeof(void)))
                         {
-                            sb.Append($"        public Result {methodName}");
+                            sb.Append($"        public RandomSkunk.Results.Result {methodName}");
                             AppendParameters(sb, methodData.Method);
                             AppendGenericConstraints(sb, methodData.Method.Arity, methodData.Method.TypeParameters);
                             sb.AppendLine("        {");
@@ -375,23 +374,23 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                             sb.AppendLine("            {");
                             sb.Append($"                {targetTypeName}.{methodName}");
                             AppendArguments(sb, methodData.Method);
-                            sb.AppendLine("                return Result.Success();");
+                            sb.AppendLine("                return RandomSkunk.Results.Result.Success();");
                             sb.AppendLine("            }");
 
-                            if (methodData.AttributeProxy.TExceptions.Length == 0)
+                            if (methodData.TryCatchInfo.TExceptions.Length == 0)
                             {
                                 sb.AppendLine("            catch (Exception ex)");
                                 sb.AppendLine("            {");
-                                sb.AppendLine("                return Result.Fail(ex);");
+                                sb.AppendLine("                return RandomSkunk.Results.Result.Fail(ex);");
                                 sb.AppendLine("            }");
                             }
                             else
                             {
-                                foreach (var exception in methodData.AttributeProxy.TExceptions)
+                                foreach (var exception in methodData.TryCatchInfo.TExceptions)
                                 {
                                     sb.AppendLine($"            catch ({GetTypeName(exception)} ex)");
                                     sb.AppendLine("            {");
-                                    sb.AppendLine("                return Result.Fail(ex);");
+                                    sb.AppendLine("                return RandomSkunk.Results.Result.Fail(ex);");
                                     sb.AppendLine("            }");
                                 }
                             }
@@ -400,7 +399,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                         }
                         else
                         {
-                            var resultType = methodData.AttributeProxy.AsMaybe ? "Maybe" : "Result";
+                            var resultType = methodData.TryCatchInfo.AsMaybe ? "RandomSkunk.Results.Maybe" : "RandomSkunk.Results.Result";
 
                             if (returnType.Name == "Task" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks")
                             {
@@ -408,7 +407,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
 
                                 if (namedType.Arity == 0)
                                 {
-                                    sb.Append($"        public async Task<Result> {methodName}");
+                                    sb.Append($"        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result> {methodName}");
                                     AppendParameters(sb, methodData.Method);
                                     AppendGenericConstraints(sb, methodData.Method.Arity, methodData.Method.TypeParameters);
                                     sb.AppendLine("        {");
@@ -416,23 +415,23 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                                     sb.AppendLine("            {");
                                     sb.Append($"                await {targetTypeName}.{methodName}");
                                     AppendArguments(sb, methodData.Method);
-                                    sb.AppendLine("                return Result.Success();");
+                                    sb.AppendLine("                return RandomSkunk.Results.Result.Success();");
                                     sb.AppendLine("            }");
 
-                                    if (methodData.AttributeProxy.TExceptions.Length == 0)
+                                    if (methodData.TryCatchInfo.TExceptions.Length == 0)
                                     {
                                         sb.AppendLine("            catch (Exception ex)");
                                         sb.AppendLine("            {");
-                                        sb.AppendLine("                return Result.Fail(ex);");
+                                        sb.AppendLine("                return RandomSkunk.Results.Result.Fail(ex);");
                                         sb.AppendLine("            }");
                                     }
                                     else
                                     {
-                                        foreach (var exception in methodData.AttributeProxy.TExceptions)
+                                        foreach (var exception in methodData.TryCatchInfo.TExceptions)
                                         {
                                             sb.AppendLine($"            catch ({GetTypeName(exception)} ex)");
                                             sb.AppendLine("            {");
-                                            sb.AppendLine("                return Result.Fail(ex);");
+                                            sb.AppendLine("                return RandomSkunk.Results.Result.Fail(ex);");
                                             sb.AppendLine("            }");
                                         }
                                     }
@@ -443,7 +442,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                                 {
                                     returnType = namedType.TypeArguments[0];
 
-                                    sb.Append($"        public async Task<{resultType}<{GetTypeName(returnType)}>> {methodName}");
+                                    sb.Append($"        public async System.Threading.Tasks.Task<{resultType}<{GetTypeName(returnType)}>> {methodName}");
                                     AppendParameters(sb, methodData.Method);
                                     AppendGenericConstraints(sb, methodData.Method.Arity, methodData.Method.TypeParameters);
                                     sb.AppendLine("        {");
@@ -454,7 +453,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                                     sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.FromValue(value);");
                                     sb.AppendLine("            }");
 
-                                    if (methodData.AttributeProxy.TExceptions.Length == 0)
+                                    if (methodData.TryCatchInfo.TExceptions.Length == 0)
                                     {
                                         sb.AppendLine("            catch (Exception ex)");
                                         sb.AppendLine("            {");
@@ -463,7 +462,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                                     }
                                     else
                                     {
-                                        foreach (var exception in methodData.AttributeProxy.TExceptions)
+                                        foreach (var exception in methodData.TryCatchInfo.TExceptions)
                                         {
                                             sb.AppendLine($"            catch ({GetTypeName(exception)} ex)");
                                             sb.AppendLine("            {");
@@ -488,7 +487,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                                 sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.FromValue(value);");
                                 sb.AppendLine("            }");
 
-                                if (methodData.AttributeProxy.TExceptions.Length == 0)
+                                if (methodData.TryCatchInfo.TExceptions.Length == 0)
                                 {
                                     sb.AppendLine("            catch (Exception ex)");
                                     sb.AppendLine("            {");
@@ -497,7 +496,7 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                                 }
                                 else
                                 {
-                                    foreach (var exception in methodData.AttributeProxy.TExceptions)
+                                    foreach (var exception in methodData.TryCatchInfo.TExceptions)
                                     {
                                         sb.AppendLine($"            catch ({GetTypeName(exception)} ex)");
                                         sb.AppendLine("            {");
@@ -515,10 +514,10 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
                     sb.AppendLine();
                     sb.AppendLine($"    public static class Try{targetTypeName}Extensions");
                     sb.AppendLine("    {");
-                    sb.AppendLine($"        public static Try{targetTypeFull} Try{item.Key.TypeParameters}(this {targetTypeFull} {variableName})");
-                    AppendGenericConstraints(sb, item.Value.TargetType.Arity, item.Value.TargetType.TypeParameters);
+                    sb.AppendLine($"        public static Try{targetType} Try{targetTypeTypeParameters}(this {targetType} {variableName})");
+                    AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
                     sb.AppendLine("        {");
-                    sb.AppendLine($"            return new Try{targetTypeFull}({variableName});");
+                    sb.AppendLine($"            return new Try{targetType}({variableName});");
                     sb.AppendLine("        }");
                     sb.AppendLine("    }");
                 }
@@ -710,15 +709,15 @@ public class TryCatchAsResultGenerator : IIncrementalGenerator
         }
     }
 
-    private class SymbolProxy
+    private class AttributeTarget
     {
-        public SymbolProxy(INamedTypeSymbol targetType, string? methodName)
+        public AttributeTarget(INamedTypeSymbol type, string? methodName)
         {
-            TargetType = targetType;
+            Type = type;
             MethodName = methodName;
         }
 
-        public INamedTypeSymbol TargetType { get; }
+        public INamedTypeSymbol Type { get; }
 
         public string? MethodName { get; }
     }
