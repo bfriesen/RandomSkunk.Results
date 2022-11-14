@@ -94,7 +94,7 @@ public record class Error
     public string? StackTrace
     {
         get => _stackTrace;
-        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value.TrimEnd();
+        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value!.TrimEnd();
     }
 
     /// <summary>

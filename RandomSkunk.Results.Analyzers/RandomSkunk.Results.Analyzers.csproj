@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+
+		<Title>RandomSkunk.Results.Analyzers</Title>
+		<Description>Analyzers and source generators for the RandomSkunk.Results package.</Description>
+		<Authors>Brian Friesen</Authors>
+		<Copyright>Copyright 2022 (c) Brian Friesen. All rights reserved.</Copyright>
+
+		<PackageId>RandomSkunk.Results.Analyzers</PackageId>
+		<PackageProjectUrl>https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results</PackageProjectUrl>
+		<PackageTags>analyzer source-generator</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PublishRepositoryUrl>True</PublishRepositoryUrl>
+		<EmbedUntrackedSources>True</EmbedUntrackedSources>
+		<DebugType>Embedded</DebugType>
+
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<NoPackageAnalysis>true</NoPackageAnalysis>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.2.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="..\LICENSE" Pack="true" PackagePath="\" />
+		<None Include="..\icon.png" Pack="true" PackagePath="\" />
+		<None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	<Target Name="_AddAnalyzersToOutput">
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="$(OutputPath)\RandomSkunk.Results.Analyzers.dll" PackagePath="analyzers/dotnet/cs" />
+		</ItemGroup>
+	</Target>
+</Project>

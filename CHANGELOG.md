@@ -12,6 +12,14 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results
     - Extract more information from an `Exception` when creating an `Error` from it.
 
+### Added
+
+- RandomSkunk.Results
+    - Add `[TryCatchAsResult]` and `[assembly: AssemblyTryCatchAsResult]` attributes.
+
+- RandomSkunk.Results.Analyzers (new package)
+    - Add try/catch source generator.
+
 ## [1.0.0-alpha21] - 2022-11-10
 
 [RandomSkunk.Results API](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha21) ([diff](https://www.fuget.org/packages/RandomSkunk.Results/1.0.0-alpha21/lib/netstandard2.1/diff/1.0.0-alpha20/))  
