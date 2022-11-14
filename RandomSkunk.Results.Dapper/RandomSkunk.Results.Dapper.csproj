@@ -1,12 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
 		<TargetFrameworks>net6.0;net5.0;netstandard2.1;netstandard2.0</TargetFrameworks>
-
-		<Title>RandomSkunk.Results.Dapper</Title>
-		<Description>Using RandomSkunk.Results with Dapper.</Description>
-		<Authors>Brian Friesen</Authors>
-		<Copyright>Copyright 2022 (c) Brian Friesen. All rights reserved.</Copyright>
 
 		<PackageId>RandomSkunk.Results.Dapper</PackageId>
 		<PackageProjectUrl>https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.Dapper</PackageProjectUrl>
@@ -20,6 +15,17 @@
 		<PublishRepositoryUrl>True</PublishRepositoryUrl>
 		<EmbedUntrackedSources>True</EmbedUntrackedSources>
 		<DebugType>Embedded</DebugType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Title>RandomSkunk.Results.Dapper</Title>
+		<Description>Using RandomSkunk.Results with Dapper.</Description>
+		<Authors>Brian Friesen</Authors>
+		<Copyright>Copyright 2022 (c) Brian Friesen. All rights reserved.</Copyright>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">
