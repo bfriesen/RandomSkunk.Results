@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
+#if NET5_0_OR_GREATER
 using System.Net.Http;
+#endif
 using System.Runtime.InteropServices;
 using System.Threading;
 
