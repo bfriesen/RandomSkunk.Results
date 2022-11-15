@@ -14,11 +14,15 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
+- Add support for .NET 7.
 - RandomSkunk.Results
     - Add `[TryCatch]` and `[assembly: TryCatchThirdParty]` attributes.
-
 - RandomSkunk.Results.Analyzers (new package)
     - Add try/catch source generator.
+
+### Removed
+
+- Remove support for .NET 5 and .NET Standard 2.1.
 
 ## [1.0.0-alpha21] - 2022-11-10
 
