@@ -36,7 +36,7 @@ namespace RandomSkunk.Results;
 /// }
 /// </code>
 /// </remarks>
-[AttributeUsage(AttributeTargets.Assembly)]
+[AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
 public sealed class TryCatchThirdPartyAttribute : Attribute
 {
     /// <summary>

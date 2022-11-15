@@ -323,56 +323,92 @@ public class TryCatchGenerator : IIncrementalGenerator
 
             foreach (var tryCatchDefinitionsByNamespace in _tryCatchDefinitions.GroupBy(item => item.Key.TargetTypeNamespace))
             {
-                sb.AppendLine($"namespace {tryCatchDefinitionsByNamespace.Key}");
-                sb.AppendLine("{");
+                if (sb.Length > 0)
+                    sb.AppendLine();
+
+                var targetNamespace = tryCatchDefinitionsByNamespace.Key;
+                sb.AppendLine($"namespace {targetNamespace}");
+                sb.Append("{");
 
                 foreach (var tryCatchDefinition in tryCatchDefinitionsByNamespace)
                 {
                     var targetTypeName = tryCatchDefinition.Key.TargetTypeName;
                     var variableName = GetVariableName(targetTypeName);
+                    var fieldName = '_' + variableName;
                     var targetTypeTypeParameters = tryCatchDefinition.Key.TargetTypeTypeParameters;
                     var targetType = targetTypeName + targetTypeTypeParameters;
                     var targetTypeDocComments = targetType.Replace('<', '{').Replace('>', '}');
 
-                    AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
-                    sb.AppendLine($"    public struct Try{targetType}");
-                    AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
-                    sb.AppendLine("    {");
-                    sb.AppendLine("        /// <summary>");
-                    sb.AppendLine($"        /// Initializes a new instance of the <see cref=\"Try{targetTypeDocComments}\"/> class.");
-                    sb.AppendLine("        /// </summary>");
-                    sb.AppendLine($"        /// <param name=\"{variableName}\">The backing instance of <see cref=\"{targetTypeDocComments}\"/>.</param>");
-                    sb.AppendLine($"        public Try{targetTypeName}({targetType} {variableName})");
-                    sb.AppendLine("        {");
-                    sb.AppendLine($"            {targetTypeName} = {variableName};");
-                    sb.AppendLine("        }");
-                    sb.AppendLine();
-                    sb.AppendLine("        /// <summary>");
-                    sb.AppendLine($"        /// Gets the backing instance of <see cref=\"{targetTypeDocComments}\"/>.");
-                    sb.AppendLine("        /// </summary>");
-                    sb.AppendLine($"        public {targetType} {targetTypeName} {{ get; }}");
                     sb.AppendLine();
 
-                    var first = true;
+                    if (tryCatchDefinition.Value.TargetType.IsStatic)
+                    {
+                        AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
+                        sb.AppendLine($"    public static class Try{targetType}");
+                        AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
+                        sb.Append("    {");
+                    }
+                    else
+                    {
+                        AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
+                        sb.AppendLine($"    public struct Try{targetType}");
+                        AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
+                        sb.AppendLine("    {");
+                        sb.AppendLine($"        private readonly {targetType} {fieldName};");
+                        sb.AppendLine();
+                        sb.AppendLine("        /// <summary>");
+                        sb.AppendLine($"        /// Initializes a new instance of the <see cref=\"Try{targetTypeDocComments}\"/> class.");
+                        sb.AppendLine("        /// </summary>");
+                        sb.AppendLine($"        /// <param name=\"{variableName}\">The backing instance of <see cref=\"{targetTypeDocComments}\"/>.</param>");
+                        sb.AppendLine($"        public Try{targetTypeName}({targetType} {variableName})");
+                        sb.AppendLine("        {");
+                        sb.AppendLine($"            {fieldName} = {variableName};");
+                        sb.AppendLine("        }");
+                        sb.AppendLine();
+                        sb.AppendLine("        /// <summary>");
+                        sb.AppendLine($"        /// Gets the backing instance of <see cref=\"{targetTypeDocComments}\"/>.");
+                        sb.AppendLine("        /// </summary>");
+                        sb.AppendLine($"        public {targetType} BackingValue => {fieldName};");
+                    }
+
                     foreach (var methodData in tryCatchDefinition.Value.Methods)
                     {
-                        if (first) first = false;
-                        else sb.AppendLine();
+                        var @static = methodData.Method.IsStatic ? "static " : null;
 
                         var methodName = methodData.Method.Name;
                         var returnType = methodData.Method.ReturnType;
+
+                        sb.AppendLine();
 
                         AppendDocComments(sb, methodData.Method.DeclaringSyntaxReferences, cancellationToken, isMethod: true);
 
                         if (IsExactType(returnType, typeof(void)))
                         {
-                            sb.Append($"        public RandomSkunk.Results.Result {methodName}");
-                            AppendParameters(sb, methodData.Method);
+                            sb.Append($"        public {@static}RandomSkunk.Results.Result {methodName}");
+                            AppendParameters(sb, methodData.Method, out var isTryAdapterExtensionMethod);
                             AppendGenericConstraints(sb, methodData.Method.Arity, methodData.Method.TypeParameters);
                             sb.AppendLine("        {");
                             sb.AppendLine("            try");
                             sb.AppendLine("            {");
-                            sb.Append($"                {targetTypeName}.{methodName}");
+                            if (methodData.Method.IsStatic)
+                            {
+                                if (methodData.Method.IsExtensionMethod)
+                                {
+                                    if (isTryAdapterExtensionMethod)
+                                        sb.Append($"                {methodData.Method.Parameters[0].Name}.BackingValue.{methodName}");
+                                    else
+                                        sb.Append($"                {methodData.Method.Parameters[0].Name}.{methodName}");
+                                }
+                                else
+                                {
+                                    sb.Append($"                {targetTypeName}.{methodName}");
+                                }
+                            }
+                            else
+                            {
+                                sb.Append($"                {fieldName}.{methodName}");
+                            }
+
                             AppendArguments(sb, methodData.Method);
                             sb.AppendLine("                return RandomSkunk.Results.Result.Success();");
                             sb.AppendLine("            }");
@@ -407,13 +443,31 @@ public class TryCatchGenerator : IIncrementalGenerator
 
                                 if (namedType.Arity == 0)
                                 {
-                                    sb.Append($"        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result> {methodName}");
-                                    AppendParameters(sb, methodData.Method);
+                                    sb.Append($"        public {@static}async System.Threading.Tasks.Task<RandomSkunk.Results.Result> {methodName}");
+                                    AppendParameters(sb, methodData.Method, out var isTryAdapterExtensionMethod);
                                     AppendGenericConstraints(sb, methodData.Method.Arity, methodData.Method.TypeParameters);
                                     sb.AppendLine("        {");
                                     sb.AppendLine("            try");
                                     sb.AppendLine("            {");
-                                    sb.Append($"                await {targetTypeName}.{methodName}");
+                                    if (methodData.Method.IsStatic)
+                                    {
+                                        if (methodData.Method.IsExtensionMethod)
+                                        {
+                                            if (isTryAdapterExtensionMethod)
+                                                sb.Append($"                await {methodData.Method.Parameters[0].Name}.BackingValue.{methodName}");
+                                            else
+                                                sb.Append($"                await {methodData.Method.Parameters[0].Name}.{methodName}");
+                                        }
+                                        else
+                                        {
+                                            sb.Append($"                await {targetTypeName}.{methodName}");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sb.Append($"                await {fieldName}.{methodName}");
+                                    }
+
                                     AppendArguments(sb, methodData.Method);
                                     sb.AppendLine("                return RandomSkunk.Results.Result.Success();");
                                     sb.AppendLine("            }");
@@ -442,15 +496,33 @@ public class TryCatchGenerator : IIncrementalGenerator
                                 {
                                     returnType = namedType.TypeArguments[0];
 
-                                    sb.Append($"        public async System.Threading.Tasks.Task<{resultType}<{GetTypeName(returnType)}>> {methodName}");
-                                    AppendParameters(sb, methodData.Method);
+                                    sb.Append($"        public {@static}async System.Threading.Tasks.Task<{resultType}<{GetTypeName(returnType)}>> {methodName}");
+                                    AppendParameters(sb, methodData.Method, out var isTryAdapterExtensionMethod);
                                     AppendGenericConstraints(sb, methodData.Method.Arity, methodData.Method.TypeParameters);
                                     sb.AppendLine("        {");
                                     sb.AppendLine("            try");
                                     sb.AppendLine("            {");
-                                    sb.Append($"                var value = await {targetTypeName}.{methodName}");
+                                    if (methodData.Method.IsStatic)
+                                    {
+                                        if (methodData.Method.IsExtensionMethod)
+                                        {
+                                            if (isTryAdapterExtensionMethod)
+                                                sb.Append($"                var methodReturnValue = await {methodData.Method.Parameters[0].Name}.BackingValue.{methodName}");
+                                            else
+                                                sb.Append($"                var methodReturnValue = await {methodData.Method.Parameters[0].Name}.{methodName}");
+                                        }
+                                        else
+                                        {
+                                            sb.Append($"                var methodReturnValue = await {targetTypeName}.{methodName}");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sb.Append($"                var methodReturnValue = await {fieldName}.{methodName}");
+                                    }
+
                                     AppendArguments(sb, methodData.Method);
-                                    sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.FromValue(value);");
+                                    sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.FromValue(methodReturnValue);");
                                     sb.AppendLine("            }");
 
                                     if (methodData.TryCatchInfo.TExceptions.Length == 0)
@@ -476,15 +548,33 @@ public class TryCatchGenerator : IIncrementalGenerator
                             }
                             else
                             {
-                                sb.Append($"        public {resultType}<{GetTypeName(returnType)}> {methodName}");
-                                AppendParameters(sb, methodData.Method);
+                                sb.Append($"        public {@static}{resultType}<{GetTypeName(returnType)}> {methodName}");
+                                AppendParameters(sb, methodData.Method, out var isTryAdapterExtensionMethod);
                                 AppendGenericConstraints(sb, methodData.Method.Arity, methodData.Method.TypeParameters);
                                 sb.AppendLine("        {");
                                 sb.AppendLine("            try");
                                 sb.AppendLine("            {");
-                                sb.Append($"                var value = {targetTypeName}.{methodName}");
+                                if (methodData.Method.IsStatic)
+                                {
+                                    if (methodData.Method.IsExtensionMethod)
+                                    {
+                                        if (isTryAdapterExtensionMethod)
+                                            sb.Append($"                var methodReturnValue = {methodData.Method.Parameters[0].Name}.BackingValue.{methodName}");
+                                        else
+                                            sb.Append($"                var methodReturnValue = {methodData.Method.Parameters[0].Name}.{methodName}");
+                                    }
+                                    else
+                                    {
+                                        sb.Append($"                var methodReturnValue = {targetTypeName}.{methodName}");
+                                    }
+                                }
+                                else
+                                {
+                                    sb.Append($"                var methodReturnValue = {fieldName}.{methodName}");
+                                }
+
                                 AppendArguments(sb, methodData.Method);
-                                sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.FromValue(value);");
+                                sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.FromValue(methodReturnValue);");
                                 sb.AppendLine("            }");
 
                                 if (methodData.TryCatchInfo.TExceptions.Length == 0)
@@ -511,15 +601,19 @@ public class TryCatchGenerator : IIncrementalGenerator
                     }
 
                     sb.AppendLine("    }");
-                    sb.AppendLine();
-                    sb.AppendLine($"    public static class Try{targetTypeName}Extensions");
-                    sb.AppendLine("    {");
-                    sb.AppendLine($"        public static Try{targetType} Try{targetTypeTypeParameters}(this {targetType} {variableName})");
-                    AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
-                    sb.AppendLine("        {");
-                    sb.AppendLine($"            return new Try{targetType}({variableName});");
-                    sb.AppendLine("        }");
-                    sb.AppendLine("    }");
+
+                    if (!tryCatchDefinition.Value.TargetType.IsStatic)
+                    {
+                        sb.AppendLine();
+                        sb.AppendLine($"    public static class {targetTypeName}TryExtensionMethod");
+                        sb.AppendLine("    {");
+                        sb.AppendLine($"        public static Try{targetType} Try{targetTypeTypeParameters}(this {targetType} {variableName})");
+                        AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
+                        sb.AppendLine("        {");
+                        sb.AppendLine($"            return new Try{targetType}({variableName});");
+                        sb.AppendLine("        }");
+                        sb.AppendLine("    }");
+                    }
                 }
 
                 sb.AppendLine("}");
@@ -568,7 +662,7 @@ public class TryCatchGenerator : IIncrementalGenerator
             sb.Append('(');
 
             var first = true;
-            foreach (var parameter in method.Parameters)
+            foreach (var parameter in method.Parameters.Skip(method.IsExtensionMethod ? 1 : 0))
             {
                 if (first) first = false;
                 else sb.Append(", ");
@@ -577,41 +671,6 @@ public class TryCatchGenerator : IIncrementalGenerator
             }
 
             sb.Append(");");
-            return sb.AppendLine();
-        }
-
-        private static StringBuilder AppendParameters(StringBuilder sb, IMethodSymbol method)
-        {
-            if (method.Arity > 0)
-            {
-                var typeParameters = string.Join(", ", method.TypeParameters.Select(GetTypeName));
-                sb.Append('<').Append(typeParameters).Append('>');
-            }
-
-            sb.Append('(');
-
-            var first = true;
-            foreach (var parameter in method.Parameters)
-            {
-                if (first) first = false;
-                else sb.Append(", ");
-
-                sb.Append($"{GetTypeName(parameter.Type)} {parameter.Name}");
-                if (parameter.HasExplicitDefaultValue)
-                {
-                    sb.Append($" = ");
-                    if (parameter.ExplicitDefaultValue is null)
-                        sb.Append("null");
-                    else if (parameter.ExplicitDefaultValue is string s)
-                        sb.Append('"').Append(s.Replace("\\", "\\\\").Replace("\"", "\\\"")).Append('"');
-                    else if (IsEnum(parameter.Type))
-                        sb.Append($"({GetTypeName(parameter.Type)})({parameter.ExplicitDefaultValue})");
-                    else
-                        sb.Append(parameter.ExplicitDefaultValue.ToString());
-                }
-            }
-
-            sb.Append(')');
             return sb.AppendLine();
         }
 
@@ -652,8 +711,6 @@ public class TryCatchGenerator : IIncrementalGenerator
                 if (typeParameter.HasConstructorConstraint)
                     sb.Append(GetComma()).Append("new()");
 
-                sb.AppendLine();
-
                 string? GetComma()
                 {
                     if (comma is not null)
@@ -678,16 +735,21 @@ public class TryCatchGenerator : IIncrementalGenerator
             return IsEnum(type.BaseType);
         }
 
-        private static string? GetGenericParameters(INamedTypeSymbol type)
+        private static string? GetGenericParameters(ITypeSymbol type)
         {
-            if (type.Arity == 0)
+            if (type is not INamedTypeSymbol namedType)
                 return null;
 
-            var typeParameters = string.Join(", ", type.TypeParameters.Select(GetTypeName));
+            if (namedType.Arity == 0)
+                return null;
+
+            var typeParameters = string.Join(", ", namedType.TypeParameters.Select(GetTypeName));
             return $"<{typeParameters}>";
         }
 
-        private static string GetTypeName(ITypeSymbol type)
+        private static string GetTypeName(ITypeSymbol type) => GetTypeName(type, null);
+
+        private static string GetTypeName(ITypeSymbol type, string? typeNamePrefix)
         {
             if (type.Kind == SymbolKind.TypeParameter)
             {
@@ -697,15 +759,77 @@ public class TryCatchGenerator : IIncrementalGenerator
             if (type is IArrayTypeSymbol arrayType)
             {
                 var commas = arrayType.Rank == 1 ? null : string.Join(string.Empty, Enumerable.Repeat(',', arrayType.Rank - 1));
-                var elementType = GetTypeName(arrayType.ElementType);
+                var elementType = GetTypeName(arrayType.ElementType, typeNamePrefix);
                 return $"{elementType}[{commas}]";
             }
 
             if (type is not INamedTypeSymbol { Arity: > 0 } namedType)
-                return $"{type.ContainingNamespace}.{type.Name}";
+                return $"{type.ContainingNamespace}.{typeNamePrefix}{type.Name}";
 
-            var typeArguments = string.Join(", ", namedType.TypeArguments.Select(GetTypeName));
-            return $"{type.ContainingNamespace}.{type.Name}<{typeArguments}>";
+            var typeArguments = string.Join(", ", namedType.TypeArguments.Select(ta => GetTypeName(ta, typeNamePrefix)));
+            return $"{type.ContainingNamespace}.{typeNamePrefix}{type.Name}<{typeArguments}>";
+        }
+
+        private StringBuilder AppendParameters(StringBuilder sb, IMethodSymbol method, out bool isTryAdapterExtensionMethod)
+        {
+            isTryAdapterExtensionMethod = false;
+
+            if (method.Arity > 0)
+            {
+                var typeParameters = string.Join(", ", method.TypeParameters.Select(GetTypeName));
+                sb.Append('<').Append(typeParameters).Append('>');
+            }
+
+            sb.Append('(');
+
+            var first = true;
+            foreach (var parameter in method.Parameters)
+            {
+                if (first)
+                {
+                    first = false;
+                    if (method.IsExtensionMethod)
+                    {
+                        sb.Append("this ");
+
+                        var key = (parameter.Type.ContainingNamespace?.ToString(), parameter.Type.Name, GetGenericParameters(parameter.Type));
+                        if (_tryCatchDefinitions.ContainsKey(key))
+                        {
+                            isTryAdapterExtensionMethod = true;
+                            sb.Append($"{GetTypeName(parameter.Type, "Try")} {parameter.Name}");
+                        }
+                        else
+                        {
+                            sb.Append($"{GetTypeName(parameter.Type)} {parameter.Name}");
+                        }
+                    }
+                    else
+                    {
+                        sb.Append($"{GetTypeName(parameter.Type)} {parameter.Name}");
+                    }
+                }
+                else
+                {
+                    sb.Append(", ");
+                    sb.Append($"{GetTypeName(parameter.Type)} {parameter.Name}");
+                }
+
+                if (parameter.HasExplicitDefaultValue)
+                {
+                    sb.Append($" = ");
+                    if (parameter.ExplicitDefaultValue is null)
+                        sb.Append("default");
+                    else if (parameter.ExplicitDefaultValue is string s)
+                        sb.Append('"').Append(s.Replace("\\", "\\\\").Replace("\"", "\\\"")).Append('"');
+                    else if (IsEnum(parameter.Type))
+                        sb.Append($"({GetTypeName(parameter.Type)})({parameter.ExplicitDefaultValue})");
+                    else
+                        sb.Append(parameter.ExplicitDefaultValue.ToString());
+                }
+            }
+
+            sb.Append(')');
+            return sb.AppendLine();
         }
     }
 
