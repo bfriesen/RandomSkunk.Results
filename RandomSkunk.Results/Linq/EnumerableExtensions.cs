@@ -11,7 +11,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -34,7 +34,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element and index of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -58,7 +58,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -81,7 +81,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element and index of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -105,7 +105,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -120,7 +120,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element and index of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -135,7 +135,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -150,7 +150,7 @@ public static class EnumerableExtensions
     /// Performs the specified result action on each element and index of the sequence.
     /// <para/>
     /// The result returned by the <paramref name="action"/> delegate determines whether subsequent elements in the sequence will
-    /// be evaluated: a <c>Success</c> allows the next element to be evaluated, while a <c>Fail</c> result is returned
+    /// be evaluated: each <c>Success</c> allows the next element to be evaluated, while the first <c>Fail</c> result is returned
     /// immediately.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
@@ -343,8 +343,8 @@ public static class EnumerableExtensions
     /// <summary>
     /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition. If no element satisfies the
     /// condition, a <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element that
-    /// satisfies the condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
-    /// returned.
+    /// satisfies the condition is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return an element from.</param>
@@ -505,7 +505,8 @@ public static class EnumerableExtensions
     /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition. If no element
     /// satisfies the condition, a <c>None</c> result is returned. If more than one element satisfies the condition, a
     /// <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/> is returned. If the single element that satisfies
-    /// the condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// the condition is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
     /// </summary>
     /// <typeparam name="T">The type of the elements of <paramref name="sourceSequence"/>.</typeparam>
     /// <param name="sourceSequence">An <see cref="IEnumerable{T}"/> to return a single element from.</param>

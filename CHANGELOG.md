@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results
     - Add `[TryCatch]` and `[assembly: TryCatchThirdParty]` attributes.
     - Add `FailIf` methods.
+    - Add `IReadOnlyList<T>.ForEach` extension methods.
 - RandomSkunk.Results.Analyzers (new package)
     - Add try/catch source generator.
 
