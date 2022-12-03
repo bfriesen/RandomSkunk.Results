@@ -52,11 +52,11 @@ public class TryCatchGenerator : IIncrementalGenerator
         else
             return false;
 
-        var tryCatchtAttribute = attributeLists.SelectMany(x => x.Attributes)
+        var tryCatchAttribute = attributeLists.SelectMany(x => x.Attributes)
             .Where(x => x.Name.ToString() is "TryCatch" or "TryCatchAttribute")
             .FirstOrDefault();
 
-        return tryCatchtAttribute is not null;
+        return tryCatchAttribute is not null;
     }
 
     private static TargetData GetTargetDataFromDecoratedMember(GeneratorSyntaxContext context, CancellationToken cancellationToken)
@@ -176,7 +176,13 @@ public class TryCatchGenerator : IIncrementalGenerator
         {
             if (item.Target is AttributeTarget target)
             {
-                var allMembers = target.Type.GetMembers();
+                ImmutableArray<ISymbol> allMembers;
+
+                if (target.Type.Arity > 0 && target.Type.TypeParameters.Any(p => p.Kind == SymbolKind.TypeParameter))
+                    allMembers = target.Type.OriginalDefinition.GetMembers();
+                else
+                    allMembers = target.Type.GetMembers();
+
                 var methods = allMembers.Where(symbol => IsPublicMethod(symbol, allMembers)).Select(symbol => (IMethodSymbol)symbol);
 
                 if (target.MethodName is null)
@@ -287,11 +293,16 @@ public class TryCatchGenerator : IIncrementalGenerator
                 {
                     if (!existingMethodData.Any(existingData => method.Equals(existingData.Method, SymbolEqualityComparer.Default)))
                         existingMethodData.Add(new MethodData(method, tryCatchInfo));
+
+                    if (method.IsExtensionMethod)
+                        EnsureTryCatchDefinitionExists(method.Parameters[0].Type);
                 }
             }
             else
             {
                 _tryCatchDefinitions[key] = (targetType, methods.Select(method => new MethodData(method, tryCatchInfo)).ToList());
+                foreach (var method in methods.Where(m => m.IsExtensionMethod))
+                    EnsureTryCatchDefinitionExists(method.Parameters[0].Type);
             }
         }
 
@@ -315,6 +326,9 @@ public class TryCatchGenerator : IIncrementalGenerator
             {
                 _tryCatchDefinitions[key] = (targetType, new List<MethodData> { new MethodData(method, tryCatchInfo) });
             }
+
+            if (method.IsExtensionMethod)
+                EnsureTryCatchDefinitionExists(method.Parameters[0].Type);
         }
 
         public string Build(CancellationToken cancellationToken)
@@ -334,41 +348,32 @@ public class TryCatchGenerator : IIncrementalGenerator
                 {
                     var targetTypeName = tryCatchDefinition.Key.TargetTypeName;
                     var variableName = GetVariableName(targetTypeName);
-                    var fieldName = '_' + variableName;
                     var targetTypeTypeParameters = tryCatchDefinition.Key.TargetTypeTypeParameters;
                     var targetType = targetTypeName + targetTypeTypeParameters;
                     var targetTypeDocComments = targetType.Replace('<', '{').Replace('>', '}');
+                    var targetTypeAccessibility = GetAccessibility(tryCatchDefinition.Value.TargetType.DeclaredAccessibility);
 
                     sb.AppendLine();
 
                     if (tryCatchDefinition.Value.TargetType.IsStatic)
                     {
                         AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
-                        sb.AppendLine($"    public static class Try{targetType}");
+                        sb.AppendLine($"    {targetTypeAccessibility} static class Try{targetType}");
                         AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
                         sb.Append("    {");
                     }
                     else
                     {
                         AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
-                        sb.AppendLine($"    public struct Try{targetType}");
+                        sb.AppendLine($"    {targetTypeAccessibility} struct Try{targetType}");
                         AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
                         sb.AppendLine("    {");
-                        sb.AppendLine($"        private readonly {targetType} {fieldName};");
-                        sb.AppendLine();
-                        sb.AppendLine("        /// <summary>");
-                        sb.AppendLine($"        /// Initializes a new instance of the <see cref=\"Try{targetTypeDocComments}\"/> class.");
-                        sb.AppendLine("        /// </summary>");
-                        sb.AppendLine($"        /// <param name=\"{variableName}\">The backing instance of <see cref=\"{targetTypeDocComments}\"/>.</param>");
-                        sb.AppendLine($"        public Try{targetTypeName}({targetType} {variableName})");
+                        sb.AppendLine($"        internal Try{targetTypeName}({targetType} {variableName})");
                         sb.AppendLine("        {");
-                        sb.AppendLine($"            {fieldName} = {variableName};");
+                        sb.AppendLine($"            BackingValue = {variableName};");
                         sb.AppendLine("        }");
                         sb.AppendLine();
-                        sb.AppendLine("        /// <summary>");
-                        sb.AppendLine($"        /// Gets the backing instance of <see cref=\"{targetTypeDocComments}\"/>.");
-                        sb.AppendLine("        /// </summary>");
-                        sb.AppendLine($"        public {targetType} BackingValue => {fieldName};");
+                        sb.AppendLine($"        internal {targetType} BackingValue {{ get; }}");
                     }
 
                     foreach (var methodData in tryCatchDefinition.Value.Methods)
@@ -406,7 +411,7 @@ public class TryCatchGenerator : IIncrementalGenerator
                             }
                             else
                             {
-                                sb.Append($"                {fieldName}.{methodName}");
+                                sb.Append($"                BackingValue.{methodName}");
                             }
 
                             AppendArguments(sb, methodData.Method);
@@ -465,7 +470,7 @@ public class TryCatchGenerator : IIncrementalGenerator
                                     }
                                     else
                                     {
-                                        sb.Append($"                await {fieldName}.{methodName}");
+                                        sb.Append($"                await BackingValue.{methodName}");
                                     }
 
                                     AppendArguments(sb, methodData.Method);
@@ -518,7 +523,7 @@ public class TryCatchGenerator : IIncrementalGenerator
                                     }
                                     else
                                     {
-                                        sb.Append($"                var methodReturnValue = await {fieldName}.{methodName}");
+                                        sb.Append($"                var methodReturnValue = await BackingValue.{methodName}");
                                     }
 
                                     AppendArguments(sb, methodData.Method);
@@ -570,7 +575,7 @@ public class TryCatchGenerator : IIncrementalGenerator
                                 }
                                 else
                                 {
-                                    sb.Append($"                var methodReturnValue = {fieldName}.{methodName}");
+                                    sb.Append($"                var methodReturnValue = BackingValue.{methodName}");
                                 }
 
                                 AppendArguments(sb, methodData.Method);
@@ -605,7 +610,7 @@ public class TryCatchGenerator : IIncrementalGenerator
                     if (!tryCatchDefinition.Value.TargetType.IsStatic)
                     {
                         sb.AppendLine();
-                        sb.AppendLine($"    public static class {targetTypeName}TryExtensionMethod");
+                        sb.AppendLine($"    {targetTypeAccessibility} static class {targetTypeName}TryExtensionMethod");
                         sb.AppendLine("    {");
                         sb.AppendLine($"        public static Try{targetType} Try{targetTypeTypeParameters}(this {targetType} {variableName})");
                         AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
@@ -621,6 +626,16 @@ public class TryCatchGenerator : IIncrementalGenerator
 
             var source = sb.ToString();
             return source;
+        }
+
+        private static string GetAccessibility(Accessibility declaredAccessibility)
+        {
+            return declaredAccessibility switch
+            {
+                Accessibility.Public => "public",
+                Accessibility.Internal => "internal",
+                _ => string.Empty,
+            };
         }
 
         private static string GetVariableName(string typeName)
@@ -710,6 +725,8 @@ public class TryCatchGenerator : IIncrementalGenerator
 
                 if (typeParameter.HasConstructorConstraint)
                     sb.Append(GetComma()).Append("new()");
+
+                sb.AppendLine();
 
                 string? GetComma()
                 {
@@ -830,6 +847,16 @@ public class TryCatchGenerator : IIncrementalGenerator
 
             sb.Append(')');
             return sb.AppendLine();
+        }
+
+        private void EnsureTryCatchDefinitionExists(ITypeSymbol type)
+        {
+            if (type is not INamedTypeSymbol targetType)
+                return;
+
+            var key = (targetType.ContainingNamespace?.ToString(), targetType.Name, GetGenericParameters(targetType));
+            if (!_tryCatchDefinitions.ContainsKey(key))
+                _tryCatchDefinitions[key] = (targetType, new List<MethodData>());
         }
     }
 

@@ -39,6 +39,8 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Polyfill", "Polyfill\Polyfi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.Analyzers", "RandomSkunk.Results.Analyzers\RandomSkunk.Results.Analyzers.csproj", "{81D2C765-4686-4F15-8D45-FD50A6D903EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomSkunk.Results.Analyzers.Tests", "RandomSkunk.Results.Analyzers.Tests\RandomSkunk.Results.Analyzers.Tests.csproj", "{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{81D2C765-4686-4F15-8D45-FD50A6D903EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81D2C765-4686-4F15-8D45-FD50A6D903EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81D2C765-4686-4F15-8D45-FD50A6D903EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{D88CF021-AB8F-4582-9E5B-D91FF380D149} = {3C1AC0A0-845F-421D-A991-EEA33E4D4CFA}
 		{5F08714B-3285-44C9-AABC-370A3833C510} = {3C1AC0A0-845F-421D-A991-EEA33E4D4CFA}
 		{43AC1C8A-FBF8-4454-A8E4-57C0D346E3C4} = {3C1AC0A0-845F-421D-A991-EEA33E4D4CFA}
+		{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E} = {BB30CAAB-2782-4160-B287-5A1FA160A4BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C3DE90D3-8E7B-4980-9D98-432245EEF3E4}
