@@ -420,7 +420,7 @@ public class TryCatchGenerator : IIncrementalGenerator
 
                             if (methodData.TryCatchInfo.TExceptions.Length == 0)
                             {
-                                sb.AppendLine("            catch (Exception ex)");
+                                sb.AppendLine("            catch (System.Exception ex)");
                                 sb.AppendLine("            {");
                                 sb.AppendLine("                return RandomSkunk.Results.Result.Fail(ex);");
                                 sb.AppendLine("            }");
@@ -479,7 +479,7 @@ public class TryCatchGenerator : IIncrementalGenerator
 
                                     if (methodData.TryCatchInfo.TExceptions.Length == 0)
                                     {
-                                        sb.AppendLine("            catch (Exception ex)");
+                                        sb.AppendLine("            catch (System.Exception ex)");
                                         sb.AppendLine("            {");
                                         sb.AppendLine("                return RandomSkunk.Results.Result.Fail(ex);");
                                         sb.AppendLine("            }");
@@ -532,7 +532,7 @@ public class TryCatchGenerator : IIncrementalGenerator
 
                                     if (methodData.TryCatchInfo.TExceptions.Length == 0)
                                     {
-                                        sb.AppendLine("            catch (Exception ex)");
+                                        sb.AppendLine("            catch (System.Exception ex)");
                                         sb.AppendLine("            {");
                                         sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.Fail(ex);");
                                         sb.AppendLine("            }");
@@ -584,7 +584,7 @@ public class TryCatchGenerator : IIncrementalGenerator
 
                                 if (methodData.TryCatchInfo.TExceptions.Length == 0)
                                 {
-                                    sb.AppendLine("            catch (Exception ex)");
+                                    sb.AppendLine("            catch (System.Exception ex)");
                                     sb.AppendLine("            {");
                                     sb.AppendLine($"                return {resultType}<{GetTypeName(returnType)}>.Fail(ex);");
                                     sb.AppendLine("            }");
