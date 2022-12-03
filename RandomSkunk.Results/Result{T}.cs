@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
 /// <content> This struct is partial - additional methods are defined in the code files from the Operations folder. </content>
-public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
+public readonly partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
 {
     private readonly Outcome _outcome;
     private readonly T? _value;
@@ -22,8 +22,8 @@ public partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     {
         _outcome = Outcome.Fail;
         _value = default;
-
         _error = error ?? new Error();
+
         if (_error.StackTrace is null && (setStackTrace ?? FailResult.SetStackTrace))
             _error = _error with { StackTrace = FilteredStackTrace.Create() };
 

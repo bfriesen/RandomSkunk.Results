@@ -4,7 +4,7 @@ namespace RandomSkunk.Results;
 /// Defines a result without a value.
 /// </summary>
 /// <content> This struct is partial - additional methods are defined in the code files from the Operations folder. </content>
-public partial struct Result : IResult<DBNull>, IEquatable<Result>
+public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
 {
     private readonly Outcome _outcome;
     private readonly Error? _error;
@@ -19,8 +19,8 @@ public partial struct Result : IResult<DBNull>, IEquatable<Result>
         else
         {
             _outcome = Outcome.Fail;
-
             _error = error ?? new Error();
+
             if (_error.StackTrace is null && (setStackTrace ?? FailResult.SetStackTrace))
                 _error = _error with { StackTrace = FilteredStackTrace.Create() };
 
