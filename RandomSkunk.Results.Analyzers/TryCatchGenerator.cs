@@ -38,7 +38,7 @@ public class TryCatchGenerator : IIncrementalGenerator
             .Select(GetSourceBuilder);
 
         context.RegisterSourceOutput(sourceBuilder, (context, builder) =>
-            context.AddSource("TryExtensions.g.cs", builder.Build(context.CancellationToken)));
+            context.AddSource("TryCatch.generated.cs", builder.Build(context.CancellationToken)));
     }
 
     private static bool IsDecoratedWithTryCatchAttribute(SyntaxNode syntaxNode, CancellationToken cancellationToken)
@@ -354,17 +354,16 @@ public class TryCatchGenerator : IIncrementalGenerator
                     var targetTypeAccessibility = GetAccessibility(tryCatchDefinition.Value.TargetType.DeclaredAccessibility);
 
                     sb.AppendLine();
+                    AppendDocComments(sb, tryCatchDefinition.Value.TargetType, cancellationToken, isMethod: false);
 
                     if (tryCatchDefinition.Value.TargetType.IsStatic)
                     {
-                        AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
                         sb.AppendLine($"    {targetTypeAccessibility} static class Try{targetType}");
                         AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
                         sb.Append("    {");
                     }
                     else
                     {
-                        AppendDocComments(sb, tryCatchDefinition.Value.TargetType.DeclaringSyntaxReferences, cancellationToken, isMethod: false);
                         sb.AppendLine($"    {targetTypeAccessibility} struct Try{targetType}");
                         AppendGenericConstraints(sb, tryCatchDefinition.Value.TargetType.Arity, tryCatchDefinition.Value.TargetType.TypeParameters);
                         sb.AppendLine("    {");
@@ -384,8 +383,7 @@ public class TryCatchGenerator : IIncrementalGenerator
                         var returnType = methodData.Method.ReturnType;
 
                         sb.AppendLine();
-
-                        AppendDocComments(sb, methodData.Method.DeclaringSyntaxReferences, cancellationToken, isMethod: true);
+                        AppendDocComments(sb, methodData.Method, cancellationToken, isMethod: true);
 
                         if (IsExactType(returnType, typeof(void)))
                         {
@@ -643,24 +641,32 @@ public class TryCatchGenerator : IIncrementalGenerator
             return char.ToLowerInvariant(typeName[0]) + typeName.Substring(1);
         }
 
-        private static StringBuilder AppendDocComments(StringBuilder sb, IEnumerable<SyntaxReference> declaringSyntaxReferences, CancellationToken cancellationToken, bool isMethod)
+        private static StringBuilder AppendDocComments(StringBuilder sb, ISymbol targetSymbol, CancellationToken cancellationToken, bool isMethod)
         {
             var indent = isMethod ? "        " : "    ";
-            foreach (var syntaxReference in declaringSyntaxReferences)
+
+            if (targetSymbol.Locations.Any(location => location.IsInSource))
             {
-                var syntaxNode = syntaxReference.GetSyntax(cancellationToken);
-                var trivia = syntaxNode.GetLeadingTrivia();
-                var index = trivia.IndexOf(SyntaxKind.SingleLineDocumentationCommentTrivia);
-                if (index != -1)
+                foreach (var syntaxReference in targetSymbol.DeclaringSyntaxReferences)
                 {
-                    var t = trivia[index];
+                    var syntaxNode = syntaxReference.GetSyntax(cancellationToken);
+                    var trivia = syntaxNode.GetLeadingTrivia();
+                    var index = trivia.IndexOf(SyntaxKind.SingleLineDocumentationCommentTrivia);
+                    if (index != -1)
+                    {
+                        var t = trivia[index];
 
-                    var docComments = Regex.Replace(t.ToString().Trim(), @"\n\s*", '\n' + indent);
+                        var docComments = Regex.Replace(t.ToString().Trim(), @"\n\s*", '\n' + indent);
 
-                    sb.Append(indent).Append("/// ");
-                    sb.Append(docComments);
-                    return sb.AppendLine();
+                        sb.Append(indent).Append("/// ");
+                        sb.Append(docComments);
+                        return sb.AppendLine();
+                    }
                 }
+            }
+            else if (targetSymbol.Locations.Any(location => location.IsInMetadata))
+            {
+                sb.AppendLine($"{indent}/// <inheritdoc cref=\"{targetSymbol.GetDocumentationCommentId()}\"/>");
             }
 
             return sb;
@@ -783,9 +789,9 @@ public class TryCatchGenerator : IIncrementalGenerator
             if (type is not INamedTypeSymbol { Arity: > 0 } namedType)
                 return $"{type.ContainingNamespace}.{typeNamePrefix}{type.Name}";
 
-            var typeArguments = string.Join(", ", namedType.TypeArguments.Select(ta => GetTypeName(ta, typeNamePrefix)));
-            return $"{type.ContainingNamespace}.{typeNamePrefix}{type.Name}<{typeArguments}>";
-        }
+                var typeArguments = string.Join(", ", namedType.TypeArguments.Select(ta => GetTypeName(ta, typeNamePrefix)));
+                return $"{type.ContainingNamespace}.{typeNamePrefix}{type.Name}<{typeArguments}>";
+            }
 
         private StringBuilder AppendParameters(StringBuilder sb, IMethodSymbol method, out bool isTryAdapterExtensionMethod)
         {
