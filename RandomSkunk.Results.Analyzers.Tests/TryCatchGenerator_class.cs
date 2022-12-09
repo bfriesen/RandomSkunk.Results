@@ -40,23 +40,23 @@ namespace RandomSkunk.Results.Analyzers.Tests
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -64,12 +64,12 @@ namespace RandomSkunk.Results.Analyzers.Tests
         {
             try
             {
-                await BackingValue.Bar(garply);
+                await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -77,12 +77,12 @@ namespace RandomSkunk.Results.Analyzers.Tests
         {
             try
             {
-                var methodReturnValue = BackingValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = SourceValue.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -90,12 +90,12 @@ namespace RandomSkunk.Results.Analyzers.Tests
         {
             try
             {
-                var methodReturnValue = await BackingValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await SourceValue.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -106,18 +106,45 @@ namespace RandomSkunk.Results.Analyzers.Tests
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        {
+            try
+            {
+                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -127,6 +154,7 @@ namespace RandomSkunk.Results.Analyzers.Tests
                 public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
                 {
                     const string inputCode = @"using RandomSkunk.Results;
+using System;
 using System.Threading.Tasks;
 
 namespace Test
@@ -156,6 +184,22 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
+        {
+        }
     }
 }";
 
@@ -168,6 +212,7 @@ namespace Test
                 public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
                 {
                     const string inputCode = @"using RandomSkunk.Results;
+using System;
 using System.Threading.Tasks;
 
 namespace Test
@@ -201,6 +246,12 @@ namespace Test
         public static void Garply()
         {
         }
+
+        [TryCatch]
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -213,6 +264,7 @@ namespace Test
                 public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
                 {
                     const string inputCode = @"using RandomSkunk.Results;
+using System;
 using System.Threading.Tasks;
 using Test;
 
@@ -244,6 +296,22 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
+        {
+        }
     }
 }";
 
@@ -256,6 +324,7 @@ namespace Test
                 public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
                 {
                     const string inputCode = @"using RandomSkunk.Results;
+using System;
 using System.Threading.Tasks;
 using Test;
 
@@ -264,6 +333,7 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Baz))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred))]
 
 namespace Test
 {
@@ -291,6 +361,11 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -313,9 +388,9 @@ namespace Test
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -326,9 +401,9 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -336,12 +411,12 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = Example.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -349,12 +424,12 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -526,25 +601,25 @@ namespace Test
                 private const string _expectedGeneratedCode = @"namespace Test
 {
     public struct TryExample<T>
-            where T : class, new()
+        where T : class, new()
     {
-        internal TryExample(Example<T> example)
+        internal TryExample(Example<T> sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example<T> BackingValue { get; }
+        internal Example<T> SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -552,22 +627,36 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example<T>.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
-    public static class ExampleTryExtensionMethod
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example{T}""/>.
+    /// </summary>
+    public static class Example_TTryExtensionMethod
     {
-        public static TryExample<T> Try<T>(this Example<T> example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample<T> Try<T>(this Example<T> sourceValue)
             where T : class, new()
         {
-            return new TryExample<T>(example);
+            return new TryExample<T>(sourceValue);
         }
     }
 }
@@ -698,24 +787,24 @@ namespace Test
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo<T>(System.Int32 garply)
             where T : class, new()
         {
             try
             {
-                BackingValue.Foo<T>(garply);
+                SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -724,21 +813,35 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar<T>(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -873,23 +976,23 @@ namespace Test
 {
     internal struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -897,21 +1000,35 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     internal static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -1042,12 +1159,12 @@ namespace Test
         {
             try
             {
-                example.BackingValue.Foo(garply);
+                example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1055,31 +1172,45 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await example.BackingValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.Exception ex)
+            catch (System.Exception caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -1215,6 +1346,567 @@ namespace Test
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
             }
+
+            public class AndTargetsAreGenericExtensionMethodsWithDifferentConstraints
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo<T>(this System.Collections.Generic.TryIEnumerable<T> foo)
+            where T : new()
+        {
+            try
+            {
+                foo.SourceValue.Foo<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Bar<T>(this System.Collections.Generic.TryIEnumerable<T> bar)
+            where T : struct
+        {
+            try
+            {
+                bar.SourceValue.Bar<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch]
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch]
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        [TryCatch]
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Bar))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetsAreClosedGenericExtensionMethods
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this System.Collections.Generic.TryIEnumerable<System.Int32> foo)
+        {
+            try
+            {
+                foo.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch]
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch]
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetTypeIsNested
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this Extensions_TryBar bar)
+        {
+            try
+            {
+                bar.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Baz(Test.Extensions.Bar bar)
+        {
+            try
+            {
+                Extensions.Baz(bar);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+
+    public struct Extensions_TryBar
+    {
+        internal Extensions_TryBar(Extensions.Bar sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal Extensions.Bar SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Extensions.Bar""/>.
+    /// </summary>
+    public static class Extensions_BarTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""Extensions_TryBar""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static Extensions_TryBar Try(this Extensions.Bar sourceValue)
+        {
+            return new Extensions_TryBar(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch]
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        [TryCatch]
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        [TryCatch]
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Foo))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Baz))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
         }
 
         public class GivenOneSpecificCaughtException
@@ -1225,23 +1917,23 @@ namespace Test
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1249,12 +1941,12 @@ namespace Test
         {
             try
             {
-                await BackingValue.Bar(garply);
+                await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1262,12 +1954,12 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = BackingValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = SourceValue.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1275,12 +1967,12 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await BackingValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await SourceValue.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1291,18 +1983,45 @@ namespace Test
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        {
+            try
+            {
+                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -1340,6 +2059,22 @@ namespace Test
         }
 
         public static void Garply()
+        {
+        }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
         {
         }
     }
@@ -1388,6 +2123,12 @@ namespace Test
         public static void Garply()
         {
         }
+
+        [TryCatch(typeof(InvalidOperationException))]
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -1432,6 +2173,22 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
+        {
+        }
     }
 }";
 
@@ -1453,6 +2210,7 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Baz), typeof(InvalidOperationException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux), typeof(InvalidOperationException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply), typeof(InvalidOperationException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred), typeof(InvalidOperationException))]
 
 namespace Test
 {
@@ -1480,6 +2238,11 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -1502,9 +2265,9 @@ namespace Test
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1515,9 +2278,9 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1525,12 +2288,12 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = Example.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1538,12 +2301,12 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -1719,25 +2482,25 @@ namespace Test
                 private const string _expectedGeneratedCode = @"namespace Test
 {
     public struct TryExample<T>
-            where T : class, new()
+        where T : class, new()
     {
-        internal TryExample(Example<T> example)
+        internal TryExample(Example<T> sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example<T> BackingValue { get; }
+        internal Example<T> SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1745,22 +2508,36 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example<T>.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
-    public static class ExampleTryExtensionMethod
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example{T}""/>.
+    /// </summary>
+    public static class Example_TTryExtensionMethod
     {
-        public static TryExample<T> Try<T>(this Example<T> example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample<T> Try<T>(this Example<T> sourceValue)
             where T : class, new()
         {
-            return new TryExample<T>(example);
+            return new TryExample<T>(sourceValue);
         }
     }
 }
@@ -1895,24 +2672,24 @@ namespace Test
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo<T>(System.Int32 garply)
             where T : class, new()
         {
             try
             {
-                BackingValue.Foo<T>(garply);
+                SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -1921,21 +2698,35 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar<T>(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -2074,23 +2865,23 @@ namespace Test
 {
     internal struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2098,21 +2889,35 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     internal static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -2247,12 +3052,12 @@ namespace Test
         {
             try
             {
-                example.BackingValue.Foo(garply);
+                example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2260,31 +3065,45 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await example.BackingValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -2424,6 +3243,579 @@ namespace Test
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
             }
+
+            public class AndTargetsAreGenericExtensionMethodsWithDifferentConstraints
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo<T>(this System.Collections.Generic.TryIEnumerable<T> foo)
+            where T : new()
+        {
+            try
+            {
+                foo.SourceValue.Foo<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Bar<T>(this System.Collections.Generic.TryIEnumerable<T> bar)
+            where T : struct
+        {
+            try
+            {
+                bar.SourceValue.Bar<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException))]
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch(typeof(InvalidOperationException))]
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException))]
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), (typeof(InvalidOperationException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo), (typeof(InvalidOperationException)))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Bar), (typeof(InvalidOperationException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetsAreClosedGenericExtensionMethods
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this System.Collections.Generic.TryIEnumerable<System.Int32> foo)
+        {
+            try
+            {
+                foo.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException))]
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch(typeof(InvalidOperationException))]
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), (typeof(InvalidOperationException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo), (typeof(InvalidOperationException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetTypeIsNested
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this Extensions_TryBar bar)
+        {
+            try
+            {
+                bar.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Baz(Test.Extensions.Bar bar)
+        {
+            try
+            {
+                Extensions.Baz(bar);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+
+    public struct Extensions_TryBar
+    {
+        internal Extensions_TryBar(Extensions.Bar sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal Extensions.Bar SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Extensions.Bar""/>.
+    /// </summary>
+    public static class Extensions_BarTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""Extensions_TryBar""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static Extensions_TryBar Try(this Extensions.Bar sourceValue)
+        {
+            return new Extensions_TryBar(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException))]
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException)]
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException)]
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), typeof(InvalidOperationException))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Foo), typeof(InvalidOperationException))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Baz), typeof(InvalidOperationException))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
         }
 
         public class GivenTwoSpecificCaughtExceptions
@@ -2434,27 +3826,27 @@ namespace Test
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2462,16 +3854,16 @@ namespace Test
         {
             try
             {
-                await BackingValue.Bar(garply);
+                await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2479,16 +3871,16 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = BackingValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = SourceValue.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2496,16 +3888,16 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await BackingValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await SourceValue.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2516,22 +3908,53 @@ namespace Test
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        {
+            try
+            {
+                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -2569,6 +3992,22 @@ namespace Test
         }
 
         public static void Garply()
+        {
+        }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
         {
         }
     }
@@ -2617,6 +4056,12 @@ namespace Test
         public static void Garply()
         {
         }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -2661,6 +4106,22 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
+        {
+        }
     }
 }";
 
@@ -2682,6 +4143,7 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Baz), typeof(InvalidOperationException), typeof(DivideByZeroException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux), typeof(InvalidOperationException), typeof(DivideByZeroException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply), typeof(InvalidOperationException), typeof(DivideByZeroException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred), typeof(InvalidOperationException), typeof(DivideByZeroException))]
 
 namespace Test
 {
@@ -2709,6 +4171,11 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -2731,13 +4198,13 @@ namespace Test
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2748,13 +4215,13 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2762,16 +4229,16 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = Example.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2779,16 +4246,16 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -2964,29 +4431,29 @@ namespace Test
                 private const string _expectedGeneratedCode = @"namespace Test
 {
     public struct TryExample<T>
-            where T : class, new()
+        where T : class, new()
     {
-        internal TryExample(Example<T> example)
+        internal TryExample(Example<T> sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example<T> BackingValue { get; }
+        internal Example<T> SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -2994,26 +4461,40 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example<T>.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
-    public static class ExampleTryExtensionMethod
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example{T}""/>.
+    /// </summary>
+    public static class Example_TTryExtensionMethod
     {
-        public static TryExample<T> Try<T>(this Example<T> example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample<T> Try<T>(this Example<T> sourceValue)
             where T : class, new()
         {
-            return new TryExample<T>(example);
+            return new TryExample<T>(sourceValue);
         }
     }
 }
@@ -3148,28 +4629,28 @@ namespace Test
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo<T>(System.Int32 garply)
             where T : class, new()
         {
             try
             {
-                BackingValue.Foo<T>(garply);
+                SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -3178,25 +4659,39 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar<T>(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -3335,27 +4830,27 @@ namespace Test
 {
     internal struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -3363,25 +4858,39 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     internal static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -3516,16 +5025,16 @@ namespace Test
         {
             try
             {
-                example.BackingValue.Foo(garply);
+                example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -3533,35 +5042,49 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await example.BackingValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -3701,6 +5224,599 @@ namespace Test
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
             }
+
+            public class AndTargetsAreGenericExtensionMethodsWithDifferentConstraints
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo<T>(this System.Collections.Generic.TryIEnumerable<T> foo)
+            where T : new()
+        {
+            try
+            {
+                foo.SourceValue.Foo<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Bar<T>(this System.Collections.Generic.TryIEnumerable<T> bar)
+            where T : struct
+        {
+            try
+            {
+                bar.SourceValue.Bar<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), typeof(InvalidOperationException), typeof(DivideByZeroException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo), typeof(InvalidOperationException), typeof(DivideByZeroException)))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Bar), typeof(InvalidOperationException), typeof(DivideByZeroException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetsAreClosedGenericExtensionMethods
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this System.Collections.Generic.TryIEnumerable<System.Int32> foo)
+        {
+            try
+            {
+                foo.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), typeof(InvalidOperationException), typeof(DivideByZeroException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo), typeof(InvalidOperationException), typeof(DivideByZeroException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetTypeIsNested
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this Extensions_TryBar bar)
+        {
+            try
+            {
+                bar.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Baz(Test.Extensions.Bar bar)
+        {
+            try
+            {
+                Extensions.Baz(bar);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+
+    public struct Extensions_TryBar
+    {
+        internal Extensions_TryBar(Extensions.Bar sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal Extensions.Bar SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Extensions.Bar""/>.
+    /// </summary>
+    public static class Extensions_BarTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""Extensions_TryBar""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static Extensions_TryBar Try(this Extensions.Bar sourceValue)
+        {
+            return new Extensions_TryBar(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), typeof(InvalidOperationException), typeof(DivideByZeroException))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Foo), typeof(InvalidOperationException), typeof(DivideByZeroException))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Baz), typeof(InvalidOperationException), typeof(DivideByZeroException))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
         }
 
         public class GivenThreeSpecificCaughtExceptions
@@ -3711,31 +5827,31 @@ namespace Test
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -3743,20 +5859,20 @@ namespace Test
         {
             try
             {
-                await BackingValue.Bar(garply);
+                await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -3764,20 +5880,20 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = BackingValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = SourceValue.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -3785,20 +5901,20 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await BackingValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await SourceValue.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -3809,26 +5925,61 @@ namespace Test
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        {
+            try
+            {
+                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -3866,6 +6017,22 @@ namespace Test
         }
 
         public static void Garply()
+        {
+        }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
         {
         }
     }
@@ -3914,6 +6081,12 @@ namespace Test
         public static void Garply()
         {
         }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -3958,6 +6131,22 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public event EventHandler Grault
+        {
+            add { }
+            remove { }
+        }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
+
+        [Obsolete]
+        public void Waldo()
+        {
+        }
     }
 }";
 
@@ -3979,6 +6168,7 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Baz), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
 
 namespace Test
 {
@@ -4006,6 +6196,11 @@ namespace Test
         public static void Garply()
         {
         }
+
+        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        {
+            waldo = true;
+        }
     }
 }";
 
@@ -4028,17 +6223,17 @@ namespace Test
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -4049,17 +6244,17 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -4067,20 +6262,20 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = Example.Baz(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -4088,20 +6283,20 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Qux(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -4277,33 +6472,33 @@ namespace Test
                 private const string _expectedGeneratedCode = @"namespace Test
 {
     public struct TryExample<T>
-            where T : class, new()
+        where T : class, new()
     {
-        internal TryExample(Example<T> example)
+        internal TryExample(Example<T> sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example<T> BackingValue { get; }
+        internal Example<T> SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -4311,30 +6506,44 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example<T>.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
-    public static class ExampleTryExtensionMethod
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example{T}""/>.
+    /// </summary>
+    public static class Example_TTryExtensionMethod
     {
-        public static TryExample<T> Try<T>(this Example<T> example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample<T> Try<T>(this Example<T> sourceValue)
             where T : class, new()
         {
-            return new TryExample<T>(example);
+            return new TryExample<T>(sourceValue);
         }
     }
 }
@@ -4469,32 +6678,32 @@ namespace Test
 {
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo<T>(System.Int32 garply)
             where T : class, new()
         {
             try
             {
-                BackingValue.Foo<T>(garply);
+                SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -4503,29 +6712,43 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar<T>(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -4664,31 +6887,31 @@ namespace Test
 {
     internal struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
 
         public RandomSkunk.Results.Result Foo(System.Int32 garply)
         {
             try
             {
-                BackingValue.Foo(garply);
+                SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -4696,29 +6919,43 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await Example.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     internal static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -4853,20 +7090,20 @@ namespace Test
         {
             try
             {
-                example.BackingValue.Foo(garply);
+                example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result.Fail(ex);
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
             }
         }
 
@@ -4874,39 +7111,53 @@ namespace Test
         {
             try
             {
-                var methodReturnValue = await example.BackingValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(methodReturnValue);
+                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
             }
-            catch (System.InvalidOperationException ex)
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.DivideByZeroException ex)
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
-            catch (System.ArithmeticException ex)
+            catch (System.ArithmeticException caughtExceptionForFailResult)
             {
-                return RandomSkunk.Results.Result<System.Int32>.Fail(ex);
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
 
     public struct TryExample
     {
-        internal TryExample(Example example)
+        internal TryExample(Example sourceValue)
         {
-            BackingValue = example;
+            SourceValue = sourceValue;
         }
 
-        internal Example BackingValue { get; }
+        internal Example SourceValue { get; }
     }
 
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Example""/>.
+    /// </summary>
     public static class ExampleTryExtensionMethod
     {
-        public static TryExample Try(this Example example)
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryExample""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryExample Try(this Example sourceValue)
         {
-            return new TryExample(example);
+            return new TryExample(sourceValue);
         }
     }
 }
@@ -5040,6 +7291,619 @@ namespace Test
         }
     }
 }";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetsAreGenericExtensionMethodsWithDifferentConstraints
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo<T>(this System.Collections.Generic.TryIEnumerable<T> foo)
+            where T : new()
+        {
+            try
+            {
+                foo.SourceValue.Foo<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Bar<T>(this System.Collections.Generic.TryIEnumerable<T> bar)
+            where T : struct
+        {
+            try
+            {
+                bar.SourceValue.Bar<T>();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException)))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Bar), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo<T>(this IEnumerable<T> foo)
+            where T : new()
+        {
+        }
+
+        public static void Bar<T>(this IEnumerable<T> bar)
+            where T : struct
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetsAreClosedGenericExtensionMethods
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this System.Collections.Generic.TryIEnumerable<System.Int32> foo)
+        {
+            try
+            {
+                foo.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+}
+
+namespace System.Collections.Generic
+{
+    /// <inheritdoc cref=""IEnumerable{T}""/>
+    public struct TryIEnumerable<T>
+    {
+        internal TryIEnumerable(IEnumerable<T> sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal IEnumerable<T> SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""IEnumerable{T}""/>.
+    /// </summary>
+    public static class IEnumerable_TTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""TryIEnumerable{T}""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static TryIEnumerable<T> Try<T>(this IEnumerable<T> sourceValue)
+        {
+            return new TryIEnumerable<T>(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Extensions.Foo), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException)))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public static void Foo(this IEnumerable<int> foo)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+            }
+
+            public class AndTargetTypeIsNested
+            {
+                private const string _expectedGeneratedCode = @"namespace Test
+{
+    public static class TryExtensions
+    {
+        public static RandomSkunk.Results.Result Foo(this Extensions_TryBar bar)
+        {
+            try
+            {
+                bar.SourceValue.Foo();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public static RandomSkunk.Results.Result Baz(Test.Extensions.Bar bar)
+        {
+            try
+            {
+                Extensions.Baz(bar);
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+    }
+
+    public struct Extensions_TryBar
+    {
+        internal Extensions_TryBar(Extensions.Bar sourceValue)
+        {
+            SourceValue = sourceValue;
+        }
+
+        internal Extensions.Bar SourceValue { get; }
+    }
+
+    /// <summary>
+    /// Defines an extension method for getting <c>Try Objects</c> for type <see cref=""Extensions.Bar""/>.
+    /// </summary>
+    public static class Extensions_BarTryExtensionMethod
+    {
+        /// <summary>
+        /// Gets a <em>try object</em> for the specified value.
+        /// </summary>
+        /// <param name=""sourceValue"">The source value of the <em>try object</em>.</param>
+        /// <returns>A <see cref=""Extensions_TryBar""/> object.</returns>
+        /// <remarks>
+        /// A <em>try object</em> behaves almost identically to the object it targets, except its methods won't throw an exception
+        /// and instead return a <c>Result</c>. Each <em>try object</em> method calls its target method inside a try/catch block: if
+        /// no exception is thrown, a <c>Success</c> result is returned; otherwise, a <c>Fail</c> result with an error capturing the
+        /// details of the thrown exception is returned.
+        /// </remarks>
+        public static Extensions_TryBar Try(this Extensions.Bar sourceValue)
+        {
+            return new Extensions_TryBar(sourceValue);
+        }
+    }
+}
+";
+
+                [Fact]
+                public void WhenTargetTypeIsDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenTargetMethodsAreDecoratedWithTryCatchAttribute_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributeWithTargetType_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
+
+                    var generatedCode = GetGeneratedCode(inputCode);
+
+                    generatedCode.Should().Be(_expectedGeneratedCode);
+                }
+
+                [Fact]
+                public void WhenAssemblyIsDecoratedWithTryCatchThirdPartyAttributesWithTargetMethod_GeneratedCodeIsCorrect()
+                {
+                    const string inputCode = @"using RandomSkunk.Results;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Test;
+
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Foo), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+[assembly: TryCatchThirdParty(typeof(Extensions), nameof(Baz), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+
+namespace Test
+{
+    public static class Extensions
+    {
+        public class Bar
+        {
+        }
+
+        public static void Foo(this Bar bar)
+        {
+        }
+
+        public static void Baz(Bar bar)
+        {
+        }
+    }
+}
+";
 
                     var generatedCode = GetGeneratedCode(inputCode);
 
