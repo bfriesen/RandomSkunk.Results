@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning].
 - Add support for .NET 7.
 - RandomSkunk.Results
     - Add `[TryCatch]` and `[assembly: TryCatchThirdParty]` attributes.
-    - Add `ToFailIf` methods.
+    - Add `ToFailIf` and `ToNoneIf` methods.
     - Add `IReadOnlyList<T>.ForEach` extension methods.
 - RandomSkunk.Results.Analyzers (new package)
     - Add try/catch source generator.
