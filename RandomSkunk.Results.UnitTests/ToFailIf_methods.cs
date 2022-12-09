@@ -1,6 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
-public class FailIf_methods
+public class ToFailIf_methods
 {
     public class For_Result
     {
@@ -10,7 +10,7 @@ public class FailIf_methods
             var result = Result.Success();
             var error = new Error();
 
-            var actual = result.FailIf(() => true, () => error);
+            var actual = result.ToFailIf(() => true, () => error);
 
             actual.IsFail.Should().BeTrue();
             actual.Error.Message.Should().BeSameAs(error.Message);
@@ -23,9 +23,9 @@ public class FailIf_methods
             var result = Result.Success();
             var error = new Error();
 
-            var actual = result.FailIf(() => false, () => error);
+            var actual = result.ToFailIf(() => false, () => error);
 
-            actual.IsSuccess.Should().BeTrue();
+            actual.Should().Be(result);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ public class FailIf_methods
             var result = Result.Fail();
             var error = new Error();
 
-            var actual = result.FailIf(() => true, () => error);
+            var actual = result.ToFailIf(() => true, () => error);
 
             actual.Should().Be(result);
         }
@@ -48,7 +48,7 @@ public class FailIf_methods
             var result = Result<int>.Success(123);
             var error = new Error();
 
-            var actual = result.FailIf(value => true, value => error);
+            var actual = result.ToFailIf(value => true, value => error);
 
             actual.IsFail.Should().BeTrue();
             actual.Error.Message.Should().BeSameAs(error.Message);
@@ -61,9 +61,9 @@ public class FailIf_methods
             var result = Result<int>.Success(123);
             var error = new Error();
 
-            var actual = result.FailIf(value => false, value => error);
+            var actual = result.ToFailIf(value => false, value => error);
 
-            actual.IsSuccess.Should().BeTrue();
+            actual.Should().Be(result);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ public class FailIf_methods
             var result = Result<int>.Fail();
             var error = new Error();
 
-            var actual = result.FailIf(value => true, value => error);
+            var actual = result.ToFailIf(value => true, value => error);
 
             actual.Should().Be(result);
         }
@@ -86,7 +86,7 @@ public class FailIf_methods
             var result = Maybe<int>.Success(123);
             var error = new Error();
 
-            var actual = result.FailIf(value => true, value => error);
+            var actual = result.ToFailIf(value => true, value => error);
 
             actual.IsFail.Should().BeTrue();
             actual.Error.Message.Should().BeSameAs(error.Message);
@@ -99,9 +99,9 @@ public class FailIf_methods
             var result = Maybe<int>.Success(123);
             var error = new Error();
 
-            var actual = result.FailIf(value => false, value => error);
+            var actual = result.ToFailIf(value => false, value => error);
 
-            actual.IsSuccess.Should().BeTrue();
+            actual.Should().Be(result);
         }
 
         [Fact]
@@ -110,7 +110,7 @@ public class FailIf_methods
             var result = Maybe<int>.Fail();
             var error = new Error();
 
-            var actual = result.FailIf(value => true, value => error);
+            var actual = result.ToFailIf(value => true, value => error);
 
             actual.Should().Be(result);
         }
@@ -121,7 +121,7 @@ public class FailIf_methods
             var result = Maybe<int>.None();
             var error = new Error();
 
-            var actual = result.FailIf(value => true, value => error);
+            var actual = result.ToFailIf(value => true, value => error);
 
             actual.Should().Be(result);
         }
