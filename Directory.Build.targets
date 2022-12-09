@@ -2,7 +2,7 @@
      See: https://www.strathweb.com/2018/07/solution-wide-nuget-package-version-handling-with-msbuild-15/ -->
 <Project>
     <PropertyGroup>
-		<PackageVersion>1.0.0-alpha21</PackageVersion>
+		<PackageVersion>1.0.0-alpha22</PackageVersion>
 		<PackageReleaseNotes>https://github.com/bfriesen/RandomSkunk.Results/blob/main/CHANGELOG.md#$(PackageVersion.Replace(".", ""))---$([System.DateTime]::Now.ToString("yyyy-MM-dd"))</PackageReleaseNotes>
         <LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>

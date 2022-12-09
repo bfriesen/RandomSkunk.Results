@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [1.0.0-alpha22] - 2022-12-09
+
 ### Changed
 
 - RandomSkunk.Results
