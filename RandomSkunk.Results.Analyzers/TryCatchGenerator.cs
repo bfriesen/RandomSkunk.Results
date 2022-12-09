@@ -475,7 +475,8 @@ public class TryCatchGenerator : IIncrementalGenerator
                         {
                             var resultType = methodData.TryCatchInfo.AsMaybe ? "RandomSkunk.Results.Maybe" : "RandomSkunk.Results.Result";
 
-                            if (returnType.Name == "Task" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks")
+                            if ((returnType.Name == "Task" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks")
+                                || (returnType.Name == "ValueTask" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks"))
                             {
                                 // TODO: Need to check for array symbol.
 

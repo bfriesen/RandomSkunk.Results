@@ -112,16 +112,42 @@ namespace RandomSkunk.Results.Analyzers.Tests
             }
         }
 
-        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyzzy)
         {
             try
             {
-                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result> Corge()
+        {
+            try
+            {
+                await SourceValue.Corge();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result<System.Int32>> Nacho()
+        {
+            try
+            {
+                var returnValueForSuccessResult = await SourceValue.Nacho();
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+            }
+            catch (System.Exception caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -191,7 +217,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -199,6 +225,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -248,9 +284,21 @@ namespace Test
         }
 
         [TryCatch]
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        [TryCatch]
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        [TryCatch]
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -303,7 +351,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -311,6 +359,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -334,6 +392,8 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Corge))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Nacho))]
 
 namespace Test
 {
@@ -362,9 +422,19 @@ namespace Test
         {
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -1989,16 +2059,42 @@ namespace Test
             }
         }
 
-        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyzzy)
         {
             try
             {
-                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result> Corge()
+        {
+            try
+            {
+                await SourceValue.Corge();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result<System.Int32>> Nacho()
+        {
+            try
+            {
+                var returnValueForSuccessResult = await SourceValue.Nacho();
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -2068,7 +2164,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -2076,6 +2172,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -2125,9 +2231,21 @@ namespace Test
         }
 
         [TryCatch(typeof(InvalidOperationException))]
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        [TryCatch(typeof(InvalidOperationException))]
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        [TryCatch(typeof(InvalidOperationException))]
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -2180,7 +2298,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -2188,6 +2306,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -2211,6 +2339,8 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux), typeof(InvalidOperationException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply), typeof(InvalidOperationException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred), typeof(InvalidOperationException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Corge), typeof(InvalidOperationException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Nacho), typeof(InvalidOperationException))]
 
 namespace Test
 {
@@ -2239,9 +2369,19 @@ namespace Test
         {
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -3918,11 +4058,11 @@ namespace Test
             }
         }
 
-        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyzzy)
         {
             try
             {
-                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
@@ -3932,6 +4072,40 @@ namespace Test
             catch (System.DivideByZeroException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result> Corge()
+        {
+            try
+            {
+                await SourceValue.Corge();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result<System.Int32>> Nacho()
+        {
+            try
+            {
+                var returnValueForSuccessResult = await SourceValue.Nacho();
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -4001,7 +4175,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -4009,6 +4183,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -4058,9 +4242,21 @@ namespace Test
         }
 
         [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException))]
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -4113,7 +4309,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -4121,6 +4317,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -4144,6 +4350,8 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux), typeof(InvalidOperationException), typeof(DivideByZeroException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply), typeof(InvalidOperationException), typeof(DivideByZeroException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred), typeof(InvalidOperationException), typeof(DivideByZeroException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Corge), typeof(InvalidOperationException), typeof(DivideByZeroException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Nacho), typeof(InvalidOperationException), typeof(DivideByZeroException))]
 
 namespace Test
 {
@@ -4172,9 +4380,19 @@ namespace Test
         {
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -5939,11 +6157,11 @@ namespace Test
             }
         }
 
-        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyxxy)
+        public RandomSkunk.Results.Result Fred(out System.Boolean waldo, ref System.Boolean thud, in System.Boolean xyzzy)
         {
             try
             {
-                SourceValue.Fred(out waldo, ref thud, in xyxxy);
+                SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
@@ -5957,6 +6175,48 @@ namespace Test
             catch (System.ArithmeticException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result> Corge()
+        {
+            try
+            {
+                await SourceValue.Corge();
+                return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
+            }
+        }
+
+        public async System.Threading.Tasks.Task<RandomSkunk.Results.Result<System.Int32>> Nacho()
+        {
+            try
+            {
+                var returnValueForSuccessResult = await SourceValue.Nacho();
+                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+            }
+            catch (System.InvalidOperationException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.DivideByZeroException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
+            }
+            catch (System.ArithmeticException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Result<System.Int32>.Fail(caughtExceptionForFailResult);
             }
         }
     }
@@ -6026,7 +6286,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -6034,6 +6294,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -6083,9 +6353,21 @@ namespace Test
         }
 
         [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        [TryCatch(typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -6138,7 +6420,7 @@ namespace Test
             remove { }
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
         }
@@ -6146,6 +6428,16 @@ namespace Test
         [Obsolete]
         public void Waldo()
         {
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
@@ -6169,6 +6461,8 @@ using Test;
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Qux), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Garply), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
 [assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Fred), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Corge), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
+[assembly: TryCatchThirdParty(typeof(Example), nameof(Example.Nacho), typeof(InvalidOperationException), typeof(DivideByZeroException), typeof(ArithmeticException))]
 
 namespace Test
 {
@@ -6197,9 +6491,19 @@ namespace Test
         {
         }
 
-        public void Fred(out bool waldo, ref bool thud, in bool xyxxy)
+        public void Fred(out bool waldo, ref bool thud, in bool xyzzy)
         {
             waldo = true;
+        }
+
+        public System.Threading.Tasks.ValueTask Corge()
+        {
+            return System.Threading.Tasks.ValueTask.CompletedTask;
+        }
+
+        public System.Threading.Tasks.ValueTask<int> Nacho()
+        {
+            return System.Threading.Tasks.ValueTask.FromResult(123);
         }
     }
 }";
