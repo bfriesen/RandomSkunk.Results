@@ -6,6 +6,24 @@ namespace RandomSkunk.Results;
 /// <content> This struct is partial - additional methods are defined in the code files from the Operations folder. </content>
 public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
 {
+    /// <summary>
+    /// A factory object that creates <c>Fail</c> results of type <see cref="Result"/>.
+    /// </summary>
+    /// <remarks>
+    /// Applications are encouraged to define custom extension methods targeting <see cref="FailFactory{TResult}"/> that return
+    /// <c>Fail</c> results relevant to the application. For example, an application could define an extension method for
+    /// creating a <c>Fail</c> result when a user is not authorized:
+    /// <code><![CDATA[
+    /// public static TResult Unauthorized<TResult>(this FailFactory<TResult> failWith) =>
+    ///     failWith.Error("User is not authorized.", 401);
+    /// ]]></code>
+    /// To use:
+    /// <code><![CDATA[
+    /// return Result.FailWith.Unauthorized();
+    /// ]]></code>
+    /// </remarks>
+    public static readonly FailFactory<Result> FailWith = new FailFactory();
+
     private readonly Outcome _outcome;
     private readonly Error? _error;
 
@@ -194,4 +212,9 @@ public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Error GetError() => _error ?? Error.DefaultError;
+
+    private class FailFactory : FailFactory<Result>
+    {
+        public override Result Error(Error error) => Result.Fail(error);
+    }
 }

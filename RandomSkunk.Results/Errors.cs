@@ -3,6 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// A class that creates <see cref="Error"/> instances.
 /// </summary>
+[ErrorFactory]
 public static class Errors
 {
     internal const string BadRequestTitle = "Bad Request";
