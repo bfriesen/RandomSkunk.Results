@@ -129,6 +129,8 @@ public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
+    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
+    /// <param name="extensions">Additional properties for the error.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
     ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
@@ -140,6 +142,8 @@ public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
         int? errorCode = ErrorCodes.InternalServerError,
         string? errorIdentifier = null,
         string? errorTitle = null,
+        bool isSensitive = false,
+        IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null,
         bool? setStackTrace = null) =>
         Fail(
@@ -147,8 +151,10 @@ public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
             {
                 Message = errorMessage,
                 Title = errorTitle!,
-                ErrorCode = errorCode,
                 Identifier = errorIdentifier,
+                ErrorCode = errorCode,
+                IsSensitive = isSensitive,
+                Extensions = extensions!,
                 InnerError = innerError,
             },
             setStackTrace);
