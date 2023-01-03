@@ -6,7 +6,7 @@
 		<Title>RandomSkunk.Results.Analyzers</Title>
 		<Description>Analyzers and source generators for the RandomSkunk.Results package.</Description>
 		<Authors>Brian Friesen</Authors>
-		<Copyright>Copyright 2022 (c) Brian Friesen. All rights reserved.</Copyright>
+		<Copyright>Copyright 2022-2023 (c) Brian Friesen. All rights reserved.</Copyright>
 
 		<PackageId>RandomSkunk.Results.Analyzers</PackageId>
 		<PackageProjectUrl>https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results</PackageProjectUrl>

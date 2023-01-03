@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [1.0.0-alpha23] - 2023-01-03
+
 ### Fixed
 
 - RandomSkunk.Results.Analyzers:
@@ -542,7 +544,9 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha21...HEAD
+[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha23...HEAD
+[1.0.0-alpha23]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha22...v1.0.0-alpha23
+[1.0.0-alpha22]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha21...v1.0.0-alpha22
 [1.0.0-alpha21]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha20...v1.0.0-alpha21
 [1.0.0-alpha20]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha19...v1.0.0-alpha20
 [1.0.0-alpha19]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.0.0-alpha18...v1.0.0-alpha19
