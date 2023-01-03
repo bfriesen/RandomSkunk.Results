@@ -12,6 +12,11 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results.Analyzers:
     - Fix generated method when return type is `ValueTask` or `ValueTask<T>`.
 
+### Changed
+
+- RandomSkunk.Results:
+    - Allow Error properties to be initialized with null values. Without this change, there was no way to use a `with` statement to create a new Error with a null `Identifier` or `StackTrace` value.
+
 ## [1.0.0-alpha22] - 2022-12-09
 
 ### Changed

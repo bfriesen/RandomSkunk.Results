@@ -35,8 +35,8 @@ public record class Error
     /// </summary>
     public Error()
     {
-        _message = DefaultMessage;
         _title = _defaultTitleCache.GetOrAdd(GetType(), type => Format.AsSentenceCase(type.Name));
+        _message = DefaultMessage;
         _extensions = _emptyExtensions;
     }
 
@@ -59,12 +59,12 @@ public record class Error
     /// </summary>
     /// <remarks>
     /// The default value for this property is "An error occurred.". If this property is initialized to <see langword="null"/>,
-    /// nothing happens - the value remains the default message.
+    /// the value is set to this default message.
     /// </remarks>
     public string Message
     {
         get => _message;
-        init => _message = string.IsNullOrWhiteSpace(value) ? _message : value;
+        init => _message = string.IsNullOrWhiteSpace(value) ? DefaultMessage : value;
     }
 
     /// <summary>
@@ -78,15 +78,15 @@ public record class Error
     public string? Identifier
     {
         get => _identifier;
-        init => _identifier = string.IsNullOrWhiteSpace(value) ? _identifier : value;
+        init => _identifier = string.IsNullOrWhiteSpace(value) ? null : value;
     }
 
     /// <summary>
     /// Gets a value indicating whether the current error contains sensitive information.
     /// </summary>
     /// <remarks>
-    /// This value is used to determines whether the <see cref="ToString()"/> method outputs the full or abbreviated
-    /// representation of the error.
+    /// This value is used to determine whether the <see cref="ToString()"/> method outputs a full or abbreviated representation
+    /// of the error.
     /// </remarks>
     public bool IsSensitive { get; init; }
 
@@ -96,7 +96,7 @@ public record class Error
     public string? StackTrace
     {
         get => _stackTrace;
-        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? _stackTrace : value!.TrimEnd();
+        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? null : value!.TrimEnd();
     }
 
     /// <summary>
