@@ -95,6 +95,14 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <summary>
+    /// Converts the specified value into a <c>Success</c> result with the same value. A <see langword="null"/> value is
+    /// converted into a <c>None</c> result.
+    /// </summary>
+    /// <param name="value">The value. Can be <see langword="null"/>.</param>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not null; otherwise, a <c>None</c> result.</returns>
+    public static implicit operator Maybe<T>(T? value) => FromValue(value);
+
+    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>

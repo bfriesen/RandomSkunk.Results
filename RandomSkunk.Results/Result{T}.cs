@@ -71,6 +71,15 @@ public readonly partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <summary>
+    /// Converts the specified value into a <c>Success</c> result with the same value. A <see langword="null"/> value is
+    /// converted into a <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/>.
+    /// </summary>
+    /// <param name="value">The value. Can be <see langword="null"/>.</param>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
+    ///     result with a generated stack trace.</returns>
+    public static implicit operator Result<T>(T? value) => FromValue(value);
+
+    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>
