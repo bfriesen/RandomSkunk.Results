@@ -109,7 +109,7 @@ public static class HttpResponseExtensions
 
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
-        return error.ErrorCode == ErrorCodes.NoneResult
+        return error.ErrorCode == ErrorCodes.NoValue
             ? Maybe<T>.None
             : Maybe<T>.Fail(error, false);
     }

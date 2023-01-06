@@ -13,8 +13,8 @@ public static class ErrorCodes
     public const int BadRequest = 400;
 
     /// <summary>
-    /// Indicates that the client request was not completed because it lacks valid authentication credentials for the
-    /// requested resource.
+    /// Indicates that the client request was not completed because it lacks valid authentication credentials for the requested
+    /// resource.
     /// </summary>
     public const int Unauthorized = 401;
 
@@ -54,9 +54,9 @@ public static class ErrorCodes
     public const int GatewayTimeout = 504;
 
     /// <summary>
-    /// Indicates that the error represents a <see cref="Maybe{T}"/> <c>None</c> result.
+    /// Indicates that the result has no value.
     /// </summary>
-    public const int NoneResult = -404;
+    public const int NoValue = -404;
 
     /// <summary>
     /// Indicates that the error represents a caught exception. The inner error contains information about the exception.

@@ -297,11 +297,11 @@ public static class Errors
             InnerError = innerError,
         };
 
-    internal static Error NoneResult() =>
+    internal static Error NoValue() =>
         new()
         {
-            Message = "This error represents a lack of a value (i.e. None).",
-            Title = "Result is None",
-            ErrorCode = ErrorCodes.NoneResult,
+            Message = "This error indicates that the result has no value.",
+            Title = "Result Has No Value",
+            ErrorCode = ErrorCodes.NoValue,
         };
 }

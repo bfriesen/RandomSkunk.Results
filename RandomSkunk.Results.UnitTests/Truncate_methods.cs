@@ -50,7 +50,7 @@ public class Truncate_methods
 
             truncated.IsSuccess.Should().BeFalse();
             truncated.IsFail.Should().BeTrue();
-            truncated.Error.ErrorCode.Should().Be(ErrorCodes.NoneResult);
+            truncated.Error.ErrorCode.Should().Be(ErrorCodes.NoValue);
         }
 
         [Fact]

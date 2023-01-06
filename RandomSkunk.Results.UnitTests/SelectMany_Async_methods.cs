@@ -180,7 +180,7 @@ public class SelectMany_Async_methods
 
             actual.IsFail.Should().BeTrue();
 
-            var expectedError = Errors.NoneResult();
+            var expectedError = Errors.NoValue();
 
             actual.Error.Message.Should().Be(expectedError.Message);
             actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
@@ -240,7 +240,7 @@ public class SelectMany_Async_methods
 
             actual.IsFail.Should().BeTrue();
 
-            var expectedError = Errors.NoneResult();
+            var expectedError = Errors.NoValue();
 
             actual.Error.Message.Should().Be(expectedError.Message);
             actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
