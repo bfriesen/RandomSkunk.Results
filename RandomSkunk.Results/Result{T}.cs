@@ -170,7 +170,7 @@ public readonly partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
 
     /// <summary>
     /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.BadRequest"/> is returned instead.
+    /// result with error code <see cref="ErrorCodes.NoValue"/> is returned instead.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
     /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
@@ -178,7 +178,7 @@ public readonly partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     public static Result<T> FromValue(T? value) =>
         value is not null
             ? Success(value)
-            : Fail(Errors.BadRequest("Result value cannot be null."));
+            : Fail(Errors.NoValue());
 
     /// <inheritdoc/>
     public bool Equals(Result<T> other) =>
