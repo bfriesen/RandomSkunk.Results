@@ -4,7 +4,7 @@ namespace RandomSkunk.Results;
 /// Defines a result without a value.
 /// </summary>
 /// <content> This struct is partial - additional methods are defined in the code files from the Operations folder. </content>
-public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
+public readonly partial struct Result : IResult<Unit>, IEquatable<Result>
 {
     private readonly Outcome _outcome;
     private readonly Error? _error;
@@ -58,9 +58,9 @@ public readonly partial struct Result : IResult<DBNull>, IEquatable<Result>
             : throw Exceptions.CannotAccessErrorUnlessFail();
 
     /// <inheritdoc/>
-    DBNull IResult<DBNull>.Value =>
+    Unit IResult<Unit>.Value =>
         _outcome == Outcome.Success
-            ? DBNull.Value
+            ? default
             : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
     /// <summary>

@@ -1316,19 +1316,19 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Result SelectMany(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Result> onSuccessSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Result> onSuccessSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (sourceResult is Result result)
-            return result.SelectMany(() => onSuccessSelector(DBNull.Value));
+            return result.SelectMany(() => onSuccessSelector(default));
 
-        if (sourceResult is Result<DBNull> resultOfDBNull)
+        if (sourceResult is Result<Unit> resultOfDBNull)
             return resultOfDBNull.SelectMany(onSuccessSelector);
 
-        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+        if (sourceResult is Maybe<Unit> maybeOfDBNull)
             return maybeOfDBNull.SelectMany(onSuccessSelector);
 
         if (sourceResult.IsSuccess)
@@ -1348,19 +1348,19 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result> SelectMany(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Task<Result>> onSuccessSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Task<Result>> onSuccessSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (sourceResult is Result result)
-            return await result.SelectMany(() => onSuccessSelector(DBNull.Value)).ConfigureAwait(false);
+            return await result.SelectMany(() => onSuccessSelector(default)).ConfigureAwait(false);
 
-        if (sourceResult is Result<DBNull> resultOfDBNull)
+        if (sourceResult is Result<Unit> resultOfDBNull)
             return await resultOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
 
-        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+        if (sourceResult is Maybe<Unit> maybeOfDBNull)
             return await maybeOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
 
         if (sourceResult.IsSuccess)
@@ -1380,8 +1380,8 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result> SelectMany(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Result> onSuccessSelector) =>
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Result> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
     /// <summary>
@@ -1395,8 +1395,8 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result> SelectMany(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Task<Result>> onSuccessSelector) =>
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Task<Result>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
@@ -1412,19 +1412,19 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Result<TReturn> SelectMany<TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Result<TReturn>> onSuccessSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Result<TReturn>> onSuccessSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (sourceResult is Result result)
-            return result.SelectMany(() => onSuccessSelector(DBNull.Value));
+            return result.SelectMany(() => onSuccessSelector(default));
 
-        if (sourceResult is Result<DBNull> resultOfDBNull)
+        if (sourceResult is Result<Unit> resultOfDBNull)
             return resultOfDBNull.SelectMany(onSuccessSelector);
 
-        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+        if (sourceResult is Maybe<Unit> maybeOfDBNull)
             return maybeOfDBNull.SelectMany(onSuccessSelector);
 
         if (sourceResult.IsSuccess)
@@ -1446,19 +1446,19 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Task<Result<TReturn>>> onSuccessSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Task<Result<TReturn>>> onSuccessSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (sourceResult is Result result)
-            return await result.SelectMany(() => onSuccessSelector(DBNull.Value)).ConfigureAwait(false);
+            return await result.SelectMany(() => onSuccessSelector(default)).ConfigureAwait(false);
 
-        if (sourceResult is Result<DBNull> resultOfDBNull)
+        if (sourceResult is Result<Unit> resultOfDBNull)
             return await resultOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
 
-        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+        if (sourceResult is Maybe<Unit> maybeOfDBNull)
             return await maybeOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
 
         if (sourceResult.IsSuccess)
@@ -1480,8 +1480,8 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Result<TReturn>> onSuccessSelector) =>
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Result<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
     /// <summary>
@@ -1497,8 +1497,8 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Task<Result<TReturn>>> onSuccessSelector) =>
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Task<Result<TReturn>>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
@@ -1514,19 +1514,19 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Maybe<TReturn> SelectMany<TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Maybe<TReturn>> onSuccessSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Maybe<TReturn>> onSuccessSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (sourceResult is Result result)
-            return result.SelectMany(() => onSuccessSelector(DBNull.Value));
+            return result.SelectMany(() => onSuccessSelector(default));
 
-        if (sourceResult is Result<DBNull> resultOfDBNull)
+        if (sourceResult is Result<Unit> resultOfDBNull)
             return resultOfDBNull.SelectMany(onSuccessSelector);
 
-        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+        if (sourceResult is Maybe<Unit> maybeOfDBNull)
             return maybeOfDBNull.SelectMany(onSuccessSelector);
 
         if (sourceResult.IsSuccess)
@@ -1552,19 +1552,19 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Task<Maybe<TReturn>>> onSuccessSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Task<Maybe<TReturn>>> onSuccessSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (sourceResult is Result result)
-            return await result.SelectMany(() => onSuccessSelector(DBNull.Value)).ConfigureAwait(false);
+            return await result.SelectMany(() => onSuccessSelector(default)).ConfigureAwait(false);
 
-        if (sourceResult is Result<DBNull> resultOfDBNull)
+        if (sourceResult is Result<Unit> resultOfDBNull)
             return await resultOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
 
-        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+        if (sourceResult is Maybe<Unit> maybeOfDBNull)
             return await maybeOfDBNull.SelectMany(onSuccessSelector).ConfigureAwait(false);
 
         if (sourceResult.IsSuccess)
@@ -1590,8 +1590,8 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Maybe<TReturn>> onSuccessSelector) =>
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Maybe<TReturn>> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
 
     /// <summary>
@@ -1607,8 +1607,8 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Task<Maybe<TReturn>>> onSuccessSelector) =>
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Task<Maybe<TReturn>>> onSuccessSelector) =>
         await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
 
     /// <summary>
@@ -1626,9 +1626,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Result<TReturn> SelectMany<TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Result> intermediateSelector,
-        Func<DBNull, DBNull, TReturn> returnSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Result> intermediateSelector,
+        Func<Unit, Unit, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1654,9 +1654,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Task<Result>> intermediateSelector,
-        Func<DBNull, DBNull, TReturn> returnSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Task<Result>> intermediateSelector,
+        Func<Unit, Unit, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1682,9 +1682,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Result> intermediateSelector,
-        Func<DBNull, DBNull, TReturn> returnSelector)
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Result> intermediateSelector,
+        Func<Unit, Unit, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1710,9 +1710,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Task<Result>> intermediateSelector,
-        Func<DBNull, DBNull, TReturn> returnSelector)
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Task<Result>> intermediateSelector,
+        Func<Unit, Unit, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1740,9 +1740,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Result<TReturn> SelectMany<TIntermediate, TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Result<TIntermediate>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Result<TIntermediate>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1770,9 +1770,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Task<Result<TIntermediate>>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1800,9 +1800,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Result<TIntermediate>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Result<TIntermediate>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1830,9 +1830,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Task<Result<TIntermediate>>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Task<Result<TIntermediate>>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1860,9 +1860,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Maybe<TReturn> SelectMany<TIntermediate, TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Maybe<TIntermediate>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Maybe<TIntermediate>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1890,9 +1890,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, Task<Maybe<TIntermediate>>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1920,9 +1920,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Maybe<TIntermediate>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Maybe<TIntermediate>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1950,9 +1950,9 @@ public static partial class ResultExtensions
     ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, Task<Maybe<TIntermediate>>> intermediateSelector,
-        Func<DBNull, TIntermediate, TReturn> returnSelector)
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, Task<Maybe<TIntermediate>>> intermediateSelector,
+        Func<Unit, TIntermediate, TReturn> returnSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -1981,7 +1981,7 @@ public static partial class ResultExtensions
     public static Result<TReturn> SelectMany<T, TReturn>(
         this Result<T> sourceResult,
         Func<T, Result> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
@@ -2009,7 +2009,7 @@ public static partial class ResultExtensions
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Result<T> sourceResult,
         Func<T, Task<Result>> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
@@ -2037,7 +2037,7 @@ public static partial class ResultExtensions
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Result> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
@@ -2065,7 +2065,7 @@ public static partial class ResultExtensions
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result>> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
@@ -2093,7 +2093,7 @@ public static partial class ResultExtensions
     public static Result<TReturn> SelectMany<T, TReturn>(
         this Maybe<T> sourceResult,
         Func<T, Result> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
@@ -2121,7 +2121,7 @@ public static partial class ResultExtensions
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Maybe<T> sourceResult,
         Func<T, Task<Result>> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
@@ -2149,7 +2149,7 @@ public static partial class ResultExtensions
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Result> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
@@ -2177,7 +2177,7 @@ public static partial class ResultExtensions
     public static Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result>> intermediateSelector,
-        Func<T, DBNull, TReturn> returnSelector)
+        Func<T, Unit, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));

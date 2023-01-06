@@ -237,8 +237,8 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static Result<TReturn> Select<TReturn>(
-        this IResult<DBNull> sourceResult,
-        Func<DBNull, TReturn> onSuccessSelector)
+        this IResult<Unit> sourceResult,
+        Func<Unit, TReturn> onSuccessSelector)
     {
         if (sourceResult is null) throw new ArgumentNullException(nameof(sourceResult));
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
@@ -246,15 +246,15 @@ public static partial class ResultExtensions
         if (sourceResult is Result result)
         {
             if (result.IsSuccess)
-                return onSuccessSelector(DBNull.Value).ToResult();
+                return onSuccessSelector(default).ToResult();
 
             return Result<TReturn>.Fail(result.Error, false);
         }
 
-        if (sourceResult is Result<DBNull> resultOfDBNull)
+        if (sourceResult is Result<Unit> resultOfDBNull)
             return resultOfDBNull.Select(onSuccessSelector);
 
-        if (sourceResult is Maybe<DBNull> maybeOfDBNull)
+        if (sourceResult is Maybe<Unit> maybeOfDBNull)
             return maybeOfDBNull.SelectMany(dbNull => onSuccessSelector(dbNull).ToResult());
 
         if (sourceResult.IsSuccess)
@@ -281,7 +281,7 @@ public static partial class ResultExtensions
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static async Task<Result<TReturn>> Select<TReturn>(
-        this Task<IResult<DBNull>> sourceResult,
-        Func<DBNull, TReturn> onSuccessSelector) =>
+        this Task<IResult<Unit>> sourceResult,
+        Func<Unit, TReturn> onSuccessSelector) =>
         (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
 }

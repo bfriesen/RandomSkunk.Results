@@ -45,19 +45,19 @@ public class Tuple_extension_methods
             var resultB = Result<int>.Success(123);
             var resultC = Maybe<int>.Success(456);
 
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
 
             (resultA, resultB, resultC).OnAllSuccess(
                 (a, b, c) => capturedValues = (a, b, c));
 
-            capturedValues.Should().Be((DBNull.Value, 123, 456));
+            capturedValues.Should().Be((default(Unit), 123, 456));
         }
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
         public void When_not_all_Success_Does_not_invoke_callback(Result resultA, Result<int> resultB, Maybe<int> resultC)
         {
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
 
             (resultA, resultB, resultC).OnAllSuccess(
                 (a, b, c) => capturedValues = (a, b, c));
@@ -77,7 +77,7 @@ public class Tuple_extension_methods
             var resultB = Result<int>.Success(123);
             var resultC = Maybe<int>.Success(456);
 
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
 
             await (resultA, resultB, resultC).OnAllSuccess(
                 (a, b, c) =>
@@ -86,14 +86,14 @@ public class Tuple_extension_methods
                     return Task.CompletedTask;
                 });
 
-            capturedValues.Should().Be((DBNull.Value, 123, 456));
+            capturedValues.Should().Be((default(Unit), 123, 456));
         }
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
         public async Task When_not_all_Success_Does_not_invoke_callback(Result resultA, Result<int> resultB, Maybe<int> resultC)
         {
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
 
             await (resultA, resultB, resultC).OnAllSuccess(
                 (a, b, c) =>
@@ -213,7 +213,7 @@ public class Tuple_extension_methods
             var resultB = Result<int>.Success(123);
             var resultC = Maybe<int>.Success(456);
 
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
 
             var returnedValue = (resultA, resultB, resultC).Match(
@@ -229,7 +229,7 @@ public class Tuple_extension_methods
                 });
 
             returnedValue.Should().Be(1);
-            capturedValues.Should().Be((DBNull.Value, 123, 456));
+            capturedValues.Should().Be((default(Unit), 123, 456));
             capturedError.Should().BeNull();
         }
 
@@ -237,7 +237,7 @@ public class Tuple_extension_methods
         [MemberData(nameof(NonSuccessResults))]
         public void When_not_all_Success_Invokes_onAnyNonSuccess_callback(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
         {
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
 
             var returnedValue = (resultA, resultB, resultC).Match(
@@ -283,7 +283,7 @@ public class Tuple_extension_methods
             var resultB = Result<int>.Success(123);
             var resultC = Maybe<int>.Success(456);
 
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
 
             var returnedValue = await (resultA, resultB, resultC).Match(
@@ -299,7 +299,7 @@ public class Tuple_extension_methods
                 });
 
             returnedValue.Should().Be(1);
-            capturedValues.Should().Be((DBNull.Value, 123, 456));
+            capturedValues.Should().Be((default(Unit), 123, 456));
             capturedError.Should().BeNull();
         }
 
@@ -307,7 +307,7 @@ public class Tuple_extension_methods
         [MemberData(nameof(NonSuccessResults))]
         public async Task When_not_all_Success_Invokes_onAnyNonSuccess_callback(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
         {
-            (DBNull?, int?, int?) capturedValues = default;
+            (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
 
             var returnedValue = await (resultA, resultB, resultC).Match(

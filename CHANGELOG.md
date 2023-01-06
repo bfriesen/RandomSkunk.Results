@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Change `Maybe.None()` method to property.
     - Rename `ErrorCodes.NoneResult` to `ErrorCodes.NoValue`.
+    - Replace `DBNull` with new `Unit` type.
 
 ### Added
 
