@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Changed
+
+- RandomSkunk.Results:
+    - Change `Maybe.None()` method to property.
+
 ## [1.0.0-alpha23] - 2023-01-03
 
 ### Fixed

@@ -40,7 +40,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void None_Returns_None_result()
         {
-            var result = Maybe<int>.None();
+            var result = Maybe<int>.None;
 
             result.IsNone.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
@@ -79,7 +79,7 @@ public class Maybe_of_T_struct
         [Fact]
         public void When_IsNone_Returns_None_function_evaluation()
         {
-            var result = Maybe<int>.None();
+            var result = Maybe<int>.None;
 
             var actual = result.Match(
                 value => value + 1,
@@ -121,7 +121,7 @@ public class Maybe_of_T_struct
         [Fact]
         public async Task When_IsNone_Returns_None_function_evaluation()
         {
-            var result = Maybe<int>.None();
+            var result = Maybe<int>.None;
 
             var actual = await result.Match(
                 value => Task.FromResult(value + 1),
@@ -161,8 +161,8 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsNone_When_other_IsNone_Returns_true()
         {
-            var result = Maybe<int>.None();
-            object other = Maybe<int>.None();
+            var result = Maybe<int>.None;
+            object other = Maybe<int>.None;
 
             var actual = result.Equals(other);
 
@@ -206,7 +206,7 @@ public class Maybe_of_T_struct
         public void Given_IsSuccess_When_other_IsNone_Returns_false()
         {
             var result = 1.ToMaybe();
-            object other = Maybe<int>.None();
+            object other = Maybe<int>.None;
 
             var actual = result.Equals(other);
 
@@ -228,7 +228,7 @@ public class Maybe_of_T_struct
         public void Given_IsFail_When_other_IsNone_Returns_false()
         {
             var result = Maybe<int>.Fail();
-            object other = Maybe<int>.None();
+            object other = Maybe<int>.None;
 
             var actual = result.Equals(other);
 
@@ -271,8 +271,8 @@ public class Maybe_of_T_struct
             var fail2 = Maybe<int>.Fail("Y").GetHashCode();
             var failA = Maybe<string>.Fail("X").GetHashCode();
             var failB = Maybe<string>.Fail("Y").GetHashCode();
-            var none1 = Maybe<int>.None().GetHashCode();
-            var noneA = Maybe<string>.None().GetHashCode();
+            var none1 = Maybe<int>.None.GetHashCode();
+            var noneA = Maybe<string>.None.GetHashCode();
 
             success1.Should().NotBe(successA);
             success1.Should().NotBe(fail1);

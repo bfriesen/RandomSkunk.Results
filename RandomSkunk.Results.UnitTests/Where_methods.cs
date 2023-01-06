@@ -19,7 +19,7 @@ public class Where_methods
 
         var actual = source.Where(value => value == 2);
 
-        actual.Should().Be(Maybe<int>.None());
+        actual.Should().Be(Maybe<int>.None);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class Where_methods
     [Fact]
     public void When_IsNone_Returns_source()
     {
-        var source = Maybe<int>.None();
+        var source = Maybe<int>.None;
 
         var actual = source.Where(value => value == 1);
 

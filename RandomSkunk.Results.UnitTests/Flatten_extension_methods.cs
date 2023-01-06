@@ -56,7 +56,7 @@ public class Flatten_extension_methods
         [Fact]
         public void When_IsNone_Returns_None()
         {
-            var source = Maybe<Maybe<int>>.None();
+            var source = Maybe<Maybe<int>>.None;
 
             var actual = source.Flatten();
 

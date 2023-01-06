@@ -82,7 +82,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!).ToMaybe(),
-            Outcome.None => Maybe<TReturn>.None(),
+            Outcome.None => Maybe<TReturn>.None,
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
@@ -110,7 +110,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
-            Outcome.None => Maybe<TReturn>.None(),
+            Outcome.None => Maybe<TReturn>.None,
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }

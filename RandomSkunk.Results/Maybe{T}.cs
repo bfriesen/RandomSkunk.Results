@@ -48,6 +48,11 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     }
 
     /// <summary>
+    /// Gets a <c>None</c> result.
+    /// </summary>
+    public static Maybe<T> None => new(none: true, null, null);
+
+    /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
@@ -114,12 +119,6 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null"/>.</exception>
     public static Maybe<T> Success(T value) => new(value);
-
-    /// <summary>
-    /// Creates a <c>None</c> result.
-    /// </summary>
-    /// <returns>A <c>None</c> result.</returns>
-    public static Maybe<T> None() => new(none: true, null, null);
 
     /// <summary>
     /// Creates a <c>Fail</c> result with the specified error.
@@ -202,7 +201,7 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     public static Maybe<T> FromValue(T? value) =>
         value is not null
             ? Success(value)
-            : None();
+            : None;
 
     /// <inheritdoc/>
     public bool Equals(Maybe<T> other) =>

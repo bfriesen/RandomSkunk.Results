@@ -120,7 +120,7 @@ public partial struct Result
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoneResult)
-            return Maybe<TReturn>.None();
+            return Maybe<TReturn>.None;
 
         return Maybe<TReturn>.Fail(error, false);
     }
@@ -150,7 +150,7 @@ public partial struct Result
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoneResult)
-            return Maybe<TReturn>.None();
+            return Maybe<TReturn>.None;
 
         return Maybe<TReturn>.Fail(error, false);
     }
@@ -276,7 +276,7 @@ public partial struct Result<T>
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoneResult)
-            return Maybe<TReturn>.None();
+            return Maybe<TReturn>.None;
 
         return Maybe<TReturn>.Fail(error, false);
     }
@@ -306,7 +306,7 @@ public partial struct Result<T>
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoneResult)
-            return Maybe<TReturn>.None();
+            return Maybe<TReturn>.None;
 
         return Maybe<TReturn>.Fail(error, false);
     }
@@ -447,7 +447,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => Maybe<TReturn>.None(),
+            Outcome.None => Maybe<TReturn>.None,
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
@@ -476,7 +476,7 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => Maybe<TReturn>.None(),
+            Outcome.None => Maybe<TReturn>.None,
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
@@ -1504,7 +1504,7 @@ public static partial class ResultExtensions
 
         var error = sourceResult.GetNonSuccessError();
         if (error.ErrorCode == ErrorCodes.NoneResult)
-            return Maybe<TReturn>.None();
+            return Maybe<TReturn>.None;
 
         return Maybe<TReturn>.Fail(error, false);
     }
@@ -1542,7 +1542,7 @@ public static partial class ResultExtensions
 
         var error = sourceResult.GetNonSuccessError();
         if (error.ErrorCode == ErrorCodes.NoneResult)
-            return Maybe<TReturn>.None();
+            return Maybe<TReturn>.None;
 
         return Maybe<TReturn>.Fail(error, false);
     }

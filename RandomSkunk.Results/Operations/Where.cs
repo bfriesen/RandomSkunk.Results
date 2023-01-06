@@ -19,7 +19,7 @@ public partial struct Result<T>
         {
             return predicate(_value!)
                 ? AsMaybe()
-                : Maybe<T>.None();
+                : Maybe<T>.None;
         }
 
         return AsMaybe();
@@ -41,7 +41,7 @@ public partial struct Result<T>
         {
             return await predicate(_value!).ConfigureAwait(false)
                 ? AsMaybe()
-                : Maybe<T>.None();
+                : Maybe<T>.None;
         }
 
         return AsMaybe();
@@ -67,7 +67,7 @@ public partial struct Maybe<T>
         {
             return predicate(_value!)
                 ? this
-                : Maybe<T>.None();
+                : Maybe<T>.None;
         }
 
         return this;
@@ -89,7 +89,7 @@ public partial struct Maybe<T>
         {
             return await predicate(_value!).ConfigureAwait(false)
                 ? this
-                : Maybe<T>.None();
+                : Maybe<T>.None;
         }
 
         return this;

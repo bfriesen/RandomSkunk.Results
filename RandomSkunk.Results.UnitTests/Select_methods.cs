@@ -66,7 +66,7 @@ public class Select_methods
         [Fact]
         public void When_IsNone_Returns_None()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
 
             var actual = source.Select(value => value.ToString());
 

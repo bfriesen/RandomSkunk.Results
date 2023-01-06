@@ -80,7 +80,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_When_IsNone_Returns_fallback_value()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
 
             var actual = source.GetValueOr(2);
 
@@ -110,7 +110,7 @@ public class GetValueOr_methods
         [Fact]
         public void Given_fallback_result_function_When_IsNone_Returns_function_evaluation()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
 
             var actual = source.GetValueOr(() => 2);
 

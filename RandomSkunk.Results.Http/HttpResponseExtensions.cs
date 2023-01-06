@@ -110,7 +110,7 @@ public static class HttpResponseExtensions
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return error.ErrorCode == ErrorCodes.NoneResult
-            ? Maybe<T>.None()
+            ? Maybe<T>.None
             : Maybe<T>.Fail(error, false);
     }
 
@@ -434,7 +434,7 @@ public static class HttpResponseExtensions
             var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
 
             if (value is null)
-                return Maybe<T>.None();
+                return Maybe<T>.None;
 
             return value.ToMaybe();
         }

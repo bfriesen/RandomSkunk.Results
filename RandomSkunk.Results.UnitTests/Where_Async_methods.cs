@@ -19,7 +19,7 @@ public class Where_Async_methods
 
         var actual = await source.Where(value => Task.FromResult(value == 2));
 
-        actual.Should().Be(Maybe<int>.None());
+        actual.Should().Be(Maybe<int>.None);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class Where_Async_methods
     [Fact]
     public async Task When_IsNone_Returns_source()
     {
-        var source = Maybe<int>.None();
+        var source = Maybe<int>.None;
 
         var actual = await source.Where(value => Task.FromResult(value == 1));
 

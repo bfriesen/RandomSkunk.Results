@@ -15,7 +15,7 @@ public partial struct Maybe<T>
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         if (_outcome == Outcome.Success && predicate(_value!))
-            return None();
+            return None;
 
         return this;
     }

@@ -110,7 +110,7 @@ public class HasValue_methods
         [Fact]
         public void Given_equality_comparer_When_IsNone_Returns_false()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
 
             var actual = source.HasValue(1);
 
@@ -150,7 +150,7 @@ public class HasValue_methods
         [Fact]
         public void Given_is_value_equal_function_When_IsNone_Returns_false()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
 
             var actual = source.HasValue(value => value == 2);
 

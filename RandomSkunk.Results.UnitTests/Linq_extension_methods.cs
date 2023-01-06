@@ -141,7 +141,7 @@ public class Linq_extension_methods
         [Fact]
         public void Given_early_none_result_Returns_none_result()
         {
-            var result = from n in Maybe<int>.None()
+            var result = from n in Maybe<int>.None
                          let n2 = n * 2
                          where n2 < 3
                          from s in $"n2: {n2}".ToMaybe()
@@ -169,7 +169,7 @@ public class Linq_extension_methods
             var result = from n in 1.ToMaybe()
                          let n2 = n * 2
                          where n2 < 3
-                         from s in Maybe<string>.None()
+                         from s in Maybe<string>.None
                          select s;
 
             result.IsNone.Should().BeTrue();

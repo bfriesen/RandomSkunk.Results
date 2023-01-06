@@ -79,7 +79,7 @@ public class WithError_methods
         [Fact]
         public void When_IsNone_Returns_source()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
 
             var actual = source.WithError(e => new Error { InnerError = e });
 

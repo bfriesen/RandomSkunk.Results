@@ -37,7 +37,7 @@ public class ToNoneIf_methods
         [Fact]
         public void GivenNoneResult_WhenPredicateReturnsTrue_ReturnsSameResult()
         {
-            var result = Maybe<int>.None();
+            var result = Maybe<int>.None;
 
             var actual = result.ToNoneIf(value => true);
 

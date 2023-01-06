@@ -137,7 +137,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_When_IsNone_Returns_fallback_result()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
             var fallbackResult = 1.ToMaybe();
 
             var actual = source.Else(fallbackResult);
@@ -172,7 +172,7 @@ public class Else_methods
         [Fact]
         public void Given_fallback_result_function_When_IsNone_Returns_function_evaluation()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
             var fallbackResult = 1.ToMaybe();
             Maybe<int> GetFallbackMaybe() => fallbackResult;
 

@@ -44,7 +44,7 @@ public class Truncate_methods
         [Fact]
         public void When_IsNone_Returns_Fail_result_with_NoneResult_error()
         {
-            var source = Maybe<int>.None();
+            var source = Maybe<int>.None;
 
             Result truncated = source.Truncate();
 
