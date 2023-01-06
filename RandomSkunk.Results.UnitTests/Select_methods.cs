@@ -74,6 +74,17 @@ public class Select_methods
         }
 
         [Fact]
+        public void Given_onNoneSelector_is_provided_When_IsNone_Returns_result_from_onNoneSelector()
+        {
+            var source = Maybe<int>.None;
+
+            var actual = source.Select(value => value.ToString(), () => "value from onNoneSelector");
+
+            actual.IsSuccess.Should().BeTrue();
+            actual.Value.Should().Be("value from onNoneSelector");
+        }
+
+        [Fact]
         public void Given_null_selector_function_Throws_ArgumentNullException()
         {
             var source = Maybe<int>.Fail();

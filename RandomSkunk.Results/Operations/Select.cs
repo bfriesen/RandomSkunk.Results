@@ -73,16 +73,19 @@ public partial struct Maybe<T>
     /// </remarks>
     /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
     /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Maybe<TReturn> Select<TReturn>(Func<T, TReturn> onSuccessSelector)
+    public Maybe<TReturn> Select<TReturn>(
+        Func<T, TReturn> onSuccessSelector,
+        Func<TReturn>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!).ToMaybe(),
-            Outcome.None => Maybe<TReturn>.None,
+            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : onNoneSelector().ToMaybe(),
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
@@ -101,16 +104,19 @@ public partial struct Maybe<T>
     /// </remarks>
     /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
     /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<TReturn>> Select<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
+    public async Task<Maybe<TReturn>> Select<TReturn>(
+        Func<T, Task<TReturn>> onSuccessSelector,
+        Func<Task<TReturn>>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
-            Outcome.None => Maybe<TReturn>.None,
+            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : (await onNoneSelector().ConfigureAwait(false)).ToMaybe(),
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
@@ -179,12 +185,14 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> Select<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, TReturn> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
+        Func<T, TReturn> onSuccessSelector,
+        Func<TReturn>? onNoneSelector = null) =>
+        (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form as a
@@ -202,12 +210,14 @@ public static partial class ResultExtensions
     /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> Select<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Task<TReturn>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector).ConfigureAwait(false);
+        Func<T, Task<TReturn>> onSuccessSelector,
+        Func<Task<TReturn>>? onNoneSelector = null) =>
+        await (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form as a

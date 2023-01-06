@@ -140,6 +140,17 @@ public class SelectMany_methods
         }
 
         [Fact]
+        public void Given_target_is_Maybe_of_T_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
+        {
+            var source = Maybe<int>.None;
+
+            var actual = source.SelectMany(value => value.ToString().ToMaybe(), () => Maybe<string>.Fail("error from onNoneSelector"));
+
+            actual.IsFail.Should().BeTrue();
+            actual.Error.Message.Should().Be("error from onNoneSelector");
+        }
+
+        [Fact]
         public void Given_target_is_Maybe_of_T_and_onSuccess_function_is_null_Throws_ArgumentNullException()
         {
             var source = Maybe<int>.Fail();
@@ -174,6 +185,17 @@ public class SelectMany_methods
             actual.Error.Message.Should().Be(expectedError.Message);
             actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
             actual.Error.Title.Should().Be(expectedError.Title);
+        }
+
+        [Fact]
+        public void Given_target_is_Result_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
+        {
+            var source = Maybe<string>.None;
+
+            var actual = source.SelectMany(value => Result.Success(), () => Result.Fail("error from onNoneSelector"));
+
+            actual.IsFail.Should().BeTrue();
+            actual.Error.Message.Should().Be("error from onNoneSelector");
         }
 
         [Fact]
@@ -223,6 +245,17 @@ public class SelectMany_methods
             actual.Error.Message.Should().Be(expectedError.Message);
             actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
             actual.Error.Title.Should().Be(expectedError.Title);
+        }
+
+        [Fact]
+        public void Given_target_is_Result_of_T_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
+        {
+            var source = Maybe<int>.None;
+
+            var actual = source.SelectMany(value => value.ToString().ToResult(), () => Result<string>.Fail("error from onNoneSelector"));
+
+            actual.IsFail.Should().BeTrue();
+            actual.Error.Message.Should().Be("error from onNoneSelector");
         }
 
         [Fact]

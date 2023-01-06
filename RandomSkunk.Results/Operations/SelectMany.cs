@@ -438,16 +438,19 @@ public partial struct Maybe<T>
     /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
     ///     </typeparam>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Maybe<TReturn> SelectMany<TReturn>(Func<T, Maybe<TReturn>> onSuccessSelector)
+    public Maybe<TReturn> SelectMany<TReturn>(
+        Func<T, Maybe<TReturn>> onSuccessSelector,
+        Func<Maybe<TReturn>>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => Maybe<TReturn>.None,
+            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : onNoneSelector.Invoke(),
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
@@ -467,16 +470,19 @@ public partial struct Maybe<T>
     /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
     ///     </typeparam>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<TReturn>> SelectMany<TReturn>(Func<T, Task<Maybe<TReturn>>> onSuccessSelector)
+    public async Task<Maybe<TReturn>> SelectMany<TReturn>(
+        Func<T, Task<Maybe<TReturn>>> onSuccessSelector,
+        Func<Task<Maybe<TReturn>>>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => Maybe<TReturn>.None,
+            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : await onNoneSelector().ConfigureAwait(false),
             _ => Maybe<TReturn>.Fail(GetError(), false),
         };
     }
@@ -488,16 +494,19 @@ public partial struct Maybe<T>
     /// result with error code <see cref="ErrorCodes.NoneResult"/>.
     /// </summary>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Result SelectMany(Func<T, Result> onSuccessSelector)
+    public Result SelectMany(
+        Func<T, Result> onSuccessSelector,
+        Func<Result>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => Result.Fail(Errors.NoneResult(), false),
+            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoneResult(), false) : onNoneSelector.Invoke(),
             _ => Result.Fail(GetError(), false),
         };
     }
@@ -509,16 +518,19 @@ public partial struct Maybe<T>
     /// result with error code <see cref="ErrorCodes.NoneResult"/>.
     /// </summary>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Result> SelectMany(Func<T, Task<Result>> onSuccessSelector)
+    public async Task<Result> SelectMany(
+        Func<T, Task<Result>> onSuccessSelector,
+        Func<Task<Result>>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => Result.Fail(Errors.NoneResult(), false),
+            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoneResult(), false) : await onNoneSelector().ConfigureAwait(false),
             _ => Result.Fail(GetError(), false),
         };
     }
@@ -538,16 +550,19 @@ public partial struct Maybe<T>
     /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
     ///     </typeparam>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Result<TReturn> SelectMany<TReturn>(Func<T, Result<TReturn>> onSuccessSelector)
+    public Result<TReturn> SelectMany<TReturn>(
+        Func<T, Result<TReturn>> onSuccessSelector,
+        Func<Result<TReturn>>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => Result<TReturn>.Fail(Errors.NoneResult(), false),
+            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoneResult(), false) : onNoneSelector.Invoke(),
             _ => Result<TReturn>.Fail(GetError(), false),
         };
     }
@@ -567,16 +582,19 @@ public partial struct Maybe<T>
     /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
     ///     </typeparam>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Result<TReturn>> SelectMany<TReturn>(Func<T, Task<Result<TReturn>>> onSuccessSelector)
+    public async Task<Result<TReturn>> SelectMany<TReturn>(
+        Func<T, Task<Result<TReturn>>> onSuccessSelector,
+        Func<Task<Result<TReturn>>>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => Result<TReturn>.Fail(Errors.NoneResult(), false),
+            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoneResult(), false) : await onNoneSelector().ConfigureAwait(false),
             _ => Result<TReturn>.Fail(GetError(), false),
         };
     }
@@ -916,12 +934,14 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result> SelectMany<T>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Result> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        Func<T, Result> onSuccessSelector,
+        Func<Result>? onNoneSelector = null) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is transformed to the new form by
@@ -932,12 +952,14 @@ public static partial class ResultExtensions
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result> SelectMany<T>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        Func<T, Task<Result>> onSuccessSelector,
+        Func<Task<Result>>? onNoneSelector = null) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
@@ -956,12 +978,14 @@ public static partial class ResultExtensions
     ///     </typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        Func<T, Result<TReturn>> onSuccessSelector,
+        Func<Result<TReturn>>? onNoneSelector = null) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is transformed to the new form by
@@ -980,12 +1004,14 @@ public static partial class ResultExtensions
     ///     </typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        Func<T, Task<Result<TReturn>>> onSuccessSelector,
+        Func<Task<Result<TReturn>>>? onNoneSelector = null) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
@@ -1004,12 +1030,14 @@ public static partial class ResultExtensions
     ///     </typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Maybe<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        Func<T, Maybe<TReturn>> onSuccessSelector,
+        Func<Maybe<TReturn>>? onNoneSelector = null) =>
+        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is transformed to the new form by
@@ -1028,12 +1056,14 @@ public static partial class ResultExtensions
     ///     </typeparam>
     /// <param name="sourceResult">The source result.</param>
     /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
         this Task<Maybe<T>> sourceResult,
-        Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        Func<T, Task<Maybe<TReturn>>> onSuccessSelector,
+        Func<Task<Maybe<TReturn>>>? onNoneSelector = null) =>
+        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the

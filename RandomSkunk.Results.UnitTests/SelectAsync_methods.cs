@@ -74,6 +74,17 @@ public class SelectAsync_methods
         }
 
         [Fact]
+        public async Task Given_onNoneSelector_is_provided_When_IsNone_Returns_result_from_selector()
+        {
+            var source = Maybe<int>.None;
+
+            var actual = await source.Select(value => Task.FromResult(value.ToString()), () => Task.FromResult("value from onNoneSelector"));
+
+            actual.IsSuccess.Should().BeTrue();
+            actual.Value.Should().Be("value from onNoneSelector");
+        }
+
+        [Fact]
         public async Task Given_null_selector_function_Throws_ArgumentNullException()
         {
             var source = Maybe<int>.Fail();
