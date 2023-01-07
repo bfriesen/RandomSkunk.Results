@@ -39,7 +39,13 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Polyfill", "Polyfill\Polyfi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.Analyzers", "RandomSkunk.Results.Analyzers\RandomSkunk.Results.Analyzers.csproj", "{81D2C765-4686-4F15-8D45-FD50A6D903EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomSkunk.Results.Analyzers.Tests", "RandomSkunk.Results.Analyzers.Tests\RandomSkunk.Results.Analyzers.Tests.csproj", "{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.Analyzers.Tests", "RandomSkunk.Results.Analyzers.Tests\RandomSkunk.Results.Analyzers.Tests.csproj", "{CA4BCF1B-31B5-4BE4-BE34-F84C32100C5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{5E4463E5-2EAC-49CB-9A23-87ACAD084BCF}"
+	ProjectSection(SolutionItems) = preProject
+		docs\index.md = docs\index.md
+		docs\_config.yml = docs\_config.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
