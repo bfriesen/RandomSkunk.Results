@@ -18,7 +18,7 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _error = null;
     }
 
-    private Maybe(bool none, Error? error, bool? setStackTrace)
+    private Maybe(bool none, Error? error, bool? omitStackTrace)
     {
         if (none)
         {
@@ -32,7 +32,7 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             _value = default;
             _error = error ?? new Error();
 
-            if (_error.StackTrace is null && (setStackTrace ?? FailResult.SetStackTrace))
+            if (_error.StackTrace is null && !(omitStackTrace ?? FailResult.OmitStackTrace))
                 _error = _error with { StackTrace = FilteredStackTrace.Create() };
 
             _error = FailResult.InvokeReplaceErrorIfSet(_error);
@@ -132,13 +132,13 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
-    ///     instead to determine whether to set the stack trace.</param>
+    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
+    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
+    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
-    public static Maybe<T> Fail(Error? error = null, bool? setStackTrace = null) =>
-        new(none: false, error, setStackTrace);
+    public static Maybe<T> Fail(Error? error = null, bool? omitStackTrace = null) =>
+        new(none: false, error, omitStackTrace);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -149,9 +149,9 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
-    ///     instead to determine whether to set the stack trace.</param>
+    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
+    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
+    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
     public static Maybe<T> Fail(
@@ -160,8 +160,8 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null,
-        bool? setStackTrace = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle), setStackTrace);
+        bool? omitStackTrace = null) =>
+        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle), omitStackTrace);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -174,9 +174,9 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="isSensitive">Whether the error contains sensitive information.</param>
     /// <param name="extensions">Additional properties for the error.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
-    /// <param name="setStackTrace">Whether to set the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.SetStackTrace"/> property is used
-    ///     instead to determine whether to set the stack trace.</param>
+    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
+    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
+    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     [StackTraceHidden]
     public static Maybe<T> Fail(
@@ -187,7 +187,7 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         bool isSensitive = false,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null,
-        bool? setStackTrace = null) =>
+        bool? omitStackTrace = null) =>
         Fail(
             new Error
             {
@@ -199,7 +199,7 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
                 Extensions = extensions!,
                 InnerError = innerError,
             },
-            setStackTrace);
+            omitStackTrace);
 
     /// <summary>
     /// Creates a maybe from the specified value.
