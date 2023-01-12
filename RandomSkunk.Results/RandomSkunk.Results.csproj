@@ -5,7 +5,7 @@
 
 		<PackageId>RandomSkunk.Results</PackageId>
 		<PackageProjectUrl>https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results</PackageProjectUrl>
-		<PackageTags>result maybe monad error linqpad-samples</PackageTags>
+		<PackageTags>result-monad maybe-monad error-handling railway-oriented-programming linqpad-samples</PackageTags>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageIcon>icon.png</PackageIcon>
@@ -23,7 +23,7 @@
 
 	<PropertyGroup>
 		<Title>RandomSkunk.Results</Title>
-		<Description>Implementations of the Result monad.</Description>
+		<Description>A functional alternative to exception-based error handling in C#.</Description>
 		<Authors>Brian Friesen</Authors>
 		<Copyright>Copyright 2022-2023 (c) Brian Friesen. All rights reserved.</Copyright>
 	</PropertyGroup>
