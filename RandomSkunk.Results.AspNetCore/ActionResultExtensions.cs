@@ -13,8 +13,8 @@ public static class ActionResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
     ///     </param>
-    /// <param name="getHttpStatusCode">An optional function that get an HTTP status code from an <see cref="Error.ErrorCode"/>.
-    ///     If <see langword="null"/> or not provided, then the following function is used:
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
     /// <returns>The equivalent action result object.</returns>
@@ -40,8 +40,8 @@ public static class ActionResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
     ///     </param>
-    /// <param name="getHttpStatusCode">An optional function that get an HTTP status code from an <see cref="Error.ErrorCode"/>.
-    ///     If <see langword="null"/> or not provided, then the following function is used:
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
     /// <returns>The equivalent action result object.</returns>
@@ -67,8 +67,8 @@ public static class ActionResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
     ///     </param>
-    /// <param name="getHttpStatusCode">An optional function that get an HTTP status code from an <see cref="Error.ErrorCode"/>.
-    ///     If <see langword="null"/> or not provided, then the following function is used:
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
     /// <returns>The equivalent action result object.</returns>
@@ -94,8 +94,8 @@ public static class ActionResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
     ///     </param>
-    /// <param name="getHttpStatusCode">An optional function that get an HTTP status code from an <see cref="Error.ErrorCode"/>.
-    ///     If <see langword="null"/> or not provided, then the following function is used:
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
     /// <returns>The equivalent action result object.</returns>
@@ -114,8 +114,8 @@ public static class ActionResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
     ///     </param>
-    /// <param name="getHttpStatusCode">An optional function that get an HTTP status code from an <see cref="Error.ErrorCode"/>.
-    ///     If <see langword="null"/> or not provided, then the following function is used:
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
     /// <returns>The equivalent action result object.</returns>
@@ -134,8 +134,8 @@ public static class ActionResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
     ///     </param>
-    /// <param name="getHttpStatusCode">An optional function that get an HTTP status code from an <see cref="Error.ErrorCode"/>.
-    ///     If <see langword="null"/> or not provided, then the following function is used:
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
     /// <returns>The equivalent action result object.</returns>
