@@ -454,7 +454,12 @@ public static class HttpResponseExtensions
             var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(options, cancellationToken).ConfigureAwait(false);
 
             if (problemDetails is not null)
+            {
+                problemDetails.Status ??= (int)response.StatusCode;
+                problemDetails.Title ??= GetTitle(response);
+
                 return problemDetails;
+            }
         }
         catch
         {
@@ -463,13 +468,15 @@ public static class HttpResponseExtensions
         return new ProblemDetails
         {
             Status = (int)response.StatusCode,
-            Title =
-                !string.IsNullOrWhiteSpace(response.ReasonPhrase)
-                    ? response.ReasonPhrase
-                    : Enum.IsDefined(typeof(HttpStatusCode), response.StatusCode)
-                        ? response.StatusCode.ToString()
-                        : null,
+            Title = GetTitle(response),
         };
+
+        static string? GetTitle(HttpResponseMessage response) =>
+            !string.IsNullOrWhiteSpace(response.ReasonPhrase)
+                ? response.ReasonPhrase
+                : Enum.IsDefined(typeof(HttpStatusCode), response.StatusCode)
+                    ? response.StatusCode.ToString()
+                    : null;
     }
 
     private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails, JsonSerializerOptions options)
