@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add optional `onNoneSelector` parameter to `Maybe<T>.Select` and `Maybe<T>.SelectMany` methods.
     - Add implicit conversion operator methods from `T` to `Result<T>` and `Maybe<T>`.
+    - Add `AsNonNullable` extension methods.
 
 ## [1.0.0-alpha23] - 2023-01-03
 
