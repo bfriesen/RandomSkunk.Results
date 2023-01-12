@@ -26,7 +26,7 @@ Result<string> result6 = n.ToResult(); // Fail("Result value cannot be null.")
 
 // Results that have an optional value:
 Maybe<int> result7 = Maybe<int>.Success(123);
-Maybe<int> result8 = Maybe<int>.None();
+Maybe<int> result8 = Maybe<int>.None;
 Maybe<int> result9 = Maybe<int>.Fail();
 
 Maybe<string> resultA = Maybe<string>.FromValue(s); // Success("abc")
@@ -111,7 +111,7 @@ string message1 = result1.Match(
 
 // Asynchronous functions:
 Maybe<Guid> result2 = default;
-string message2 = await result2.MatchAsync(
+string message2 = await result2.Match(
     onSuccess: async userId =>
     {
         string userName = await GetUserName(userId);
@@ -132,7 +132,7 @@ Result<int>.Success(123).GetValueOr(456); // 123
 Result<int>.Fail().GetValueOr(456); // 456
 
 Maybe<int>.Success(123).GetValueOr(456); // 123
-Maybe<int>.None().GetValueOr(456); // 456
+Maybe<int>.None.GetValueOr(456); // 456
 Maybe<int>.Fail().GetValueOr(456); // 456
 ```
 
@@ -147,7 +147,7 @@ Result<int>.Success(123).Or(456); // Success(123)
 Result<int>.Fail().Or(456); // Success(456)
 
 Maybe<int>.Success(123).Or(456); // Success(123)
-Maybe<int>.None().Or(456); // Success(456)
+Maybe<int>.None.Or(456); // Success(456)
 Maybe<int>.Fail().Or(456); // Success(456)
 ```
 
@@ -164,13 +164,13 @@ Result<int>.Fail("A").Else(Result<int>.Success(456)); // Success(456)
 Result<int>.Fail("A").Else(Result<int>.Fail("B")); // Fail("B")
 
 Maybe<int>.Success(123).Else(Maybe<int>.Success(456)); // Success(123)
-Maybe<int>.Success(123).Else(Maybe<int>.None()); // Success(123)
+Maybe<int>.Success(123).Else(Maybe<int>.None); // Success(123)
 Maybe<int>.Success(123).Else(Maybe<int>.Fail("B")); // Success(123)
-Maybe<int>.None().Else(Maybe<int>.Success(456)); // Success(456)
-Maybe<int>.None().Else(Maybe<int>.None()); // None
-Maybe<int>.None().Else(Maybe<int>.Fail("B")); // Fail("B")
+Maybe<int>.None.Else(Maybe<int>.Success(456)); // Success(456)
+Maybe<int>.None.Else(Maybe<int>.None); // None
+Maybe<int>.None.Else(Maybe<int>.Fail("B")); // Fail("B")
 Maybe<int>.Fail("A").Else(Maybe<int>.Success(456)); // Success(456)
-Maybe<int>.Fail("A").Else(Maybe<int>.None()); // None
+Maybe<int>.Fail("A").Else(Maybe<int>.None); // None
 Maybe<int>.Fail("A").Else(Maybe<int>.Fail("B")); // Fail("B")
 ```
 
@@ -187,7 +187,7 @@ Result<int>.Success(123).Select(value => value.ToString()); // Success("123")
 Result<int>.Fail("A").Select(value => value.ToString()); // Fail("A")
 
 Maybe<int>.Success(123).Select(value => value.ToString()); // Success("123")
-Maybe<int>.None().Select(value => value.ToString()); // None
+Maybe<int>.None.Select(value => value.ToString()); // None
 Maybe<int>.Fail("A").Select(value => value.ToString()); // Fail("A")
 ```
 
@@ -205,22 +205,23 @@ Result<int>.Success(123).SelectMany(GetFailResult); // Fail
 Result<int>.Fail("A").SelectMany(GetSuccessResult); // Fail
 Result<int>.Fail("A").SelectMany(GetFailResult); // Fail
 
-Maybe<bool>.Success(true).SelectMany(GetSuccessResult); // Success("true")
-Maybe<bool>.Success(true).SelectMany(GetNoneResult); // None
-Maybe<bool>.Success(true).SelectMany(GetFailResult); // Fail("B")
-Maybe<bool>.None().SelectMany(GetSuccessResult); // None
-Maybe<bool>.None().SelectMany(GetNoneResult); // None
-Maybe<bool>.None().SelectMany(GetFailResult); // None
-Maybe<bool>.Fail("A").SelectMany(GetSuccessResult); // Fail("A")
-Maybe<bool>.Fail("A").SelectMany(GetNoneResult); // Fail("A")
-Maybe<bool>.Fail("A").SelectMany(GetFailResult); // Fail("A")
+Maybe<bool>.Success(true).SelectMany(GetSuccessMaybe); // Success("true")
+Maybe<bool>.Success(true).SelectMany(GetNoneMaybe); // None
+Maybe<bool>.Success(true).SelectMany(GetFailMaybe); // Fail("B")
+Maybe<bool>.None.SelectMany(GetSuccessMaybe); // None
+Maybe<bool>.None.SelectMany(GetNoneMaybe); // None
+Maybe<bool>.None.SelectMany(GetFailMaybe); // None
+Maybe<bool>.Fail("A").SelectMany(GetSuccessMaybe); // Fail("A")
+Maybe<bool>.Fail("A").SelectMany(GetNoneMaybe); // Fail("A")
+Maybe<bool>.Fail("A").SelectMany(GetFailMaybe); // Fail("A")
 
 Result<string> GetSuccessResult(int value) => Result<string>.Success(value.ToString());
 Result<string> GetFailResult(int value) => Result<string>.Fail("B");
 
-Maybe<string> GetSuccessResult(bool value) => Maybe<string>.Success(value.ToString());
-Maybe<string> GetNoneResult(bool value) => Maybe<string>.None();
-Maybe<string> GetFailResult(bool value) => Maybe<string>.Fail("B");
+Maybe<string> GetSuccessMaybe(bool value) => Maybe<string>.Success(value.ToString());
+Maybe<string> GetNoneMaybe(bool value) => Maybe<string>.None;
+Maybe<string> GetFailMaybe(bool value) => Maybe<string>.Fail("B");
+
 ```
 
 #### Flatten
@@ -228,11 +229,25 @@ Maybe<string> GetFailResult(bool value) => Maybe<string>.Fail("B");
 Flattens a `Result<Result<T>>` into a `Result<T>` or a `Maybe<Maybe<T>>` into a `Maybe<T>`.
 
 ```c#
-Result<Result<int>> nestedResult = ...
-Result<int> flattenedResult = nestedResult.Flatten();
+void Example(
+    Result<Result<int>> nestedResult,
+    Maybe<Maybe<int>> nestedMaybe)
+{
+    Result<int> flattenedResult = nestedResult.Flatten();
+    Maybe<int> flattenedMaybe = nestedMaybe.Flatten();
+}
+```
 
-Maybe<Maybe<int>> nestedMaybe = ...
-Maybe<int> flattenedMaybe = nestedMaybe.Flatten();
+#### Truncate
+
+Truncates the value from a `Result<T>` or `Maybe<T>`, resulting in a `Result`.
+
+```c#
+void Example(Result<int> result, Maybe<int> maybe)
+{
+    Result truncatedFromResult = result.Truncate();
+    Result truncatedFromMaybe = maybe.Truncate();
+}
 ```
 
 #### Where
@@ -244,7 +259,7 @@ Filters a `Success` result to `None` unless the specified filter function evalua
 ```c#
 Maybe<int>.Success(123).Where(value => value < 150); // Success(123)
 Maybe<int>.Success(456).Where(value => value < 150); // None
-Maybe<int>.None().Where(value => value < 150); // None
+Maybe<int>.None.Where(value => value < 150); // None
 Maybe<int>.Fail("A").Where(value => value < 150); // Fail("A")
 ```
 
@@ -259,10 +274,18 @@ Result failResult = Result.Fail("Inner error");
 Result successResult = Result.Success();
 
 // Fail("Outer error"("Inner error"))
-failResult.WithError(error => new Error("Outer error") { InnerError = error });
+failResult.WithError(error => new Error
+    {
+        Message = "Outer error",
+        InnerError = error,
+    });
 
 // Success
-successResult.WithError(error => new Error("Outer error") { InnerError = error });
+successResult.WithError(error => new Error
+    {
+        Message = "Outer error",
+        InnerError = error,
+    });
 ```
 
 ### Custom Errors
@@ -273,8 +296,8 @@ Custom errors can be created by inheriting from the `Error` record class.
 public record class NotFoundError : Error
 {
     public NotFoundError(int id, string resourceType = "record")
-        : base($"A {resourceType} with the ID {id} could not be found.")
     {
+        Message = $"A {resourceType} with the ID {id} could not be found.";
         ErrorCode = 404;
     }
 }
@@ -297,13 +320,15 @@ int? errorCode = result.Error.ErrorCode;
 If you have multiple results and need to do something based on whether they all succeeded or any did not succeed, wrap up the results in a value tuple and call one of the result tuple extensions: `Match`, `OnAllSuccess`, `OnAnyNonSuccess`, `Select`, or `SelectMany`.
 
 ```c#
-Result<int> result1 = default;
-Maybe<int> result2 = default;
-Result<string> result3 = default;
-
-(result1, result2, result3)
-    .OnAllSuccess((r1, r2, r3) => Console.WriteLine($"Success: {r1}, {r2}, {r3}"))
-    .OnAnyNonSuccess(error => Console.WriteLine($"Fail: {error}"));
+void Example(
+    Result<int> result1,
+    Maybe<int> result2,
+    Result<string> result3)
+{
+    (result1, result2, result3)
+        .OnAllSuccess((r1, r2, r3) => Console.WriteLine($"Success: {r1}, {r2}, {r3}"))
+        .OnAnyNonSuccess(error => Console.WriteLine($"Fail: {error}"));
+}
 ```
 
 ### LINQ Extension Methods
@@ -317,12 +342,13 @@ using RandomSkunk.Results.Linq;
 Maybe<Person> GetPerson(Guid id)
 Maybe<Department> GetDepartment(Guid id)
 
-Guid personId;
-
-// Chain the results together:
-Maybe<Department> result =
-    from person in GetPerson(personId)
-    where person.IsActive
-    from department in GetDepartment(person.DepartmentId)
-    select department;
+void Example(Guid personId)
+{
+    // Chain the results together:
+    Maybe<Department> result =
+        from person in GetPerson(personId)
+        where person.IsActive
+        from department in GetDepartment(person.DepartmentId)
+        select department;
+}
 ```

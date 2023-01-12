@@ -10,24 +10,24 @@ Result result1 = Result.Success();
 result1.ToActionResult(); // 200
 
 Result result2 = Result.Fail("Bad Request", errorCode: 400);
-result2.ToActionResult(); // 400 { "status": 400, "title": "Bad Request", "type": "Error" }
+result2.ToActionResult(); // 400 { "status": 400, "title": "Error", "detail": "Bad Request" }
 
 // Result<T>
 Result<int[]> result3 = new[] { 1, 2, 3 }.ToResult();
 result3.ToActionResult(); // 200 [ 1, 2, 3 ]
 
 Result<int[]> result4 = Result<int[]>.Fail("Forbidden", errorCode: 403);
-result4.ToActionResult(); // 403 { "status": 403, "title": "Forbidden", "type": "Error" }
+result4.ToActionResult(); // 403 { "status": 403, "title": "Error", "detail": "Forbidden" }
 
 // Maybe<T>
 Maybe<int[]> result5 = new[] { 4, 5, 6 }.ToMaybe();
 result5.ToActionResult(); // 200 [ 4, 5, 6 ]
 
-Maybe<int[]> result6 = Maybe<int[]>.None();
-result6.ToActionResult(); // 404 { "status": 404, "title": "Not Found", "type": "Error" }
+Maybe<int[]> result6 = Maybe<int[]>.None;
+result6.ToActionResult(); // 404 { "status": 404, "title": "Error", "detail": "Not Found" }
 
 Maybe<int[]> result7 = Maybe<int[]>.Fail("Not Acceptable", errorCode: 406);
-result7.ToActionResult(); // 406 { "status": 406, "title": "Not Acceptable", "type": "Error" }
+result7.ToActionResult(); // 406 { "status": 406, "title": "Error", "detail": "Not Acceptable" }
 ```
 
 ## GetProblemDetails extension method

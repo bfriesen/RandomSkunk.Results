@@ -17,7 +17,7 @@ Maybe<int?> result = Maybe<int?>.FromValue(value);
 
 // Too complicated:
 Maybe<int> result = value is null
-	? Maybe<int>.None()
+	? Maybe<int>.None
 	: Maybe<int>.Success(value.Value);
 ```
 
