@@ -43,6 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.Analyze
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{5E4463E5-2EAC-49CB-9A23-87ACAD084BCF}"
 	ProjectSection(SolutionItems) = preProject
+		docs\faq.md = docs\faq.md
 		docs\index.md = docs\index.md
 		docs\_config.yml = docs\_config.yml
 	EndProjectSection
