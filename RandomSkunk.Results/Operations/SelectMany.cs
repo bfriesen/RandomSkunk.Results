@@ -18,7 +18,7 @@ public partial struct Result
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(),
-            _ => Fail(GetError(), false),
+            _ => Fail(GetError(), true),
         };
     }
 
@@ -37,7 +37,7 @@ public partial struct Result
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector().ConfigureAwait(false),
-            _ => Fail(GetError(), false),
+            _ => Fail(GetError(), true),
         };
     }
 
@@ -64,7 +64,7 @@ public partial struct Result
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -91,7 +91,7 @@ public partial struct Result
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector().ConfigureAwait(false),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -122,7 +122,7 @@ public partial struct Result
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, false);
+        return Maybe<TReturn>.Fail(error, true);
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ public partial struct Result
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, false);
+        return Maybe<TReturn>.Fail(error, true);
     }
 }
 
@@ -182,7 +182,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -209,7 +209,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -228,7 +228,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            _ => Result.Fail(GetError(), false),
+            _ => Result.Fail(GetError(), true),
         };
     }
 
@@ -247,7 +247,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            _ => Result.Fail(GetError(), false),
+            _ => Result.Fail(GetError(), true),
         };
     }
 
@@ -278,7 +278,7 @@ public partial struct Result<T>
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, false);
+        return Maybe<TReturn>.Fail(error, true);
     }
 
     /// <summary>
@@ -308,7 +308,7 @@ public partial struct Result<T>
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, false);
+        return Maybe<TReturn>.Fail(error, true);
     }
 
     /// <summary>
@@ -451,7 +451,7 @@ public partial struct Maybe<T>
         {
             Outcome.Success => onSuccessSelector(_value!),
             Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : onNoneSelector.Invoke(),
-            _ => Maybe<TReturn>.Fail(GetError(), false),
+            _ => Maybe<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -483,7 +483,7 @@ public partial struct Maybe<T>
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
             Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : await onNoneSelector().ConfigureAwait(false),
-            _ => Maybe<TReturn>.Fail(GetError(), false),
+            _ => Maybe<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -506,8 +506,8 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), false) : onNoneSelector.Invoke(),
-            _ => Result.Fail(GetError(), false),
+            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), true) : onNoneSelector.Invoke(),
+            _ => Result.Fail(GetError(), true),
         };
     }
 
@@ -530,8 +530,8 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), false) : await onNoneSelector().ConfigureAwait(false),
-            _ => Result.Fail(GetError(), false),
+            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(false),
+            _ => Result.Fail(GetError(), true),
         };
     }
 
@@ -562,8 +562,8 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), false) : onNoneSelector.Invoke(),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), true) : onNoneSelector.Invoke(),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -594,8 +594,8 @@ public partial struct Maybe<T>
         return _outcome switch
         {
             Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), false) : await onNoneSelector().ConfigureAwait(false),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(false),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -1334,7 +1334,7 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return onSuccessSelector(sourceResult.Value);
 
-        return Result.Fail(sourceResult.GetNonSuccessError(), false);
+        return Result.Fail(sourceResult.GetNonSuccessError(), true);
     }
 
     /// <summary>
@@ -1366,7 +1366,7 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return await onSuccessSelector(sourceResult.Value).ConfigureAwait(false);
 
-        return Result.Fail(sourceResult.GetNonSuccessError(), false);
+        return Result.Fail(sourceResult.GetNonSuccessError(), true);
     }
 
     /// <summary>
@@ -1430,7 +1430,7 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return onSuccessSelector(sourceResult.Value);
 
-        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError(), false);
+        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError(), true);
     }
 
     /// <summary>
@@ -1464,7 +1464,7 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return await onSuccessSelector(sourceResult.Value).ConfigureAwait(false);
 
-        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError(), false);
+        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError(), true);
     }
 
     /// <summary>
@@ -1536,7 +1536,7 @@ public static partial class ResultExtensions
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, false);
+        return Maybe<TReturn>.Fail(error, true);
     }
 
     /// <summary>
@@ -1574,7 +1574,7 @@ public static partial class ResultExtensions
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, false);
+        return Maybe<TReturn>.Fail(error, true);
     }
 
     /// <summary>

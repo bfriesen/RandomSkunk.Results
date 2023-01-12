@@ -28,7 +28,7 @@ public class Result_of_T_struct
         public void Fail_Returns_fail_result_with_specified_error()
         {
             var error = new Error();
-            var result = Result<int>.Fail(error, false);
+            var result = Result<int>.Fail(error, true);
 
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();

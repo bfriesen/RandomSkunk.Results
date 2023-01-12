@@ -19,7 +19,7 @@ public class SelectMany_methods
         public void Given_target_is_Result_of_T_When_source_is_Fail_Returns_Fail()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, false);
+            var source = Result<int>.Fail(error, true);
 
             var actual = source.SelectMany(value => value.ToString().ToResult());
 
@@ -52,7 +52,7 @@ public class SelectMany_methods
         public void Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, false);
+            var source = Result<int>.Fail(error, true);
 
             var actual = source.SelectMany(value => Result.Success());
 
@@ -85,7 +85,7 @@ public class SelectMany_methods
         public void Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, false);
+            var source = Result<int>.Fail(error, true);
 
             var actual = source.SelectMany(value => value.ToString().ToMaybe());
 
@@ -121,7 +121,7 @@ public class SelectMany_methods
         public void Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error, false);
+            var source = Maybe<int>.Fail(error, true);
 
             var actual = source.SelectMany(value => value.ToString().ToMaybe());
 
@@ -202,7 +202,7 @@ public class SelectMany_methods
         public void Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<string>.Fail(error, false);
+            var source = Maybe<string>.Fail(error, true);
 
             var actual = source.SelectMany(value => Result.Success());
 
@@ -262,7 +262,7 @@ public class SelectMany_methods
         public void Given_target_is_Result_of_T_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error, false);
+            var source = Maybe<int>.Fail(error, true);
 
             var actual = source.SelectMany(value => value.ToString().ToResult());
 

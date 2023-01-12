@@ -29,7 +29,7 @@ public static class HttpResponseExtensions
         options ??= _defaultOptions;
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
-        return Result.Fail(error, false);
+        return Result.Fail(error, true);
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public static class HttpResponseExtensions
 
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
         var error = GetErrorFromProblemDetails(problemDetails, options);
-        return Result<T>.Fail(error, false);
+        return Result<T>.Fail(error, true);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public static class HttpResponseExtensions
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return error.ErrorCode == ErrorCodes.NoValue
             ? Maybe<T>.None
-            : Maybe<T>.Fail(error, false);
+            : Maybe<T>.Fail(error, true);
     }
 
     /// <summary>

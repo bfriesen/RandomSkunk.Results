@@ -372,7 +372,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error);
+            return Result<TReturn>.Fail(error, true);
         }
     }
 
@@ -428,7 +428,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error);
+            return Result<TReturn>.Fail(error, true);
         }
     }
 
@@ -480,7 +480,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result.Fail(error);
+            return Result.Fail(error, true);
         }
     }
 
@@ -532,7 +532,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Task.FromResult(Result.Fail(error));
+            return Task.FromResult(Result.Fail(error, true));
         }
     }
 
@@ -585,7 +585,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error);
+            return Result<TReturn>.Fail(error, true);
         }
     }
 
@@ -638,7 +638,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Task.FromResult(Result<TReturn>.Fail(error));
+            return Task.FromResult(Result<TReturn>.Fail(error, true));
         }
     }
 
@@ -691,7 +691,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Maybe<TReturn>.Fail(error);
+            return Maybe<TReturn>.Fail(error, true);
         }
     }
 
@@ -744,7 +744,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Task.FromResult(Maybe<TReturn>.Fail(error));
+            return Task.FromResult(Maybe<TReturn>.Fail(error, true));
         }
     }
 

@@ -8,7 +8,7 @@ public class Unsafe_extensions_methods
         public void GetError_When_IsFail_Returns_error()
         {
             var error = new Error();
-            var source = Result.Fail(error, false);
+            var source = Result.Fail(error, true);
 
             var actual = source.Error;
 
@@ -33,7 +33,7 @@ public class Unsafe_extensions_methods
         public void GetError_When_IsFail_Returns_error()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, false);
+            var source = Result<int>.Fail(error, true);
 
             var actual = source.Error;
 
@@ -79,7 +79,7 @@ public class Unsafe_extensions_methods
         public void GetError_When_IsFail_Returns_error()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error, false);
+            var source = Maybe<int>.Fail(error, true);
 
             var actual = source.Error;
 

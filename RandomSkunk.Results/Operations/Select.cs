@@ -25,7 +25,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => onSuccessSelector(_value!).ToResult(),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -51,7 +51,7 @@ public partial struct Result<T>
         return _outcome switch
         {
             Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToResult(),
-            _ => Result<TReturn>.Fail(GetError(), false),
+            _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
 }
@@ -86,7 +86,7 @@ public partial struct Maybe<T>
         {
             Outcome.Success => onSuccessSelector(_value!).ToMaybe(),
             Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : onNoneSelector().ToMaybe(),
-            _ => Maybe<TReturn>.Fail(GetError(), false),
+            _ => Maybe<TReturn>.Fail(GetError(), true),
         };
     }
 
@@ -117,7 +117,7 @@ public partial struct Maybe<T>
         {
             Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
             Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : (await onNoneSelector().ConfigureAwait(false)).ToMaybe(),
-            _ => Maybe<TReturn>.Fail(GetError(), false),
+            _ => Maybe<TReturn>.Fail(GetError(), true),
         };
     }
 }
@@ -248,7 +248,7 @@ public static partial class ResultExtensions
             if (result.IsSuccess)
                 return onSuccessSelector(default).ToResult();
 
-            return Result<TReturn>.Fail(result.Error, false);
+            return Result<TReturn>.Fail(result.Error, true);
         }
 
         if (sourceResult is Result<Unit> resultOfDBNull)
@@ -260,7 +260,7 @@ public static partial class ResultExtensions
         if (sourceResult.IsSuccess)
             return onSuccessSelector(sourceResult.Value).ToResult();
 
-        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError(), false);
+        return Result<TReturn>.Fail(sourceResult.GetNonSuccessError(), true);
     }
 
     /// <summary>
