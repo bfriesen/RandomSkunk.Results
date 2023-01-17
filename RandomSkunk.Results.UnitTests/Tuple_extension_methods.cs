@@ -50,7 +50,7 @@ public class Tuple_extension_methods
             (resultA, resultB, resultC).OnAllSuccess(
                 (a, b, c) => capturedValues = (a, b, c));
 
-            capturedValues.Should().Be((default(Unit), 123, 456));
+            capturedValues.Should().Be((Unit.Value, 123, 456));
         }
 
         [Theory]
@@ -86,7 +86,7 @@ public class Tuple_extension_methods
                     return Task.CompletedTask;
                 });
 
-            capturedValues.Should().Be((default(Unit), 123, 456));
+            capturedValues.Should().Be((Unit.Value, 123, 456));
         }
 
         [Theory]
@@ -229,7 +229,7 @@ public class Tuple_extension_methods
                 });
 
             returnedValue.Should().Be(1);
-            capturedValues.Should().Be((default(Unit), 123, 456));
+            capturedValues.Should().Be((Unit.Value, 123, 456));
             capturedError.Should().BeNull();
         }
 
@@ -299,7 +299,7 @@ public class Tuple_extension_methods
                 });
 
             returnedValue.Should().Be(1);
-            capturedValues.Should().Be((default(Unit), 123, 456));
+            capturedValues.Should().Be((Unit.Value, 123, 456));
             capturedError.Should().BeNull();
         }
 

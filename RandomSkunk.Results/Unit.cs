@@ -1,14 +1,17 @@
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// A value of type <see cref="Unit"/> indicates the lack of a value.
+/// The <see cref="Unit"/> struct represents the lack of a value. It has no fields or properties, and the only possible value is
+/// <c>default(Unit)</c>. It is used when coercing a value from a <c>Success</c> <see cref="Result"/> in LINQ-to-Results queries
+/// and value-tuple-of-results extension methods.
 /// </summary>
-/// <remarks>
-/// The <see cref="Result"/> type implements <see cref="IResult{T}"/>, where <c>T</c> is type <see cref="Unit"/>. This allows
-/// <see cref="Result"/> to seamlessly participate in LINQ-to-Result queries.
-/// </remarks>
-public readonly struct Unit
+public readonly record struct Unit
 {
+    /// <summary>
+    /// Represents the sole value of the <see cref="Unit"/> struct.
+    /// </summary>
+    public static readonly Unit Value;
+
     /// <summary>
     /// Returns a description of the <see cref="Unit"/> type.
     /// </summary>

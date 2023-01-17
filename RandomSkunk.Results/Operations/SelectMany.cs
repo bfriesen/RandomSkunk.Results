@@ -168,7 +168,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return SelectMany(() => onSuccessSelector(default));
+        return SelectMany(() => onSuccessSelector(Unit.Value));
     }
 
     /// <summary>
@@ -184,7 +184,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return await SelectMany(() => onSuccessSelector(default)).ConfigureAwait(false);
+        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return SelectMany(() => onSuccessSelector(default));
+        return SelectMany(() => onSuccessSelector(Unit.Value));
     }
 
     /// <summary>
@@ -220,7 +220,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return await SelectMany(() => onSuccessSelector(default)).ConfigureAwait(false);
+        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return SelectMany(() => onSuccessSelector(default));
+        return SelectMany(() => onSuccessSelector(Unit.Value));
     }
 
     /// <summary>
@@ -256,7 +256,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return await SelectMany(() => onSuccessSelector(default)).ConfigureAwait(false);
+        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(false);
     }
 
     /// <summary>

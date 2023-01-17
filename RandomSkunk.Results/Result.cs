@@ -60,7 +60,7 @@ public readonly partial struct Result : IResult<Unit>, IEquatable<Result>
     /// <inheritdoc/>
     Unit IResult<Unit>.Value =>
         _outcome == Outcome.Success
-            ? default
+            ? Unit.Value
             : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
     /// <summary>

@@ -25,7 +25,7 @@ public partial struct Result
 
         return _outcome switch
         {
-            Outcome.Success => onSuccessSelector(default).ToResult(),
+            Outcome.Success => onSuccessSelector(Unit.Value).ToResult(),
             _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
@@ -52,7 +52,7 @@ public partial struct Result
 
         return _outcome switch
         {
-            Outcome.Success => (await onSuccessSelector(default).ConfigureAwait(false)).ToResult(),
+            Outcome.Success => (await onSuccessSelector(Unit.Value).ConfigureAwait(false)).ToResult(),
             _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
