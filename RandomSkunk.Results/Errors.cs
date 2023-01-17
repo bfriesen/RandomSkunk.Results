@@ -297,7 +297,15 @@ public static class Errors
             InnerError = innerError,
         };
 
-    internal static Error NoValue() =>
+    /// <summary>
+    /// Creates an <see cref="Error"/> indicating that the result has no value.
+    /// </summary>
+    /// <returns>A No Value error.</returns>
+    /// <remarks>
+    /// This error is to used to indicate that a <c>Fail</c> <see cref="Result{T}"/> is equivalent to
+    /// <see cref="Maybe{T}.None"/>.
+    /// </remarks>
+    public static Error NoValue() =>
         new()
         {
             Message = "This error indicates that the result has no value.",

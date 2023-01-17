@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `Errors.NoValue()` method.
+
 ## [1.0.0] - 2023-01-12
 
 Initial release.

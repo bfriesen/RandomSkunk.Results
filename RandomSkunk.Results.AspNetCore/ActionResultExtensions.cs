@@ -159,7 +159,7 @@ public static class ActionResultExtensions
 
     private static IActionResult GetNoneActionResult(Func<int, int>? getHttpStatusCode)
     {
-        var error = new Error { ErrorCode = ErrorCodes.NoValue };
+        var error = Errors.NoValue();
         return GetFailActionResult(error, getHttpStatusCode);
     }
 }
