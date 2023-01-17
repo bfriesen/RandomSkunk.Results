@@ -1,5 +1,7 @@
 using ExampleBlazorApp.Server.Services;
+using ExampleBlazorApp.Shared;
 using Microsoft.AspNetCore.Mvc;
+using RandomSkunk.Results;
 using RandomSkunk.Results.AspNetCore;
 
 namespace ExampleBlazorApp.Server.Controllers;
@@ -20,10 +22,12 @@ public class WeatherForecastController : ControllerBase
     {
         // Get a simulated five day forcast as a Maybe<IReadOnlyList<WeatherForcast>>
         // using our WeatherForecastSimulator.
-        return await _weatherForecastSimulator.GetFiveDayForecast(city)
+        Maybe<IReadOnlyList<WeatherForecast>> forcastResult =
+            await _weatherForecastSimulator.GetFiveDayForecast(city);
 
-            // Using the RandomSkunk.Results.AspNetCore package, convert the
-            // Maybe<IReadOnlyList<WeatherForcast>> into an equivalent IActionResult.
-            .ToActionResult();
+        // Using the RandomSkunk.Results.AspNetCore package, convert the
+        // Maybe<IReadOnlyList<WeatherForcast>> into an equivalent IActionResult.
+        IActionResult actionResult = forcastResult.ToActionResult();
+        return actionResult;
     }
 }

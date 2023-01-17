@@ -12,7 +12,7 @@ public class WeatherRepository : IWeatherRepository
 
     public WeatherRepository(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("WeatherData");
+        _connectionString = configuration.GetConnectionString("WeatherData") ?? throw new ArgumentException("Connection string 'WeatherData' is missing from the configuration.", nameof(configuration));
     }
 
     public async Task<Maybe<MonthlyTemperature>> GetMonthlyTemperature(string city, int month)
@@ -27,7 +27,7 @@ SELECT
 FROM WeatherData
 WHERE City = @city AND Month = @month";
 
-        using var connection = new SqliteConnection(_connectionString);
+        using SqliteConnection connection = new(_connectionString);
         await connection.OpenAsync();
 
         // Using the RandomSkunk.Results.Dapper package, query the database for the monthly temperature information
@@ -46,16 +46,19 @@ SELECT
     StandardDeviation
 FROM WeatherData";
 
-        using var connection = new SqliteConnection(_connectionString);
+        using SqliteConnection connection = new(_connectionString);
         await connection.OpenAsync();
 
         // Using the RandomSkunk.Results.Dapper package, query the database for the monthly temperature
         // information. Any errors from making the query are automatically captured in the result.
-        var monthlyTemperaturesResult = await connection.TryQueryAsync<MonthlyTemperature>(sql);
+        Result<IEnumerable<MonthlyTemperature>> monthlyTemperaturesResult =
+            await connection.TryQueryAsync<MonthlyTemperature>(sql);
 
-        // Convert the Result<IEnumerable<MonthlyTemperator>> into a Result<IReadOnlyList<WeatherProfile>>
+        // Project the Result<IEnumerable<MonthlyTemperator>> into a Result<IReadOnlyList<WeatherProfile>>
         // using the Select method. This works very similar to the Select extension method from LINQ.
-        return monthlyTemperaturesResult.Select(CreateWeatherProfiles);
+        Result<IReadOnlyList<WeatherProfile>> weatherProfilesResult =
+            monthlyTemperaturesResult.Select(CreateWeatherProfiles);
+        return weatherProfilesResult;
     }
 
     public Task<Result> AddWeatherProfile(WeatherProfile weatherProfile)
@@ -105,40 +108,53 @@ WHERE City = @City AND Month = @Month;";
     private async Task<Result> UpsertWeatherProfile(WeatherProfile weatherProfile, string sql)
     {
         using DbConnection connection = new SqliteConnection(_connectionString);
-        await connection.OpenAsync(default);
 
-        using DbTransaction transaction = await connection.BeginTransactionAsync();
+        // This method uses LINQ-to-Results in order to safely execute a complex workflow. The main thing to remember
+        // about LINQ-to-Results is that they are short-circuiting: if evaluating one clause results in a Fail result,
+        // no further clauses are evaluated, and the error from that Fail result will be the error of the overall result.
+        Result<int> upsertResult = await (
 
-        foreach (MonthlyTemperature? monthlyTemperature in weatherProfile.MonthlyTemperatures)
-        {
-            var param = new
-            {
-                weatherProfile.City,
-                monthlyTemperature.Month,
-                monthlyTemperature.AverageHigh,
-                monthlyTemperature.AverageLow,
-                monthlyTemperature.StandardDeviation,
-            };
+            // Open the connection. If opening the connection fails, no further clauses will be evaluated.
+            from connectionOpened in TryCatch.AsResult(() => connection.OpenAsync(default)).ContinueWith(r => (IResult<Unit>)r)
 
-            // Using the RandomSkunk.Results.Dapper package, execute the query.
-            // Any errors from making the query are automatically captured in the result.
-            Result<int> rowsAffectedResult = await connection.TryExecuteAsync(sql, param, transaction);
+            // Begin a transaction if the connection was opened successfully. If this fails, the whole query fails.
+            from transaction in TryCatch.AsResult(async () => await connection.BeginTransactionAsync())
 
-            // The caller doesn't care about the number of affected rows, so just make sure
-            // exactly one row was affected.
-            Result result = rowsAffectedResult.EnsureOneRowAffected();
+            // Insert/update each monthly temperature record if everything has been successful so far. If updating
+            // any of the monthly temperatures fail, the query short-circuits.
+            from weatherProfileUpdated in weatherProfile.MonthlyTemperatures.ForEach(async monthlyTemperature =>
+                {
+                    var param = new
+                    {
+                        weatherProfile.City,
+                        monthlyTemperature.Month,
+                        monthlyTemperature.AverageHigh,
+                        monthlyTemperature.AverageLow,
+                        monthlyTemperature.StandardDeviation,
+                    };
 
-            if (result.IsFail)
-            {
-                // If the query failed or exactly one row was not affected, roll back the
-                // transaction and return the Fail result.
-                await transaction.RollbackAsync();
-                return result;
-            }
-        }
+                    // Using the RandomSkunk.Results.Dapper package, execute the query.
+                    // Any errors from making the query are automatically captured in the result.
+                    Result<int> rowsAffectedResult = await connection.TryExecuteAsync(sql, param, transaction);
 
-        // If all queries were successful, commit the transaction and return a Success result.
-        await transaction.CommitAsync();
-        return Result.Success();
+                    // The caller doesn't care about the number of affected rows, so return a
+                    // result that ensures that exactly one row was affected.
+                    var upsertResult = rowsAffectedResult.EnsureOneRowAffected();
+
+                    // If the insert/update failed, roll back the transaction.
+                    await upsertResult.OnFail(error => transaction.RollbackAsync());
+
+                    return upsertResult;
+                })
+
+            // If everything has been successful, commit the transaction.
+            from transactionCommitted in TryCatch.AsResult(() => transaction.CommitAsync())
+
+            // We don't need the return value of this query, but LINQ requires it, so arbitrarily return the number
+            // two. This means that, when successful, our query will always return a result with a value of two.
+            select 2);
+
+        // Truncate the arbitrary value of two from the result since we don't need it.
+        return upsertResult.Truncate();
     }
 }

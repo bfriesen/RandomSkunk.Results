@@ -24,19 +24,21 @@ public class WeatherProfileClient
     {
         // Using the RandomSkunk.Results.Http package, make a request to the server to add the weather profile.
         // Any errors from making the request are automatically captured in the result.
-        var responseResult = await _httpClient.TryPostAsJsonAsync("WeatherProfiles", weatherProfile);
+        Result<HttpResponseMessage> responseResult = await _httpClient.TryPostAsJsonAsync("WeatherProfiles", weatherProfile);
 
         // Since the caller doesn't care about the actual HttpResponse, just make sure it has a success status code.
-        return await responseResult.EnsureSuccessStatusCodeAsync();
+        Result result = await responseResult.EnsureSuccessStatusCodeAsync();
+        return result;
     }
 
     public async Task<Result> EditWeatherProfile(WeatherProfile weatherProfile)
     {
         // Using the RandomSkunk.Results.Http package, make a request to the server to edit the weather profile.
         // Any errors from making the request are automatically captured in the result.
-        var responseResult = await _httpClient.TryPutAsJsonAsync("WeatherProfiles", weatherProfile);
+        Result<HttpResponseMessage> responseResult = await _httpClient.TryPutAsJsonAsync("WeatherProfiles", weatherProfile);
 
         // Since the caller doesn't care about the actual HttpResponse, just make sure it has a success status code.
-        return await responseResult.EnsureSuccessStatusCodeAsync();
+        Result result = await responseResult.EnsureSuccessStatusCodeAsync();
+        return result;
     }
 }

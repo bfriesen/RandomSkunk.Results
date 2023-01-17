@@ -50,11 +50,11 @@ These are the interesting parts of the example app (with links to the code):
 
 - ExampleBlazorApp.Client project
     - Typed HTTP Clients - *each one uses RandomSkunk.Results.Http to make HTTP requests to the server*
-        - [WeatherForcastClient](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherForecastClient.cs#L16-L23)
+        - [WeatherForcastClient](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherForecastClient.cs#L16-L25)
         - WeatherProfileClient
             - [GetWeatherProfiles](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherProfileClient.cs#L16-L21)
-            - [AddWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherProfileClient.cs#L23-L31)
-            - [EditWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherProfileClient.cs#L33-L40)
+            - [AddWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherProfileClient.cs#L23-L32)
+            - [EditWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/HttpClients/WeatherProfileClient.cs#L34-L43)
     - Razor pages - *each one uses one of the typed HTTP clients to make a request to the server, then handles the result*
         - [FiveDayForecast](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Client/Pages/FiveDayForecast.razor#L62-L72)
         - WeatherProfiles
@@ -63,12 +63,12 @@ These are the interesting parts of the example app (with links to the code):
 - ExampleBlazorApp.Server project
     - WeatherRepository - *uses RandomSkunk.Results.Dapper to make queries to the database*
         - [GetMonthlyTemperature](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Repositories/WeatherRepository.cs#L18-L36)
-        - [GetWeatherProfiles](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Repositories/WeatherRepository.cs#L38-L59)
-        - [UpsertWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Repositories/WeatherRepository.cs#L105-L143)
-    - [WeatherForecastSimulator](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Services/WeatherForecastSimulator.cs#L23-L31) - *uses WeatherRepository to make queries to the database*
+        - [GetWeatherProfiles](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Repositories/WeatherRepository.cs#L38-L62)
+        - [UpsertWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Repositories/WeatherRepository.cs#L108-L159)
+    - [WeatherForecastSimulator](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Services/WeatherForecastSimulator.cs#L23-L33) - *uses WeatherRepository to make queries to the database*
     - Controllers
-        - [WeatherForecastController](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherForecastController.cs#L18-L28) - *uses WeatherForecastSimulator to simulate weather forecasts*
+        - [WeatherForecastController](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherForecastController.cs#L20-L32) - *uses WeatherForecastSimulator to simulate weather forecasts*
         - WeatherProfilesController - *uses WeatherRepository to make queries to the database*
-            - [GetWeatherProfiles](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherProfilesController.cs#L19-L29)
-            - [AddWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherProfilesController.cs#L31-L40)
-            - [EditWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherProfilesController.cs#L42-L51)
+            - [GetWeatherProfiles](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherProfilesController.cs#L20-L32)
+            - [AddWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherProfilesController.cs#L34-L44)
+            - [EditWeatherProfile](https://github.com/bfriesen/RandomSkunk.Results/blob/main/ExampleBlazorApp.Server/Controllers/WeatherProfilesController.cs#L46-L56)
