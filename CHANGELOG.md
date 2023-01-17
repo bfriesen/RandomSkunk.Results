@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add `Errors.NoValue()` method.
 
+- RandomSkunk.Results.AspNetCore:
+    - Add `ToFileActionResult` extension methods.
+
 ## [1.0.0] - 2023-01-12
 
 Initial release.
