@@ -18,7 +18,9 @@ public static class ActionResultExtensions
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
-    /// <returns>The equivalent action result object.</returns>
+    /// <returns>If the source result is <c>Success</c>, a <see cref="StatusCodeResult"/> with status code from
+    ///     <paramref name="successStatusCode"/>; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
     ///     299.</exception>
     public static IActionResult ToActionResult(
@@ -45,7 +47,8 @@ public static class ActionResultExtensions
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
-    /// <returns>The equivalent action result object.</returns>
+    /// <returns>If the source result is <c>Success</c>, an <see cref="ObjectResult"/> for its value; otherwise an
+    ///     <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/> describing the non-success result.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
     ///     299.</exception>
     public static IActionResult ToActionResult<T>(
@@ -72,7 +75,8 @@ public static class ActionResultExtensions
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
-    /// <returns>The equivalent action result object.</returns>
+    /// <returns>If the source result is <c>Success</c>, an <see cref="ObjectResult"/> for its value; otherwise an
+    ///     <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/> describing the non-success result.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
     ///     299.</exception>
     public static IActionResult ToActionResult<T>(
@@ -99,7 +103,9 @@ public static class ActionResultExtensions
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
-    /// <returns>The equivalent action result object.</returns>
+    /// <returns>If the source result is <c>Success</c>, a <see cref="StatusCodeResult"/> with status code from
+    ///     <paramref name="successStatusCode"/>; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
     ///     299.</exception>
     public static async Task<IActionResult> ToActionResult(
@@ -119,7 +125,8 @@ public static class ActionResultExtensions
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
-    /// <returns>The equivalent action result object.</returns>
+    /// <returns>If the source result is <c>Success</c>, an <see cref="ObjectResult"/> for its value; otherwise an
+    ///     <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/> describing the non-success result.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
     ///     299.</exception>
     public static async Task<IActionResult> ToActionResult<T>(
@@ -139,7 +146,8 @@ public static class ActionResultExtensions
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
     /// </param>
-    /// <returns>The equivalent action result object.</returns>
+    /// <returns>If the source result is <c>Success</c>, an <see cref="ObjectResult"/> for its value; otherwise an
+    ///     <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/> describing the non-success result.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
     ///     299.</exception>
     public static async Task<IActionResult> ToActionResult<T>(
