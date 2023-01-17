@@ -115,7 +115,7 @@ WHERE City = @City AND Month = @Month;";
         Result<int> upsertResult = await (
 
             // Open the connection. If opening the connection fails, no further clauses will be evaluated.
-            from connectionOpened in TryCatch.AsResult(() => connection.OpenAsync(default)).ContinueWith(r => (IResult<Unit>)r)
+            from connectionOpened in TryCatch.AsResult(() => connection.OpenAsync(default))
 
             // Begin a transaction if the connection was opened successfully. If this fails, the whole query fails.
             from transaction in TryCatch.AsResult(async () => await connection.BeginTransactionAsync())
