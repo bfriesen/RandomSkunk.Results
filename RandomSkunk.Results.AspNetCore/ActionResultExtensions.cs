@@ -229,7 +229,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that is equivalent to the source <see cref="Maybe{T}"/>.
@@ -249,7 +249,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that is equivalent to the source <see cref="Result{T}"/>.
@@ -324,7 +324,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that is equivalent to the source <see cref="Maybe{T}"/>.
@@ -344,7 +344,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     private static IActionResult GetFailActionResult(Error error, Func<int, int>? getHttpStatusCode)
     {

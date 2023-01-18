@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning].
 ### Fixed
 - RandomSkunk.Results:
     - Change targets of LINQ-to-Results methods from `IResult<Unit>` to `Result`. This fixes queries where the first clause is of type `Task<Result>`, which would fail to compile.
+    - Add missing calls to `ConfigureAwait(false)`.
 
 ## [1.0.0] - 2023-01-12
 

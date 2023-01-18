@@ -39,7 +39,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>An equivalent <see cref="Result"/>.</returns>
     public static async Task<Result> Truncate<T>(this Task<Result<T>> sourceResult) =>
-        (await sourceResult).Truncate();
+        (await sourceResult.ConfigureAwait(false)).Truncate();
 
     /// <summary>
     /// Truncates the <see cref="Maybe{T}"/> into an equivalent <see cref="Result"/>. If it is a <c>Success</c> result, then its
@@ -51,5 +51,5 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>An equivalent <see cref="Result"/>.</returns>
     public static async Task<Result> Truncate<T>(this Task<Maybe<T>> sourceResult) =>
-        (await sourceResult).Truncate();
+        (await sourceResult.ConfigureAwait(false)).Truncate();
 }
