@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RandomSkunk.Results.AspNetCore;
@@ -476,6 +477,110 @@ public static class ActionResultExtensions
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
         (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> for JSON that is equivalent to the source <see cref="Result{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="serializerSettings">The serializer settings to be used by the formatter.
+    ///     <para>
+    ///     When using <c>System.Text.Json</c>, this should be an instance of <see cref="JsonSerializerOptions"/>.
+    ///     </para>
+    ///     <para>
+    ///     When using <c>Newtonsoft.Json</c>, this should be an instance of <c>JsonSerializerSettings</c>.
+    ///     </para>
+    /// </param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, a <see cref="JsonResult"/>; otherwise an <see cref="ObjectResult"/> for
+    ///     a <see cref="ProblemDetails"/> describing the non-success result.</returns>
+    public static IActionResult ToJsonActionResult<T>(
+        this Result<T> sourceResult,
+        object? serializerSettings = null,
+        Func<int, int>? getHttpStatusCode = null) =>
+        sourceResult.ToActionResult(
+            value => new JsonResult(value, serializerSettings),
+            getHttpStatusCode);
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> for JSON that is equivalent to the source <see cref="Maybe{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="serializerSettings">The serializer settings to be used by the formatter.
+    ///     <para>
+    ///     When using <c>System.Text.Json</c>, this should be an instance of <see cref="JsonSerializerOptions"/>.
+    ///     </para>
+    ///     <para>
+    ///     When using <c>Newtonsoft.Json</c>, this should be an instance of <c>JsonSerializerSettings</c>.
+    ///     </para>
+    /// </param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, a <see cref="JsonResult"/>; otherwise an <see cref="ObjectResult"/> for
+    ///     a <see cref="ProblemDetails"/> describing the non-success result.</returns>
+    public static IActionResult ToJsonActionResult<T>(
+        this Maybe<T> sourceResult,
+        object? serializerSettings = null,
+        Func<int, int>? getHttpStatusCode = null) =>
+        sourceResult.ToActionResult(
+            value => new JsonResult(value, serializerSettings),
+            getHttpStatusCode);
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> for JSON that is equivalent to the source <see cref="Result{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="serializerSettings">The serializer settings to be used by the formatter.
+    ///     <para>
+    ///     When using <c>System.Text.Json</c>, this should be an instance of <see cref="JsonSerializerOptions"/>.
+    ///     </para>
+    ///     <para>
+    ///     When using <c>Newtonsoft.Json</c>, this should be an instance of <c>JsonSerializerSettings</c>.
+    ///     </para>
+    /// </param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, a <see cref="JsonResult"/>; otherwise an <see cref="ObjectResult"/> for
+    ///     a <see cref="ProblemDetails"/> describing the non-success result.</returns>
+    public static async Task<IActionResult> ToJsonActionResult<T>(
+        this Task<Result<T>> sourceResult,
+        object? serializerSettings = null,
+        Func<int, int>? getHttpStatusCode = null) =>
+        (await sourceResult.ConfigureAwait(false)).ToJsonActionResult(serializerSettings, getHttpStatusCode);
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> for JSON that is equivalent to the source <see cref="Maybe{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="serializerSettings">The serializer settings to be used by the formatter.
+    ///     <para>
+    ///     When using <c>System.Text.Json</c>, this should be an instance of <see cref="JsonSerializerOptions"/>.
+    ///     </para>
+    ///     <para>
+    ///     When using <c>Newtonsoft.Json</c>, this should be an instance of <c>JsonSerializerSettings</c>.
+    ///     </para>
+    /// </param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, a <see cref="JsonResult"/>; otherwise an <see cref="ObjectResult"/> for
+    ///     a <see cref="ProblemDetails"/> describing the non-success result.</returns>
+    public static async Task<IActionResult> ToJsonActionResult<T>(
+        this Task<Maybe<T>> sourceResult,
+        object? serializerSettings = null,
+        Func<int, int>? getHttpStatusCode = null) =>
+        (await sourceResult.ConfigureAwait(false)).ToJsonActionResult(serializerSettings, getHttpStatusCode);
 
     private static IActionResult GetFailActionResult(Error error, Func<int, int>? getHttpStatusCode)
     {

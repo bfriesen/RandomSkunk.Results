@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results.AspNetCore:
     - Add `ToFileActionResult` extension methods.
     - Add `ToActionResult` overloads that have an `onSuccess` function parameter.
+    - Add `ToJsonActionResult` extension methods.
 
 ### Fixed
 - RandomSkunk.Results:
