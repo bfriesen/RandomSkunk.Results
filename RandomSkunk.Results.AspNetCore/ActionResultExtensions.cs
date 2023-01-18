@@ -12,6 +12,140 @@ public static class ActionResultExtensions
     /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result"/>.
     /// </summary>
     /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccess">The function to evaluate and return if the result is <c>Success</c>.</param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
+    ///     <paramref name="onSuccess"/> function; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
+    public static IActionResult ToActionResult(
+        this Result sourceResult,
+        Func<IActionResult> onSuccess,
+        Func<int, int>? getHttpStatusCode = null)
+    {
+        if (onSuccess is null)
+            throw new ArgumentNullException(nameof(onSuccess));
+
+        return sourceResult.Match(
+            onSuccess: onSuccess,
+            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+    }
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccess">The function to evaluate and return if the result is <c>Success</c>.</param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
+    ///     <paramref name="onSuccess"/> function; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
+    public static IActionResult ToActionResult<T>(
+        this Result<T> sourceResult,
+        Func<T, IActionResult> onSuccess,
+        Func<int, int>? getHttpStatusCode = null)
+    {
+        if (onSuccess is null)
+            throw new ArgumentNullException(nameof(onSuccess));
+
+        return sourceResult.Match(
+            onSuccess: onSuccess,
+            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+    }
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Maybe{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccess">The function to evaluate and return if the result is <c>Success</c>.</param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
+    ///     <paramref name="onSuccess"/> function; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
+    public static IActionResult ToActionResult<T>(
+        this Maybe<T> sourceResult,
+        Func<T, IActionResult> onSuccess,
+        Func<int, int>? getHttpStatusCode = null)
+    {
+        if (onSuccess is null)
+            throw new ArgumentNullException(nameof(onSuccess));
+
+        return sourceResult.Match(
+            onSuccess: onSuccess,
+            onNone: () => GetNoneActionResult(getHttpStatusCode),
+            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+    }
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result"/>.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccess">The function to evaluate and return if the result is <c>Success</c>.</param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
+    ///     <paramref name="onSuccess"/> function; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
+    public static async Task<IActionResult> ToActionResult(
+        this Task<Result> sourceResult,
+        Func<IActionResult> onSuccess,
+        Func<int, int>? getHttpStatusCode = null) =>
+        (await sourceResult.ConfigureAwait(false)).ToActionResult(onSuccess, getHttpStatusCode);
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccess">The function to evaluate and return if the result is <c>Success</c>.</param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
+    ///     <paramref name="onSuccess"/> function; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
+    public static async Task<IActionResult> ToActionResult<T>(
+        this Task<Result<T>> sourceResult,
+        Func<T, IActionResult> onSuccess,
+        Func<int, int>? getHttpStatusCode = null) =>
+        (await sourceResult.ConfigureAwait(false)).ToActionResult(onSuccess, getHttpStatusCode);
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Maybe{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onSuccess">The function to evaluate and return if the result is <c>Success</c>.</param>
+    /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
+    ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
+    ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
+    /// </param>
+    /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
+    ///     <paramref name="onSuccess"/> function; otherwise an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
+    ///     describing the non-success result.</returns>
+    public static async Task<IActionResult> ToActionResult<T>(
+        this Task<Maybe<T>> sourceResult,
+        Func<T, IActionResult> onSuccess,
+        Func<int, int>? getHttpStatusCode = null) =>
+        (await sourceResult.ConfigureAwait(false)).ToActionResult(onSuccess, getHttpStatusCode);
+
+    /// <summary>
+    /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result"/>.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
     /// <param name="successStatusCode">The status code to use when <paramref name="sourceResult"/> is a <c>Success</c> result.
     ///     </param>
     /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
@@ -31,9 +165,9 @@ public static class ActionResultExtensions
         if (successStatusCode < 200 || successStatusCode > 299)
             throw new ArgumentOutOfRangeException(nameof(successStatusCode), successStatusCode, "Must be between 200 and 299 inclusive.");
 
-        return sourceResult.Match(
-            onSuccess: () => new StatusCodeResult(successStatusCode),
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+        return sourceResult.ToActionResult(
+            () => new StatusCodeResult(successStatusCode),
+            getHttpStatusCode);
     }
 
     /// <summary>
@@ -59,9 +193,9 @@ public static class ActionResultExtensions
         if (successStatusCode < 200 || successStatusCode > 299)
             throw new ArgumentOutOfRangeException(nameof(successStatusCode), successStatusCode, "Must be between 200 and 299 inclusive.");
 
-        return sourceResult.Match(
-            onSuccess: value => new ObjectResult(value) { StatusCode = successStatusCode },
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+        return sourceResult.ToActionResult(
+            value => new ObjectResult(value) { StatusCode = successStatusCode },
+            getHttpStatusCode);
     }
 
     /// <summary>
@@ -87,10 +221,9 @@ public static class ActionResultExtensions
         if (successStatusCode < 200 || successStatusCode > 299)
             throw new ArgumentOutOfRangeException(nameof(successStatusCode), successStatusCode, "Must be between 200 and 299 inclusive.");
 
-        return sourceResult.Match(
-            onSuccess: value => new ObjectResult(value) { StatusCode = successStatusCode },
-            onNone: () => GetNoneActionResult(getHttpStatusCode),
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+        return sourceResult.ToActionResult(
+            value => new ObjectResult(value) { StatusCode = successStatusCode },
+            getHttpStatusCode);
     }
 
     /// <summary>
@@ -178,9 +311,9 @@ public static class ActionResultExtensions
         if (string.IsNullOrEmpty(contentType))
             throw new ArgumentNullException(nameof(contentType));
 
-        return sourceResult.Match(
-            onSuccess: fileContents => new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName },
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+        return sourceResult.ToActionResult(
+            fileContents => new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName },
+            getHttpStatusCode);
     }
 
     /// <summary>
@@ -205,10 +338,9 @@ public static class ActionResultExtensions
         if (string.IsNullOrEmpty(contentType))
             throw new ArgumentNullException(nameof(contentType));
 
-        return sourceResult.Match(
-            onSuccess: fileContents => new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName },
-            onNone: () => GetNoneActionResult(getHttpStatusCode),
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+        return sourceResult.ToActionResult(
+            fileContents => new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName },
+            getHttpStatusCode);
     }
 
     /// <summary>
@@ -273,9 +405,9 @@ public static class ActionResultExtensions
         if (string.IsNullOrEmpty(contentType))
             throw new ArgumentNullException(nameof(contentType));
 
-        return sourceResult.Match(
-            onSuccess: fileStream => new FileStreamResult(fileStream, contentType) { FileDownloadName = fileDownloadName },
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+        return sourceResult.ToActionResult(
+            fileStream => new FileStreamResult(fileStream, contentType) { FileDownloadName = fileDownloadName },
+            getHttpStatusCode);
     }
 
     /// <summary>
@@ -300,10 +432,9 @@ public static class ActionResultExtensions
         if (string.IsNullOrEmpty(contentType))
             throw new ArgumentNullException(nameof(contentType));
 
-        return sourceResult.Match(
-            onSuccess: fileStream => new FileStreamResult(fileStream, contentType) { FileDownloadName = fileDownloadName },
-            onNone: () => GetNoneActionResult(getHttpStatusCode),
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+        return sourceResult.ToActionResult(
+            fileStream => new FileStreamResult(fileStream, contentType) { FileDownloadName = fileDownloadName },
+            getHttpStatusCode);
     }
 
     /// <summary>
