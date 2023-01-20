@@ -64,6 +64,26 @@ public readonly partial struct Result : IResult<Unit>, IEquatable<Result>
             : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
     /// <summary>
+    /// Truncates the <see cref="Maybe{T}"/> of type <see cref="Unit"/> into an equivalent <see cref="Result"/>. If it is a
+    /// <c>Success</c> result, then its value is ignored and a valueless <c>Success</c> result is returned. If it is a
+    /// <c>None</c> result, then a <c>Fail</c> result with error code <see cref="ErrorCodes.NoValue"/> is returned. Otherwise, a
+    /// <c>Fail</c> result with the same error as is returned.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <returns>An equivalent <see cref="Result"/>.</returns>
+    public static implicit operator Result(Result<Unit> sourceResult) => sourceResult.Truncate();
+
+    /// <summary>
+    /// Truncates the <see cref="Maybe{T}"/> of type <see cref="Unit"/> into an equivalent <see cref="Result"/>. If it is a
+    /// <c>Success</c> result, then its value is ignored and a valueless <c>Success</c> result is returned. If it is a
+    /// <c>None</c> result, then a <c>Fail</c> result with error code <see cref="ErrorCodes.NoValue"/> is returned. Otherwise, a
+    /// <c>Fail</c> result with the same error as is returned.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <returns>An equivalent <see cref="Result"/>.</returns>
+    public static implicit operator Result(Maybe<Unit> sourceResult) => sourceResult.Truncate();
+
+    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>
