@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add `Errors.NoValue()` method.
     - Add implicit conversion from `Result<Unit>` and `Maybe<Unit>` to `Result`.
+    - Add overloads for `Maybe<T>.ToResult` and `Maybe<T>.Truncate` with `onNoneSelector` parameter.
 
 - RandomSkunk.Results.AspNetCore:
     - Add `ToFileActionResult` extension methods.
