@@ -1,5 +1,5 @@
 <Query Kind="Program">
-  <NuGetReference Prerelease="true">RandomSkunk.Results</NuGetReference>
+  <NuGetReference>RandomSkunk.Results</NuGetReference>
   <Namespace>RandomSkunk.Results</Namespace>
 </Query>
 
@@ -54,7 +54,7 @@ private static Maybe<string> GetRandomStringMaybe()
         case 0:
             return Maybe<string>.Success("Success Maybe<T>");
         case 1:
-            return Maybe<string>.None();
+            return Maybe<string>.None;
         default:
             return Maybe<string>.Fail("Yikes!");
     }

@@ -1,5 +1,5 @@
 <Query Kind="Statements">
-  <NuGetReference Prerelease="true">RandomSkunk.Results</NuGetReference>
+  <NuGetReference>RandomSkunk.Results</NuGetReference>
   <Namespace>RandomSkunk.Results</Namespace>
 </Query>
 
@@ -16,7 +16,7 @@ Maybe<string> successMaybe = Maybe<string>.Success("abc");
 // Maybe<string> thrownResult = Maybe<string>.Success(null!);
 
 // Successful operations that do not have a value are represented by a None result.
-Maybe<string> noneMaybe = Maybe<string>.None();
+Maybe<string> noneMaybe = Maybe<string>.None;
 
 // Unsuccessful operations are represented by a Fail result, which has an error that describes what went wrong.
 Maybe<string> failMaybe = Maybe<string>.Fail();

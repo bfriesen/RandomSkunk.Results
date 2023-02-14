@@ -1,5 +1,5 @@
 <Query Kind="Statements">
-  <NuGetReference Prerelease="true">RandomSkunk.Results</NuGetReference>
+  <NuGetReference>RandomSkunk.Results</NuGetReference>
   <Namespace>RandomSkunk.Results</Namespace>
   <Namespace>RandomSkunk.Results.FactoryExtensions</Namespace>
 </Query>
