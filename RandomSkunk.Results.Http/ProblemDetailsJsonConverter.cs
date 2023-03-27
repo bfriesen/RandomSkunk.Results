@@ -64,13 +64,13 @@ internal sealed class ProblemDetailsJsonConverter : JsonConverter<ProblemDetails
         else if (reader.ValueTextEquals(Status.EncodedUtf8Bytes))
         {
             reader.Read();
-            if (reader.TokenType == JsonTokenType.Null)
-            {
-                // Nothing to do here.
-            }
-            else
+            if (reader.TokenType == JsonTokenType.Number)
             {
                 value.Status = reader.GetInt32();
+            }
+            else if (reader.TokenType == JsonTokenType.String && int.TryParse(reader.GetString(), out var status))
+            {
+                value.Status = status;
             }
         }
         else

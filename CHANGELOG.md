@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning].
     - Change targets of LINQ-to-Results methods from `IResult<Unit>` to `Result`. This fixes queries where the first clause is of type `Task<Result>`, which would fail to compile.
     - Add missing calls to `ConfigureAwait(false)`.
 
+- RandomSkunk.Results.Http:
+    - When JSON deserializing, accept `Status` field with token type of either `Number` or `String`.
+
 ## [1.0.0] - 2023-01-12
 
 Initial release.
