@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>ToNoneIf</c> method. </content>
@@ -34,5 +36,5 @@ public static partial class ResultExtensions
     /// <returns>A <c>None</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
     ///     did not.</returns>
     public static async Task<Maybe<T>> ToNoneIf<T>(this Task<Maybe<T>> sourceResult, Func<T, bool> predicate) =>
-        (await sourceResult.ConfigureAwait(false)).ToNoneIf(predicate);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToNoneIf(predicate);
 }

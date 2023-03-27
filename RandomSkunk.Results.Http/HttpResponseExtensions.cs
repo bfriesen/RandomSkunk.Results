@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results.Http;
 
 /// <summary>
@@ -27,7 +29,7 @@ public static class HttpResponseExtensions
             return Result.Success();
 
         options ??= _defaultOptions;
-        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
+        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Result.Fail(error, true);
     }
@@ -64,9 +66,9 @@ public static class HttpResponseExtensions
         options ??= _defaultOptions;
 
         if (sourceResponse.IsSuccessStatusCode)
-            return await ReadResultValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(false);
+            return await ReadResultValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
-        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
+        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return Result<T>.Fail(error, true);
     }
@@ -105,9 +107,9 @@ public static class HttpResponseExtensions
         options ??= _defaultOptions;
 
         if (sourceResponse.IsSuccessStatusCode)
-            return await ReadMaybeValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(false);
+            return await ReadMaybeValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
-        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(false);
+        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         var error = GetErrorFromProblemDetails(problemDetails, options);
         return error.ErrorCode == ErrorCodes.NoValue
             ? Maybe<T>.None
@@ -144,7 +146,7 @@ public static class HttpResponseExtensions
         CancellationToken cancellationToken = default) =>
         sourceResponse.SelectMany(async response =>
         {
-            var result = await response.GetResultAsync(options, cancellationToken).ConfigureAwait(false);
+            var result = await response.GetResultAsync(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
             response.Dispose();
             return result;
         });
@@ -237,7 +239,7 @@ public static class HttpResponseExtensions
         this Task<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).GetResultAsync(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).GetResultAsync(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
@@ -249,7 +251,7 @@ public static class HttpResponseExtensions
     public static async Task<Result> GetResultAsync(
         this Task<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).GetResultAsync(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).GetResultAsync(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
@@ -266,7 +268,7 @@ public static class HttpResponseExtensions
         this Task<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
@@ -280,7 +282,7 @@ public static class HttpResponseExtensions
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
@@ -297,7 +299,7 @@ public static class HttpResponseExtensions
         this Task<HttpResponseMessage> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
@@ -311,7 +313,7 @@ public static class HttpResponseExtensions
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
@@ -327,7 +329,7 @@ public static class HttpResponseExtensions
         this Task<Result<HttpResponseMessage>> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).EnsureSuccessStatusCodeAsync(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).EnsureSuccessStatusCodeAsync(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
@@ -340,7 +342,7 @@ public static class HttpResponseExtensions
     public static async Task<Result> EnsureSuccessStatusCodeAsync(
         this Task<Result<HttpResponseMessage>> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).EnsureSuccessStatusCodeAsync(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).EnsureSuccessStatusCodeAsync(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
@@ -357,7 +359,7 @@ public static class HttpResponseExtensions
         this Task<Result<HttpResponseMessage>> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadResultFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
@@ -371,7 +373,7 @@ public static class HttpResponseExtensions
     public static async Task<Result<T>> ReadResultFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
@@ -388,7 +390,7 @@ public static class HttpResponseExtensions
         this Task<Result<HttpResponseMessage>> sourceResponse,
         JsonSerializerOptions? options,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
@@ -402,7 +404,7 @@ public static class HttpResponseExtensions
     public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(false)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(false);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     private static async Task<Result<T>> ReadResultValue<T>(
         HttpContent content,
@@ -411,7 +413,7 @@ public static class HttpResponseExtensions
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
             if (value is null)
                 return Result<T>.Fail("Response content was the literal string \"null\".");
@@ -431,7 +433,7 @@ public static class HttpResponseExtensions
     {
         try
         {
-            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(false);
+            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
             if (value is null)
                 return Maybe<T>.None;
@@ -451,7 +453,7 @@ public static class HttpResponseExtensions
     {
         try
         {
-            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(options, cancellationToken).ConfigureAwait(false);
+            var problemDetails = await response.Content.ReadFromJsonAsync<ProblemDetails>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
             if (problemDetails is not null)
             {

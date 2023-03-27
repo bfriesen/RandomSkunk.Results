@@ -99,7 +99,7 @@ public static class ResultTupleExtensions
             await onAllSuccess(
                 sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
-            .Append(@").ConfigureAwait(false);
+            .Append(@").ConfigureAwait(AwaitSettings.ContinueOnCapturedContext);
         }
 
         return sourceResults;
@@ -194,7 +194,7 @@ public static class ResultTupleExtensions
       .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            await onAnyNonSuccess(error).ConfigureAwait(false);
+            await onAnyNonSuccess(error).ConfigureAwait(AwaitSettings.ContinueOnCapturedContext);
         }
 
         return sourceResults;
@@ -417,7 +417,7 @@ public static class ResultTupleExtensions
             var value = await onAllSuccessSelector(
                 sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
-            .Append(@").ConfigureAwait(false);
+            .Append(@").ConfigureAwait(AwaitSettings.ContinueOnCapturedContext);
 
             return Result<TReturn>.Success(value);
         }

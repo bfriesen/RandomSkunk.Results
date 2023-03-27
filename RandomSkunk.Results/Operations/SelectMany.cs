@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>SelectMany</c> methods. </content>
@@ -36,7 +38,7 @@ public partial struct Result
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessSelector().ConfigureAwait(false),
+            Outcome.Success => await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext),
             _ => Fail(GetError(), true),
         };
     }
@@ -90,7 +92,7 @@ public partial struct Result
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessSelector().ConfigureAwait(false),
+            Outcome.Success => await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext),
             _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
@@ -146,7 +148,7 @@ public partial struct Result
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (_outcome == Outcome.Success)
-            return await onSuccessSelector().ConfigureAwait(false);
+            return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
@@ -184,7 +186,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(false);
+        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(ContinueOnCapturedContext);
     }
 
     /// <summary>
@@ -220,7 +222,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(false);
+        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(ContinueOnCapturedContext);
     }
 
     /// <summary>
@@ -256,7 +258,7 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(false);
+        return await SelectMany(() => onSuccessSelector(Unit.Value)).ConfigureAwait(ContinueOnCapturedContext);
     }
 
     /// <summary>
@@ -305,7 +307,7 @@ public partial struct Result
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
@@ -470,7 +472,7 @@ public partial struct Result<T>
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
+            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
             _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
@@ -508,7 +510,7 @@ public partial struct Result<T>
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
+            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
             _ => Result.Fail(GetError(), true),
         };
     }
@@ -564,7 +566,7 @@ public partial struct Result<T>
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (_outcome == Outcome.Success)
-            return await onSuccessSelector(_value!).ConfigureAwait(false);
+            return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
@@ -727,7 +729,7 @@ public partial struct Result<T>
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 }
@@ -791,8 +793,8 @@ public partial struct Maybe<T>
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : await onNoneSelector().ConfigureAwait(false),
+            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
+            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext),
             _ => Maybe<TReturn>.Fail(GetError(), true),
         };
     }
@@ -839,8 +841,8 @@ public partial struct Maybe<T>
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(false),
+            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
+            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext),
             _ => Result.Fail(GetError(), true),
         };
     }
@@ -903,8 +905,8 @@ public partial struct Maybe<T>
 
         return _outcome switch
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(false),
-            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(false),
+            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
+            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext),
             _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
@@ -1063,7 +1065,7 @@ public partial struct Maybe<T>
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 }
@@ -1083,7 +1085,7 @@ public static partial class ResultExtensions
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Result> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by
@@ -1097,7 +1099,7 @@ public static partial class ResultExtensions
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1113,7 +1115,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1129,7 +1131,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1145,7 +1147,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Maybe<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1161,7 +1163,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
@@ -1176,7 +1178,7 @@ public static partial class ResultExtensions
     public static async Task<Result> SelectMany<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Result> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
@@ -1191,7 +1193,7 @@ public static partial class ResultExtensions
     public static async Task<Result> SelectMany<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1214,7 +1216,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1237,7 +1239,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1260,7 +1262,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Maybe<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1283,7 +1285,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<TReturn>> SelectMany<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
@@ -1301,7 +1303,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, Result> onSuccessSelector,
         Func<Result>? onNoneSelector = null) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
@@ -1319,7 +1321,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result>> onSuccessSelector,
         Func<Task<Result>>? onNoneSelector = null) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1345,7 +1347,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, Result<TReturn>> onSuccessSelector,
         Func<Result<TReturn>>? onNoneSelector = null) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1371,7 +1373,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Result<TReturn>>> onSuccessSelector,
         Func<Task<Result<TReturn>>>? onNoneSelector = null) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1396,7 +1398,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, Maybe<TReturn>> onSuccessSelector,
         Func<Maybe<TReturn>>? onNoneSelector = null) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1421,7 +1423,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<Maybe<TReturn>>> onSuccessSelector,
         Func<Task<Maybe<TReturn>>>? onNoneSelector = null) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector, onNoneSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
@@ -1676,7 +1678,7 @@ public static partial class ResultExtensions
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Unit, Result> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by
@@ -1691,7 +1693,7 @@ public static partial class ResultExtensions
     public static async Task<Result> SelectMany(
         this Task<Result> sourceResult,
         Func<Unit, Task<Result>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1708,7 +1710,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Unit, Result<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1725,7 +1727,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Unit, Task<Result<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1742,7 +1744,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Unit, Maybe<TReturn>> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
@@ -1759,7 +1761,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<TReturn>> SelectMany<TReturn>(
         this Task<Result> sourceResult,
         Func<Unit, Task<Maybe<TReturn>>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).SelectMany(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SelectMany(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
@@ -1813,7 +1815,7 @@ public static partial class ResultExtensions
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return sourceResult.SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
@@ -1989,7 +1991,7 @@ public static partial class ResultExtensions
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return sourceResult.SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
@@ -2045,7 +2047,7 @@ public static partial class ResultExtensions
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return sourceResult.SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(false)).Select(
+            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 }

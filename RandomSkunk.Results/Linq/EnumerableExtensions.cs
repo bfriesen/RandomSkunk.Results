@@ -1,5 +1,7 @@
 using RandomSkunk.Results;
 
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace System.Linq;
 
 /// <summary>
@@ -70,7 +72,7 @@ public static class EnumerableExtensions
     {
         foreach (var item in sourceSequence)
         {
-            var result = await action(item).ConfigureAwait(false);
+            var result = await action(item).ConfigureAwait(ContinueOnCapturedContext);
             if (result.IsFail) return result;
         }
 
@@ -94,7 +96,7 @@ public static class EnumerableExtensions
         var i = 0;
         foreach (var item in sourceSequence)
         {
-            var result = await action(item, i++).ConfigureAwait(false);
+            var result = await action(item, i++).ConfigureAwait(ContinueOnCapturedContext);
             if (result.IsFail) return result;
         }
 
@@ -114,7 +116,7 @@ public static class EnumerableExtensions
     /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result> ForEach<T>(this Task<IEnumerable<T>> sourceSequence, Func<T, Result> action) =>
-        (await sourceSequence.ConfigureAwait(false)).ForEach(action);
+        (await sourceSequence.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action);
 
     /// <summary>
     /// Performs the specified result action on each element and index of the sequence.
@@ -129,7 +131,7 @@ public static class EnumerableExtensions
     /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result> ForEach<T>(this Task<IEnumerable<T>> sourceSequence, Func<T, int, Result> action) =>
-        (await sourceSequence.ConfigureAwait(false)).ForEach(action);
+        (await sourceSequence.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action);
 
     /// <summary>
     /// Performs the specified result action on each element of the sequence.
@@ -144,7 +146,7 @@ public static class EnumerableExtensions
     /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result> ForEach<T>(this Task<IEnumerable<T>> sourceSequence, Func<T, Task<Result>> action) =>
-        await (await sourceSequence.ConfigureAwait(false)).ForEach(action).ConfigureAwait(false);
+        await (await sourceSequence.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Performs the specified result action on each element and index of the sequence.
@@ -159,7 +161,7 @@ public static class EnumerableExtensions
     /// <returns>A <c>Success</c> result if all elements of the sequence produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result> ForEach<T>(this Task<IEnumerable<T>> sourceSequence, Func<T, int, Task<Result>> action) =>
-        await (await sourceSequence.ConfigureAwait(false)).ForEach(action).ConfigureAwait(false);
+        await (await sourceSequence.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Returns a <c>Success</c> result of the first element of a sequence. If the sequence is empty, a <c>Fail</c> result with

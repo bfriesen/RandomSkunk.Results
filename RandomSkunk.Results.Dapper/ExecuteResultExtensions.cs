@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results.Dapper;
 
 /// <summary>
@@ -21,7 +23,7 @@ public static class ExecuteResultExtensions
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
     /// <returns>A result representing a database query that affected one row.</returns>
     public static async Task<Result> EnsureOneRowAffected(this Task<Result<int>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).EnsureOneRowAffected();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureOneRowAffected();
 
     /// <summary>
     /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is equal to
@@ -44,5 +46,5 @@ public static class ExecuteResultExtensions
     /// <param name="affectedRows">The expected number of affected rows.</param>
     /// <returns>A result representing a database query that affected N rows.</returns>
     public static async Task<Result> EnsureNRowsAffected(this Task<Result<int>> sourceResult, int affectedRows) =>
-        (await sourceResult.ConfigureAwait(false)).EnsureNRowsAffected(affectedRows);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureNRowsAffected(affectedRows);
 }

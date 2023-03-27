@@ -1,5 +1,7 @@
 namespace RandomSkunk.Results;
 
+using static RandomSkunk.Results.AwaitSettings;
+
 /// <content> Defines the <c>WithError</c> method. </content>
 public partial struct Result
 {
@@ -72,7 +74,7 @@ public static partial class ResultExtensions
     ///     <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onFailGetError"/> is <see langword="null"/>.</exception>
     public static async Task<Result> WithError(this Task<Result> sourceResult, Func<Error, Error> onFailGetError) =>
-        (await sourceResult.ConfigureAwait(false)).WithError(onFailGetError);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).WithError(onFailGetError);
 
     /// <summary>
     /// Replaces the error of a <c>Fail</c> result, otherwise does nothing.
@@ -84,7 +86,7 @@ public static partial class ResultExtensions
     ///     <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onFailGetError"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> WithError<T>(this Task<Result<T>> sourceResult, Func<Error, Error> onFailGetError) =>
-        (await sourceResult.ConfigureAwait(false)).WithError(onFailGetError);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).WithError(onFailGetError);
 
     /// <summary>
     /// Replaces the error of a <c>Fail</c> result, otherwise does nothing.
@@ -96,5 +98,5 @@ public static partial class ResultExtensions
     ///     <c>Fail</c> result; otherwise, <paramref name="sourceResult"/>.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="onFailGetError"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> WithError<T>(this Task<Maybe<T>> sourceResult, Func<Error, Error> onFailGetError) =>
-        (await sourceResult.ConfigureAwait(false)).WithError(onFailGetError);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).WithError(onFailGetError);
 }

@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Or</c> methods. </content>
@@ -77,7 +79,7 @@ public static partial class ResultExtensions
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="fallbackValue"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> Or<T>(this Task<Result<T>> sourceResult, [DisallowNull] T fallbackValue) =>
-        (await sourceResult.ConfigureAwait(false)).Or(fallbackValue);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Or(fallbackValue);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result; otherwise, returns a new <c>Success</c> result
@@ -89,7 +91,7 @@ public static partial class ResultExtensions
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> Or<T>(this Task<Result<T>> sourceResult, Func<T> getFallbackValue) =>
-        (await sourceResult.ConfigureAwait(false)).Or(getFallbackValue);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Or(getFallbackValue);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result; otherwise, returns a new <c>Success</c> result
@@ -101,7 +103,7 @@ public static partial class ResultExtensions
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="fallbackValue"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> Or<T>(this Task<Maybe<T>> sourceResult, [DisallowNull] T fallbackValue) =>
-        (await sourceResult.ConfigureAwait(false)).Or(fallbackValue);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Or(fallbackValue);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result; otherwise, returns a new <c>Success</c> result
@@ -113,5 +115,5 @@ public static partial class ResultExtensions
     /// <returns>A <c>Success</c> result.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> Or<T>(this Task<Maybe<T>> sourceResult, Func<T> getFallbackValue) =>
-        (await sourceResult.ConfigureAwait(false)).Or(getFallbackValue);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Or(getFallbackValue);
 }

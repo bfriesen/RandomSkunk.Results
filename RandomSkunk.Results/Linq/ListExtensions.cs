@@ -1,5 +1,7 @@
 using RandomSkunk.Results;
 
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace System.Linq;
 
 /// <summary>
@@ -71,7 +73,7 @@ public static class ListExtensions
     {
         foreach (var item in sourceList)
         {
-            var result = await action(item).ConfigureAwait(false);
+            var result = await action(item).ConfigureAwait(ContinueOnCapturedContext);
             if (result.TryGetError(out var error))
                 return Result<IReadOnlyList<T>>.Fail(error, true);
         }
@@ -95,7 +97,7 @@ public static class ListExtensions
     {
         for (int i = 0; i < sourceList.Count; i++)
         {
-            var result = await action(sourceList[i], i).ConfigureAwait(false);
+            var result = await action(sourceList[i], i).ConfigureAwait(ContinueOnCapturedContext);
             if (result.TryGetError(out var error))
                 return Result<IReadOnlyList<T>>.Fail(error, true);
         }
@@ -116,7 +118,7 @@ public static class ListExtensions
     /// <returns>A <c>Success</c> result if all elements of the list produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result<IReadOnlyList<T>>> ForEach<T>(this Task<IReadOnlyList<T>> sourceList, Func<T, Result> action) =>
-        (await sourceList.ConfigureAwait(false)).ForEach(action);
+        (await sourceList.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action);
 
     /// <summary>
     /// Performs the specified result action on each element and index of the list.
@@ -131,7 +133,7 @@ public static class ListExtensions
     /// <returns>A <c>Success</c> result if all elements of the list produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result<IReadOnlyList<T>>> ForEach<T>(this Task<IReadOnlyList<T>> sourceList, Func<T, int, Result> action) =>
-        (await sourceList.ConfigureAwait(false)).ForEach(action);
+        (await sourceList.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action);
 
     /// <summary>
     /// Performs the specified result action on each element of the list.
@@ -146,7 +148,7 @@ public static class ListExtensions
     /// <returns>A <c>Success</c> result if all elements of the list produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result<IReadOnlyList<T>>> ForEach<T>(this Task<IReadOnlyList<T>> sourceList, Func<T, Task<Result>> action) =>
-        await (await sourceList.ConfigureAwait(false)).ForEach(action).ConfigureAwait(false);
+        await (await sourceList.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Performs the specified result action on each element and index of the list.
@@ -161,5 +163,5 @@ public static class ListExtensions
     /// <returns>A <c>Success</c> result if all elements of the list produce a <c>Success</c> result; otherwise, the first
     ///     <c>Fail</c> result produced by an element.</returns>
     public static async Task<Result<IReadOnlyList<T>>> ForEach<T>(this Task<IReadOnlyList<T>> sourceList, Func<T, int, Task<Result>> action) =>
-        await (await sourceList.ConfigureAwait(false)).ForEach(action).ConfigureAwait(false);
+        await (await sourceList.ConfigureAwait(ContinueOnCapturedContext)).ForEach(action).ConfigureAwait(ContinueOnCapturedContext);
 }

@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>OnFail</c> methods. </content>
@@ -28,7 +30,7 @@ public partial struct Result
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            await onFailCallback(GetError()).ConfigureAwait(false);
+            await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -62,7 +64,7 @@ public partial struct Result<T>
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            await onFailCallback(GetError()).ConfigureAwait(false);
+            await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -96,7 +98,7 @@ public partial struct Maybe<T>
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            await onFailCallback(GetError()).ConfigureAwait(false);
+            await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -112,7 +114,7 @@ public static partial class ResultExtensions
     /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result> OnFail(this Task<Result> sourceResult, Action<Error> onFailCallback) =>
-        (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
@@ -121,7 +123,7 @@ public static partial class ResultExtensions
     /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result> OnFail(this Task<Result> sourceResult, Func<Error, Task> onFailCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
@@ -131,7 +133,7 @@ public static partial class ResultExtensions
     /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> sourceResult, Action<Error> onFailCallback) =>
-        (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
@@ -141,7 +143,7 @@ public static partial class ResultExtensions
     /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> sourceResult, Func<Error, Task> onFailCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
@@ -151,7 +153,7 @@ public static partial class ResultExtensions
     /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Maybe<T>> OnFail<T>(this Task<Maybe<T>> sourceResult, Action<Error> onFailCallback) =>
-        (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
@@ -161,5 +163,5 @@ public static partial class ResultExtensions
     /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Maybe<T>> OnFail<T>(this Task<Maybe<T>> sourceResult, Func<Error, Task> onFailCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnFail(onFailCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback).ConfigureAwait(ContinueOnCapturedContext);
 }

@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results.Http;
 
 /// <summary>
@@ -110,8 +112,8 @@ public static class HttpClientExtensions
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        var responseResult = await sourceHttpClient.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken).ConfigureAwait(false);
-        var returnResult = await responseResult.ReadMaybeFromJsonAsync<TValue>(options, cancellationToken).ConfigureAwait(false);
+        var responseResult = await sourceHttpClient.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        var returnResult = await responseResult.ReadMaybeFromJsonAsync<TValue>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         responseResult.OnSuccess(response => response.Dispose());
         return returnResult;
     }

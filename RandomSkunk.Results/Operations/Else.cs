@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Else</c> methods. </content>
@@ -94,7 +96,7 @@ public static partial class ResultExtensions
     /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
     public static async Task<Result> Else(this Task<Result> sourceResult, Result fallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Else(fallbackResult);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
@@ -106,7 +108,7 @@ public static partial class ResultExtensions
     ///     </returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
     public static async Task<Result> Else(this Task<Result> sourceResult, Func<Result> getFallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Else(getFallbackResult);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
@@ -116,7 +118,7 @@ public static partial class ResultExtensions
     /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
     public static async Task<Result<T>> Else<T>(this Task<Result<T>> sourceResult, Result<T> fallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Else(fallbackResult);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
@@ -129,7 +131,7 @@ public static partial class ResultExtensions
     ///     </returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> Else<T>(this Task<Result<T>> sourceResult, Func<Result<T>> getFallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Else(getFallbackResult);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the specified fallback result.
@@ -139,7 +141,7 @@ public static partial class ResultExtensions
     /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
     /// <returns>Either <paramref name="sourceResult"/> or <paramref name="fallbackResult"/>.</returns>
     public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> sourceResult, Maybe<T> fallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(fallbackResult);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Else(fallbackResult);
 
     /// <summary>
     /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result, else returns the result from evaluating the
@@ -152,5 +154,5 @@ public static partial class ResultExtensions
     ///     </returns>
     /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> Else<T>(this Task<Maybe<T>> sourceResult, Func<Maybe<T>> getFallbackResult) =>
-        (await sourceResult.ConfigureAwait(false)).Else(getFallbackResult);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Else(getFallbackResult);
 }

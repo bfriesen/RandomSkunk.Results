@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -57,7 +59,7 @@ public static class TryCatch
 
         try
         {
-            await sourceDelegate().ConfigureAwait(false);
+            await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Result.Success();
         }
         catch (Exception ex)
@@ -121,7 +123,7 @@ public static class TryCatch
 
         try
         {
-            var value = await sourceDelegate().ConfigureAwait(false);
+            var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Result<T>.FromValue(value);
         }
         catch (Exception ex)
@@ -185,7 +187,7 @@ public static class TryCatch
 
         try
         {
-            var value = await sourceDelegate().ConfigureAwait(false);
+            var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Maybe<T>.FromValue(value);
         }
         catch (Exception ex)

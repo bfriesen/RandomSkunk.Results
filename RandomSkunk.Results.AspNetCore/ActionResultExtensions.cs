@@ -2,6 +2,8 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results.AspNetCore;
 
 /// <summary>
@@ -103,7 +105,7 @@ public static class ActionResultExtensions
         this Task<Result> sourceResult,
         Func<IActionResult> onSuccess,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToActionResult(onSuccess, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(onSuccess, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result{T}"/>.
@@ -122,7 +124,7 @@ public static class ActionResultExtensions
         this Task<Result<T>> sourceResult,
         Func<T, IActionResult> onSuccess,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToActionResult(onSuccess, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(onSuccess, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Maybe{T}"/>.
@@ -141,7 +143,7 @@ public static class ActionResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, IActionResult> onSuccess,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToActionResult(onSuccess, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(onSuccess, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result"/>.
@@ -246,7 +248,7 @@ public static class ActionResultExtensions
         this Task<Result> sourceResult,
         int successStatusCode = 200,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToActionResult(successStatusCode, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(successStatusCode, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Result{T}"/>.
@@ -267,7 +269,7 @@ public static class ActionResultExtensions
         this Task<Result<T>> sourceResult,
         int successStatusCode = 200,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToActionResult(successStatusCode, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(successStatusCode, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> that is equivalent to the source <see cref="Maybe{T}"/>.
@@ -288,7 +290,7 @@ public static class ActionResultExtensions
         this Task<Maybe<T>> sourceResult,
         int successStatusCode = 200,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToActionResult(successStatusCode, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(successStatusCode, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that is equivalent to the source <see cref="Result{T}"/>.
@@ -362,7 +364,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that is equivalent to the source <see cref="Maybe{T}"/>.
@@ -382,7 +384,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that is equivalent to the source <see cref="Result{T}"/>.
@@ -456,7 +458,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that is equivalent to the source <see cref="Maybe{T}"/>.
@@ -476,7 +478,7 @@ public static class ActionResultExtensions
         string contentType,
         string? fileDownloadName = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for JSON that is equivalent to the source <see cref="Result{T}"/>.
@@ -555,7 +557,7 @@ public static class ActionResultExtensions
         this Task<Result<T>> sourceResult,
         object? serializerSettings = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToJsonActionResult(serializerSettings, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToJsonActionResult(serializerSettings, getHttpStatusCode);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for JSON that is equivalent to the source <see cref="Maybe{T}"/>.
@@ -580,7 +582,7 @@ public static class ActionResultExtensions
         this Task<Maybe<T>> sourceResult,
         object? serializerSettings = null,
         Func<int, int>? getHttpStatusCode = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToJsonActionResult(serializerSettings, getHttpStatusCode);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToJsonActionResult(serializerSettings, getHttpStatusCode);
 
     private static IActionResult GetFailActionResult(Error error, Func<int, int>? getHttpStatusCode)
     {

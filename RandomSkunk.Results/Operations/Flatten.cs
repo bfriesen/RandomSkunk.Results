@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Flatten</c> extension methods. </content>
@@ -62,7 +64,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Result<T>> Flatten<T>(this Task<Result<Result<T>>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
@@ -70,7 +72,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Result> Flatten(this Task<Result<Result>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
@@ -79,7 +81,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Maybe<T>> Flatten<T>(this Task<Result<Maybe<T>>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
@@ -88,7 +90,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Maybe<T>> Flatten<T>(this Task<Maybe<Maybe<T>>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
@@ -96,7 +98,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Result> Flatten(this Task<Maybe<Result>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Flatten();
 
     /// <summary>
     /// Flattens the nested result.
@@ -105,5 +107,5 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The flattened result.</returns>
     public static async Task<Result<T>> Flatten<T>(this Task<Maybe<Result<T>>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Flatten();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Flatten();
 }

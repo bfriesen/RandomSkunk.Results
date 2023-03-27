@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results.Dapper;
 
 /// <summary>
@@ -1033,7 +1035,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
-            async () => new GridReader(await cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(false)),
+            async () => new GridReader(await cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext)),
             exceptionHandler);
 
     /// <summary>

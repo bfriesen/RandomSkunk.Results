@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>AsMaybe</c> method. </content>
@@ -27,5 +29,5 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public static async Task<Maybe<T>> AsMaybe<T>(this Task<Result<T>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).AsMaybe();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).AsMaybe();
 }

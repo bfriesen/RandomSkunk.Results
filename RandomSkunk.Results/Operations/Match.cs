@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Match</c> methods. </content>
@@ -190,7 +192,7 @@ public static partial class ResultExtensions
         this Task<Result> sourceResult,
         Func<TReturn> onSuccess,
         Func<Error, TReturn> onFail) =>
-        (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Match(onSuccess, onFail);
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
@@ -209,7 +211,7 @@ public static partial class ResultExtensions
         this Task<Result> sourceResult,
         Func<Task<TReturn>> onSuccess,
         Func<Error, Task<TReturn>> onFail) =>
-        await (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Match(onSuccess, onFail).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
@@ -229,7 +231,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> sourceResult,
         Func<T, TReturn> onSuccess,
         Func<Error, TReturn> onFail) =>
-            (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail);
+            (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Match(onSuccess, onFail);
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
@@ -250,7 +252,7 @@ public static partial class ResultExtensions
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccess,
         Func<Error, Task<TReturn>> onFail) =>
-            await (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onFail).ConfigureAwait(false);
+            await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Match(onSuccess, onFail).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/>, <paramref name="onNone"/>, or <paramref name="onFail"/> function
@@ -273,7 +275,7 @@ public static partial class ResultExtensions
         Func<T, TReturn> onSuccess,
         Func<TReturn> onNone,
         Func<Error, TReturn> onFail) =>
-        (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onNone, onFail);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Match(onSuccess, onNone, onFail);
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/>, <paramref name="onNone"/>, or <paramref name="onFail"/> function
@@ -297,5 +299,5 @@ public static partial class ResultExtensions
         Func<T, Task<TReturn>> onSuccess,
         Func<Task<TReturn>> onNone,
         Func<Error, Task<TReturn>> onFail) =>
-        await (await sourceResult.ConfigureAwait(false)).Match(onSuccess, onNone, onFail).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Match(onSuccess, onNone, onFail).ConfigureAwait(ContinueOnCapturedContext);
 }

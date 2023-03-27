@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Select</c> methods. </content>
@@ -52,7 +54,7 @@ public partial struct Result
 
         return _outcome switch
         {
-            Outcome.Success => (await onSuccessSelector(Unit.Value).ConfigureAwait(false)).ToResult(),
+            Outcome.Success => (await onSuccessSelector(Unit.Value).ConfigureAwait(ContinueOnCapturedContext)).ToResult(),
             _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
@@ -108,7 +110,7 @@ public partial struct Result<T>
 
         return _outcome switch
         {
-            Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToResult(),
+            Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext)).ToResult(),
             _ => Result<TReturn>.Fail(GetError(), true),
         };
     }
@@ -173,8 +175,8 @@ public partial struct Maybe<T>
 
         return _outcome switch
         {
-            Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(false)).ToMaybe(),
-            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : (await onNoneSelector().ConfigureAwait(false)).ToMaybe(),
+            Outcome.Success => (await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext)).ToMaybe(),
+            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : (await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext)).ToMaybe(),
             _ => Maybe<TReturn>.Fail(GetError(), true),
         };
     }
@@ -203,7 +205,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> Select<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, TReturn> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Select(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form as a
@@ -225,7 +227,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> Select<T, TReturn>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Select(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form as a
@@ -250,7 +252,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, TReturn> onSuccessSelector,
         Func<TReturn>? onNoneSelector = null) =>
-        (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector, onNoneSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Select(onSuccessSelector, onNoneSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form as a
@@ -275,7 +277,7 @@ public static partial class ResultExtensions
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<TReturn>> onSuccessSelector,
         Func<Task<TReturn>>? onNoneSelector = null) =>
-        await (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector, onNoneSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Select(onSuccessSelector, onNoneSelector).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form as a
@@ -297,7 +299,7 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> Select<TReturn>(
         this Task<Result> sourceResult,
         Func<Unit, TReturn> onSuccessSelector) =>
-        (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Select(onSuccessSelector);
 
     /// <summary>
     /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form as a
@@ -319,5 +321,5 @@ public static partial class ResultExtensions
     public static async Task<Result<TReturn>> Select<TReturn>(
         this Task<Result> sourceResult,
         Func<Unit, Task<TReturn>> onSuccessSelector) =>
-        await (await sourceResult.ConfigureAwait(false)).Select(onSuccessSelector).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Select(onSuccessSelector).ConfigureAwait(ContinueOnCapturedContext);
 }

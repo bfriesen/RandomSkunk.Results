@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning].
     - Add overloads for `Maybe<T>.ToResult` and `Maybe<T>.Truncate` with `onNoneSelector` parameter.
     - Add implicit conversion operator methods from `Error` to `Result`, `Result<T>`, and `Maybe<T>`.
     - Add `Unit.Invoke` method.
+    - Add `AwaitSettings.ContinueOnCapturedContext` setting.
 
 - RandomSkunk.Results.AspNetCore:
     - Add `ToFileActionResult` extension methods.

@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>ToFailIf</c> method. </content>
@@ -79,7 +81,7 @@ public static partial class ResultExtensions
     /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
     ///     did not.</returns>
     public static async Task<Result> ToFailIf(this Task<Result> sourceResult, Func<bool> predicate, Func<Error>? getError = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToFailIf(predicate, getError);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError);
 
     /// <summary>
     /// Gets a <c>Fail</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>
@@ -92,7 +94,7 @@ public static partial class ResultExtensions
     /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
     ///     did not.</returns>
     public static async Task<Result<T>> ToFailIf<T>(this Task<Result<T>> sourceResult, Func<T, bool> predicate, Func<T, Error>? getError = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToFailIf(predicate, getError);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError);
 
     /// <summary>
     /// Gets a <c>Fail</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>
@@ -105,5 +107,5 @@ public static partial class ResultExtensions
     /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
     ///     did not.</returns>
     public static async Task<Maybe<T>> ToFailIf<T>(this Task<Maybe<T>> sourceResult, Func<T, bool> predicate, Func<T, Error>? getError = null) =>
-        (await sourceResult.ConfigureAwait(false)).ToFailIf(predicate, getError);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError);
 }

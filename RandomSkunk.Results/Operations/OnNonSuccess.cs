@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>OnNonSuccess</c> extension methods. </content>
@@ -43,7 +45,7 @@ public static partial class ResultExtensions
         if (!sourceResult.IsSuccess)
         {
             var error = sourceResult.GetNonSuccessError();
-            await onNonSuccess(error).ConfigureAwait(false);
+            await onNonSuccess(error).ConfigureAwait(ContinueOnCapturedContext);
         }
 
         return sourceResult;
@@ -60,7 +62,7 @@ public static partial class ResultExtensions
         this Task<TResult> sourceResult,
         Action<Error> onNonSuccessCallback)
         where TResult : IResult =>
-        (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccessCallback);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnNonSuccess(onNonSuccessCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onNonSuccess"/> function if the current result is a <c>non-Success</c> result.
@@ -73,5 +75,5 @@ public static partial class ResultExtensions
         this Task<TResult> sourceResult,
         Func<Error, Task> onNonSuccess)
         where TResult : IResult =>
-        await (await sourceResult.ConfigureAwait(false)).OnNonSuccess(onNonSuccess).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnNonSuccess(onNonSuccess).ConfigureAwait(ContinueOnCapturedContext);
 }

@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Truncate</c> method. </content>
@@ -50,7 +52,7 @@ public static partial class ResultExtensions
     /// <param name="sourceResult">The source result.</param>
     /// <returns>An equivalent <see cref="Result"/>.</returns>
     public static async Task<Result> Truncate<T>(this Task<Result<T>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(false)).Truncate();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Truncate();
 
     /// <summary>
     /// Truncates the <see cref="Maybe{T}"/> into an equivalent <see cref="Result"/>. If it is a <c>Success</c> result, then its
@@ -63,7 +65,7 @@ public static partial class ResultExtensions
     /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>An equivalent <see cref="Result"/>.</returns>
     public static async Task<Result> Truncate<T>(this Task<Maybe<T>> sourceResult, Func<Result>? onNoneSelector) =>
-        (await sourceResult.ConfigureAwait(false)).Truncate(onNoneSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Truncate(onNoneSelector);
 
     /// <summary>
     /// Truncates the <see cref="Maybe{T}"/> into an equivalent <see cref="Result"/>. If it is a <c>Success</c> result, then its

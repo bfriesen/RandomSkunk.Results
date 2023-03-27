@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>OnSuccess</c> methods. </content>
@@ -28,7 +30,7 @@ public partial struct Result
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            await onSuccessCallback().ConfigureAwait(false);
+            await onSuccessCallback().ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -62,7 +64,7 @@ public partial struct Result<T>
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            await onSuccessCallback(_value!).ConfigureAwait(false);
+            await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -96,7 +98,7 @@ public partial struct Maybe<T>
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            await onSuccessCallback(_value!).ConfigureAwait(false);
+            await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -113,7 +115,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccessCallback">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Maybe<T>> OnSuccess<T>(this Task<Maybe<T>> sourceResult, Action<T> onSuccessCallback) =>
-        (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnSuccess(onSuccessCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccessCallback"/> function if <paramref name="sourceResult"/> is a <c>Success</c> result.
@@ -123,7 +125,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccessCallback">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Maybe<T>> OnSuccess<T>(this Task<Maybe<T>> sourceResult, Func<T, Task> onSuccessCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnSuccess(onSuccessCallback).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccessCallback"/> function if <paramref name="sourceResult"/> is a <c>Success</c> result.
@@ -132,7 +134,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccessCallback">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result> OnSuccess(this Task<Result> sourceResult, Action onSuccessCallback) =>
-        (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnSuccess(onSuccessCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccessCallback"/> function if <paramref name="sourceResult"/> is a <c>Success</c> result.
@@ -141,7 +143,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccessCallback">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result> OnSuccess(this Task<Result> sourceResult, Func<Task> onSuccessCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnSuccess(onSuccessCallback).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccessCallback"/> function if <paramref name="sourceResult"/> is a <c>Success</c> result.
@@ -151,7 +153,7 @@ public static partial class ResultExtensions
     /// <param name="onSuccessCallback">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result<T>> OnSuccess<T>(this Task<Result<T>> sourceResult, Action<T> onSuccessCallback) =>
-        (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnSuccess(onSuccessCallback);
 
     /// <summary>
     /// Invokes the <paramref name="onSuccessCallback"/> function if <paramref name="sourceResult"/> is a <c>Success</c> result.
@@ -161,5 +163,5 @@ public static partial class ResultExtensions
     /// <param name="onSuccessCallback">A callback function to invoke if the source is a <c>Success</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result<T>> OnSuccess<T>(this Task<Result<T>> sourceResult, Func<T, Task> onSuccessCallback) =>
-        await (await sourceResult.ConfigureAwait(false)).OnSuccess(onSuccessCallback).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnSuccess(onSuccessCallback).ConfigureAwait(ContinueOnCapturedContext);
 }

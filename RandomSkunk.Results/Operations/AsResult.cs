@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>AsResult</c> method. </content>
@@ -39,7 +41,7 @@ public static partial class ResultExtensions
     /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
     public static async Task<Result<T>> AsResult<T>(this Task<Maybe<T>> sourceResult, Func<Result<T>>? onNoneSelector) =>
-        (await sourceResult.ConfigureAwait(false)).AsResult(onNoneSelector);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).AsResult(onNoneSelector);
 
     /// <summary>
     /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>. If this is a <c>Success</c> result, then a

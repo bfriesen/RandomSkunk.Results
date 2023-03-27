@@ -1,5 +1,7 @@
 namespace RandomSkunk.Results;
 
+using static RandomSkunk.Results.AwaitSettings;
+
 /// <content> Defines the <c>Where</c> methods. </content>
 public partial struct Result<T>
 {
@@ -39,7 +41,7 @@ public partial struct Result<T>
 
         if (IsSuccess)
         {
-            return await predicate(_value!).ConfigureAwait(false)
+            return await predicate(_value!).ConfigureAwait(ContinueOnCapturedContext)
                 ? AsMaybe()
                 : Maybe<T>.None;
         }
@@ -87,7 +89,7 @@ public partial struct Maybe<T>
 
         if (IsSuccess)
         {
-            return await predicate(_value!).ConfigureAwait(false)
+            return await predicate(_value!).ConfigureAwait(ContinueOnCapturedContext)
                 ? this
                 : Maybe<T>.None;
         }
@@ -113,7 +115,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<T>> Where<T>(
         this Task<Result<T>> sourceResult,
         Func<T, bool> predicate) =>
-        (await sourceResult.ConfigureAwait(false)).Where(predicate);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Where(predicate);
 
     /// <summary>
     /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
@@ -129,7 +131,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<T>> Where<T>(
         this Task<Result<T>> sourceResult,
         Func<T, Task<bool>> predicate) =>
-        await (await sourceResult.ConfigureAwait(false)).Where(predicate).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Where(predicate).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
@@ -145,7 +147,7 @@ public static partial class ResultExtensions
     public static async Task<Maybe<T>> Where<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, bool> predicate) =>
-        (await sourceResult.ConfigureAwait(false)).Where(predicate);
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Where(predicate);
 
     /// <summary>
     /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
@@ -161,5 +163,5 @@ public static partial class ResultExtensions
     public static async Task<Maybe<T>> Where<T>(
         this Task<Maybe<T>> sourceResult,
         Func<T, Task<bool>> predicate) =>
-        await (await sourceResult.ConfigureAwait(false)).Where(predicate).ConfigureAwait(false);
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Where(predicate).ConfigureAwait(ContinueOnCapturedContext);
 }

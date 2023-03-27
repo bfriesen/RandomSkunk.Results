@@ -1,3 +1,5 @@
+using static RandomSkunk.Results.AwaitSettings;
+
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>AsNonNullable</c> extension methods. </content>
@@ -31,7 +33,7 @@ public static partial class ResultExtensions
     /// <returns>The equivalant result.</returns>
     public static async Task<Result<T>> AsNonNullable<T>(this Task<Result<T?>> result)
         where T : struct =>
-        (await result.ConfigureAwait(false)).AsNonNullable();
+        (await result.ConfigureAwait(ContinueOnCapturedContext)).AsNonNullable();
 
     /// <summary>
     /// Gets an equivalent result with a non-nullable type.
@@ -41,5 +43,5 @@ public static partial class ResultExtensions
     /// <returns>The equivalant result.</returns>
     public static async Task<Maybe<T>> AsNonNullable<T>(this Task<Maybe<T?>> result)
         where T : struct =>
-        (await result.ConfigureAwait(false)).AsNonNullable();
+        (await result.ConfigureAwait(ContinueOnCapturedContext)).AsNonNullable();
 }
