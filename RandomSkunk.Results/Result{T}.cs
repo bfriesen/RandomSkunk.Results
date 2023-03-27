@@ -80,6 +80,13 @@ public readonly partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     public static implicit operator Result<T>(T? value) => FromValue(value);
 
     /// <summary>
+    /// Converts the specified <see cref="Results.Error"/> into a <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <param name="error">The error for the new <c>Fail</c> result.</param>
+    /// <returns>A <c>Fail</c> result with the specified error.</returns>
+    public static implicit operator Result<T>(Error error) => Fail(error);
+
+    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>
