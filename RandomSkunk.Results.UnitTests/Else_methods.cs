@@ -104,7 +104,7 @@ public class Else_methods
         {
             var source = Result<int>.Fail();
 
-            Action act = () => source.Else(null!);
+            Action act = () => source.Else((Func<Result<int>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -186,7 +186,7 @@ public class Else_methods
         {
             var source = Maybe<int>.Fail();
 
-            Action act = () => source.Else(null!);
+            Action act = () => source.Else((Func<Maybe<int>>)null!);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
