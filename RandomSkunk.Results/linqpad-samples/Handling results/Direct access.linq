@@ -6,8 +6,8 @@
 void Main()
 {
     // Directly accessing the Value or Error of a result is inherently dangerous and the result's
-    // outcome *must* check prior to doing so. Accessing the Value or Error of a result when it is
-    // not valid to do so will result in an InvalidStateException.
+    // outcome *must* be checked prior to doing so. Accessing the Value or Error of a result when
+    // it is not valid to do so will result in an InvalidStateException.
     
     // Get some random results - re-run this script to get different results.
     Result result = GetRandomResult();
