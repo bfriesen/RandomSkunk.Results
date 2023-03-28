@@ -1,5 +1,6 @@
 Create results from value.linq
 Create results from value extension methods.linq
 Fail results.linq
+Implicitly creating results.linq
 Result default values.linq
 About Stack Traces.linq
