@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.AwaitSettings;
-
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>WithError</c> method. </content>

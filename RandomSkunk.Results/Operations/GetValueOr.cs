@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.AwaitSettings;
-
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>GetValueOr</c> and <c>GetValueOrDefault</c> methods. </content>

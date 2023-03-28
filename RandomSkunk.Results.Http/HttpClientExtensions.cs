@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.AwaitSettings;
-
 namespace RandomSkunk.Results.Http;
 
 /// <summary>

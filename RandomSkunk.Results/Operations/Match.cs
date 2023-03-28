@@ -1,5 +1,3 @@
-using static RandomSkunk.Results.AwaitSettings;
-
 namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Match</c> methods. </content>

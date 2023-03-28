@@ -1,7 +1,5 @@
 using RandomSkunk.Results;
 
-using static RandomSkunk.Results.AwaitSettings;
-
 namespace System.Linq;
 
 /// <summary>
