@@ -1,6 +1,6 @@
-namespace RandomSkunk.Results;
-
 using static RandomSkunk.Results.AwaitSettings;
+
+namespace RandomSkunk.Results;
 
 /// <content> Defines the <c>Where</c> methods. </content>
 public partial struct Result<T>

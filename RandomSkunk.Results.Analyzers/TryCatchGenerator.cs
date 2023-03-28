@@ -350,17 +350,6 @@ public class TryCatchGenerator : IIncrementalGenerator
                 EnsureTryCatchDefinitionExists(method.Parameters[0].Type);
         }
 
-        private static string GetTryName(string targetTypeName)
-        {
-            var openAngleBracketIndex = targetTypeName.IndexOf('<');
-            if (openAngleBracketIndex == -1)
-                openAngleBracketIndex = targetTypeName.Length - 1;
-
-            var lastDotIndex = targetTypeName.LastIndexOf('.', openAngleBracketIndex);
-            return (targetTypeName.Substring(0, lastDotIndex + 1) + "Try" + targetTypeName.Substring(lastDotIndex + 1))
-                .Replace('.', '_');
-        }
-
         public string Build(CancellationToken cancellationToken)
         {
             var sb = new StringBuilder();
@@ -479,7 +468,6 @@ public class TryCatchGenerator : IIncrementalGenerator
                                 || (returnType.Name == "ValueTask" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks"))
                             {
                                 // TODO: Need to check for array symbol.
-
                                 var namedType = (INamedTypeSymbol)returnType;
 
                                 if (namedType.Arity == 0)
@@ -681,6 +669,17 @@ public class TryCatchGenerator : IIncrementalGenerator
             return source;
         }
 
+        private static string GetTryName(string targetTypeName)
+        {
+            var openAngleBracketIndex = targetTypeName.IndexOf('<');
+            if (openAngleBracketIndex == -1)
+                openAngleBracketIndex = targetTypeName.Length - 1;
+
+            var lastDotIndex = targetTypeName.LastIndexOf('.', openAngleBracketIndex);
+            return (targetTypeName.Substring(0, lastDotIndex + 1) + "Try" + targetTypeName.Substring(lastDotIndex + 1))
+                .Replace('.', '_');
+        }
+
         private static string GetAccessibility(Accessibility declaredAccessibility)
         {
             return declaredAccessibility switch
@@ -838,18 +837,6 @@ public class TryCatchGenerator : IIncrementalGenerator
 
             var typeParameters = string.Join(", ", namedType.TypeParameters.Select(GetFullName));
             return $"<{typeParameters}>";
-        }
-
-        private static string? GetGenericArguments(ITypeSymbol type)
-        {
-            if (type is not INamedTypeSymbol namedType)
-                return null;
-
-            if (namedType.Arity == 0)
-                return null;
-
-            var typeArguments = string.Join(", ", namedType.TypeArguments.Select(GetFullName));
-            return $"<{typeArguments}>";
         }
 
         private static string GetFullName(ITypeSymbol type) => GetFullName(type, null);

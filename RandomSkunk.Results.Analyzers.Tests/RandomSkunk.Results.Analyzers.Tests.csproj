@@ -33,4 +33,8 @@
 		<ProjectReference Include="..\RandomSkunk.Results\RandomSkunk.Results.csproj" />
 	</ItemGroup>
 
+	<PropertyGroup>
+		<NoWarn>NU1608</NoWarn>
+	</PropertyGroup>
+
 </Project>
