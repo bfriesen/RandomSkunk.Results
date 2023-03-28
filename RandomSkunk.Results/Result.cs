@@ -88,6 +88,7 @@ public readonly partial struct Result : IResult<Unit>, IEquatable<Result>
     /// </summary>
     /// <param name="error">The error for the new <c>Fail</c> result.</param>
     /// <returns>A <c>Fail</c> result with the specified error.</returns>
+    [StackTraceHidden]
     public static implicit operator Result(Error error) => Fail(error);
 
     /// <summary>

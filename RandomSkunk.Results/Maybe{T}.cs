@@ -107,6 +107,7 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// </summary>
     /// <param name="error">The error for the new <c>Fail</c> result.</param>
     /// <returns>A <c>Fail</c> result with the specified error.</returns>
+    [StackTraceHidden]
     public static implicit operator Maybe<T>(Error error) => Fail(error);
 
     /// <summary>
