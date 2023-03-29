@@ -305,7 +305,7 @@ public partial struct Result
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
@@ -727,7 +727,7 @@ public partial struct Result<T>
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 }
@@ -1063,7 +1063,7 @@ public partial struct Maybe<T>
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 }
@@ -1813,7 +1813,7 @@ public static partial class ResultExtensions
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return sourceResult.SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
@@ -1989,7 +1989,7 @@ public static partial class ResultExtensions
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return sourceResult.SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 
@@ -2045,7 +2045,7 @@ public static partial class ResultExtensions
         if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
 
         return sourceResult.SelectMany(
-            async sourceValue => (await intermediateSelector(sourceValue).ConfigureAwait(ContinueOnCapturedContext)).Select(
+            sourceValue => intermediateSelector(sourceValue).Select(
                 intermediateValue => returnSelector(sourceValue, intermediateValue)));
     }
 }

@@ -70,7 +70,7 @@ public static partial class ResultExtensions
 
         public AsyncDisposableResult(Result<TAsyncDisposable> source) => _source = source;
 
-        public async ValueTask DisposeAsync() => await _source.OnSuccess(async value => await value.DisposeAsync().ConfigureAwait(ContinueOnCapturedContext)).ConfigureAwait(ContinueOnCapturedContext);
+        public async ValueTask DisposeAsync() => await _source.OnSuccess(value => value.DisposeAsync().AsTask()).ConfigureAwait(ContinueOnCapturedContext);
     }
 
     private class AsyncDisposableMaybe<TAsyncDisposable> : IAsyncDisposable
@@ -80,6 +80,6 @@ public static partial class ResultExtensions
 
         public AsyncDisposableMaybe(Maybe<TAsyncDisposable> source) => _source = source;
 
-        public async ValueTask DisposeAsync() => await _source.OnSuccess(async value => await value.DisposeAsync().ConfigureAwait(ContinueOnCapturedContext)).ConfigureAwait(ContinueOnCapturedContext);
+        public async ValueTask DisposeAsync() => await _source.OnSuccess(value => value.DisposeAsync().AsTask()).ConfigureAwait(ContinueOnCapturedContext);
     }
 }
