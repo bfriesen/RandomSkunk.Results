@@ -17,7 +17,7 @@ namespace RandomSkunk.Results;
 public record class Error
 {
     internal const string DefaultMessage = "An error occurred.";
-    internal const string DefaultFromExceptionMessage = "An exception was thrown.";
+    internal const string DefaultFromExceptionMessage = "An exception was thrown. See InnerError for details.";
 
     private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
