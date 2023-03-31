@@ -28,7 +28,17 @@ public partial struct Result<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return _outcome == Outcome.Success ? this : getFallbackValue().ToResult();
+        if (_outcome == Outcome.Success)
+            return this;
+
+        try
+        {
+            return getFallbackValue().ToResult();
+        }
+        catch (Exception ex)
+        {
+            return Fail(ex);
+        }
     }
 }
 
@@ -60,7 +70,17 @@ public partial struct Maybe<T>
     {
         if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
 
-        return _outcome == Outcome.Success ? this : getFallbackValue().ToMaybe();
+        if (_outcome == Outcome.Success)
+            return this;
+
+        try
+        {
+            return getFallbackValue().ToMaybe();
+        }
+        catch (Exception ex)
+        {
+            return Fail(ex);
+        }
     }
 }
 

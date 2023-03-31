@@ -13,7 +13,16 @@ public partial struct Result
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            onSuccessCallback();
+        {
+            try
+            {
+                onSuccessCallback();
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }
@@ -28,7 +37,16 @@ public partial struct Result
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            await onSuccessCallback().ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                await onSuccessCallback().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }
@@ -47,7 +65,16 @@ public partial struct Result<T>
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            onSuccessCallback(_value!);
+        {
+            try
+            {
+                onSuccessCallback(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }
@@ -62,7 +89,16 @@ public partial struct Result<T>
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }
@@ -81,7 +117,16 @@ public partial struct Maybe<T>
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            onSuccessCallback(_value!);
+        {
+            try
+            {
+                onSuccessCallback(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }
@@ -96,7 +141,16 @@ public partial struct Maybe<T>
         if (onSuccessCallback is null) throw new ArgumentNullException(nameof(onSuccessCallback));
 
         if (_outcome == Outcome.Success)
-            await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }

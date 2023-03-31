@@ -13,7 +13,16 @@ public partial struct Result
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            onFailCallback(GetError());
+        {
+            try
+            {
+                onFailCallback(GetError());
+            }
+            catch (Exception ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+            }
+        }
 
         return this;
     }
@@ -28,7 +37,16 @@ public partial struct Result
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+            }
+        }
 
         return this;
     }
@@ -47,7 +65,16 @@ public partial struct Result<T>
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            onFailCallback(GetError());
+        {
+            try
+            {
+                onFailCallback(GetError());
+            }
+            catch (Exception ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+            }
+        }
 
         return this;
     }
@@ -62,7 +89,16 @@ public partial struct Result<T>
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+            }
+        }
 
         return this;
     }
@@ -81,7 +117,16 @@ public partial struct Maybe<T>
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            onFailCallback(GetError());
+        {
+            try
+            {
+                onFailCallback(GetError());
+            }
+            catch (Exception ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+            }
+        }
 
         return this;
     }
@@ -96,7 +141,16 @@ public partial struct Maybe<T>
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
-            await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+            }
+        }
 
         return this;
     }

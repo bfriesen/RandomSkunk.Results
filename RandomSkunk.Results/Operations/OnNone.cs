@@ -13,7 +13,16 @@ public partial struct Maybe<T>
         if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
 
         if (_outcome == Outcome.None)
-            onNoneCallback();
+        {
+            try
+            {
+                onNoneCallback();
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }
@@ -28,7 +37,16 @@ public partial struct Maybe<T>
         if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
 
         if (_outcome == Outcome.None)
-            await onNoneCallback().ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                await onNoneCallback().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
 
         return this;
     }

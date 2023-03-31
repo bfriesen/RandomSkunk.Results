@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+- RandomSkunk.Results:
+    - Catch and handle exceptions thrown from callbacks where possible.
+
 ## [1.1.0] - 2023-03-28
 
 ### Added

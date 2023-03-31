@@ -15,11 +15,19 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => onSuccessSelector(),
-            _ => Fail(GetError(), true),
-        };
+            try
+            {
+                return onSuccessSelector();
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
+
+        return Fail(GetError(), true);
     }
 
     /// <summary>
@@ -34,11 +42,19 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext),
-            _ => Fail(GetError(), true),
-        };
+            try
+            {
+                return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Fail(ex);
+            }
+        }
+
+        return Fail(GetError(), true);
     }
 
     /// <summary>
@@ -61,11 +77,19 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => onSuccessSelector(),
-            _ => Result<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return onSuccessSelector();
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        return Result<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -88,11 +112,19 @@ public partial struct Result
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext),
-            _ => Result<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        return Result<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -116,7 +148,16 @@ public partial struct Result
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (_outcome == Outcome.Success)
-            return onSuccessSelector();
+        {
+            try
+            {
+                return onSuccessSelector();
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
@@ -146,7 +187,16 @@ public partial struct Result
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (_outcome == Outcome.Success)
-            return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            {
+                return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
@@ -441,11 +491,19 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => onSuccessSelector(_value!),
-            _ => Result<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        return Result<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -468,11 +526,19 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
-            _ => Result<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        return Result<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -487,11 +553,19 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => onSuccessSelector(_value!),
-            _ => Result.Fail(GetError(), true),
-        };
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
+        }
+
+        return Result.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -506,11 +580,19 @@ public partial struct Result<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
-            _ => Result.Fail(GetError(), true),
-        };
+            try
+            {
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
+        }
+
+        return Result.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -534,7 +616,16 @@ public partial struct Result<T>
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (_outcome == Outcome.Success)
-            return onSuccessSelector(_value!);
+        {
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
@@ -564,7 +655,16 @@ public partial struct Result<T>
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
         if (_outcome == Outcome.Success)
-            return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+        {
+            try
+            { 
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
@@ -758,12 +858,34 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : onNoneSelector.Invoke(),
-            _ => Maybe<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
+
+        if (_outcome == Outcome.None)
+        {
+            if (onNoneSelector is null)
+                return Maybe<TReturn>.None;
+
+            try
+            {
+                return onNoneSelector();
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
+
+        return Maybe<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -789,12 +911,34 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
-            Outcome.None => onNoneSelector is null ? Maybe<TReturn>.None : await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext),
-            _ => Maybe<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
+
+        if (_outcome == Outcome.None)
+        {
+            if (onNoneSelector is null)
+                return Maybe<TReturn>.None;
+
+            try
+            {
+                return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
+        }
+
+        return Maybe<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -813,12 +957,34 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), true) : onNoneSelector.Invoke(),
-            _ => Result.Fail(GetError(), true),
-        };
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
+        }
+
+        if (_outcome == Outcome.None)
+        {
+            if (onNoneSelector is null)
+                return Result.Fail(Errors.NoValue(), true);
+
+            try
+            {
+                return onNoneSelector();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
+        }
+
+        return Result.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -837,12 +1003,34 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
-            Outcome.None => onNoneSelector is null ? Result.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext),
-            _ => Result.Fail(GetError(), true),
-        };
+            try
+            {
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
+        }
+
+        if (_outcome == Outcome.None)
+        {
+            if (onNoneSelector is null)
+                return Result.Fail(Errors.NoValue(), true);
+
+            try
+            {
+                return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
+        }
+
+        return Result.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -869,12 +1057,34 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => onSuccessSelector(_value!),
-            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), true) : onNoneSelector.Invoke(),
-            _ => Result<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        if (_outcome == Outcome.None)
+        {
+            if (onNoneSelector is null)
+                return Result<TReturn>.Fail(Errors.NoValue(), true);
+
+            try
+            {
+                return onNoneSelector();
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        return Result<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>
@@ -901,12 +1111,34 @@ public partial struct Maybe<T>
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
-        return _outcome switch
+        if (_outcome == Outcome.Success)
         {
-            Outcome.Success => await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext),
-            Outcome.None => onNoneSelector is null ? Result<TReturn>.Fail(Errors.NoValue(), true) : await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext),
-            _ => Result<TReturn>.Fail(GetError(), true),
-        };
+            try
+            {
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        if (_outcome == Outcome.None)
+        {
+            if (onNoneSelector is null)
+                return Result<TReturn>.Fail(Errors.NoValue(), true);
+
+            try
+            {
+                return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
+        }
+
+        return Result<TReturn>.Fail(GetError(), true);
     }
 
     /// <summary>

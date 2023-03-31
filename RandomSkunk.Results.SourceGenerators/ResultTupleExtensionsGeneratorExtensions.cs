@@ -55,7 +55,7 @@ public static class ResultTupleExtensions
         {
             onAllSuccess(
                 sourceResults.Item1.Value")
-            .AppendItemNValueParameters(tupleCount)
+            .AppendItemNValueParameters(tupleCount, extraIndent: false)
             .Append(@");
         }
 
@@ -98,7 +98,7 @@ public static class ResultTupleExtensions
         {
             await onAllSuccess(
                 sourceResults.Item1.Value")
-            .AppendItemNValueParameters(tupleCount)
+            .AppendItemNValueParameters(tupleCount, extraIndent: false)
             .Append(@").ConfigureAwait(AwaitSettings.ContinueOnCapturedContext);
         }
 
@@ -246,7 +246,7 @@ public static class ResultTupleExtensions
         {
             return onAllSuccess(
                 sourceResults.Item1.Value")
-            .AppendItemNValueParameters(tupleCount)
+            .AppendItemNValueParameters(tupleCount, extraIndent: false)
             .Append(@");
         }
         else
@@ -306,7 +306,7 @@ public static class ResultTupleExtensions
         {
             return onAllSuccess(
                 sourceResults.Item1.Value")
-            .AppendItemNValueParameters(tupleCount)
+            .AppendItemNValueParameters(tupleCount, extraIndent: false)
             .Append(@");
         }
         else
@@ -358,12 +358,19 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            var value = onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                var value = onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Success(value);
+                return Result<TReturn>.FromValue(value);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
         }
         else
         {
@@ -414,12 +421,19 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            var value = await onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                var value = await onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@").ConfigureAwait(AwaitSettings.ContinueOnCapturedContext);
 
-            return Result<TReturn>.Success(value);
+                return Result<TReturn>.FromValue(value);
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
         }
         else
         {
@@ -468,10 +482,17 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            return onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                return onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
         }
         else
         {
@@ -501,7 +522,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
     ///     <c>Success</c>.</param>
     /// <returns>The projected result.</returns>
-    public static Task<Result> SelectMany")
+    public static async Task<Result> SelectMany")
             .AppendTypeDefinitionForT(tupleCount)
             .Append(@"(
         this ")
@@ -520,10 +541,17 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            return onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                return await onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex);
+            }
         }
         else
         {
@@ -532,7 +560,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Task.FromResult(Result.Fail(error, true));
+            return Result.Fail(error, true);
         }
     }
 
@@ -573,10 +601,17 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            return onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                return onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
         }
         else
         {
@@ -607,7 +642,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
     ///     <c>Success</c>.</param>
     /// <returns>The projected result.</returns>
-    public static Task<Result<TReturn>> SelectMany<")
+    public static async Task<Result<TReturn>> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -626,10 +661,17 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            return onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                return await onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (Exception ex)
+            {
+                return Result<TReturn>.Fail(ex);
+            }
         }
         else
         {
@@ -638,7 +680,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Task.FromResult(Result<TReturn>.Fail(error, true));
+            return Result<TReturn>.Fail(error, true);
         }
     }
 
@@ -679,10 +721,17 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            return onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                return onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (Exception ex)
+            {
+                return Maybe<TReturn>.Fail(ex);
+            }
         }
         else
         {
@@ -713,7 +762,7 @@ public static class ResultTupleExtensions
     /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
     ///     <c>Success</c>.</param>
     /// <returns>The projected result.</returns>
-    public static Task<Maybe<TReturn>> SelectMany<")
+    public static async Task<Maybe<TReturn>> SelectMany<")
             .AppendTypeDefinitionArgumentsForT(tupleCount)
             .Append(@", TReturn>(
         this ")
@@ -732,10 +781,17 @@ public static class ResultTupleExtensions
             .AppendAndItemNIsSuccessClauses(tupleCount)
             .Append(@")
         {
-            return onAllSuccessSelector(
-                sourceResults.Item1.Value")
+            try
+            {
+                return await onAllSuccessSelector(
+                    sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (Exception ex)
+            {
+               return Maybe<TReturn>.Fail(ex); 
+            }
         }
         else
         {
@@ -744,7 +800,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Task.FromResult(Maybe<TReturn>.Fail(error, true));
+            return Maybe<TReturn>.Fail(error, true);
         }
     }
 
@@ -894,12 +950,16 @@ public static class ResultTupleExtensions
         return code;
     }
 
-    private static StringBuilder AppendItemNValueParameters(this StringBuilder code, int tupleCount)
+    private static StringBuilder AppendItemNValueParameters(this StringBuilder code, int tupleCount, bool extraIndent = true)
     {
+        var indent = extraIndent
+            ? "                    "
+            : "                ";
+
         for (int tupleNumber = 2; tupleNumber <= tupleCount; tupleNumber++)
         {
             code.Append($@",
-                sourceResults.Item{tupleNumber}.Value");
+{indent}sourceResults.Item{tupleNumber}.Value");
         }
 
         return code;
