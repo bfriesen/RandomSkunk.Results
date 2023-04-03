@@ -37,7 +37,7 @@ public partial struct Result<T>
         }
         catch (Exception ex)
         {
-            return Fail(ex);
+            return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackValue)));
         }
     }
 }
@@ -79,7 +79,7 @@ public partial struct Maybe<T>
         }
         catch (Exception ex)
         {
-            return Fail(ex);
+            return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackValue)));
         }
     }
 }

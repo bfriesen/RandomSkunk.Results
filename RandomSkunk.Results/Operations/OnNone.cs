@@ -20,7 +20,7 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Fail(ex);
+                return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneCallback)));
             }
         }
 
@@ -44,7 +44,7 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Fail(ex);
+                return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneCallback)));
             }
         }
 

@@ -18,6 +18,7 @@ public record class Error
 {
     internal const string DefaultMessage = "An error occurred.";
     internal const string DefaultFromExceptionMessage = "An exception was thrown. See InnerError for details.";
+    private const string _messageFormatForExceptionThrownInCallback = "An exception was thrown in the '{0}' callback parameter. See InnerError for details.";
 
     private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
@@ -149,6 +150,9 @@ public record class Error
             InnerError = innerError,
         };
     }
+
+    internal static string GetMessageForExceptionThrownInCallback(string callbackName) =>
+        string.Format(_messageFormatForExceptionThrownInCallback, callbackName);
 
     private static Error CreateInnerError(Exception exception)
     {

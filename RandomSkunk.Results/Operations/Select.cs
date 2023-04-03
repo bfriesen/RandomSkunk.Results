@@ -31,7 +31,7 @@ public partial struct Result
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex);
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
         }
 
@@ -66,7 +66,7 @@ public partial struct Result
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex);
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
         }
 
@@ -104,10 +104,10 @@ public partial struct Result<T>
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex);
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
         }
-        
+
         return Result<TReturn>.Fail(GetError(), true);
     }
 
@@ -138,7 +138,7 @@ public partial struct Result<T>
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex);
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
         }
 
@@ -180,7 +180,7 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Maybe<TReturn>.Fail(ex);
+                return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
         }
 
@@ -195,7 +195,7 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Maybe<TReturn>.Fail(ex);
+                return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
         }
 
@@ -233,7 +233,7 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Maybe<TReturn>.Fail(ex);
+                return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
         }
 
@@ -248,7 +248,7 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Maybe<TReturn>.Fail(ex);
+                return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
         }
 

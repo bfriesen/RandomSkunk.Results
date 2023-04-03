@@ -20,7 +20,11 @@ public partial struct Result
             }
             catch (Exception ex)
             {
-                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                }));
             }
         }
 
@@ -44,7 +48,11 @@ public partial struct Result
             }
             catch (Exception ex)
             {
-                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                }));
             }
         }
 
@@ -72,7 +80,11 @@ public partial struct Result<T>
             }
             catch (Exception ex)
             {
-                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                }));
             }
         }
 
@@ -96,7 +108,11 @@ public partial struct Result<T>
             }
             catch (Exception ex)
             {
-                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                }));
             }
         }
 
@@ -124,7 +140,11 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                }));
             }
         }
 
@@ -148,7 +168,11 @@ public partial struct Maybe<T>
             }
             catch (Exception ex)
             {
-                return Fail(CompositeError.CreateOrGetSingle(new[] { GetError(), Error.FromException(ex).InnerError! }));
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                }));
             }
         }
 
