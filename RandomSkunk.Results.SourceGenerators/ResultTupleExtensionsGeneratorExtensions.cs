@@ -373,7 +373,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -440,7 +440,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -503,7 +503,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
+                return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -566,7 +566,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
+                return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -630,7 +630,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -694,7 +694,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
+                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -758,7 +758,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-                return Maybe<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
+                return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -822,7 +822,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex)
             {
-               return Maybe<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector))); 
+               return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector))); 
             }
         }
         else
