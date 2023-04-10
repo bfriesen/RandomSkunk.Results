@@ -31,6 +31,10 @@ public partial struct Result
         {
             return getFallbackResult();
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (Exception ex)
         {
             return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackResult)));
@@ -69,6 +73,10 @@ public partial struct Result<T>
         {
             return getFallbackResult();
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (Exception ex)
         {
             return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackResult)));
@@ -106,6 +114,10 @@ public partial struct Maybe<T>
         try
         {
             return getFallbackResult();
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (Exception ex)
         {

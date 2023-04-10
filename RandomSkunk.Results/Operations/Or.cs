@@ -35,6 +35,10 @@ public partial struct Result<T>
         {
             return getFallbackValue().ToResult();
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (Exception ex)
         {
             return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackValue)));
@@ -76,6 +80,10 @@ public partial struct Maybe<T>
         try
         {
             return getFallbackValue().ToMaybe();
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (Exception ex)
         {

@@ -312,4 +312,32 @@ public static class Errors
             Title = "Result Has No Value",
             ErrorCode = ErrorCodes.NoValue,
         };
+
+    /// <summary>
+    /// Creates an <see cref="Error"/> indicating that the operation was canceled.
+    /// </summary>
+    /// <param name="taskCanceledException">The exception that was thrown indicating that the operation was canceled.
+    ///     </param>
+    /// <returns>A Canceled error.</returns>
+    public static Error Canceled(TaskCanceledException? taskCanceledException = null)
+    {
+        const string title = "Canceled";
+        const string message = "The operation was canceled.";
+
+        if (taskCanceledException is null)
+        {
+            return new()
+            {
+                Title = title,
+                Message = message,
+                ErrorCode = ErrorCodes.Canceled,
+            };
+        }
+
+        return Error.FromException(
+            taskCanceledException,
+            title: title,
+            message: message + " See InnerError for details.",
+            errorCode: ErrorCodes.Canceled);
+    }
 }

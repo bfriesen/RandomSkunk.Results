@@ -18,6 +18,10 @@ public partial struct Result
             {
                 onSuccessCallback();
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
@@ -41,6 +45,10 @@ public partial struct Result
             try
             {
                 await onSuccessCallback().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -70,6 +78,10 @@ public partial struct Result<T>
             {
                 onSuccessCallback(_value!);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
@@ -93,6 +105,10 @@ public partial struct Result<T>
             try
             {
                 await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -122,6 +138,10 @@ public partial struct Maybe<T>
             {
                 onSuccessCallback(_value!);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
@@ -145,6 +165,10 @@ public partial struct Maybe<T>
             try
             {
                 await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {

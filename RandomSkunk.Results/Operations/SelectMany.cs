@@ -21,6 +21,10 @@ public partial struct Result
             {
                 return onSuccessSelector();
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -47,6 +51,10 @@ public partial struct Result
             try
             {
                 return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -83,6 +91,10 @@ public partial struct Result
             {
                 return onSuccessSelector();
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -118,6 +130,10 @@ public partial struct Result
             {
                 return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -152,6 +168,10 @@ public partial struct Result
             try
             {
                 return onSuccessSelector();
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -191,6 +211,10 @@ public partial struct Result
             try
             {
                 return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -497,6 +521,10 @@ public partial struct Result<T>
             {
                 return onSuccessSelector(_value!);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -532,6 +560,10 @@ public partial struct Result<T>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -559,6 +591,10 @@ public partial struct Result<T>
             {
                 return onSuccessSelector(_value!);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -585,6 +621,10 @@ public partial struct Result<T>
             try
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -620,6 +660,10 @@ public partial struct Result<T>
             try
             {
                 return onSuccessSelector(_value!);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -659,6 +703,10 @@ public partial struct Result<T>
             try
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -864,6 +912,10 @@ public partial struct Maybe<T>
             {
                 return onSuccessSelector(_value!);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -878,6 +930,10 @@ public partial struct Maybe<T>
             try
             {
                 return onNoneSelector();
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -917,6 +973,10 @@ public partial struct Maybe<T>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -931,6 +991,10 @@ public partial struct Maybe<T>
             try
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -963,6 +1027,10 @@ public partial struct Maybe<T>
             {
                 return onSuccessSelector(_value!);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -977,6 +1045,10 @@ public partial struct Maybe<T>
             try
             {
                 return onNoneSelector();
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -1009,6 +1081,10 @@ public partial struct Maybe<T>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -1023,6 +1099,10 @@ public partial struct Maybe<T>
             try
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -1063,6 +1143,10 @@ public partial struct Maybe<T>
             {
                 return onSuccessSelector(_value!);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -1077,6 +1161,10 @@ public partial struct Maybe<T>
             try
             {
                 return onNoneSelector();
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -1117,6 +1205,10 @@ public partial struct Maybe<T>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
@@ -1131,6 +1223,10 @@ public partial struct Maybe<T>
             try
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {

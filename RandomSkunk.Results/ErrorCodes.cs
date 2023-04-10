@@ -54,6 +54,11 @@ public static class ErrorCodes
     public const int GatewayTimeout = 504;
 
     /// <summary>
+    /// Indicates that the operation was canceled.
+    /// </summary>
+    public const int Canceled = -400;
+
+    /// <summary>
     /// Indicates that the result has no value.
     /// </summary>
     /// <remarks>

@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `Errors.Canceled` and automatic task cancellation handling.
+
 ### Fixed
 - RandomSkunk.Results:
     - Catch and handle exceptions thrown from callbacks where possible.

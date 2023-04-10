@@ -71,6 +71,10 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
             sourceDelegate();
             return Result.Success();
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (TException1 ex)
         {
             return Result.Fail(exception1Handler(ex));
@@ -139,6 +143,10 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
         {
             await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Result.Success();
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (TException1 ex)
         {
@@ -211,6 +219,10 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
             var value = sourceDelegate();
             return Result<T>.FromValue(value);
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (TException1 ex)
         {
             return Result<T>.Fail(exception1Handler(ex));
@@ -281,6 +293,10 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Result<T>.FromValue(value);
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (TException1 ex)
         {
@@ -353,6 +369,10 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
             var value = sourceDelegate();
             return Maybe<T>.FromValue(value);
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (TException1 ex)
         {
             return Maybe<T>.Fail(exception1Handler(ex));
@@ -423,6 +443,10 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Maybe<T>.FromValue(value);
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (TException1 ex)
         {

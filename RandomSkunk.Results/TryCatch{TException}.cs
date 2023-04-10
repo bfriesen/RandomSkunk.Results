@@ -34,6 +34,10 @@ public static class TryCatch<TException>
             sourceDelegate();
             return Result.Success();
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (TException ex)
         {
             return Result.Fail(exceptionHandler(ex));
@@ -63,6 +67,10 @@ public static class TryCatch<TException>
         {
             await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Result.Success();
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (TException ex)
         {
@@ -97,6 +105,10 @@ public static class TryCatch<TException>
             var value = sourceDelegate();
             return Result<T>.FromValue(value);
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (TException ex)
         {
             return Result<T>.Fail(exceptionHandler(ex));
@@ -129,6 +141,10 @@ public static class TryCatch<TException>
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Result<T>.FromValue(value);
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (TException ex)
         {
@@ -163,6 +179,10 @@ public static class TryCatch<TException>
             var value = sourceDelegate();
             return Maybe<T>.FromValue(value);
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (TException ex)
         {
             return Maybe<T>.Fail(exceptionHandler(ex));
@@ -195,6 +215,10 @@ public static class TryCatch<TException>
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
             return Maybe<T>.FromValue(value);
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (TException ex)
         {

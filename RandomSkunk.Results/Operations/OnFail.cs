@@ -18,6 +18,14 @@ public partial struct Result
             {
                 onFailCallback(GetError());
             }
+            catch (TaskCanceledException ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Errors.Canceled(ex),
+                }));
+            }
             catch (Exception ex)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
@@ -45,6 +53,14 @@ public partial struct Result
             try
             {
                 await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Errors.Canceled(ex),
+                }));
             }
             catch (Exception ex)
             {
@@ -78,6 +94,14 @@ public partial struct Result<T>
             {
                 onFailCallback(GetError());
             }
+            catch (TaskCanceledException ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Errors.Canceled(ex),
+                }));
+            }
             catch (Exception ex)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
@@ -105,6 +129,14 @@ public partial struct Result<T>
             try
             {
                 await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Errors.Canceled(ex),
+                }));
             }
             catch (Exception ex)
             {
@@ -138,6 +170,14 @@ public partial struct Maybe<T>
             {
                 onFailCallback(GetError());
             }
+            catch (TaskCanceledException ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Errors.Canceled(ex),
+                }));
+            }
             catch (Exception ex)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
@@ -165,6 +205,14 @@ public partial struct Maybe<T>
             try
             {
                 await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Fail(CompositeError.CreateOrGetSingle(new[]
+                {
+                    GetError(),
+                    Errors.Canceled(ex),
+                }));
             }
             catch (Exception ex)
             {

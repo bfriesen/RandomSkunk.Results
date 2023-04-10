@@ -18,6 +18,10 @@ public partial struct Maybe<T>
             {
                 onNoneCallback();
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneCallback)));
@@ -41,6 +45,10 @@ public partial struct Maybe<T>
             try
             {
                 await onNoneCallback().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {

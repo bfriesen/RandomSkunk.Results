@@ -367,6 +367,10 @@ public static class ResultTupleExtensions
 
                 return Result<TReturn>.FromValue(value);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
@@ -430,6 +434,10 @@ public static class ResultTupleExtensions
 
                 return Result<TReturn>.FromValue(value);
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
@@ -489,6 +497,10 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
@@ -547,6 +559,10 @@ public static class ResultTupleExtensions
                     sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -608,6 +624,10 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
@@ -667,6 +687,10 @@ public static class ResultTupleExtensions
                     sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -728,6 +752,10 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForCallback(nameof(onAllSuccessSelector)));
@@ -787,6 +815,10 @@ public static class ResultTupleExtensions
                     sourceResults.Item1.Value")
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {

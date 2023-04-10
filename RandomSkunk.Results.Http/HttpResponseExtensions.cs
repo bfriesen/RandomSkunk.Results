@@ -418,6 +418,10 @@ public static class HttpResponseExtensions
 
             return value.ToResult();
         }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
+        }
         catch (Exception ex)
         {
             return Result<T>.Fail(ex, "Error reading value from response content.");
@@ -437,6 +441,10 @@ public static class HttpResponseExtensions
                 return Maybe<T>.None;
 
             return value.ToMaybe();
+        }
+        catch (TaskCanceledException ex)
+        {
+            return Errors.Canceled(ex);
         }
         catch (Exception ex)
         {
