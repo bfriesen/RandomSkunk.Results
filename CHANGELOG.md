@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `Maybe<T>.ToFailIfNone` method.
+
 ## [1.2.0] - 2023-04-10
 
 ### Added

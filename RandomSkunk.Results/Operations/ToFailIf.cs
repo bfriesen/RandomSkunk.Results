@@ -64,6 +64,20 @@ public partial struct Maybe<T>
 
         return this;
     }
+
+    /// <summary>
+    /// Gets a <c>Fail</c> result if the current result is <c>None</c>; otherwise returns the same result.
+    /// </summary>
+    /// <param name="getError">An optional fuction that gets the <c>Fail</c> result's error.</param>
+    /// <returns>A <c>Fail</c> result if the current result is <c>None</c>, or the same result if it is <c>Success</c> or
+    ///     <c>Fail</c>.</returns>
+    public Maybe<T> ToFailIfNone(Func<Error>? getError = null)
+    {
+        if (_outcome == Outcome.None)
+            return Fail(getError?.Invoke());
+
+        return this;
+    }
 }
 
 /// <content> Defines the <c>ToFailIf</c> extension methods. </content>
@@ -106,4 +120,15 @@ public static partial class ResultExtensions
     ///     did not.</returns>
     public static async Task<Maybe<T>> ToFailIf<T>(this Task<Maybe<T>> sourceResult, Func<T, bool> predicate, Func<T, Error>? getError = null) =>
         (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError);
+
+    /// <summary>
+    /// Gets a <c>Fail</c> result if the current result is <c>None</c>; otherwise returns the same result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="getError">An optional fuction that gets the <c>Fail</c> result's error.</param>
+    /// <returns>A <c>Fail</c> result if the current result is <c>None</c>, or the same result if it is <c>Success</c> or
+    ///     <c>Fail</c>.</returns>
+    public static async Task<Maybe<T>> ToFailIfNone<T>(this Task<Maybe<T>> sourceResult, Func<Error>? getError = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIfNone(getError);
 }
