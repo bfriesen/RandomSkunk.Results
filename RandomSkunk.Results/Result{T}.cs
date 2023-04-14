@@ -85,7 +85,7 @@ public readonly partial struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <param name="error">The error for the new <c>Fail</c> result.</param>
     /// <returns>A <c>Fail</c> result with the specified error.</returns>
     [StackTraceHidden]
-    public static implicit operator Result<T>(Error error) => Fail(error);
+    public static implicit operator Result<T>(Error? error) => Fail(error);
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.

@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Add `Maybe<T>.ToFailIfNone` method.
 
+### Fixed
+- RandomSkunk.Results:
+    - Add nullable annotation to the `Error` parameter in implicit operators.
+
 ## [1.2.0] - 2023-04-10
 
 ### Added
