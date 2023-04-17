@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Add `Maybe<T>.ToFailIfNone` method.
+    - Add `Rescue` methods.
 
 ### Fixed
 - RandomSkunk.Results:
