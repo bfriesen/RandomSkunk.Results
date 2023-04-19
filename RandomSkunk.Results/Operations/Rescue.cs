@@ -20,6 +20,10 @@ public partial struct Result
             {
                 return onFail(GetError());
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
@@ -45,6 +49,10 @@ public partial struct Result
             try
             {
                 return await onFail(GetError());
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -76,6 +84,10 @@ public partial struct Result<T>
             {
                 return onFail(GetError());
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
@@ -101,6 +113,10 @@ public partial struct Result<T>
             try
             {
                 return await onFail(GetError());
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
@@ -132,6 +148,10 @@ public partial struct Maybe<T>
             {
                 return onFail(GetError());
             }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
             catch (Exception ex)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
@@ -157,6 +177,10 @@ public partial struct Maybe<T>
             try
             {
                 return await onFail(GetError());
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
             }
             catch (Exception ex)
             {
