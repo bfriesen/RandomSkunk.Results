@@ -203,6 +203,17 @@ public class Rescue_methods
         }
 
         [Fact]
+        public void Given_None_Returns_result_from_onNone_rescue_function()
+        {
+            var sourceResult = Maybe<int>.None;
+            var rescueResult = Maybe<int>.Fail("b");
+
+            var actual = sourceResult.Rescue(error => Maybe<int>.Fail("a"), () => rescueResult);
+
+            actual.Should().Be(rescueResult);
+        }
+
+        [Fact]
         public void Given_IsFail_Returns_result_from_rescue_function()
         {
             var sourceResult = Maybe<int>.Fail();
@@ -255,6 +266,19 @@ public class Rescue_methods
             var actual = await sourceResult.Rescue(error => Task.FromResult(rescueResult));
 
             actual.Should().Be(sourceResult);
+        }
+
+        [Fact]
+        public async Task Given_IsNone_Returns_result_from_onNone_rescue_function()
+        {
+            var sourceResult = Maybe<int>.None;
+            var rescueResult = Maybe<int>.Fail("b");
+
+            var actual = await sourceResult.Rescue(
+                error => Task.FromResult(Maybe<int>.Fail("a")),
+                () => Task.FromResult(rescueResult));
+
+            actual.Should().Be(rescueResult);
         }
 
         [Fact]
