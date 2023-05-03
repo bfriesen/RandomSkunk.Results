@@ -5,6 +5,8 @@ namespace RandomSkunk.Results;
 /// </summary>
 public static class FailResult
 {
+    private static readonly ConditionalWeakTable<Error, ErrorInfo> _errorInfoTable = new();
+
     private static Action<Error>? _callback;
     private static Func<Error, Error>? _replaceError;
 
@@ -55,37 +57,53 @@ public static class FailResult
         }
     }
 
-    internal static Error InvokeReplaceErrorIfSet(Error error)
+    internal static void Handle(ref Error error, bool? omitStackTrace)
     {
-        var replaceError = _replaceError;
-
-        if (replaceError is null)
-            return error;
-
-        try
-        {
-            return replaceError(error);
-        }
-        catch
-        {
-        }
-
-        return error;
-    }
-
-    internal static void InvokeCallbackIfSet(Error error)
-    {
-        var callback = _callback;
-
-        if (callback is null)
+        var errorInfo = _errorInfoTable.GetValue(error, _ => new());
+        if (errorInfo.Handled)
             return;
 
-        try
+        var originalError = error;
+
+        if (error.StackTrace is null && !(omitStackTrace ?? OmitStackTrace))
+            error = error with { StackTrace = FilteredStackTrace.Create() };
+
+        var replaceError = _replaceError;
+        var callback = _callback;
+
+        if (replaceError is not null)
         {
-            callback(error);
+            try
+            {
+                error = replaceError(error);
+            }
+            catch
+            {
+            }
         }
-        catch
+
+        if (callback is not null)
         {
+            try
+            {
+                callback(error);
+            }
+            catch
+            {
+            }
         }
+
+        errorInfo.Handled = true;
+
+        if (!ReferenceEquals(error, originalError))
+        {
+            _errorInfoTable.Add(error, errorInfo);
+            _errorInfoTable.Remove(originalError);
+        }
+    }
+
+    private class ErrorInfo
+    {
+        public bool Handled { get; set; }
     }
 }

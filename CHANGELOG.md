@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning].
 ### Fixed
 - RandomSkunk.Results:
     - Add nullable annotation to the `Error` parameter in implicit operators.
+    - Fix bug where the "callback" and "replace error" functions from `FailResult` were invoked multiple times for the same error.
 
 ## [1.2.0] - 2023-04-10
 

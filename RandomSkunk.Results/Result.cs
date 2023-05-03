@@ -21,11 +21,7 @@ public readonly partial struct Result : IResult<Unit>, IEquatable<Result>
             _outcome = Outcome.Fail;
             _error = error ?? new Error();
 
-            if (_error.StackTrace is null && !(omitStackTrace ?? FailResult.OmitStackTrace))
-                _error = _error with { StackTrace = FilteredStackTrace.Create() };
-
-            _error = FailResult.InvokeReplaceErrorIfSet(_error);
-            FailResult.InvokeCallbackIfSet(_error);
+            FailResult.Handle(ref _error, omitStackTrace);
         }
     }
 

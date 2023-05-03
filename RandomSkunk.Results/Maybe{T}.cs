@@ -32,11 +32,7 @@ public readonly partial struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             _value = default;
             _error = error ?? new Error();
 
-            if (_error.StackTrace is null && !(omitStackTrace ?? FailResult.OmitStackTrace))
-                _error = _error with { StackTrace = FilteredStackTrace.Create() };
-
-            _error = FailResult.InvokeReplaceErrorIfSet(_error);
-            FailResult.InvokeCallbackIfSet(_error);
+            FailResult.Handle(ref _error, omitStackTrace);
         }
     }
 
