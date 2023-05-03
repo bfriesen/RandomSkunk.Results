@@ -1,5 +1,6 @@
 namespace RandomSkunk.Results.UnitTests;
 
+[Collection(nameof(FailResult))]
 public class FailResult_Handle_method
 {
     [Fact]
@@ -164,5 +165,10 @@ public class FailResult_Handle_method
         {
             FailResult.SetCallbackFunction(null);
         }
+    }
+
+    [CollectionDefinition(nameof(FailResult), DisableParallelization = true)]
+    public class FailResultCollectionDefinition
+    {
     }
 }
