@@ -1,4 +1,4 @@
-# RandomSkunk.Results [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.svg)](https://www.nuget.org/packages/RandomSkunk.Results)
+# RandomSkunk.Results [![NuGet](https://img.shields.io/nuget/v/RandomSkunk.Results.svg)](https://www.nuget.org/packages/RandomSkunk.Results)
 
 This library contains three result types: `Result<T>`, which represents a result that has a required value; `Maybe<T>`, which represents a result that has an optional value; and `Result`, which represents a result that does not have a value.
 

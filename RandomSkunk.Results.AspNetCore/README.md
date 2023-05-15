@@ -1,4 +1,4 @@
-# RandomSkunk.Results.AspNetCore [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.AspNetCore.svg)](https://www.nuget.org/packages/RandomSkunk.Results.AspNetCore)
+# RandomSkunk.Results.AspNetCore [![NuGet](https://img.shields.io/nuget/v/RandomSkunk.Results.AspNetCore.svg)](https://www.nuget.org/packages/RandomSkunk.Results.AspNetCore)
 
 ## IActionResult extension methods
 

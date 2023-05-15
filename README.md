@@ -24,19 +24,19 @@ There are three types of results:
 
 There are a number of libraries in this repository: the main library, and several that depend on the main library and provide result functionality in specific domains.
 
-## [RandomSkunk.Results](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results) [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.svg)](https://www.nuget.org/packages/RandomSkunk.Results)
+## [RandomSkunk.Results](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results) [![NuGet](https://img.shields.io/nuget/v/RandomSkunk.Results.svg)](https://www.nuget.org/packages/RandomSkunk.Results)
 
 *The main library. Implementations of the Result monad.*
 
-## [RandomSkunk.Results.AspNetCore](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.AspNetCore) [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.AspNetCore.svg)](https://www.nuget.org/packages/RandomSkunk.Results.AspNetCore)
+## [RandomSkunk.Results.AspNetCore](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.AspNetCore) [![NuGet](https://img.shields.io/nuget/v/RandomSkunk.Results.AspNetCore.svg)](https://www.nuget.org/packages/RandomSkunk.Results.AspNetCore)
 
 *Using RandomSkunk.Results from AspNetCore apps.*
 
-## [RandomSkunk.Results.Dapper](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.Dapper) [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.Dapper.svg)](https://www.nuget.org/packages/RandomSkunk.Results.Dapper)
+## [RandomSkunk.Results.Dapper](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.Dapper) [![NuGet](https://img.shields.io/nuget/v/RandomSkunk.Results.Dapper.svg)](https://www.nuget.org/packages/RandomSkunk.Results.Dapper)
 
 *Using RandomSkunk.Results with Dapper.*
 
-## [RandomSkunk.Results.Http](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.Http) [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.Http.svg)](https://www.nuget.org/packages/RandomSkunk.Results.Http)
+## [RandomSkunk.Results.Http](https://github.com/bfriesen/RandomSkunk.Results/tree/main/RandomSkunk.Results.Http) [![NuGet](https://img.shields.io/nuget/v/RandomSkunk.Results.Http.svg)](https://www.nuget.org/packages/RandomSkunk.Results.Http)
 
 *Using RandomSkunk.Results with System.Net.Http and System.Net.Http.Json.*
 

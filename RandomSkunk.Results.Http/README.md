@@ -1,4 +1,4 @@
-# RandomSkunk.Results.Http [![NuGet](https://img.shields.io/nuget/vpre/RandomSkunk.Results.Http.svg)](https://www.nuget.org/packages/RandomSkunk.Results.Http)
+# RandomSkunk.Results.Http [![NuGet](https://img.shields.io/nuget/v/RandomSkunk.Results.Http.svg)](https://www.nuget.org/packages/RandomSkunk.Results.Http)
 
 ## HttpClient extension methods
 
