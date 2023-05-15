@@ -15,7 +15,7 @@ public partial struct Result<T>
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        if (IsSuccess)
+        if (_outcome == Outcome.Success)
         {
             return predicate(_value!)
                 ? AsMaybe()
@@ -37,7 +37,7 @@ public partial struct Result<T>
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        if (IsSuccess)
+        if (_outcome == Outcome.Success)
         {
             return await predicate(_value!).ConfigureAwait(ContinueOnCapturedContext)
                 ? AsMaybe()
@@ -63,7 +63,7 @@ public partial struct Maybe<T>
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        if (IsSuccess)
+        if (_outcome == Outcome.Success)
         {
             return predicate(_value!)
                 ? this
@@ -85,7 +85,7 @@ public partial struct Maybe<T>
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        if (IsSuccess)
+        if (_outcome == Outcome.Success)
         {
             return await predicate(_value!).ConfigureAwait(ContinueOnCapturedContext)
                 ? this
