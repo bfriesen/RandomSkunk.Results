@@ -14,7 +14,8 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PublishRepositoryUrl>True</PublishRepositoryUrl>
 		<EmbedUntrackedSources>True</EmbedUntrackedSources>
-		<DebugType>Embedded</DebugType>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
