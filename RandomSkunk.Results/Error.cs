@@ -190,10 +190,19 @@ public record class Error
         foreach (var dataEntry in dataEntries)
             extensions.Add($"Exception.Data.{dataEntry.Key}", dataEntry.Value);
 
+        string exceptionFullName;
+        var exceptionType = exception.GetType();
+        if (!string.IsNullOrEmpty(exceptionType.FullName))
+            exceptionFullName = exceptionType.FullName;
+        else if (!string.IsNullOrEmpty(exceptionType.Namespace))
+            exceptionFullName = $"{exceptionType.Namespace}.{exceptionType.Name}";
+        else
+            exceptionFullName = exceptionType.Name;
+
         return new Error
         {
             Message = exception.Message,
-            Title = exception.GetType().Name,
+            Title = exceptionFullName,
             Extensions = new ReadOnlyDictionary<string, object>(extensions),
             StackTrace = exception.StackTrace,
             ErrorCode = errorCode,

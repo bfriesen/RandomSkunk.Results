@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Changed
+
+- RandomSkunk.Results:
+    - When creating error from exception, use exception full name as title of inner error.
+
 ## [1.3.1] - 2023-05-15
 
 ### Fixed
