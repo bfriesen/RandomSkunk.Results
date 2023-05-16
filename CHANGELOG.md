@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- RandomSkunk.Results:
+    - Add `TryCatch.DefaultExceptionHandler` property.
+
 ### Changed
 
 - RandomSkunk.Results:
@@ -15,6 +20,7 @@ and this project adheres to [Semantic Versioning].
 ## [1.3.1] - 2023-05-15
 
 ### Fixed
+
 -Fix issues with Source Link.
 
 ## [1.3.0] - 2023-05-02
@@ -26,6 +32,7 @@ and this project adheres to [Semantic Versioning].
     - Add `Rescue` methods.
 
 ### Fixed
+
 - RandomSkunk.Results:
     - Add nullable annotation to the `Error` parameter in implicit operators.
     - Fix bug where the "callback" and "replace error" functions from `FailResult` were invoked multiple times for the same error.
@@ -38,6 +45,7 @@ and this project adheres to [Semantic Versioning].
     - Add `Errors.Canceled` and automatic task cancellation handling.
 
 ### Fixed
+
 - RandomSkunk.Results:
     - Catch and handle exceptions thrown from callbacks where possible.
 

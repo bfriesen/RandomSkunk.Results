@@ -10,9 +10,6 @@ public static class TryCatch<TException1, TException2>
     where TException1 : Exception
     where TException2 : Exception
 {
-    private static readonly Func<TException1, Error> _defaultException1Handler = TryCatch.GetErrorFromException;
-    private static readonly Func<TException2, Error> _defaultException2Handler = TryCatch.GetErrorFromException;
-
     /// <summary>
     /// Evaluates <paramref name="sourceDelegate"/> with a try-catch statement and returns a <see cref="Result"/> representing
     /// the outcome of the operation. If the delegate evaluates successfully, a <c>Success</c> result is returned. If the
@@ -22,11 +19,11 @@ public static class TryCatch<TException1, TException2>
     /// </summary>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exception1Handler">An optional function that maps a caught <typeparamref name="TException1"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <param name="exception2Handler">An optional function that maps a caught <typeparamref name="TException2"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result AsResult(
@@ -35,9 +32,6 @@ public static class TryCatch<TException1, TException2>
         Func<TException2, Error>? exception2Handler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
 
         try
         {
@@ -50,10 +44,12 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
+            exception1Handler ??= TryCatch.DefaultExceptionHandler;
             return Result.Fail(exception1Handler(ex));
         }
         catch (TException2 ex)
         {
+            exception2Handler ??= TryCatch.DefaultExceptionHandler;
             return Result.Fail(exception2Handler(ex));
         }
     }
@@ -67,11 +63,11 @@ public static class TryCatch<TException1, TException2>
     /// </summary>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exception1Handler">An optional function that maps a caught <typeparamref name="TException1"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <param name="exception2Handler">An optional function that maps a caught <typeparamref name="TException2"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> AsResult(
@@ -80,9 +76,6 @@ public static class TryCatch<TException1, TException2>
         Func<TException2, Error>? exception2Handler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
 
         try
         {
@@ -95,10 +88,12 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
+            exception1Handler ??= TryCatch.DefaultExceptionHandler;
             return Result.Fail(exception1Handler(ex));
         }
         catch (TException2 ex)
         {
+            exception2Handler ??= TryCatch.DefaultExceptionHandler;
             return Result.Fail(exception2Handler(ex));
         }
     }
@@ -114,11 +109,11 @@ public static class TryCatch<TException1, TException2>
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exception1Handler">An optional function that maps a caught <typeparamref name="TException1"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <param name="exception2Handler">An optional function that maps a caught <typeparamref name="TException2"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result<T> AsResult<T>(
@@ -127,9 +122,6 @@ public static class TryCatch<TException1, TException2>
         Func<TException2, Error>? exception2Handler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
 
         try
         {
@@ -142,10 +134,12 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
+            exception1Handler ??= TryCatch.DefaultExceptionHandler;
             return Result<T>.Fail(exception1Handler(ex));
         }
         catch (TException2 ex)
         {
+            exception2Handler ??= TryCatch.DefaultExceptionHandler;
             return Result<T>.Fail(exception2Handler(ex));
         }
     }
@@ -161,11 +155,11 @@ public static class TryCatch<TException1, TException2>
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exception1Handler">An optional function that maps a caught <typeparamref name="TException1"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <param name="exception2Handler">An optional function that maps a caught <typeparamref name="TException2"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> AsResult<T>(
@@ -174,9 +168,6 @@ public static class TryCatch<TException1, TException2>
         Func<TException2, Error>? exception2Handler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
 
         try
         {
@@ -189,10 +180,12 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
+            exception1Handler ??= TryCatch.DefaultExceptionHandler;
             return Result<T>.Fail(exception1Handler(ex));
         }
         catch (TException2 ex)
         {
+            exception2Handler ??= TryCatch.DefaultExceptionHandler;
             return Result<T>.Fail(exception2Handler(ex));
         }
     }
@@ -208,11 +201,11 @@ public static class TryCatch<TException1, TException2>
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exception1Handler">An optional function that maps a caught <typeparamref name="TException1"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <param name="exception2Handler">An optional function that maps a caught <typeparamref name="TException2"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> AsMaybe<T>(
@@ -221,9 +214,6 @@ public static class TryCatch<TException1, TException2>
         Func<TException2, Error>? exception2Handler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
 
         try
         {
@@ -236,10 +226,12 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
+            exception1Handler ??= TryCatch.DefaultExceptionHandler;
             return Maybe<T>.Fail(exception1Handler(ex));
         }
         catch (TException2 ex)
         {
+            exception2Handler ??= TryCatch.DefaultExceptionHandler;
             return Maybe<T>.Fail(exception2Handler(ex));
         }
     }
@@ -255,11 +247,11 @@ public static class TryCatch<TException1, TException2>
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exception1Handler">An optional function that maps a caught <typeparamref name="TException1"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <param name="exception2Handler">An optional function that maps a caught <typeparamref name="TException2"/> to a
-    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling
-    ///     <see cref="Error.FromException"/>.</param>
+    ///     <c>Fail</c> result's error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="TryCatch.DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> AsMaybe<T>(
@@ -268,9 +260,6 @@ public static class TryCatch<TException1, TException2>
         Func<TException2, Error>? exception2Handler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
 
         try
         {
@@ -283,10 +272,12 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
+            exception1Handler ??= TryCatch.DefaultExceptionHandler;
             return Maybe<T>.Fail(exception1Handler(ex));
         }
         catch (TException2 ex)
         {
+            exception2Handler ??= TryCatch.DefaultExceptionHandler;
             return Maybe<T>.Fail(exception2Handler(ex));
         }
     }

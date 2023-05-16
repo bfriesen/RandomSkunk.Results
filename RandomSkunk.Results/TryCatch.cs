@@ -6,7 +6,17 @@ namespace RandomSkunk.Results;
 /// </summary>
 public static class TryCatch
 {
-    private static readonly Func<Exception, Error> _defaultExceptionHandler = GetErrorFromException;
+    private static Func<Exception, Error> _defaultExceptionHandler = ex => Error.FromException(ex);
+
+    /// <summary>
+    /// Gets or sets the default exception handler, to be used when a method's optional <c>exceptionHandler</c> parameter is not
+    /// provided.
+    /// </summary>
+    public static Func<Exception, Error> DefaultExceptionHandler
+    {
+        get => _defaultExceptionHandler;
+        set => _defaultExceptionHandler = value ?? _defaultExceptionHandler;
+    }
 
     /// <summary>
     /// Evaluates <paramref name="sourceDelegate"/> with a try-catch statement and returns a <see cref="Result"/> representing
@@ -15,7 +25,8 @@ public static class TryCatch
     /// </summary>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    ///     error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result AsResult(
@@ -23,8 +34,6 @@ public static class TryCatch
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        exceptionHandler ??= _defaultExceptionHandler;
 
         try
         {
@@ -37,6 +46,7 @@ public static class TryCatch
         }
         catch (Exception ex)
         {
+            exceptionHandler ??= DefaultExceptionHandler;
             return Result.Fail(exceptionHandler(ex));
         }
     }
@@ -48,7 +58,8 @@ public static class TryCatch
     /// </summary>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    ///     error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result> AsResult(
@@ -56,8 +67,6 @@ public static class TryCatch
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        exceptionHandler ??= _defaultExceptionHandler;
 
         try
         {
@@ -70,6 +79,7 @@ public static class TryCatch
         }
         catch (Exception ex)
         {
+            exceptionHandler ??= DefaultExceptionHandler;
             return Result.Fail(exceptionHandler(ex));
         }
     }
@@ -84,7 +94,8 @@ public static class TryCatch
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    ///     error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Result<T> AsResult<T>(
@@ -92,8 +103,6 @@ public static class TryCatch
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        exceptionHandler ??= _defaultExceptionHandler;
 
         try
         {
@@ -106,6 +115,7 @@ public static class TryCatch
         }
         catch (Exception ex)
         {
+            exceptionHandler ??= DefaultExceptionHandler;
             return Result<T>.Fail(exceptionHandler(ex));
         }
     }
@@ -120,7 +130,8 @@ public static class TryCatch
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    ///     error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> AsResult<T>(
@@ -128,8 +139,6 @@ public static class TryCatch
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        exceptionHandler ??= _defaultExceptionHandler;
 
         try
         {
@@ -142,6 +151,7 @@ public static class TryCatch
         }
         catch (Exception ex)
         {
+            exceptionHandler ??= DefaultExceptionHandler;
             return Result<T>.Fail(exceptionHandler(ex));
         }
     }
@@ -156,7 +166,8 @@ public static class TryCatch
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    ///     error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static Maybe<T> AsMaybe<T>(
@@ -164,8 +175,6 @@ public static class TryCatch
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        exceptionHandler ??= _defaultExceptionHandler;
 
         try
         {
@@ -178,6 +187,7 @@ public static class TryCatch
         }
         catch (Exception ex)
         {
+            exceptionHandler ??= DefaultExceptionHandler;
             return Maybe<T>.Fail(exceptionHandler(ex));
         }
     }
@@ -192,7 +202,8 @@ public static class TryCatch
     ///     </typeparam>
     /// <param name="sourceDelegate">The delegate to evaluate.</param>
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    ///     error. If <see langword="null"/>, the error is created by calling the function from the
+    ///     <see cref="DefaultExceptionHandler"/> property.</param>
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Maybe<T>> AsMaybe<T>(
@@ -200,8 +211,6 @@ public static class TryCatch
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
-
-        exceptionHandler ??= _defaultExceptionHandler;
 
         try
         {
@@ -214,9 +223,10 @@ public static class TryCatch
         }
         catch (Exception ex)
         {
+            exceptionHandler ??= DefaultExceptionHandler;
             return Maybe<T>.Fail(exceptionHandler(ex));
         }
     }
 
-    internal static Error GetErrorFromException(Exception ex) => Error.FromException(ex);
+    private static Error GetErrorFromException(Exception ex) => Error.FromException(ex);
 }
