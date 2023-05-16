@@ -1,4 +1,3 @@
-#if INCLUDE_ANALYZERS
 namespace RandomSkunk.Results;
 
 /// <summary>
@@ -262,4 +261,3 @@ public sealed class TryCatchThirdPartyAttribute : Attribute
     /// </summary>
     public bool AsMaybe { get; init; }
 }
-#endif
