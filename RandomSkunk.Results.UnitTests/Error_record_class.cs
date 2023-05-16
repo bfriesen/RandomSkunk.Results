@@ -23,7 +23,7 @@ public class Error_record_class
             error.InnerError.Should().NotBeNull();
             error.InnerError!.Message.Should().Be(exception.Message);
             error.InnerError.StackTrace.Should().Be(exception.StackTrace);
-            error.InnerError.Title.Should().Be(exception.GetType().Name);
+            error.InnerError.Title.Should().Be(exception.GetType().FullName);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ public class Error_record_class
             error.InnerError.Should().NotBeNull();
             error.InnerError!.Message.Should().Be(exception.Message);
             error.InnerError.StackTrace.Should().Be(exception.StackTrace);
-            error.InnerError.Title.Should().Be(exception.GetType().Name);
+            error.InnerError.Title.Should().Be(exception.GetType().FullName);
         }
 
         [Fact]

@@ -23,7 +23,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(Exception));
+                error.InnerError.Title.Should().Be(typeof(Exception).FullName);
             }
 
             [Fact]
@@ -53,7 +53,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(Exception));
+                error.InnerError.Title.Should().Be(typeof(Exception).FullName);
             }
 
             [Fact]
@@ -84,7 +84,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(Exception));
+                error.InnerError.Title.Should().Be(typeof(Exception).FullName);
             }
 
             [Fact]
@@ -123,7 +123,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(Exception));
+                error.InnerError.Title.Should().Be(typeof(Exception).FullName);
             }
 
             [Fact]
@@ -151,7 +151,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(Exception));
+                error.InnerError.Title.Should().Be(typeof(Exception).FullName);
             }
 
             [Fact]
@@ -180,7 +180,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(Exception));
+                error.InnerError.Title.Should().Be(typeof(Exception).FullName);
             }
 
             [Fact]
@@ -222,7 +222,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -262,7 +262,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -303,7 +303,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -353,7 +353,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -391,7 +391,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -431,7 +431,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -484,7 +484,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -503,7 +503,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
+                error.InnerError.Title.Should().Be(typeof(DivideByZeroException).FullName);
             }
 
             [Fact]
@@ -543,7 +543,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -562,7 +562,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
+                error.InnerError.Title.Should().Be(typeof(DivideByZeroException).FullName);
             }
 
             [Fact]
@@ -602,7 +602,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -621,7 +621,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
+                error.InnerError.Title.Should().Be(typeof(DivideByZeroException).FullName);
             }
 
             [Fact]
@@ -669,7 +669,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -687,7 +687,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
+                error.InnerError.Title.Should().Be(typeof(DivideByZeroException).FullName);
             }
 
             [Fact]
@@ -726,7 +726,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -744,7 +744,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
+                error.InnerError.Title.Should().Be(typeof(DivideByZeroException).FullName);
             }
 
             [Fact]
@@ -783,7 +783,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(InvalidOperationException));
+                error.InnerError.Title.Should().Be(typeof(InvalidOperationException).FullName);
             }
 
             [Fact]
@@ -801,7 +801,7 @@ public class TryCatch_methods
 
                 error.InnerError.Should().NotBeNull();
                 error.InnerError!.Message.Should().Be("a");
-                error.InnerError.Title.Should().Be(nameof(DivideByZeroException));
+                error.InnerError.Title.Should().Be(typeof(DivideByZeroException).FullName);
             }
 
             [Fact]

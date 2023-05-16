@@ -42,7 +42,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(nameof(Exception));
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
         }
     }
 
@@ -86,7 +86,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(nameof(Exception));
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
         }
     }
 
@@ -130,7 +130,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(nameof(Exception));
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
         }
     }
 
@@ -174,7 +174,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(nameof(Exception));
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
         }
     }
 
@@ -240,7 +240,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(nameof(Exception));
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
         }
     }
 
@@ -308,7 +308,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(nameof(Exception));
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
         }
     }
 }
