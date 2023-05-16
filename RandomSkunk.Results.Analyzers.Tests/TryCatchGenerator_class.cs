@@ -1,14 +1,14 @@
-/*
 using FluentAssertions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using RandomSkunk.Results;
+using System.Collections.Immutable;
 
 namespace RandomSkunk.Results.Analyzers.Tests
 {
     public class TryCatchGenerator_class
     {
-        private static string GetGeneratedCode(string inputCode)
+        private static (string? GeneratedCode, ImmutableArray<Diagnostic>? Diagnostics) Compile(string inputCode)
         {
             var syntaxTree = CSharpSyntaxTree.ParseText(inputCode);
 
@@ -27,10 +27,17 @@ namespace RandomSkunk.Results.Analyzers.Tests
             CSharpGeneratorDriver.Create(generator)
                 .RunGeneratorsAndUpdateCompilation(compilation, out var outputCompilation, out var diagnostics);
 
-            outputCompilation.SyntaxTrees.Should().HaveCount(compilation.SyntaxTrees.Length + 1);
+            if (outputCompilation.SyntaxTrees.Count() == compilation.SyntaxTrees.Length + 1)
+            {
+                diagnostics.Should().BeEmpty();
 
-            var generatedCode = outputCompilation.SyntaxTrees.Last().ToString();
-            return generatedCode;
+                var generatedCode = outputCompilation.SyntaxTrees.Last().ToString();
+                return (generatedCode, null);
+            }
+
+            outputCompilation.SyntaxTrees.Should().HaveCount(compilation.SyntaxTrees.Length);
+
+            return (null, diagnostics);
         }
 
         public class GivenNoSpecificCaughtException
@@ -55,6 +62,10 @@ namespace RandomSkunk.Results.Analyzers.Tests
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -68,6 +79,10 @@ namespace RandomSkunk.Results.Analyzers.Tests
                 await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -78,8 +93,11 @@ namespace RandomSkunk.Results.Analyzers.Tests
         {
             try
             {
-                var returnValueForSuccessResult = SourceValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return SourceValue.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -91,8 +109,11 @@ namespace RandomSkunk.Results.Analyzers.Tests
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -107,6 +128,10 @@ namespace RandomSkunk.Results.Analyzers.Tests
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -119,6 +144,10 @@ namespace RandomSkunk.Results.Analyzers.Tests
             {
                 SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -133,6 +162,10 @@ namespace RandomSkunk.Results.Analyzers.Tests
                 await SourceValue.Corge();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -143,8 +176,11 @@ namespace RandomSkunk.Results.Analyzers.Tests
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Nacho();
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Nacho();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -240,7 +276,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -304,7 +340,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -374,7 +410,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -440,7 +476,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -459,6 +495,10 @@ namespace Test
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -472,6 +512,10 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -482,8 +526,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return Example.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -495,8 +542,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -539,7 +589,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -579,7 +629,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -618,7 +668,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -661,7 +711,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -688,6 +738,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -698,8 +752,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example<T>.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example<T>.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -756,7 +813,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -785,7 +842,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -815,7 +872,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -846,7 +903,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -873,6 +930,10 @@ namespace Test
                 SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -884,8 +945,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar<T>(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -942,7 +1006,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -972,7 +1036,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1003,7 +1067,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1035,7 +1099,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1061,6 +1125,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -1071,8 +1139,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -1127,7 +1198,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1155,7 +1226,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1184,7 +1255,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1214,7 +1285,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1233,6 +1304,10 @@ namespace Test
                 example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -1243,8 +1318,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await example.SourceValue.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -1313,7 +1391,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1345,7 +1423,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1378,7 +1456,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1412,7 +1490,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1432,6 +1510,10 @@ namespace Test
                 foo.SourceValue.Foo<T>();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -1445,6 +1527,10 @@ namespace Test
             {
                 bar.SourceValue.Bar<T>();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -1516,7 +1602,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1547,7 +1633,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1579,7 +1665,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1612,7 +1698,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1630,6 +1716,10 @@ namespace Test
             {
                 foo.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -1695,7 +1785,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1719,7 +1809,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1745,7 +1835,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1771,7 +1861,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1790,6 +1880,10 @@ namespace Test
                 bar.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.Exception caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -1802,6 +1896,10 @@ namespace Test
             {
                 Extensions.Baz(bar);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.Exception caughtExceptionForFailResult)
             {
@@ -1871,7 +1969,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1904,7 +2002,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1938,7 +2036,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -1973,7 +2071,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2002,6 +2100,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2015,6 +2117,10 @@ namespace Test
                 await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2025,8 +2131,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = SourceValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return SourceValue.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2038,8 +2147,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2054,6 +2166,10 @@ namespace Test
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2066,6 +2182,10 @@ namespace Test
             {
                 SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2080,6 +2200,10 @@ namespace Test
                 await SourceValue.Corge();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2090,8 +2214,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Nacho();
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Nacho();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2187,7 +2314,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2251,7 +2378,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2321,7 +2448,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2387,7 +2514,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2406,6 +2533,10 @@ namespace Test
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2419,6 +2550,10 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2429,8 +2564,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return Example.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2442,8 +2580,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2487,7 +2628,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2528,7 +2669,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2568,7 +2709,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2612,7 +2753,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2639,6 +2780,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2649,8 +2794,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example<T>.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example<T>.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2708,7 +2856,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2738,7 +2886,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2769,7 +2917,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2801,7 +2949,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2828,6 +2976,10 @@ namespace Test
                 SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -2839,8 +2991,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar<T>(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -2898,7 +3053,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2929,7 +3084,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2961,7 +3116,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -2994,7 +3149,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3020,6 +3175,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -3030,8 +3189,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -3087,7 +3249,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3116,7 +3278,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3146,7 +3308,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3177,7 +3339,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3196,6 +3358,10 @@ namespace Test
                 example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -3206,8 +3372,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await example.SourceValue.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -3277,7 +3446,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3310,7 +3479,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3344,7 +3513,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3379,7 +3548,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3399,6 +3568,10 @@ namespace Test
                 foo.SourceValue.Foo<T>();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -3412,6 +3585,10 @@ namespace Test
             {
                 bar.SourceValue.Bar<T>();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -3484,7 +3661,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3516,7 +3693,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3549,7 +3726,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3583,7 +3760,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3601,6 +3778,10 @@ namespace Test
             {
                 foo.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -3667,7 +3848,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3692,7 +3873,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3719,7 +3900,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3746,7 +3927,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3765,6 +3946,10 @@ namespace Test
                 bar.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -3777,6 +3962,10 @@ namespace Test
             {
                 Extensions.Baz(bar);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -3847,7 +4036,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3881,7 +4070,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3916,7 +4105,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3952,7 +4141,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -3981,6 +4170,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -3998,6 +4191,10 @@ namespace Test
                 await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -4012,8 +4209,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = SourceValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return SourceValue.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4029,8 +4229,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4049,6 +4252,10 @@ namespace Test
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -4065,6 +4272,10 @@ namespace Test
             {
                 SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4083,6 +4294,10 @@ namespace Test
                 await SourceValue.Corge();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -4097,8 +4312,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Nacho();
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Nacho();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4198,7 +4416,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4262,7 +4480,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4332,7 +4550,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4398,7 +4616,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4417,6 +4635,10 @@ namespace Test
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -4434,6 +4656,10 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -4448,8 +4674,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return Example.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4465,8 +4694,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4514,7 +4746,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4555,7 +4787,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4595,7 +4827,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4639,7 +4871,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4666,6 +4898,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -4680,8 +4916,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example<T>.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example<T>.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4743,7 +4982,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4773,7 +5012,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4804,7 +5043,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4836,7 +5075,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4863,6 +5102,10 @@ namespace Test
                 SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -4878,8 +5121,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar<T>(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -4941,7 +5187,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -4972,7 +5218,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5004,7 +5250,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5037,7 +5283,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5063,6 +5309,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -5077,8 +5327,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -5138,7 +5391,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5167,7 +5420,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5197,7 +5450,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5228,7 +5481,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5247,6 +5500,10 @@ namespace Test
                 example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -5261,8 +5518,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await example.SourceValue.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -5336,7 +5596,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5369,7 +5629,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5403,7 +5663,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5438,7 +5698,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5458,6 +5718,10 @@ namespace Test
                 foo.SourceValue.Foo<T>();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -5475,6 +5739,10 @@ namespace Test
             {
                 bar.SourceValue.Bar<T>();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -5551,7 +5819,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5583,7 +5851,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5616,7 +5884,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5650,7 +5918,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5668,6 +5936,10 @@ namespace Test
             {
                 foo.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -5738,7 +6010,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5763,7 +6035,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5790,7 +6062,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5817,7 +6089,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5836,6 +6108,10 @@ namespace Test
                 bar.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -5852,6 +6128,10 @@ namespace Test
             {
                 Extensions.Baz(bar);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -5926,7 +6206,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5960,7 +6240,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -5995,7 +6275,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6031,7 +6311,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6060,6 +6340,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -6081,6 +6365,10 @@ namespace Test
                 await SourceValue.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -6099,8 +6387,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = SourceValue.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return SourceValue.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6120,8 +6411,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6144,6 +6438,10 @@ namespace Test
                 Example.Garply();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -6164,6 +6462,10 @@ namespace Test
             {
                 SourceValue.Fred(out waldo, ref thud, in xyzzy);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6186,6 +6488,10 @@ namespace Test
                 await SourceValue.Corge();
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -6204,8 +6510,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await SourceValue.Nacho();
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await SourceValue.Nacho();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6309,7 +6618,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6373,7 +6682,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6443,7 +6752,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6509,7 +6818,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6527,6 +6836,10 @@ namespace Test
             {
                 Example.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6549,6 +6862,10 @@ namespace Test
                 await Example.Bar(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -6567,8 +6884,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = Example.Baz(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return Example.Baz(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6588,8 +6908,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Qux(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Qux(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6641,7 +6964,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6682,7 +7005,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6722,7 +7045,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6766,7 +7089,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6793,6 +7116,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -6811,8 +7138,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example<T>.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example<T>.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -6878,7 +7208,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6908,7 +7238,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6939,7 +7269,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6971,7 +7301,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -6998,6 +7328,10 @@ namespace Test
                 SourceValue.Foo<T>(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -7017,8 +7351,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar<T>(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar<T>(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -7084,7 +7421,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7115,7 +7452,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7147,7 +7484,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7180,7 +7517,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7206,6 +7543,10 @@ namespace Test
                 SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
             }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
+            }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
                 return RandomSkunk.Results.Result.Fail(caughtExceptionForFailResult);
@@ -7224,8 +7565,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await Example.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await Example.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -7289,7 +7633,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7318,7 +7662,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7348,7 +7692,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7379,7 +7723,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7397,6 +7741,10 @@ namespace Test
             {
                 example.SourceValue.Foo(garply);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -7416,8 +7764,11 @@ namespace Test
         {
             try
             {
-                var returnValueForSuccessResult = await example.SourceValue.Bar(garply);
-                return RandomSkunk.Results.Result<System.Int32>.FromValue(returnValueForSuccessResult);
+                return await example.SourceValue.Bar(garply);
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -7495,7 +7846,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7528,7 +7879,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7562,7 +7913,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7597,7 +7948,7 @@ namespace Test
     }
 }";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7616,6 +7967,10 @@ namespace Test
             {
                 foo.SourceValue.Foo<T>();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -7638,6 +7993,10 @@ namespace Test
             {
                 bar.SourceValue.Bar<T>();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -7718,7 +8077,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7750,7 +8109,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7783,7 +8142,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7817,7 +8176,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7835,6 +8194,10 @@ namespace Test
             {
                 foo.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -7909,7 +8272,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7934,7 +8297,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7961,7 +8324,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -7988,7 +8351,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -8006,6 +8369,10 @@ namespace Test
             {
                 bar.SourceValue.Foo();
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -8027,6 +8394,10 @@ namespace Test
             {
                 Extensions.Baz(bar);
                 return RandomSkunk.Results.Result.Success();
+            }
+            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)
+            {
+                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);
             }
             catch (System.InvalidOperationException caughtExceptionForFailResult)
             {
@@ -8105,7 +8476,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -8139,7 +8510,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -8174,7 +8545,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -8210,7 +8581,7 @@ namespace Test
 }
 ";
 
-                    var generatedCode = GetGeneratedCode(inputCode);
+                    var (generatedCode, _) = Compile(inputCode);
 
                     generatedCode.Should().Be(_expectedGeneratedCode);
                 }
@@ -8218,4 +8589,3 @@ namespace Test
         }
     }
 }
-*/

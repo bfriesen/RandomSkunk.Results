@@ -439,6 +439,10 @@ public class TryCatchGenerator : IIncrementalGenerator
                             AppendArguments(sb, methodData.Method);
                             sb.AppendLine("                return RandomSkunk.Results.Result.Success();");
                             sb.AppendLine("            }");
+                            sb.AppendLine("            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)");
+                            sb.AppendLine("            {");
+                            sb.AppendLine("                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);");
+                            sb.AppendLine("            }");
 
                             if (methodData.TryCatchInfo.TExceptions.Length == 0)
                             {
@@ -500,6 +504,10 @@ public class TryCatchGenerator : IIncrementalGenerator
                                     AppendArguments(sb, methodData.Method);
                                     sb.AppendLine("                return RandomSkunk.Results.Result.Success();");
                                     sb.AppendLine("            }");
+                                    sb.AppendLine("            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)");
+                                    sb.AppendLine("            {");
+                                    sb.AppendLine("                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);");
+                                    sb.AppendLine("            }");
 
                                     if (methodData.TryCatchInfo.TExceptions.Length == 0)
                                     {
@@ -536,22 +544,26 @@ public class TryCatchGenerator : IIncrementalGenerator
                                         if (methodData.Method.IsExtensionMethod)
                                         {
                                             if (isTryAdapterExtensionMethod)
-                                                sb.Append($"                var returnValueForSuccessResult = await {methodData.Method.Parameters[0].Name}.SourceValue.{methodName}");
+                                                sb.Append($"                return await {methodData.Method.Parameters[0].Name}.SourceValue.{methodName}");
                                             else
-                                                sb.Append($"                var returnValueForSuccessResult = await {methodData.Method.Parameters[0].Name}.{methodName}");
+                                                sb.Append($"                return await {methodData.Method.Parameters[0].Name}.{methodName}");
                                         }
                                         else
                                         {
-                                            sb.Append($"                var returnValueForSuccessResult = await {targetType}.{methodName}");
+                                            sb.Append($"                return await {targetType}.{methodName}");
                                         }
                                     }
                                     else
                                     {
-                                        sb.Append($"                var returnValueForSuccessResult = await SourceValue.{methodName}");
+                                        sb.Append($"                return await SourceValue.{methodName}");
                                     }
 
                                     AppendArguments(sb, methodData.Method);
-                                    sb.AppendLine($"                return {resultType}<{GetFullName(returnType)}>.FromValue(returnValueForSuccessResult);");
+
+                                    sb.AppendLine("            }");
+                                    sb.AppendLine("            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)");
+                                    sb.AppendLine("            {");
+                                    sb.AppendLine($"                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);");
                                     sb.AppendLine("            }");
 
                                     if (methodData.TryCatchInfo.TExceptions.Length == 0)
@@ -588,22 +600,26 @@ public class TryCatchGenerator : IIncrementalGenerator
                                     if (methodData.Method.IsExtensionMethod)
                                     {
                                         if (isTryAdapterExtensionMethod)
-                                            sb.Append($"                var returnValueForSuccessResult = {methodData.Method.Parameters[0].Name}.SourceValue.{methodName}");
+                                            sb.Append($"                return {methodData.Method.Parameters[0].Name}.SourceValue.{methodName}");
                                         else
-                                            sb.Append($"                var returnValueForSuccessResult = {methodData.Method.Parameters[0].Name}.{methodName}");
+                                            sb.Append($"                return {methodData.Method.Parameters[0].Name}.{methodName}");
                                     }
                                     else
                                     {
-                                        sb.Append($"                var returnValueForSuccessResult = {targetType}.{methodName}");
+                                        sb.Append($"                return {targetType}.{methodName}");
                                     }
                                 }
                                 else
                                 {
-                                    sb.Append($"                var returnValueForSuccessResult = SourceValue.{methodName}");
+                                    sb.Append($"                return SourceValue.{methodName}");
                                 }
 
                                 AppendArguments(sb, methodData.Method);
-                                sb.AppendLine($"                return {resultType}<{GetFullName(returnType)}>.FromValue(returnValueForSuccessResult);");
+
+                                sb.AppendLine("            }");
+                                sb.AppendLine("            catch (System.Threading.Tasks.TaskCanceledException caughtExceptionForFailResult)");
+                                sb.AppendLine("            {");
+                                sb.AppendLine($"                return RandomSkunk.Results.Errors.Canceled(caughtExceptionForFailResult);");
                                 sb.AppendLine("            }");
 
                                 if (methodData.TryCatchInfo.TExceptions.Length == 0)
