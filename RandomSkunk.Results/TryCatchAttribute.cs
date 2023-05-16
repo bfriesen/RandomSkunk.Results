@@ -22,20 +22,21 @@ namespace RandomSkunk.Results;
 /// </list>
 /// </summary>
 /// <remarks>
-/// Create a try adapter by decorating a type or method:
+/// Generate the try adapter code by decorating our <c>MathExample</c> class with the <c>[TryCatch]</c> attribute. Alternatively,
+/// we could decorate its methods individually.
 /// <code>
 /// [TryCatch]
-/// public class MyTargetType
+/// public class MathExample
 /// {
-///     public int MyIntMethod() => 123;
+///     public int Divide(int dividend, int divisor) => dividend / divisor;
 /// }
 /// </code>
-/// Get a try adapter for a <c>MyTargetType</c> object by calling the <c>Try()</c> extension method. Then call one of the try
-/// adapter's methods, which returns a result.
+/// Get a try adapter for our <c>MathExample</c> object by calling the <c>Try()</c> extension method. Then call one of the try
+/// adapter's <c>Divide</c> method, which returns a result.
 /// <code>
-/// void Example(MyTargetType value)
+/// void Example(MathExample math)
 /// {
-///     Result&lt;int&gt; result = value.Try().MyIntMethod();
+///     Result&lt;int&gt; result = math.Try().Divide(1, 0);
 /// }
 /// </code>
 /// </remarks>

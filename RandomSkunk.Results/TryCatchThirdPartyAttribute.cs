@@ -23,7 +23,7 @@ namespace RandomSkunk.Results;
 /// </list>
 /// </summary>
 /// <remarks>
-/// Create a try adapter for something you don't own with an `assembly: ` attribute:
+/// Generate the try adapter code for something we don't own with an `assembly: ` attribute:
 /// <code>
 /// [assembly: TryCatchThirdParty(typeof(System.IO.FileInfo))]
 /// </code>
