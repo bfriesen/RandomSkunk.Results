@@ -471,7 +471,6 @@ public class TryCatchGenerator : IIncrementalGenerator
                             if ((returnType.Name == "Task" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks")
                                 || (returnType.Name == "ValueTask" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks"))
                             {
-                                // TODO: Need to check for array symbol.
                                 var namedType = (INamedTypeSymbol)returnType;
 
                                 if (namedType.Arity == 0)
