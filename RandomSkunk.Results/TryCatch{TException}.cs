@@ -171,7 +171,6 @@ public static class TryCatch<TException>
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
 
-
         try
         {
             var value = sourceDelegate();

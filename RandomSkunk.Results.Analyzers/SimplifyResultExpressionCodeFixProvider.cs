@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace RandomSkunk.Results.Analyzers;
 
+/// <summary>
+/// An code fix provider that simplifies a condition for maybe.
+/// </summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(SimplifyResultExpressionCodeFixProvider))]
 [Shared]
 public class SimplifyResultExpressionCodeFixProvider : CodeFixProvider
@@ -29,9 +32,16 @@ public class SimplifyResultExpressionCodeFixProvider : CodeFixProvider
             context.RegisterCodeFix(
                 CodeAction.Create(
                     title: "Simplify result expression",
-                    createChangedDocument: cancellationToken => SimplifyResultExpression(context.Document, node, diagnostic, cancellationToken)),
+                    createChangedDocument: cancellationToken => SimplifyResultExpression(context.Document, node, diagnostic, cancellationToken),
+                    equivalenceKey: "CBEB70F1-2C34-493C-BCD3-4B192DEB03D5"),
                 diagnostic);
         }
+    }
+
+    /// <inheritdoc/>
+    public override FixAllProvider? GetFixAllProvider()
+    {
+        return WellKnownFixAllProviders.BatchFixer;
     }
 
     private async Task<Document> SimplifyResultExpression(Document document, SyntaxNode node, Diagnostic diagnostic, CancellationToken cancellationToken)
