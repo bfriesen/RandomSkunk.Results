@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 namespace RandomSkunk.Results.Analyzers.Tests;
 
-public class ResultPropertyAnalyzer_class
+public class UnsafeResultUsageAnalyzer_class
 {
     [Fact]
     public async Task GivenResultVariables_WhenNoChecks_ReportsDiagnostics()
@@ -1258,7 +1258,7 @@ public class ResultPropertyAnalyzer_class
 
     private static async Task VerifyAnalyzerAsync(string code)
     {
-        var test = new CSharpCodeFixTest<ResultPropertyAnalyzer, EmptyCodeFixProvider, XUnitVerifier>
+        var test = new CSharpCodeFixTest<UnsafeResultUsageAnalyzer, EmptyCodeFixProvider, XUnitVerifier>
         {
             TestCode = code,
             ReferenceAssemblies = ReferenceAssemblies.Default

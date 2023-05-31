@@ -11,7 +11,7 @@ namespace RandomSkunk.Results.Analyzers;
 /// An analyzer that ensures that access to the result properties <c>Value</c> and <c>Error</c> is done safely.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public class ResultPropertyAnalyzer : DiagnosticAnalyzer
+public class UnsafeResultUsageAnalyzer : DiagnosticAnalyzer
 {
     private const string _title = "Unsafe usage of result property";
     private const string _messageFormat = "The '{0}' property can only be safely accessed when '{1}' is true";
