@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - When creating error from exception, use exception full name as title of inner error.
 
+- RandomSkunk.Results.Http:
+    - Add "responseStatusCode" and "problemDetailsStatus" extensions to errors.
+
 ### Fixed
 
 - RandomSkunk.Results.Http:

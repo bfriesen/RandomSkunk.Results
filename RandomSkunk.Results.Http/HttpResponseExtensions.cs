@@ -490,7 +490,8 @@ public static class HttpResponseExtensions
         string? stackTrace = null;
         string? identifier = null;
         Error? innerError = null;
-        Dictionary<string, object>? extensions = null;
+
+        Dictionary<string, object>? extensions = new(StringComparer.Ordinal);
 
         foreach (var extension in problemDetails.Extensions)
         {
@@ -514,23 +515,21 @@ public static class HttpResponseExtensions
                         innerError = TryDeserializeError(element, options);
                     break;
                 default:
-                    extensions ??= new Dictionary<string, object>(StringComparer.Ordinal);
                     extensions[extension.Key] = extension.Value;
                     break;
             }
         }
 
+        extensions["responseStatusCode"] = (int)response.StatusCode;
+
+        if (problemDetails.Status != null)
+            extensions["problemDetailsStatus"] = problemDetails.Status;
+
         if (problemDetails.Type != null)
-        {
-            extensions ??= new Dictionary<string, object>(StringComparer.Ordinal);
             extensions["problemDetailsType"] = problemDetails.Type;
-        }
 
         if (problemDetails.Instance != null)
-        {
-            extensions ??= new Dictionary<string, object>(StringComparer.Ordinal);
             extensions["problemDetailsInstance"] = problemDetails.Instance;
-        }
 
         return new Error
         {
