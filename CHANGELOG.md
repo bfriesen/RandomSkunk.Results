@@ -12,9 +12,15 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - When creating error from exception, use exception full name as title of inner error.
 
+### Fixed
+
+- RandomSkunk.Results.Http:
+    - If ErrorCode is not specified in the Problem Details object, use the Http Status Code instead.
+
 ## [1.3.1] - 2023-05-15
 
 ### Fixed
+
 -Fix issues with Source Link.
 
 ## [1.3.0] - 2023-05-02

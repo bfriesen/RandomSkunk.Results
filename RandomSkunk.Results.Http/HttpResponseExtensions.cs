@@ -28,7 +28,7 @@ public static class HttpResponseExtensions
 
         options ??= _defaultOptions;
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-        var error = GetErrorFromProblemDetails(problemDetails, options);
+        var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
         return Result.Fail(error, true);
     }
 
@@ -67,7 +67,7 @@ public static class HttpResponseExtensions
             return await ReadResultValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-        var error = GetErrorFromProblemDetails(problemDetails, options);
+        var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
         return Result<T>.Fail(error, true);
     }
 
@@ -108,7 +108,7 @@ public static class HttpResponseExtensions
             return await ReadMaybeValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-        var error = GetErrorFromProblemDetails(problemDetails, options);
+        var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
         return error.ErrorCode == ErrorCodes.NoValue
             ? Maybe<T>.None
             : Maybe<T>.Fail(error, true);
@@ -463,9 +463,7 @@ public static class HttpResponseExtensions
 
             if (problemDetails is not null)
             {
-                problemDetails.Status ??= (int)response.StatusCode;
                 problemDetails.Title ??= GetTitle(response);
-
                 return problemDetails;
             }
         }
@@ -475,7 +473,6 @@ public static class HttpResponseExtensions
 
         return new ProblemDetails
         {
-            Status = (int)response.StatusCode,
             Title = GetTitle(response),
         };
 
@@ -487,7 +484,7 @@ public static class HttpResponseExtensions
                     : null;
     }
 
-    private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails, JsonSerializerOptions options)
+    private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails, HttpResponseMessage response, JsonSerializerOptions options)
     {
         int? errorCode = null;
         string? stackTrace = null;
@@ -541,7 +538,7 @@ public static class HttpResponseExtensions
             Title = problemDetails.Title!,
             Extensions = extensions!,
             StackTrace = stackTrace,
-            ErrorCode = errorCode,
+            ErrorCode = errorCode ?? problemDetails.Status ?? (int)response.StatusCode,
             Identifier = identifier,
             InnerError = innerError,
         };
