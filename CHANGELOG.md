@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+*No notable changes have been made.*
+
+## [1.4.0] - 2023-06-28
+
 ### Changed
 
 - RandomSkunk.Results:
@@ -24,7 +28,7 @@ and this project adheres to [Semantic Versioning].
 
 ### Fixed
 
--Fix issues with Source Link.
+- Fix issues with Source Link.
 
 ## [1.3.0] - 2023-05-02
 
@@ -631,7 +635,8 @@ Initial release.
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.3.1...v1.4.0
 [1.3.1]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/bfriesen/RandomSkunk.Results/compare/v1.1.0...v1.2.0
