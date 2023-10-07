@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
-*No notable changes have been made.*
+### Added
+
+- RandomSkunk.Results.AspNetCore:
+    - Add `GetActionResult` extension method for `Error`.
 
 ## [1.4.0] - 2023-06-28
 

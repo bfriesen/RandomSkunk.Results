@@ -31,7 +31,7 @@ public static class ActionResultExtensions
 
         return sourceResult.Match(
             onSuccess: onSuccess,
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+            onFail: error => error.GetActionResult(getHttpStatusCode: getHttpStatusCode));
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public static class ActionResultExtensions
 
         return sourceResult.Match(
             onSuccess: onSuccess,
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+            onFail: error => error.GetActionResult(getHttpStatusCode: getHttpStatusCode));
     }
 
     /// <summary>
@@ -83,8 +83,8 @@ public static class ActionResultExtensions
 
         return sourceResult.Match(
             onSuccess: onSuccess,
-            onNone: () => GetFailActionResult(Errors.NoValue(), getHttpStatusCode),
-            onFail: error => GetFailActionResult(error, getHttpStatusCode));
+            onNone: () => Errors.NoValue().GetActionResult(getHttpStatusCode: getHttpStatusCode),
+            onFail: error => error.GetActionResult(getHttpStatusCode: getHttpStatusCode));
     }
 
     /// <summary>
@@ -581,14 +581,4 @@ public static class ActionResultExtensions
         object? serializerSettings = null,
         Func<int, int>? getHttpStatusCode = null) =>
         (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToJsonActionResult(serializerSettings, getHttpStatusCode);
-
-    private static IActionResult GetFailActionResult(Error error, Func<int, int>? getHttpStatusCode)
-    {
-        var httpStatusCode = error.GetHttpStatusCode(getHttpStatusCode);
-
-        return new ObjectResult(error.GetProblemDetails(getHttpStatusCode: getHttpStatusCode))
-        {
-            StatusCode = httpStatusCode ?? ErrorCodes.InternalServerError,
-        };
-    }
 }
