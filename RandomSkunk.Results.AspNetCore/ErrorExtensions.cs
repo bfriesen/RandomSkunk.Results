@@ -76,9 +76,6 @@ public static class ErrorExtensions
         if (sourceError.ErrorCode is not null)
             problemDetails.Extensions["errorCode"] = sourceError.ErrorCode;
 
-        if (sourceError.StackTrace is not null)
-            problemDetails.Extensions["errorStackTrace"] = sourceError.StackTrace;
-
         if (sourceError.Identifier is not null)
             problemDetails.Extensions["errorIdentifier"] = sourceError.Identifier;
 

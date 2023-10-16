@@ -11,12 +11,6 @@ public static class FailResult
     private static Func<Error, Error>? _replaceError;
 
     /// <summary>
-    /// Gets or sets a value indicating whether to omit the stack trace of fail result errors.
-    /// </summary>
-    /// <remarks>Default value is <see langword="false"/>.</remarks>
-    public static bool OmitStackTrace { get; set; }
-
-    /// <summary>
     /// Sets the callback function that will be invoked whenever a <c>Fail</c> result is created.
     /// </summary>
     /// <param name="onFailCallback">The callback function.</param>
@@ -57,16 +51,13 @@ public static class FailResult
         }
     }
 
-    internal static void Handle(ref Error error, bool? omitStackTrace)
+    internal static void Handle(ref Error error)
     {
         var errorInfo = _errorInfoTable.GetValue(error, _ => new());
         if (errorInfo.Handled)
             return;
 
         var originalError = error;
-
-        if (error.StackTrace is null && !(omitStackTrace ?? OmitStackTrace))
-            error = error with { StackTrace = FilteredStackTrace.Create() };
 
         var replaceError = _replaceError;
         var callback = _callback;

@@ -19,7 +19,7 @@ public class SelectAsync_methods
         public async Task When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, true);
+            var source = Result<int>.Fail(error);
 
             var actual = await source.Select(value => Task.FromResult(value.ToString()));
 
@@ -55,7 +55,7 @@ public class SelectAsync_methods
         public async Task When_IsFail_Returns_Fail()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error, true);
+            var source = Maybe<int>.Fail(error);
 
             var actual = await source.Select(value => Task.FromResult(value.ToString()));
 

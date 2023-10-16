@@ -29,7 +29,7 @@ public class Maybe_of_T_struct
         public void Fail_Returns_Fail_result_with_specified_error()
         {
             var error = new Error();
-            var result = Maybe<int>.Fail(error, true);
+            var result = Maybe<int>.Fail(error);
 
             result.IsFail.Should().BeTrue();
             result.IsSuccess.Should().BeFalse();
@@ -148,9 +148,9 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsFail_When_other_IsFail_with_equal_error_Returns_true()
         {
-            var error = new Error { Message = "a", StackTrace = "b", ErrorCode = 1, Identifier = "c", Title = "d" };
+            var error = new Error { Message = "a", ErrorCode = 1, Identifier = "c", Title = "d" };
             var result = Maybe<int>.Fail(error);
-            var otherError = new Error { Message = "a", StackTrace = "b", ErrorCode = 1, Identifier = "c", Title = "d" };
+            var otherError = new Error { Message = "a", ErrorCode = 1, Identifier = "c", Title = "d" };
             object other = Maybe<int>.Fail(otherError);
 
             var actual = result.Equals(other);
@@ -238,9 +238,9 @@ public class Maybe_of_T_struct
         [Fact]
         public void Given_IsFail_When_other_IsFail_with_unequal_error_Returns_false()
         {
-            var error = new Error { Message = "a", StackTrace = "b", ErrorCode = 1, Identifier = "c", Title = "d" };
+            var error = new Error { Message = "a", ErrorCode = 1, Identifier = "c", Title = "d" };
             var result = Maybe<int>.Fail(error);
-            var otherError = new Error { Message = "w", StackTrace = "x", ErrorCode = 2, Identifier = "y", Title = "z" };
+            var otherError = new Error { Message = "w", ErrorCode = 2, Identifier = "y", Title = "z" };
             object other = Maybe<int>.Fail(otherError);
 
             var actual = result.Equals(other);

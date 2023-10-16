@@ -8,7 +8,7 @@ public class WithError_methods
         public void When_IsFail_Returns_fail_result_with_error_from_function_evaluation()
         {
             var error = new Error();
-            var source = Result.Fail(error, true);
+            var source = Result.Fail(error);
 
             var actual = source.WithError(e => new Error { InnerError = e });
 
@@ -33,7 +33,7 @@ public class WithError_methods
         public void When_IsFail_Returns_fail_result_with_error_from_function_evaluation()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, true);
+            var source = Result<int>.Fail(error);
 
             var actual = source.WithError(e => new Error { InnerError = e });
 
@@ -58,7 +58,7 @@ public class WithError_methods
         public void When_IsFail_Returns_fail_result_with_error_from_function_evaluation()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error, true);
+            var source = Maybe<int>.Fail(error);
 
             var actual = source.WithError(e => new Error { InnerError = e });
 

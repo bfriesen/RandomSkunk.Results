@@ -19,7 +19,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Result_of_T_When_source_is_Fail_Returns_Fail()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, true);
+            var source = Result<int>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
@@ -52,7 +52,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, true);
+            var source = Result<int>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
@@ -85,7 +85,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Result<int>.Fail(error, true);
+            var source = Result<int>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
@@ -121,7 +121,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error, true);
+            var source = Maybe<int>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
@@ -202,7 +202,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<string>.Fail(error, true);
+            var source = Maybe<string>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
@@ -262,7 +262,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Result_of_T_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error, true);
+            var source = Maybe<int>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 

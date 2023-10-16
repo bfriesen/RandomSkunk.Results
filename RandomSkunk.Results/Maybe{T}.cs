@@ -17,7 +17,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _error = null;
     }
 
-    private Maybe(bool none, Error? error, bool? omitStackTrace)
+    private Maybe(bool none, Error? error)
     {
         if (none)
         {
@@ -31,7 +31,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             _value = default;
             _error = error ?? new Error();
 
-            FailResult.Handle(ref _error, omitStackTrace);
+            FailResult.Handle(ref _error);
         }
     }
 
@@ -45,7 +45,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <summary>
     /// Gets a <c>None</c> result.
     /// </summary>
-    public static Maybe<T> None => new(none: true, null, null);
+    public static Maybe<T> None => new(none: true, null);
 
     /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
@@ -102,7 +102,6 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// </summary>
     /// <param name="error">The error for the new <c>Fail</c> result.</param>
     /// <returns>A <c>Fail</c> result with the specified error.</returns>
-    [StackTraceHidden]
     public static implicit operator Maybe<T>(Error? error) => Fail(error);
 
     /// <summary>
@@ -135,13 +134,9 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
-    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
-    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    [StackTraceHidden]
-    public static Maybe<T> Fail(Error? error = null, bool? omitStackTrace = null) =>
-        new(none: false, error, omitStackTrace);
+    public static Maybe<T> Fail(Error? error = null) =>
+        new(none: false, error);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -152,19 +147,14 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
-    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
-    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    [StackTraceHidden]
     public static Maybe<T> Fail(
         Exception exception,
         string errorMessage = Error.DefaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
-        string? errorTitle = null,
-        bool? omitStackTrace = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle), omitStackTrace);
+        string? errorTitle = null) =>
+        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -174,23 +164,16 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
-    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
     /// <param name="extensions">Additional properties for the error.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
-    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
-    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    [StackTraceHidden]
     public static Maybe<T> Fail(
         string errorMessage,
         int? errorCode = ErrorCodes.InternalServerError,
         string? errorIdentifier = null,
         string? errorTitle = null,
-        bool isSensitive = false,
         IReadOnlyDictionary<string, object>? extensions = null,
-        Error? innerError = null,
-        bool? omitStackTrace = null) =>
+        Error? innerError = null) =>
         Fail(
             new Error
             {
@@ -198,11 +181,9 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
                 Title = errorTitle!,
                 Identifier = errorIdentifier,
                 ErrorCode = errorCode,
-                IsSensitive = isSensitive,
                 Extensions = extensions!,
                 InnerError = innerError,
-            },
-            omitStackTrace);
+            });
 
     /// <summary>
     /// Creates a maybe from the specified value.
@@ -780,7 +761,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Maybe<TReturn>.Fail(GetError(), true);
+        return Maybe<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -841,7 +822,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Maybe<TReturn>.Fail(GetError(), true);
+        return Maybe<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -902,7 +883,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Maybe<TReturn>.Fail(GetError(), true);
+        return Maybe<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -963,7 +944,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Maybe<TReturn>.Fail(GetError(), true);
+        return Maybe<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -1001,7 +982,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Result.Fail(Errors.NoValue(), true);
+                return Result.Fail(Errors.NoValue());
 
             try
             {
@@ -1017,7 +998,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Result.Fail(GetError(), true);
+        return Result.Fail(GetError());
     }
 
     /// <summary>
@@ -1055,7 +1036,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Result.Fail(Errors.NoValue(), true);
+                return Result.Fail(Errors.NoValue());
 
             try
             {
@@ -1071,7 +1052,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Result.Fail(GetError(), true);
+        return Result.Fail(GetError());
     }
 
     /// <summary>
@@ -1117,7 +1098,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Result<TReturn>.Fail(Errors.NoValue(), true);
+                return Result<TReturn>.Fail(Errors.NoValue());
 
             try
             {
@@ -1133,7 +1114,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Result<TReturn>.Fail(GetError(), true);
+        return Result<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -1179,7 +1160,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Result<TReturn>.Fail(Errors.NoValue(), true);
+                return Result<TReturn>.Fail(Errors.NoValue());
 
             try
             {
@@ -1195,7 +1176,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             }
         }
 
-        return Result<TReturn>.Fail(GetError(), true);
+        return Result<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -1502,7 +1483,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
 
         return _outcome == Outcome.Fail
-            ? Fail(onFailGetError(GetError()), true)
+            ? Fail(onFailGetError(GetError()))
             : this;
     }
 

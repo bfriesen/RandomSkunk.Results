@@ -83,24 +83,6 @@ public record class Error
     }
 
     /// <summary>
-    /// Gets a value indicating whether the current error contains sensitive information.
-    /// </summary>
-    /// <remarks>
-    /// This value is used to determine whether the <see cref="ToString()"/> method outputs a full or abbreviated representation
-    /// of the error.
-    /// </remarks>
-    public bool IsSensitive { get; init; }
-
-    /// <summary>
-    /// Gets the optional stack trace.
-    /// </summary>
-    public string? StackTrace
-    {
-        get => _stackTrace;
-        init => _stackTrace = string.IsNullOrWhiteSpace(value) ? null : value!.TrimEnd();
-    }
-
-    /// <summary>
     /// Gets additional properties for the error.
     /// </summary>
     /// <remarks>
@@ -182,6 +164,7 @@ public record class Error
                     && (!errorCode.HasValue
                         || p.Name != nameof(ExternalException.ErrorCode)
                         || !typeof(ExternalException).IsAssignableFrom(p.DeclaringType)))
+                .OrderBy(p => p.Name)
                 .ToDictionary(p => $"{(p.DeclaringType is null ? null : p.DeclaringType.Name + ".")}{p.Name}", p => p.Value);
 
         var dataEntries = exception.Data.OfType<DictionaryEntry>()
@@ -189,6 +172,9 @@ public record class Error
             .Where(x => x.Value is not null);
         foreach (var dataEntry in dataEntries)
             extensions.Add($"Exception.Data.{dataEntry.Key}", dataEntry.Value);
+
+        if (!string.IsNullOrEmpty(exception.StackTrace))
+            extensions.Add("Exception.StackTrace", exception.StackTrace);
 
         string exceptionFullName;
         var exceptionType = exception.GetType();
@@ -204,7 +190,6 @@ public record class Error
             Message = exception.Message,
             Title = exceptionFullName,
             Extensions = new ReadOnlyDictionary<string, object>(extensions),
-            StackTrace = exception.StackTrace,
             ErrorCode = errorCode,
             InnerError = innerError,
         };
@@ -305,51 +290,8 @@ public record class Error
     /// <summary>
     /// Returns a string that represents the current error.
     /// </summary>
-    /// <remarks>
-    /// If the <see cref="IsSensitive"/> is <see langword="true"/>, then a simplified value containing only the
-    /// <see cref="Title"/> and <see cref="ErrorCode"/> (if present) is returned. Otherwise, the full representation is returned.
-    /// </remarks>
     /// <returns>A string that represents the current error.</returns>
     public sealed override string ToString()
-    {
-        if (IsSensitive)
-            return ToStringAbbreviated();
-
-        return ToStringFull();
-    }
-
-    private string ToStringAbbreviated()
-    {
-        var sb = new StringBuilder();
-
-        if (ErrorCode.HasValue)
-        {
-            if (ErrorCodes.TryGetDescription(ErrorCode.Value, out var description))
-            {
-                if (description == $"{ErrorCode} ({Title})")
-                    sb.Append(description);
-                else
-                    sb.Append($"{Title}: {description}");
-            }
-            else
-            {
-                sb.Append($"{Title}: {ErrorCode}");
-            }
-        }
-        else
-        {
-            sb.Append(Title);
-        }
-
-        if (!string.IsNullOrWhiteSpace(Identifier))
-        {
-            sb.Append(" - ").Append(Identifier);
-        }
-
-        return sb.ToString();
-    }
-
-    private string ToStringFull()
     {
         var sb = new StringBuilder();
 
@@ -366,18 +308,6 @@ public record class Error
         {
             sb.Append(" ---> ");
             AppendSummary(sb, innerError, indention is null ? "      " : indention);
-        }
-
-        var first = true;
-        for (var e = error; e is not null; e = e.InnerError)
-        {
-            if (first) first = false;
-            else sb.AppendLine("   --- End of inner error stack trace ---");
-
-            if (!string.IsNullOrWhiteSpace(e.StackTrace))
-                sb.AppendLine(e.StackTrace);
-            else
-                sb.AppendLine("   Stack trace not available.");
         }
 
         foreach (var extensionProperty in error.Extensions)
@@ -417,7 +347,11 @@ public record class Error
                 continue;
             }
 
-            sb.Append(indention + "   ").Append(extensionProperty.Key).Append(": ").AppendLine(extensionProperty.Value.ToString());
+            var extensionPropertyValue = extensionProperty.Value.ToString() ?? string.Empty;
+            if (extensionPropertyValue.Contains('\n'))
+                sb.Append(indention + "   ").Append(extensionProperty.Key).AppendLine(":").AppendLine(Indent(extensionPropertyValue, indention + "   ", indention + "   "));
+            else
+                sb.Append(indention + "   ").Append(extensionProperty.Key).Append(": ").AppendLine(extensionProperty.Value.ToString());
         }
     }
 
@@ -451,12 +385,12 @@ public record class Error
 
     private string GetDebuggerDisplay() => $"{Title}: \"{Message}\"";
 
-    private class Property
+    private sealed class Property
     {
         private readonly PropertyInfo _propertyInfo;
         private Func<object, object?> _propertyAccessor;
 
-        protected Property(PropertyInfo propertyInfo)
+        private Property(PropertyInfo propertyInfo)
         {
             _propertyInfo = propertyInfo;
 

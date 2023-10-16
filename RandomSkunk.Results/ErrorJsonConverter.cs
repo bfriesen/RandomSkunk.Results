@@ -4,7 +4,6 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
 {
 #pragma warning disable IDE1006 // Naming Styles
     private static readonly JsonEncodedText Message = JsonEncodedText.Encode("Message");
-    private static readonly JsonEncodedText StackTrace = JsonEncodedText.Encode("StackTrace");
     private static readonly JsonEncodedText ErrorCode = JsonEncodedText.Encode("ErrorCode");
     private static readonly JsonEncodedText Identifier = JsonEncodedText.Encode("Identifier");
     private static readonly JsonEncodedText Type = JsonEncodedText.Encode("Type");
@@ -39,10 +38,6 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
         if (TryReadStringProperty(ref reader, Message, out var propertyValue))
         {
             builder.Message = propertyValue;
-        }
-        else if (TryReadStringProperty(ref reader, StackTrace, out propertyValue))
-        {
-            builder.StackTrace = propertyValue;
         }
         else if (reader.ValueTextEquals(ErrorCode.EncodedUtf8Bytes))
         {
@@ -80,9 +75,6 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
     {
         if (value.Message != null)
             writer.WriteString(Message, value.Message);
-
-        if (value.StackTrace != null)
-            writer.WriteString(StackTrace, value.StackTrace);
 
         if (value.ErrorCode != null)
             writer.WriteNumber(ErrorCode, value.ErrorCode.Value);
@@ -126,8 +118,6 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
 
         public string? Message { get; set; }
 
-        public string? StackTrace { get; set; }
-
         public int? ErrorCode { get; set; }
 
         public string? Identifier { get; set; }
@@ -144,7 +134,6 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
                 Message = Message!,
                 Title = Type!,
                 Extensions = Extensions,
-                StackTrace = StackTrace,
                 ErrorCode = ErrorCode,
                 Identifier = Identifier,
                 InnerError = InnerError,

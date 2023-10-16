@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning].
 
 ### Changed
 
+- RandomSkunk.Results:
+    - Remove the `StackTrace` and `IsSensitive` properties from the `Error` record class.
+    - When creating an `Error` from an `Exception`, add an item to its `Extensions` named "Exception.StackTrace" and put the exception's stack trace there.
+
 - RandomSkunk.Results.AspNetCore:
     - In the `ToActionResult` extension methods, change the optional parameter from `Func<int, int>? getHttpStatusCode` to `Func<Error, IActionResult>? onFail`.
 

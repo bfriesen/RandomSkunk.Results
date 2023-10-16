@@ -34,7 +34,7 @@ public class ToFailIfNone_method
 
         actual.Should().NotBe(result);
         actual.IsFail.Should().BeTrue();
-        (actual.Error with { StackTrace = null }).Should().Be(error);
+        actual.Error.Should().Be(error);
     }
 
     [Fact]
@@ -46,6 +46,6 @@ public class ToFailIfNone_method
 
         actual.Should().NotBe(result);
         actual.IsFail.Should().BeTrue();
-        (actual.Error with { StackTrace = null }).Should().Be(Error.DefaultError);
+        actual.Error.Should().Be(Error.DefaultError);
     }
 }

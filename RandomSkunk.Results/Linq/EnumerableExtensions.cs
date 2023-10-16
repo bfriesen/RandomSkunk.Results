@@ -612,12 +612,10 @@ public static class EnumerableExtensions
         return Maybe<T>.None;
     }
 
-    [StackTraceHidden]
     private static Result<T> ToResultOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
         value.ToResult().WithError(error =>
             error with { ErrorCode = ErrorCodes.UnexpectedNullValue, Message = string.Format(errorMessageFormat, errorMessageArgs) });
 
-    [StackTraceHidden]
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
         value is not null
             ? value.ToMaybe()

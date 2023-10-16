@@ -29,7 +29,7 @@ public static class HttpResponseExtensions
         options ??= _defaultOptions;
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
-        return Result.Fail(error, true);
+        return Result.Fail(error);
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public static class HttpResponseExtensions
 
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
-        return Result<T>.Fail(error, true);
+        return Result<T>.Fail(error);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public static class HttpResponseExtensions
         var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
         return error.ErrorCode == ErrorCodes.NoValue
             ? Maybe<T>.None
-            : Maybe<T>.Fail(error, true);
+            : Maybe<T>.Fail(error);
     }
 
     /// <summary>
@@ -487,7 +487,6 @@ public static class HttpResponseExtensions
     private static Error GetErrorFromProblemDetails(ProblemDetails problemDetails, HttpResponseMessage response, JsonSerializerOptions options)
     {
         int? errorCode = null;
-        string? stackTrace = null;
         string? identifier = null;
         Error? innerError = null;
 
@@ -503,9 +502,6 @@ public static class HttpResponseExtensions
                 case "errorCode":
                     if (int.TryParse(extension.Value.ToString(), out var errorCodeValue))
                         errorCode = errorCodeValue;
-                    break;
-                case "errorStackTrace":
-                    stackTrace = extension.Value.ToString();
                     break;
                 case "errorIdentifier":
                     identifier = extension.Value.ToString();
@@ -536,7 +532,6 @@ public static class HttpResponseExtensions
             Message = problemDetails.Detail!,
             Title = problemDetails.Title!,
             Extensions = extensions!,
-            StackTrace = stackTrace,
             ErrorCode = errorCode ?? problemDetails.Status ?? (int)response.StatusCode,
             Identifier = identifier,
             InnerError = innerError,

@@ -8,7 +8,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     private readonly Outcome _outcome;
     private readonly Error? _error;
 
-    private Result(bool success, Error? error, bool? omitStackTrace)
+    private Result(bool success, Error? error)
     {
         if (success)
         {
@@ -20,7 +20,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             _outcome = Outcome.Fail;
             _error = error ?? new Error();
 
-            FailResult.Handle(ref _error, omitStackTrace);
+            FailResult.Handle(ref _error);
         }
     }
 
@@ -83,7 +83,6 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// </summary>
     /// <param name="error">The error for the new <c>Fail</c> result.</param>
     /// <returns>A <c>Fail</c> result with the specified error.</returns>
-    [StackTraceHidden]
     public static implicit operator Result(Error? error) => Fail(error);
 
     /// <summary>
@@ -108,18 +107,14 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// Creates a <c>Success</c> result.
     /// </summary>
     /// <returns>A <c>Success</c> result.</returns>
-    public static Result Success() => new(success: true, null, null);
+    public static Result Success() => new(success: true, null);
 
     /// <summary>
     /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
-    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
-    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    [StackTraceHidden]
-    public static Result Fail(Error? error = null, bool? omitStackTrace = null) => new(success: false, error, omitStackTrace);
+    public static Result Fail(Error? error = null) => new(success: false, error);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -130,19 +125,14 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
-    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
-    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    [StackTraceHidden]
     public static Result Fail(
         Exception exception,
         string errorMessage = Error.DefaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
-        string? errorTitle = null,
-        bool? omitStackTrace = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle), omitStackTrace);
+        string? errorTitle = null) =>
+        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -152,23 +142,16 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// <param name="errorIdentifier">The optional identifier of the error.</param>
     /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
-    /// <param name="isSensitive">Whether the error contains sensitive information.</param>
     /// <param name="extensions">Additional properties for the error.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
-    /// <param name="omitStackTrace">Whether to omit the stack trace of the error to the current location. If
-    ///     <see langword="null"/> or not provided, the value of the <see cref="FailResult.OmitStackTrace"/> property is used
-    ///     instead to determine whether to omit the stack trace.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    [StackTraceHidden]
     public static Result Fail(
         string errorMessage,
         int? errorCode = ErrorCodes.InternalServerError,
         string? errorIdentifier = null,
         string? errorTitle = null,
-        bool isSensitive = false,
         IReadOnlyDictionary<string, object>? extensions = null,
-        Error? innerError = null,
-        bool? omitStackTrace = null) =>
+        Error? innerError = null) =>
         Fail(
             new Error
             {
@@ -176,11 +159,9 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
                 Title = errorTitle!,
                 Identifier = errorIdentifier,
                 ErrorCode = errorCode,
-                IsSensitive = isSensitive,
                 Extensions = extensions!,
                 InnerError = innerError,
-            },
-            omitStackTrace);
+            });
 
     /// <summary>
     /// Returns the current result if it is a <c>Success</c> result, else returns the specified fallback result.
@@ -491,7 +472,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
         }
 
-        return Result<TReturn>.Fail(GetError(), true);
+        return Result<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -530,7 +511,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
         }
 
-        return Result<TReturn>.Fail(GetError(), true);
+        return Result<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -561,7 +542,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
         }
 
-        return Fail(GetError(), true);
+        return Fail(GetError());
     }
 
     /// <summary>
@@ -592,7 +573,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
         }
 
-        return Fail(GetError(), true);
+        return Fail(GetError());
     }
 
     /// <summary>
@@ -631,7 +612,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
         }
 
-        return Result<TReturn>.Fail(GetError(), true);
+        return Result<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -670,7 +651,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
         }
 
-        return Result<TReturn>.Fail(GetError(), true);
+        return Result<TReturn>.Fail(GetError());
     }
 
     /// <summary>
@@ -713,7 +694,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, true);
+        return Maybe<TReturn>.Fail(error);
     }
 
     /// <summary>
@@ -756,7 +737,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         if (error.ErrorCode == ErrorCodes.NoValue)
             return Maybe<TReturn>.None;
 
-        return Maybe<TReturn>.Fail(error, true);
+        return Maybe<TReturn>.Fail(error);
     }
 
     /// <summary>
@@ -1070,7 +1051,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
 
         return _outcome == Outcome.Fail
-            ? Fail(onFailGetError(GetError()), true)
+            ? Fail(onFailGetError(GetError()))
             : this;
     }
 

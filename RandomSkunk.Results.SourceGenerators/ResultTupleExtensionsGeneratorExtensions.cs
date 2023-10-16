@@ -383,7 +383,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error, true);
+            return Result<TReturn>.Fail(error);
         }
     }
 
@@ -450,7 +450,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error, true);
+            return Result<TReturn>.Fail(error);
         }
     }
 
@@ -513,7 +513,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result.Fail(error, true);
+            return Result.Fail(error);
         }
     }
 
@@ -576,7 +576,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result.Fail(error, true);
+            return Result.Fail(error);
         }
     }
 
@@ -640,7 +640,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error, true);
+            return Result<TReturn>.Fail(error);
         }
     }
 
@@ -704,7 +704,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error, true);
+            return Result<TReturn>.Fail(error);
         }
     }
 
@@ -768,7 +768,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Maybe<TReturn>.Fail(error, true);
+            return Maybe<TReturn>.Fail(error);
         }
     }
 
@@ -832,7 +832,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Maybe<TReturn>.Fail(error, true);
+            return Maybe<TReturn>.Fail(error);
         }
     }
 
