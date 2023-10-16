@@ -190,6 +190,62 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the first element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> FirstOrFail<T, TEnumerable>(this Result<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrFail());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the first element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> FirstOrFail<T, TEnumerable>(this Maybe<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrFail());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the first element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> FirstOrFail<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrFail<T, TEnumerable>();
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the first element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> FirstOrFail<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrFail<T, TEnumerable>();
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the first element of a sequence. If the sequence is empty, a <c>None</c> result is
     /// returned. If the first element is <see langword="null"/>, a <c>Fail</c> result with error code
     /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
@@ -218,6 +274,62 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// first element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> FirstOrNone<T, TEnumerable>(this Result<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrNone());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// first element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> FirstOrNone<T, TEnumerable>(this Maybe<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrNone());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// first element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> FirstOrNone<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrNone<T, TEnumerable>();
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// first element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> FirstOrNone<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrNone<T, TEnumerable>();
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the first element of the sequence that satisfies a condition. If no element satisfies
     /// the condition, a <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the first element
     /// that satisfies the condition is <see langword="null"/>, a <c>Fail</c> result with error code
@@ -244,6 +356,74 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the first element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Result<T> FirstOrFail<T, TEnumerable>(this Result<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrFail(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the first element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Result<T> FirstOrFail<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrFail(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the first element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<T>> FirstOrFail<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrFail(predicate);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the first element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<T>> FirstOrFail<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrFail(predicate);
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the first element of the sequence that satisfies a condition. If no element satisfies
     /// the condition, a <c>None</c> result is returned. If the first element that satisfies the condition is
     /// <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
@@ -267,6 +447,70 @@ public static class EnumerableExtensions
 
         return Maybe<T>.None;
     }
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the first element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> FirstOrNone<T, TEnumerable>(this Result<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrNone(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the first element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> FirstOrNone<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.FirstOrNone(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the first element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> FirstOrNone<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrNone(predicate);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the first element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the first element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the first element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> FirstOrNone<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).FirstOrNone(predicate);
 
     /// <summary>
     /// Returns a <c>Success</c> result of the last element of a sequence. If the sequence is empty, a <c>Fail</c> result with
@@ -305,6 +549,62 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the last element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> LastOrFail<T, TEnumerable>(this Result<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrFail());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the last element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> LastOrFail<T, TEnumerable>(this Maybe<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrFail());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the last element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> LastOrFail<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrFail<T, TEnumerable>();
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the last element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> LastOrFail<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrFail<T, TEnumerable>();
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the last element of a sequence. If the sequence is empty, a <c>None</c> result is
     /// returned. If the last element is <see langword="null"/>, a <c>Fail</c> result with error code
     /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
@@ -341,6 +641,62 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// last element is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/>
+    /// is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> LastOrNone<T, TEnumerable>(this Result<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrNone());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// last element is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/>
+    /// is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> LastOrNone<T, TEnumerable>(this Maybe<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrNone());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// last element is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/>
+    /// is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> LastOrNone<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrNone<T, TEnumerable>();
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// last element is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/>
+    /// is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> LastOrNone<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrNone<T, TEnumerable>();
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition. If no element satisfies the
     /// condition, a <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element that
     /// satisfies the condition is <see langword="null"/>, a <c>Fail</c> result with error code
@@ -365,6 +721,74 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Result<T> LastOrFail<T, TEnumerable>(this Result<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrFail(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Result<T> LastOrFail<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrFail(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<T>> LastOrFail<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrFail(predicate);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the last element that satisfies the
+    /// condition is <see langword="null"/>, a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is
+    /// returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<T>> LastOrFail<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrFail(predicate);
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the last element of a sequence that satisfies a condition. If no element satisfies the
     /// condition, a <c>None</c> result is returned. If the last element that satisfies the condition is <see langword="null"/>,
     /// a <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
@@ -386,6 +810,70 @@ public static class EnumerableExtensions
 
         return result;
     }
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the last element that satisfies the condition is <see langword="null"/>, a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> LastOrNone<T, TEnumerable>(this Result<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrNone(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the last element that satisfies the condition is <see langword="null"/>, a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> LastOrNone<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.LastOrNone(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the last element that satisfies the condition is <see langword="null"/>, a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> LastOrNone<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrNone(predicate);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the last element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the last element that satisfies the condition is <see langword="null"/>, a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the last element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> LastOrNone<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).LastOrNone(predicate);
 
     /// <summary>
     /// Returns a <c>Success</c> result of the only element of a sequence. If the sequence is empty, a <c>Fail</c> result with
@@ -427,6 +915,62 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the single element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> SingleOrFail<T, TEnumerable>(this Result<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrFail());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the single element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> SingleOrFail<T, TEnumerable>(this Maybe<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrFail());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the single element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> SingleOrFail<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrFail<T, TEnumerable>();
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.NotFound"/> is returned. If the single element is <see langword="null"/>, a <c>Fail</c> result with
+    /// error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> SingleOrFail<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrFail<T, TEnumerable>();
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the only element of a sequence. If the sequence is empty, a <c>None</c> result is
     /// returned. If the sequence contains more than one element, a <c>Fail</c> result with error code
     /// <see cref="ErrorCodes.BadRequest"/> is returned. If the single element is <see langword="null"/>, a <c>Fail</c> result
@@ -463,6 +1007,62 @@ public static class EnumerableExtensions
 
         return Maybe<T>.Fail(SequenceContainsMoreThanOneElement());
     }
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// single element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> SingleOrNone<T, TEnumerable>(this Result<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrNone());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// single element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> SingleOrNone<T, TEnumerable>(this Maybe<TEnumerable> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrNone());
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// single element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> SingleOrNone<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrNone<T, TEnumerable>();
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of a sequence result. If the result is <c>Fail</c>, then a
+    /// <c>Fail</c> result with the same error is returned. If the sequence is empty, a <c>None</c> result is returned. If the
+    /// single element is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> SingleOrNone<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrNone<T, TEnumerable>();
 
     /// <summary>
     /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition. If no element
@@ -502,6 +1102,74 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the single element that satisfies
+    /// the condition is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Result<T> SingleOrFail<T, TEnumerable>(this Result<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrFail(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the single element that satisfies
+    /// the condition is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Result<T> SingleOrFail<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrFail(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the single element that satisfies
+    /// the condition is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<T>> SingleOrFail<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrFail(predicate);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.NotFound"/> is returned. If the single element that satisfies
+    /// the condition is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Result<T>> SingleOrFail<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrFail(predicate);
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the only element of a sequence that satisfies a specified condition. If no element
     /// satisfies the condition, a <c>None</c> result is returned. If more than one element satisfies the condition, a
     /// <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/> is returned. If the single element that satisfies
@@ -537,6 +1205,68 @@ public static class EnumerableExtensions
             _ => Maybe<T>.Fail(SequenceContainsMoreThanOneMatchingElement(count)),
         };
     }
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the single element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static Maybe<T> SingleOrNone<T, TEnumerable>(this Result<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrNone(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the single element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> SingleOrNone<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.SingleOrNone(predicate));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the single element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
+    public static async Task<Maybe<T>> SingleOrNone<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrNone(predicate);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the only element of the sequence result that satisfies a condition. If the result is
+    /// <c>Fail</c>, then a <c>Fail</c> result with the same error is returned. If no element satisfies the condition, a
+    /// <c>None</c> result is returned. If the single element that satisfies the condition is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the single element of.</param>
+    /// <param name="predicate">A function to test each element for a condition.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> SingleOrNone<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, Func<T, bool> predicate)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).SingleOrNone(predicate);
 
     /// <summary>
     /// Returns a <c>Success</c> result of the element at a specified index in a sequence. If the index is out of range, a
@@ -576,6 +1306,66 @@ public static class EnumerableExtensions
     }
 
     /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>Fail</c> result with error
+    /// code <see cref="ErrorCodes.NotFound"/> is returned. If the element at the specified index is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> ElementAtOrFail<T, TEnumerable>(this Result<TEnumerable> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.ElementAtOrFail(index));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>Fail</c> result with error
+    /// code <see cref="ErrorCodes.NotFound"/> is returned. If the element at the specified index is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Result<T> ElementAtOrFail<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.ElementAtOrFail(index));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>Fail</c> result with error
+    /// code <see cref="ErrorCodes.NotFound"/> is returned. If the element at the specified index is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> ElementAtOrFail<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ElementAtOrFail<T, TEnumerable>(index);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>Fail</c> result with error
+    /// code <see cref="ErrorCodes.NotFound"/> is returned. If the element at the specified index is <see langword="null"/>, a
+    /// <c>Fail</c> result with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Result<T>> ElementAtOrFail<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ElementAtOrFail<T, TEnumerable>(index);
+
+    /// <summary>
     /// Returns a <c>Success</c> result of the element at a specified index in a sequence. If the index is out of range, a
     /// <c>None</c> result is returned. If the element at the specified index is <see langword="null"/>, a <c>Fail</c> result
     /// with error code <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
@@ -612,9 +1402,70 @@ public static class EnumerableExtensions
         return Maybe<T>.None;
     }
 
+    /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>None</c> result is
+    /// returned. If the element at the specified index is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> ElementAtOrNone<T, TEnumerable>(this Result<TEnumerable> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.ElementAtOrNone(index));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>None</c> result is
+    /// returned. If the element at the specified index is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static Maybe<T> ElementAtOrNone<T, TEnumerable>(this Maybe<TEnumerable> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        sourceResult.SelectMany(sourceSequence => sourceSequence.ElementAtOrNone(index));
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>None</c> result is
+    /// returned. If the element at the specified index is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> ElementAtOrNone<T, TEnumerable>(this Task<Result<TEnumerable>> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ElementAtOrNone<T, TEnumerable>(index);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result of the element at a specified index in a sequence result. If the result is <c>Fail</c>,
+    /// then a <c>Fail</c> result with the same error is returned. If the index is out of range, a <c>None</c> result is
+    /// returned. If the element at the specified index is <see langword="null"/>, a <c>Fail</c> result with error code
+    /// <see cref="ErrorCodes.UnexpectedNullValue"/> is returned.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <typeparam name="TEnumerable">The <see cref="IEnumerable{T}"/> type of <paramref name="sourceResult"/>.</typeparam>
+    /// <param name="sourceResult">The <see cref="IEnumerable{T}"/> result to return the element from.</param>
+    /// <param name="index">The zero-based index of the element to retrieve.</param>
+    /// <returns>A result representing the operation.</returns>
+    public static async Task<Maybe<T>> ElementAtOrNone<T, TEnumerable>(this Task<Maybe<TEnumerable>> sourceResult, int index)
+        where TEnumerable : IEnumerable<T> =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ElementAtOrNone<T, TEnumerable>(index);
+
     private static Result<T> ToResultOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
-        value.ToResult().WithError(error =>
-            error with { ErrorCode = ErrorCodes.UnexpectedNullValue, Message = string.Format(errorMessageFormat, errorMessageArgs) });
+        value is not null
+            ? value.ToResult()
+            : Result<T>.Fail(Errors.UnexpectedNullValue(string.Format(errorMessageFormat, errorMessageArgs)));
 
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
         value is not null

@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning].
 
 ### Added
 
+- RandomSkunk.Results:
+    - Add overloads for enumerable extensions.
+
 - RandomSkunk.Results.AspNetCore:
     - Add `GetActionResult` extension method for `Error`.
 
