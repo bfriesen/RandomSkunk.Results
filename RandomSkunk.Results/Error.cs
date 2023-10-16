@@ -42,6 +42,17 @@ public record class Error
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="Error"/> class.
+    /// </summary>
+    /// <param name="extensions">Additional properties for the error.</param>
+    public Error(params (string Key, object Value)[] extensions)
+    {
+        _title = _defaultTitleCache.GetOrAdd(GetType(), type => Format.AsSentenceCase(type.Name));
+        _message = DefaultMessage;
+        _extensions = new ReadOnlyDictionary<string, object>(extensions.ToDictionary(item => item.Key, item => item.Value));
+    }
+
+    /// <summary>
     /// Gets the title for the error.
     /// </summary>
     /// <remarks>
@@ -85,14 +96,27 @@ public record class Error
     /// <summary>
     /// Gets additional properties for the error.
     /// </summary>
-    /// <remarks>
-    /// The default value for this property is an empty dictionary. If this property is initialized to <see langword="null"/>,
-    /// nothing happens - the value remains an empty dictionary.
-    /// </remarks>
     public IReadOnlyDictionary<string, object> Extensions
     {
         get => _extensions;
-        init => _extensions = value ?? _emptyExtensions;
+        init
+        {
+            value ??= _emptyExtensions;
+            if (value.Count > 0)
+            {
+                if (_extensions.Count > 0)
+                {
+                    var extensions = _extensions.ToDictionary(item => item.Key, item => item.Value);
+                    foreach (var item in value)
+                        extensions.Add(item.Key, item.Value);
+                    _extensions = new ReadOnlyDictionary<string, object>(extensions);
+                }
+                else
+                {
+                    _extensions = value;
+                }
+            }
+        }
     }
 
     /// <summary>
