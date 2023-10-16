@@ -217,44 +217,6 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         AsResult(null);
 
     /// <summary>
-    /// Returns the current result if it is a <c>Success</c> result, else returns the specified fallback result.
-    /// </summary>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either the current result or <paramref name="fallbackResult"/>.</returns>
-    public Maybe<T> Else(Maybe<T> fallbackResult)
-    {
-        return _outcome == Outcome.Success ? this : fallbackResult;
-    }
-
-    /// <summary>
-    /// Returns the current result if it is a <c>Success</c> result, else returns the result from evaluating the
-    /// <paramref name="getFallbackResult"/> function.
-    /// </summary>
-    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either the current result or the value returned from <paramref name="getFallbackResult"/>.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
-    public Maybe<T> Else(Func<Maybe<T>> getFallbackResult)
-    {
-        if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
-
-        if (_outcome == Outcome.Success)
-            return this;
-
-        try
-        {
-            return getFallbackResult();
-        }
-        catch (TaskCanceledException ex)
-        {
-            return Errors.Canceled(ex);
-        }
-        catch (Exception ex)
-        {
-            return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackResult)));
-        }
-    }
-
-    /// <summary>
     /// Gets the value of the <c>Success</c> result, or the specified fallback value if it is a <c>Fail</c> or <c>None</c>
     /// result.
     /// </summary>
@@ -565,48 +527,6 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         }
 
         return this;
-    }
-
-    /// <summary>
-    /// Returns the current result if it is a <c>Success</c> result; otherwise, returns a new <c>Success</c> result with the
-    /// specified fallback value.
-    /// </summary>
-    /// <param name="fallbackValue">The fallback value if the result is not <c>Success</c>.</param>
-    /// <returns>A <c>Success</c> result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="fallbackValue"/> is <see langword="null"/>.</exception>
-    public Maybe<T> Or([DisallowNull] T fallbackValue)
-    {
-        if (fallbackValue is null) throw new ArgumentNullException(nameof(fallbackValue));
-
-        return _outcome == Outcome.Success ? this : fallbackValue.ToMaybe();
-    }
-
-    /// <summary>
-    /// Returns the current result if it is a <c>Success</c> result; otherwise, returns a new <c>Success</c> result with its
-    /// value from evaluating the <paramref name="getFallbackValue"/> function.
-    /// </summary>
-    /// <param name="getFallbackValue">A function that returns the fallback value if the result is not <c>Success</c>.</param>
-    /// <returns>A <c>Success</c> result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackValue"/> is <see langword="null"/>.</exception>
-    public Maybe<T> Or(Func<T> getFallbackValue)
-    {
-        if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
-
-        if (_outcome == Outcome.Success)
-            return this;
-
-        try
-        {
-            return getFallbackValue().ToMaybe();
-        }
-        catch (TaskCanceledException ex)
-        {
-            return Errors.Canceled(ex);
-        }
-        catch (Exception ex)
-        {
-            return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackValue)));
-        }
     }
 
     /// <summary>
@@ -1425,50 +1345,6 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
 
         error = null;
         return false;
-    }
-
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public Maybe<T> Where(Func<T, bool> predicate)
-    {
-        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-
-        if (_outcome == Outcome.Success)
-        {
-            return predicate(_value!)
-                ? this
-                : Maybe<T>.None;
-        }
-
-        return this;
-    }
-
-    /// <summary>
-    /// Filters the current result into a <c>None</c> result if it is a <c>Success</c> result and the
-    /// <paramref name="predicate"/> function evaluates to <see langword="false"/>. Otherwise returns the result unchanged.
-    /// </summary>
-    /// <param name="predicate">A function that filters a <c>Success</c> result into a <c>None</c> result by returning
-    ///     <see langword="false"/>.</param>
-    /// <returns>The filtered result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="predicate"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<T>> Where(Func<T, Task<bool>> predicate)
-    {
-        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
-
-        if (_outcome == Outcome.Success)
-        {
-            return await predicate(_value!).ConfigureAwait(ContinueOnCapturedContext)
-                ? this
-                : Maybe<T>.None;
-        }
-
-        return this;
     }
 
     /// <summary>

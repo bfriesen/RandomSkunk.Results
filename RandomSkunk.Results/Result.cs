@@ -164,44 +164,6 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             });
 
     /// <summary>
-    /// Returns the current result if it is a <c>Success</c> result, else returns the specified fallback result.
-    /// </summary>
-    /// <param name="fallbackResult">The fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either the current result or <paramref name="fallbackResult"/>.</returns>
-    public Result Else(Result fallbackResult)
-    {
-        return _outcome == Outcome.Success ? this : fallbackResult;
-    }
-
-    /// <summary>
-    /// Returns the current result if it is a <c>Success</c> result, else returns the result from evaluating the
-    /// <paramref name="getFallbackResult"/> function.
-    /// </summary>
-    /// <param name="getFallbackResult">A function that returns the fallback result if the result is not <c>Success</c>.</param>
-    /// <returns>Either the current result or the value returned from <paramref name="getFallbackResult"/>.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="getFallbackResult"/> is <see langword="null"/>.</exception>
-    public Result Else(Func<Result> getFallbackResult)
-    {
-        if (getFallbackResult is null) throw new ArgumentNullException(nameof(getFallbackResult));
-
-        if (_outcome == Outcome.Success)
-            return this;
-
-        try
-        {
-            return getFallbackResult();
-        }
-        catch (TaskCanceledException ex)
-        {
-            return Errors.Canceled(ex);
-        }
-        catch (Exception ex)
-        {
-            return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(getFallbackResult)));
-        }
-    }
-
-    /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
     /// is <c>Success</c> or <c>Fail</c>.
     /// </summary>

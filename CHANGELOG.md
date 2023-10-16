@@ -25,6 +25,11 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results.AspNetCore:
     - Add `GetActionResult` extension method for `Error`.
 
+### Removed
+
+- RandomSkunk.Results:
+    - Remove `Else`, `Or`, and `Where` methods.
+
 ## [1.4.0] - 2023-06-28
 
 ### Changed
