@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Changed
+
+- RandomSkunk.Results.AspNetCore:
+    - In the `ToActionResult` extension methods, change the optional parameter from `Func<int, int>? getHttpStatusCode` to `Func<Error, IActionResult>? onFail`.
+
 ### Added
 
 - RandomSkunk.Results.AspNetCore:
