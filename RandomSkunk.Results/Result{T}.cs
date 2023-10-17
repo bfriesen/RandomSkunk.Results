@@ -17,11 +17,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         _error = null;
     }
 
-    private Result(Error? error)
+    private Result(Error error)
     {
         _outcome = Outcome.Fail;
         _value = default;
-        _error = error ?? new Error();
+        _error = error;
 
         FailResult.Handle(ref _error);
     }
@@ -112,7 +112,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static Result<T> Fail(Error? error = null) => new(error);
+    public static Result<T> Fail(Error? error = null) => new(error ?? new Error());
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -130,7 +130,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
+        new(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -150,8 +150,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         string? errorTitle = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
-        Fail(
-            new Error
+        new(new Error
             {
                 Message = errorMessage,
                 Title = errorTitle!,

@@ -17,22 +17,22 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         _error = null;
     }
 
-    private Maybe(bool none, Error? error)
+#pragma warning disable IDE0060 // Remove unused parameter
+    private Maybe(Unit noneSignifier)
     {
-        if (none)
-        {
-            _outcome = Outcome.None;
-            _value = default;
-            _error = null;
-        }
-        else
-        {
-            _outcome = Outcome.Fail;
-            _value = default;
-            _error = error ?? new Error();
+        _outcome = Outcome.None;
+        _value = default;
+        _error = null;
+    }
+#pragma warning restore IDE0060 // Remove unused parameter
 
-            FailResult.Handle(ref _error);
-        }
+    private Maybe(Error error)
+    {
+        _outcome = Outcome.Fail;
+        _value = default;
+        _error = error;
+
+        FailResult.Handle(ref _error);
     }
 
     private enum Outcome
@@ -130,8 +130,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static Maybe<T> Fail(Error? error = null) =>
-        new(none: false, error);
+    public static Maybe<T> Fail(Error? error = null) => new(error ?? new Error());
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -149,7 +148,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
+        new(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -169,8 +168,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         string? errorTitle = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
-        Fail(
-            new Error
+        new(new Error
             {
                 Message = errorMessage,
                 Title = errorTitle!,
@@ -184,7 +182,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     /// Creates a <c>None</c> result.
     /// </summary>
     /// <returns>A <c>None</c> result.</returns>
-    public static Maybe<T> None() => new(none: true, null);
+    public static Maybe<T> None() => new(noneSignifier: Unit.Value);
 
     /// <summary>
     /// Creates a maybe from the specified value.

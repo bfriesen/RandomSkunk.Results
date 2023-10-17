@@ -8,20 +8,20 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     private readonly Outcome _outcome;
     private readonly Error? _error;
 
-    private Result(bool success, Error? error)
+#pragma warning disable IDE0060 // Remove unused parameter
+    private Result(Unit successSignifier)
     {
-        if (success)
-        {
-            _outcome = Outcome.Success;
-            _error = null;
-        }
-        else
-        {
-            _outcome = Outcome.Fail;
-            _error = error ?? new Error();
+        _outcome = Outcome.Success;
+        _error = null;
+    }
+#pragma warning restore IDE0060 // Remove unused parameter
 
-            FailResult.Handle(ref _error);
-        }
+    private Result(Error error)
+    {
+        _outcome = Outcome.Fail;
+        _error = error;
+
+        FailResult.Handle(ref _error);
     }
 
     private enum Outcome
@@ -107,14 +107,14 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// Creates a <c>Success</c> result.
     /// </summary>
     /// <returns>A <c>Success</c> result.</returns>
-    public static Result Success() => new(success: true, null);
+    public static Result Success() => new(successSignifier: Unit.Value);
 
     /// <summary>
     /// Creates a <c>Fail</c> result with the specified error.
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static Result Fail(Error? error = null) => new(success: false, error);
+    public static Result Fail(Error? error = null) => new(error ?? new Error());
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -132,7 +132,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null) =>
-        Fail(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
+        new(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -152,8 +152,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         string? errorTitle = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
-        Fail(
-            new Error
+        new(new Error
             {
                 Message = errorMessage,
                 Title = errorTitle!,
