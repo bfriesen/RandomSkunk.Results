@@ -61,6 +61,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     public bool IsFail => _outcome == Outcome.Fail;
 
     /// <summary>
+    /// Gets a value indicating whether this is an uninitialized instance of the <see cref="Maybe{T}"/> struct.
+    /// </summary>
+    public bool IsUninitialized => _outcome == Outcome.Fail && _error is null;
+
+    /// <summary>
     /// Gets the value from the <c>Success</c> result.
     /// </summary>
     /// <returns>If this is a <c>Success</c> result, its value; otherwise throws an <see cref="InvalidStateException"/>.

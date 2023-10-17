@@ -43,6 +43,11 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     public bool IsFail => _outcome == Outcome.Fail;
 
     /// <summary>
+    /// Gets a value indicating whether this is an uninitialized instance of the <see cref="Result"/> struct.
+    /// </summary>
+    public bool IsUninitialized => _outcome == Outcome.Fail && _error is null;
+
+    /// <summary>
     /// Gets the error from the <c>Fail</c> result.
     /// </summary>
     /// <returns>If this is a <c>Fail</c> result, its error; otherwise throws an <see cref="InvalidStateException"/>.</returns>
