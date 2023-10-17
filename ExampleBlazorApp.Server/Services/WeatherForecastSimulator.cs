@@ -20,14 +20,14 @@ public class WeatherForecastSimulator : IWeatherForecastSimulator
         _random = random;
     }
 
-    public async Task<Maybe<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city)
+    public async Task<Result<IReadOnlyList<WeatherForecast>>> GetFiveDayForecast(string city)
     {
         // Get the monthly temperature of the city and the current month using our WeatherRepository.
-        Maybe<MonthlyTemperature> monthlyTemperatureResult = await _weatherRepository.GetMonthlyTemperature(city, DateTime.Now.Month);
+        Result<MonthlyTemperature> monthlyTemperatureResult = await _weatherRepository.GetMonthlyTemperature(city, DateTime.Now.Month);
 
         // Project the Maybe<MonthlyTemperature> into a Maybe<IReadOnlyList<WeatherForecast>>
         // using the Select method. This works very similar to the Select extension method from LINQ.
-        Maybe<IReadOnlyList<WeatherForecast>> weatherForecastResult =
+        Result<IReadOnlyList<WeatherForecast>> weatherForecastResult =
             monthlyTemperatureResult.Select(GenerateFiveDayForecast);
         return weatherForecastResult;
     }

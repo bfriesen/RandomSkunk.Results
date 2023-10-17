@@ -141,7 +141,7 @@ public static class ResultTupleExtensions
             .AppendOrItemNIsNotSuccessClauses(tupleCount)
             .Append(@")
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -189,7 +189,7 @@ public static class ResultTupleExtensions
       .AppendOrItemNIsNotSuccessClauses(tupleCount)
             .Append(@")
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
       .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -251,7 +251,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -311,7 +311,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -378,7 +378,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -445,7 +445,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -508,7 +508,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -571,7 +571,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -635,7 +635,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -699,135 +699,7 @@ public static class ResultTupleExtensions
         }
         else
         {
-            var error = GetNonSuccessError(
-                sourceResults.Item1")
-            .AppendItemNParameters(tupleCount)
-            .Append(@");
-
-            return error;
-        }
-    }
-
-");
-    }
-
-    public static StringBuilder AppendSelectManyMaybeOfTMethod(this StringBuilder code, int tupleCount)
-    {
-        return code.Append(@"    /// <summary>
-    /// Projects the tuple of results into a new <see cref=""Maybe{T}""/> form: if <em>all</em> results are <c>Success</c>, they
-    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
-    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
-    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
-    /// </summary>
-    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
-            .AppendTypeParamDocsForT(tupleCount)
-            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
-    /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
-    ///     <c>Success</c>.</param>
-    /// <returns>The projected result.</returns>
-    public static Maybe<TReturn> SelectMany<")
-            .AppendTypeDefinitionArgumentsForT(tupleCount)
-            .Append(@", TReturn>(
-        this ")
-            .AppendTupleDefinitionForT(tupleCount)
-            .Append(@" sourceResults,
-        Func<")
-            .AppendTypeDefinitionArgumentsForT(tupleCount)
-            .Append(@", Maybe<TReturn>> onAllSuccessSelector)
-    {
-        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
-
-        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
-            .AppendItemNNullChecks(tupleCount)
-            .Append(@"
-        if (sourceResults.Item1.IsSuccess")
-            .AppendAndItemNIsSuccessClauses(tupleCount)
-            .Append(@")
-        {
-            try
-            {
-                return onAllSuccessSelector(
-                    sourceResults.Item1.Value")
-            .AppendItemNValueParameters(tupleCount)
-            .Append(@");
-            }
-            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
-            }
-        }
-        else
-        {
-            var error = GetNonSuccessError(
-                sourceResults.Item1")
-            .AppendItemNParameters(tupleCount)
-            .Append(@");
-
-            return error;
-        }
-    }
-
-");
-    }
-
-    public static StringBuilder AppendAsyncSelectManyMaybeOfTMethod(this StringBuilder code, int tupleCount)
-    {
-        return code.Append(@"    /// <summary>
-    /// Projects the tuple of results into a new <see cref=""Maybe{T}""/> form: if <em>all</em> results are <c>Success</c>, they
-    /// are transformed to the new form by passing their values to the <paramref name=""onAllSuccessSelector""/> function; if
-    /// <em>any</em> results are <c>NonSuccess</c>, they are transformed to the new form as a <c>Fail</c> result with a
-    /// <see cref=""CompositeError""/> containing each <c>Non-Success</c> result's error.
-    /// </summary>
-    /// <typeparam name=""T1"">The type of the tuple's first result.</typeparam>")
-            .AppendTypeParamDocsForT(tupleCount)
-            .Append(@"    /// <typeparam name=""TReturn"">The type of the returned result value.</typeparam>
-    /// <param name=""sourceResults"">A tuple of results.</param>
-    /// <param name=""onAllSuccessSelector"">A transform function to apply to the values of the results when all are
-    ///     <c>Success</c>.</param>
-    /// <returns>The projected result.</returns>
-    public static async Task<Maybe<TReturn>> SelectMany<")
-            .AppendTypeDefinitionArgumentsForT(tupleCount)
-            .Append(@", TReturn>(
-        this ")
-            .AppendTupleDefinitionForT(tupleCount)
-            .Append(@" sourceResults,
-        Func<")
-            .AppendTypeDefinitionArgumentsForT(tupleCount)
-            .Append(@", Task<Maybe<TReturn>>> onAllSuccessSelector)
-    {
-        if (onAllSuccessSelector is null) throw new ArgumentNullException(nameof(onAllSuccessSelector));
-
-        if (sourceResults.Item1 is null) throw new ArgumentNullException($""{nameof(sourceResults)}.Item1"");")
-            .AppendItemNNullChecks(tupleCount)
-            .Append(@"
-        if (sourceResults.Item1.IsSuccess")
-            .AppendAndItemNIsSuccessClauses(tupleCount)
-            .Append(@")
-        {
-            try
-            {
-                return await onAllSuccessSelector(
-                    sourceResults.Item1.Value")
-            .AppendItemNValueParameters(tupleCount)
-            .Append(@");
-            }
-            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
-            {
-               return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector))); 
-            }
-        }
-        else
-        {
-            var error = GetNonSuccessError(
+            var error = GetFailError(
                 sourceResults.Item1")
             .AppendItemNParameters(tupleCount)
             .Append(@");
@@ -844,11 +716,11 @@ public static class ResultTupleExtensions
 
     public static StringBuilder AppendGetNonSuccessErrorMethod(this StringBuilder code)
     {
-        return code.Append(@"    private static Error GetNonSuccessError(params IResult[] results)
+        return code.Append(@"    private static Error GetFailError(params IResult[] results)
     {
         var errors = results
             .Where(r => !r.IsSuccess)
-            .Select(r => r.GetNonSuccessError());
+            .Select(r => r.Error);
 
         return CompositeError.CreateOrGetSingle(errors);
     }");

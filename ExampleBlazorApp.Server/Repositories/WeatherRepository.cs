@@ -15,7 +15,7 @@ public class WeatherRepository : IWeatherRepository
         _connectionString = configuration.GetConnectionString("WeatherData") ?? throw new ArgumentException("Connection string 'WeatherData' is missing from the configuration.", nameof(configuration));
     }
 
-    public async Task<Maybe<MonthlyTemperature>> GetMonthlyTemperature(string city, int month)
+    public async Task<Result<MonthlyTemperature>> GetMonthlyTemperature(string city, int month)
     {
         const string sql = @"
 SELECT

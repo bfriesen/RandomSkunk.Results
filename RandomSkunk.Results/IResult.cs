@@ -12,10 +12,16 @@ public interface IResult
     bool IsSuccess { get; }
 
     /// <summary>
+    /// Gets a value indicating whether this is a <c>Fail</c> result.
+    /// </summary>
+    /// <returns><see langword="true"/> if this is a <c>Fail</c> result; otherwise, <see langword="false"/>.</returns>
+    bool IsFail { get; }
+
+    /// <summary>
     /// Gets the error of the <c>non-Success</c> result, or throws an <see cref="InvalidStateException"/> if this is a
     /// <c>Success</c> result.
     /// </summary>
     /// <returns>The error of the <c>non-Success</c> result.</returns>
     /// <exception cref="InvalidStateException">If this is a <c>Success</c> result.</exception>
-    Error GetNonSuccessError();
+    Error Error { get; }
 }

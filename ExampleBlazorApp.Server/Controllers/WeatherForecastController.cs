@@ -22,7 +22,7 @@ public class WeatherForecastController : ControllerBase
     {
         // Get a simulated five day forcast as a Maybe<IReadOnlyList<WeatherForcast>>
         // using our WeatherForecastSimulator.
-        Maybe<IReadOnlyList<WeatherForecast>> forcastResult =
+        Result<IReadOnlyList<WeatherForecast>> forcastResult =
             await _weatherForecastSimulator.GetFiveDayForecast(city);
 
         // Using the RandomSkunk.Results.AspNetCore package, convert the

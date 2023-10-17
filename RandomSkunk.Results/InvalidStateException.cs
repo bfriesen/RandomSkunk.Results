@@ -6,8 +6,7 @@ namespace RandomSkunk.Results;
 /// </summary>
 /// <remarks>
 /// In order to access a result's <c>Error</c> property, its <c>IsFail</c> property must be true. In order to access a result's
-/// <c>Value</c> property, its <c>IsSuccess</c> property must be true. In order to call <see cref="IResult.GetNonSuccessError"/>,
-/// its <c>IsSuccess</c> property must be false. Otherwise, in each case, this exception is thrown.
+/// <c>Value</c> property, its <c>IsSuccess</c> property must be true. Otherwise, in each case, this exception is thrown.
 /// </remarks>
 public class InvalidStateException : Exception
 {

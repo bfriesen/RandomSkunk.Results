@@ -153,35 +153,7 @@ public static partial class ResultSqlMapper
     /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
     ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
     ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-    public static Result<T> TryQueryFirstOrDefault<T>(
-        this IDbConnection cnn,
-        string sql,
-        object? param = null,
-        IDbTransaction? transaction = null,
-        int? commandTimeout = null,
-        CommandType? commandType = null,
-        Func<Exception, Error>? exceptionHandler = null)
-        where T : struct =>
-        TryCatch.AsResult(
-            () => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
-
-    /// <summary>
-    /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of result to return.</typeparam>
-    /// <param name="cnn">The connection to query on.</param>
-    /// <param name="sql">The SQL to execute for the query.</param>
-    /// <param name="param">The parameters to pass, if any.</param>
-    /// <param name="transaction">The transaction to use, if any.</param>
-    /// <param name="commandTimeout">The command timeout (in seconds).</param>
-    /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
-    ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
-    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-    public static Maybe<T> TryQueryFirstOrNone<T>(
+    public static Result<T> TryQueryFirstOrNone<T>(
         this IDbConnection cnn,
         string sql,
         object? param = null,
@@ -190,7 +162,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : class =>
-        TryCatch.AsMaybe(
+        TryCatch.AsResult(
             () => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -236,35 +208,7 @@ public static partial class ResultSqlMapper
     /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
     ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
     ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-    public static Result<T> TryQuerySingleOrDefault<T>(
-        this IDbConnection cnn,
-        string sql,
-        object? param = null,
-        IDbTransaction? transaction = null,
-        int? commandTimeout = null,
-        CommandType? commandType = null,
-        Func<Exception, Error>? exceptionHandler = null)
-        where T : struct =>
-        TryCatch.AsResult(
-            () => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
-
-    /// <summary>
-    /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of result to return.</typeparam>
-    /// <param name="cnn">The connection to query on.</param>
-    /// <param name="sql">The SQL to execute for the query.</param>
-    /// <param name="param">The parameters to pass, if any.</param>
-    /// <param name="transaction">The transaction to use, if any.</param>
-    /// <param name="commandTimeout">The command timeout (in seconds).</param>
-    /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
-    ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
-    ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-    public static Maybe<T> TryQuerySingleOrNone<T>(
+    public static Result<T> TryQuerySingleOrNone<T>(
         this IDbConnection cnn,
         string sql,
         object? param = null,
@@ -273,7 +217,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : class =>
-        TryCatch.AsMaybe(
+        TryCatch.AsResult(
             () => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -619,33 +563,7 @@ public static partial class ResultSqlMapper
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
     /// <returns>The first result or <c>None</c>.</returns>
-    public static Task<Result<T>> TryQueryFirstOrDefaultAsync<T>(
-        this IDbConnection cnn,
-        string sql,
-        object? param = null,
-        IDbTransaction? transaction = null,
-        int? commandTimeout = null,
-        CommandType? commandType = null,
-        Func<Exception, Error>? exceptionHandler = null)
-        where T : struct =>
-        TryCatch.AsResult(
-            () => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
-
-    /// <summary>
-    /// Execute a single-row query asynchronously using Task.
-    /// </summary>
-    /// <typeparam name="T">The type of result to return.</typeparam>
-    /// <param name="cnn">The connection to query on.</param>
-    /// <param name="sql">The SQL to execute for the query.</param>
-    /// <param name="param">The parameters to pass, if any.</param>
-    /// <param name="transaction">The transaction to use, if any.</param>
-    /// <param name="commandTimeout">The command timeout (in seconds).</param>
-    /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>The first result or <c>None</c>.</returns>
-    public static Task<Maybe<T>> TryQueryFirstOrNoneAsync<T>(
+    public static Task<Result<T>> TryQueryFirstOrNoneAsync<T>(
         this IDbConnection cnn,
         string sql,
         object? param = null,
@@ -654,7 +572,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : class =>
-        TryCatch.AsMaybe(
+        TryCatch.AsResult(
             () => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 
@@ -696,33 +614,7 @@ public static partial class ResultSqlMapper
     /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
     ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
     /// <returns>The single result or <c>None</c>.</returns>
-    public static Task<Result<T>> TryQuerySingleOrDefaultAsync<T>(
-        this IDbConnection cnn,
-        string sql,
-        object? param = null,
-        IDbTransaction? transaction = null,
-        int? commandTimeout = null,
-        CommandType? commandType = null,
-        Func<Exception, Error>? exceptionHandler = null)
-        where T : struct =>
-        TryCatch.AsResult(
-            () => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
-
-    /// <summary>
-    /// Execute a single-row query asynchronously using Task.
-    /// </summary>
-    /// <typeparam name="T">The type to return.</typeparam>
-    /// <param name="cnn">The connection to query on.</param>
-    /// <param name="sql">The SQL to execute for the query.</param>
-    /// <param name="param">The parameters to pass, if any.</param>
-    /// <param name="transaction">The transaction to use, if any.</param>
-    /// <param name="commandTimeout">The command timeout (in seconds).</param>
-    /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
-    /// <returns>The single result or <c>None</c>.</returns>
-    public static Task<Maybe<T>> TryQuerySingleOrNoneAsync<T>(
+    public static Task<Result<T>> TryQuerySingleOrNoneAsync<T>(
         this IDbConnection cnn,
         string sql,
         object? param = null,
@@ -731,7 +623,7 @@ public static partial class ResultSqlMapper
         CommandType? commandType = null,
         Func<Exception, Error>? exceptionHandler = null)
         where T : class =>
-        TryCatch.AsMaybe(
+        TryCatch.AsResult(
             () => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
             exceptionHandler);
 

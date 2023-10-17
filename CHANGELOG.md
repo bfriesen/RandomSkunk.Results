@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning].
     - Add constructor to `Error` - makes initializing an error with extension properties easier.
     - Add setting to catch exceptions thrown by callbacks (defaults to true).
     - Add `IsUninitialized` property to each result type.
+    - Add "None" functionality to `Result<T>`.
 
 - RandomSkunk.Results.AspNetCore:
     - Add `GetActionResult` extension method for `Error`.
@@ -32,6 +33,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Remove `Else`, `Or`, and `Where` methods.
+    - Remove the `Maybe<T>` struct.
 
 ## [1.4.0] - 2023-06-28
 

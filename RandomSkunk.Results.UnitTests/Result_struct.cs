@@ -202,40 +202,4 @@ public class Result_struct
             result.Error.Should().BeSameAs(error);
         }
     }
-
-    public class ImplicitConversionFromMaybeOfUnit
-    {
-        [Fact]
-        public void Given_IsSuccess_Returns_Success_result()
-        {
-            Maybe<Unit> resultOfUnit = Maybe<Unit>.Success(Unit.Value);
-
-            Result result = resultOfUnit;
-
-            result.IsSuccess.Should().BeTrue();
-        }
-
-        [Fact]
-        public void Given_IsNone_Returns_Fail_result()
-        {
-            Maybe<Unit> resultOfUnit = Maybe<Unit>.None();
-
-            Result result = resultOfUnit;
-
-            result.IsFail.Should().BeTrue();
-            result.Error.ErrorCode.Should().Be(ErrorCodes.NoValue);
-        }
-
-        [Fact]
-        public void Given_IsFail_Returns_Fail_result()
-        {
-            Error error = new();
-            Maybe<Unit> resultOfUnit = Maybe<Unit>.Fail(error);
-
-            Result result = resultOfUnit;
-
-            result.IsFail.Should().BeTrue();
-            result.Error.Should().BeSameAs(error);
-        }
-    }
 }

@@ -10,7 +10,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a DELETE request to the specified Uri with a cancellation token as an asynchronous operation. A
-    /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
@@ -78,7 +78,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
-    /// an asynchronous operation. A <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// an asynchronous operation. A <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
@@ -102,7 +102,7 @@ public static class HttpClientExtensions
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
-    public static async Task<Maybe<TValue>> TryGetFromJsonAsync<TValue>(
+    public static async Task<Result<TValue>> TryGetFromJsonAsync<TValue>(
         this HttpClient sourceHttpClient,
         string? requestUri,
         Func<HttpRequestException, Error>? getHttpError = null,
@@ -111,7 +111,7 @@ public static class HttpClientExtensions
         CancellationToken cancellationToken = default)
     {
         var responseResult = await sourceHttpClient.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-        var returnResult = await responseResult.ReadMaybeFromJsonAsync<TValue>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        var returnResult = await responseResult.ReadResultFromJsonAsync<TValue>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         responseResult.OnSuccess(response => response.Dispose());
         return returnResult;
     }
@@ -120,7 +120,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a PATCH request to the specified Uri containing the value serialized as JSON in the request body. A
-    /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
@@ -156,7 +156,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a PATCH request to the specified Uri containing the value serialized as JSON in the request body. A
-    /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
@@ -198,7 +198,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a POST request to the specified Uri containing the value serialized as JSON in the request body. A
-    /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
@@ -234,7 +234,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a POST request to the specified Uri containing the value serialized as JSON in the request body. A
-    /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
@@ -274,7 +274,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a PUT request to the specified Uri containing the value serialized as JSON in the request body. A
-    /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
@@ -310,7 +310,7 @@ public static class HttpClientExtensions
 
     /// <summary>
     /// Sends a PUT request to the specified Uri containing the value serialized as JSON in the request body. A
-    /// <see cref="Maybe{T}"/> value is returned, representing the result of the overall operation.
+    /// <see cref="Result{T}"/> value is returned, representing the result of the overall operation.
     /// </summary>
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>

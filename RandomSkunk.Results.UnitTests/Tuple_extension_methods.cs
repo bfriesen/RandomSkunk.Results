@@ -9,11 +9,11 @@ public class Tuple_extension_methods
     {
         get
         {
-            yield return new object[] { Result.Fail("a", 1), Result<int>.Success(123), Maybe<int>.Success(456) };
-            yield return new object[] { Result.Success(), Result<int>.Fail("b", 2), Maybe<int>.Success(456) };
-            yield return new object[] { Result.Success(), Result<int>.Success(123), Maybe<int>.Fail("c", 3) };
-            yield return new object[] { Result.Success(), Result<int>.Success(123), Maybe<int>.None() };
-            yield return new object[] { Result.Fail("a", 1), Result<int>.Fail("b", 2), Maybe<int>.Fail("c", 3) };
+            yield return new object[] { Result.Fail("a", 1), Result<int>.Success(123), Result<int>.Success(456) };
+            yield return new object[] { Result.Success(), Result<int>.Fail("b", 2), Result<int>.Success(456) };
+            yield return new object[] { Result.Success(), Result<int>.Success(123), Result<int>.Fail("c", 3) };
+            yield return new object[] { Result.Success(), Result<int>.Success(123), Result<int>.None() };
+            yield return new object[] { Result.Fail("a", 1), Result<int>.Fail("b", 2), Result<int>.Fail("c", 3) };
         }
     }
 
@@ -43,7 +43,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             (Unit?, int?, int?) capturedValues = default;
 
@@ -55,7 +55,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public void When_not_all_Success_Does_not_invoke_callback(Result resultA, Result<int> resultB, Maybe<int> resultC)
+        public void When_not_all_Success_Does_not_invoke_callback(Result resultA, Result<int> resultB, Result<int> resultC)
         {
             (Unit?, int?, int?) capturedValues = default;
 
@@ -75,7 +75,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             (Unit?, int?, int?) capturedValues = default;
 
@@ -91,7 +91,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public async Task When_not_all_Success_Does_not_invoke_callback(Result resultA, Result<int> resultB, Maybe<int> resultC)
+        public async Task When_not_all_Success_Does_not_invoke_callback(Result resultA, Result<int> resultB, Result<int> resultC)
         {
             (Unit?, int?, int?) capturedValues = default;
 
@@ -115,7 +115,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             Error? capturedError = null;
 
@@ -126,7 +126,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public void When_not_all_Success_Invokes_callback(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public void When_not_all_Success_Invokes_callback(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             Error? capturedError = null;
 
@@ -159,7 +159,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             Error? capturedError = null;
 
@@ -174,7 +174,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public async Task When_not_all_Success_Invokes_callback(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public async Task When_not_all_Success_Invokes_callback(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             Error? capturedError = null;
 
@@ -211,7 +211,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
@@ -235,7 +235,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public void When_not_all_Success_Invokes_onAnyNonSuccess_callback(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public void When_not_all_Success_Invokes_onAnyNonSuccess_callback(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
@@ -281,7 +281,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
@@ -305,7 +305,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public async Task When_not_all_Success_Invokes_onAnyNonSuccess_callback(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public async Task When_not_all_Success_Invokes_onAnyNonSuccess_callback(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             (Unit?, int?, int?) capturedValues = default;
             Error? capturedError = null;
@@ -351,7 +351,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             var actual = (resultA, resultB, resultC).Select((a, b, c) => b + c);
 
@@ -361,7 +361,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public void When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public void When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             var actual = (resultA, resultB, resultC).Select((a, b, c) => b + c);
 
@@ -392,7 +392,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             var actual = await (resultA, resultB, resultC).Select((a, b, c) => Task.FromResult(b + c));
 
@@ -402,7 +402,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public async Task When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public async Task When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             var actual = await (resultA, resultB, resultC).Select((a, b, c) => Task.FromResult(b + c));
 
@@ -433,7 +433,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result.Fail("x", -1));
 
@@ -444,7 +444,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public void Given_return_type_is_Result_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public void Given_return_type_is_Result_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result.Success());
 
@@ -470,7 +470,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result<int>.Success(b + c));
 
@@ -480,45 +480,9 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public void Given_return_type_is_Result_of_T_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public void Given_return_type_is_Result_of_T_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Result<int>.Success(b + c));
-
-            actual.IsSuccess.Should().BeFalse();
-            actual.Error.Message.Should().Be(expectedError.Message);
-            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.Error.Should().BeOfType(expectedError.GetType());
-
-            if (expectedError is CompositeError expectedCompositeError)
-            {
-                var compositeError = (CompositeError)actual.Error;
-                compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
-                for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
-                {
-                    compositeError.Errors[i].Message.Should().Be(expectedCompositeError.Errors[i].Message);
-                    compositeError.Errors[i].ErrorCode.Should().Be(expectedCompositeError.Errors[i].ErrorCode);
-                }
-            }
-        }
-
-        [Fact]
-        public void Given_return_type_is_Maybe_of_T_When_all_Success_Returns_Success_result_from_function_evaluation()
-        {
-            var resultA = Result.Success();
-            var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
-
-            var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Maybe<int>.Success(b + c));
-
-            actual.IsSuccess.Should().BeTrue();
-            actual.Value.Should().Be(579);
-        }
-
-        [Theory]
-        [MemberData(nameof(NonSuccessResults))]
-        public void Given_return_type_is_Maybe_of_T_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
-        {
-            var actual = (resultA, resultB, resultC).SelectMany((a, b, c) => Maybe<int>.Success(b + c));
 
             actual.IsSuccess.Should().BeFalse();
             actual.Error.Message.Should().Be(expectedError.Message);
@@ -547,7 +511,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result.Fail("x", -1)));
 
@@ -558,7 +522,7 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public async Task Given_return_type_is_Result_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public async Task Given_return_type_is_Result_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result.Success()));
 
@@ -584,7 +548,7 @@ public class Tuple_extension_methods
         {
             var resultA = Result.Success();
             var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
+            var resultC = Result<int>.Success(456);
 
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result<int>.Success(b + c)));
 
@@ -594,45 +558,9 @@ public class Tuple_extension_methods
 
         [Theory]
         [MemberData(nameof(NonSuccessResults))]
-        public async Task Given_return_type_is_Result_of_T_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
+        public async Task Given_return_type_is_Result_of_T_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Result<int> resultC, Error expectedError)
         {
             var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Result<int>.Success(b + c)));
-
-            actual.IsSuccess.Should().BeFalse();
-            actual.Error.Message.Should().Be(expectedError.Message);
-            actual.Error.ErrorCode.Should().Be(expectedError.ErrorCode);
-            actual.Error.Should().BeOfType(expectedError.GetType());
-
-            if (expectedError is CompositeError expectedCompositeError)
-            {
-                var compositeError = (CompositeError)actual.Error;
-                compositeError.Errors.Should().HaveSameCount(expectedCompositeError.Errors);
-                for (int i = 0; i < expectedCompositeError.Errors.Count; i++)
-                {
-                    compositeError.Errors[i].Message.Should().Be(expectedCompositeError.Errors[i].Message);
-                    compositeError.Errors[i].ErrorCode.Should().Be(expectedCompositeError.Errors[i].ErrorCode);
-                }
-            }
-        }
-
-        [Fact]
-        public async Task Given_return_type_is_Maybe_of_T_When_all_Success_Returns_Success_result_from_function_evaluation()
-        {
-            var resultA = Result.Success();
-            var resultB = Result<int>.Success(123);
-            var resultC = Maybe<int>.Success(456);
-
-            var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Maybe<int>.Success(b + c)));
-
-            actual.IsSuccess.Should().BeTrue();
-            actual.Value.Should().Be(579);
-        }
-
-        [Theory]
-        [MemberData(nameof(NonSuccessResults))]
-        public async Task Given_return_type_is_Maybe_of_T_When_not_all_Success_Returns_Fail_result(Result resultA, Result<int> resultB, Maybe<int> resultC, Error expectedError)
-        {
-            var actual = await (resultA, resultB, resultC).SelectMany((a, b, c) => Task.FromResult(Maybe<int>.Success(b + c)));
 
             actual.IsSuccess.Should().BeFalse();
             actual.Error.Message.Should().Be(expectedError.Message);

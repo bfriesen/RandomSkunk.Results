@@ -75,12 +75,6 @@ public class TryCatchGenerator : IIncrementalGenerator
 
         var tryCatchInfo = new TryCatchInfo();
 
-        foreach (var namedArgument in attribute.NamedArguments)
-        {
-            if (namedArgument.Key == "AsMaybe")
-                tryCatchInfo.AsMaybe = (bool)namedArgument.Value.Value!;
-        }
-
         if (attribute.ConstructorArguments.Length == 0)
         {
             tryCatchInfo.TExceptions = Array.Empty<INamedTypeSymbol>();
@@ -130,12 +124,6 @@ public class TryCatchGenerator : IIncrementalGenerator
         var target = new AttributeTarget(targetType, methodName);
 
         var tryCatchInfo = new TryCatchInfo();
-
-        foreach (var namedArgument in attribute.NamedArguments)
-        {
-            if (namedArgument.Key == "AsMaybe")
-                tryCatchInfo.AsMaybe = (bool)namedArgument.Value.Value!;
-        }
 
         if (attribute.ConstructorArguments.Length == 1
             || (attribute.ConstructorArguments.Length == 2 && attribute.ConstructorArguments[1].Type!.Name == "String"))
@@ -290,8 +278,6 @@ public class TryCatchGenerator : IIncrementalGenerator
 
     private class TryCatchInfo
     {
-        public bool AsMaybe { get; set; }
-
         public INamedTypeSymbol[] TExceptions { get; set; } = null!;
     }
 
@@ -462,7 +448,7 @@ public class TryCatchGenerator : IIncrementalGenerator
                         }
                         else
                         {
-                            var resultType = methodData.TryCatchInfo.AsMaybe ? "RandomSkunk.Results.Maybe" : "RandomSkunk.Results.Result";
+                            var resultType = "RandomSkunk.Results.Result";
 
                             if ((returnType.Name == "Task" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks")
                                 || (returnType.Name == "ValueTask" && returnType.ContainingNamespace?.ToString() == "System.Threading.Tasks"))

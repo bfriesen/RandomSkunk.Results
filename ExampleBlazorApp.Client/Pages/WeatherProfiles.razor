@@ -169,7 +169,7 @@ else
                 })
 
             // If the call to the server was not successful, log to the browser console and alert the user.
-            .OnNonSuccessLogAndAlert(JS);
+            .OnFailLogAndAlert(JS);
     }
 
     private async Task SaveProfile()
@@ -197,6 +197,6 @@ else
             .OnSuccess(() => CloseDialog())
 
             // If the call to the server was not successful, log to the browser console and alert the user.
-            .OnNonSuccessLogAndAlert(JS);
+            .OnFailLogAndAlert(JS);
     }
 }

@@ -5,165 +5,9 @@ public class SelectMany_Async_methods
     public class For_Result_of_T
     {
         [Fact]
-        public async Task Given_target_is_Result_of_T_When_source_is_Success_Returns_onSuccess_function_evaluation()
-        {
-            var source = 1.ToResult();
-
-            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
-
-            actual.IsSuccess.Should().BeTrue();
-            actual.Value.Should().Be("1");
-        }
-
-        [Fact]
-        public async Task Given_target_is_Result_of_T_When_source_is_Fail_Returns_Fail()
-        {
-            var error = new Error();
-            var source = Result<int>.Fail(error);
-
-            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Should().BeSameAs(error);
-        }
-
-        [Fact]
-        public async Task Given_target_is_Result_of_T_When_onSuccess_function_is_null_Throws_ArgumentNullException()
-        {
-            var source = Result<int>.Fail();
-
-            Func<Task> act = () => source.SelectMany((Func<int, Task<Result<string>>>)null!);
-
-            await act.Should().ThrowExactlyAsync<ArgumentNullException>();
-        }
-
-        [Fact]
         public async Task Given_target_is_Result_When_source_is_Success_Returns_onSuccess_function_evaluation()
         {
             var source = "a".ToResult();
-
-            var actual = await source.SelectMany(value => Task.FromResult(Result.Fail(value)));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Message.Should().Be("a");
-        }
-
-        [Fact]
-        public async Task Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
-        {
-            var error = new Error();
-            var source = Result<int>.Fail(error);
-
-            var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Should().BeSameAs(error);
-        }
-
-        [Fact]
-        public async Task Given_target_is_Result_When_onSuccess_function_is_null_Throws_ArgumentNullException()
-        {
-            var source = Result<int>.Fail();
-
-            Func<Task> act = () => source.SelectMany((Func<int, Task<Result>>)null!);
-
-            await act.Should().ThrowExactlyAsync<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_When_source_is_Success_Returns_onSuccess_function_evaluation()
-        {
-            var source = "a".ToResult();
-
-            var actual = await source.SelectMany(value => Task.FromResult(Maybe<int>.Fail(value)));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Message.Should().Be("a");
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail_result()
-        {
-            var error = new Error();
-            var source = Result<int>.Fail(error);
-
-            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Should().BeSameAs(error);
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_and_onSuccess_function_is_null_Throws_ArgumentNullException()
-        {
-            var source = Result<int>.Fail();
-
-            Func<Task> act = () => source.SelectMany((Func<int, Task<Maybe<string>>>)null!);
-
-            await act.Should().ThrowExactlyAsync<ArgumentNullException>();
-        }
-    }
-
-    public class For_Maybe_of_T
-    {
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_When_source_is_Success_Returns_onSuccess_function_evaluation()
-        {
-            var source = 1.ToMaybe();
-
-            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
-
-            actual.IsSuccess.Should().BeTrue();
-            actual.Value.Should().Be("1");
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail()
-        {
-            var error = new Error();
-            var source = Maybe<int>.Fail(error);
-
-            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Should().BeSameAs(error);
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_When_source_is_None_Returns_None()
-        {
-            var source = Maybe<int>.None();
-
-            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
-
-            actual.IsNone.Should().BeTrue();
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
-        {
-            var source = Maybe<int>.None();
-
-            var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()), () => Task.FromResult(Maybe<string>.Fail("error from onNoneSelector")));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Message.Should().Be("error from onNoneSelector");
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_and_onSuccess_function_is_null_Throws_ArgumentNullException()
-        {
-            var source = Maybe<int>.Fail();
-
-            Func<Task> act = () => source.SelectMany((Func<int, Task<Maybe<string>>>)null!);
-
-            await act.Should().ThrowExactlyAsync<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Given_target_is_Result_When_source_is_Success_Returns_onSuccess_function_evaluation()
-        {
-            var source = "a".ToMaybe();
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Fail(value)));
 
@@ -174,7 +18,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_When_source_is_None_Returns_Fail_result()
         {
-            var source = Maybe<string>.None();
+            var source = Result<string>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
@@ -190,7 +34,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
         {
-            var source = Maybe<string>.None();
+            var source = Result<string>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()), () => Task.FromResult(Result.Fail("error from onNoneSelector")));
 
@@ -202,7 +46,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Result_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<string>.Fail(error);
+            var source = Result<string>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
@@ -213,7 +57,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_and_onSuccess_function_is_null_Throws_ArgumentNullException()
         {
-            var source = Maybe<int>.Fail();
+            var source = Result<int>.Fail();
 
             Func<Task> act = () => source.SelectMany((Func<int, Task<Result>>)null!);
 
@@ -223,7 +67,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_of_T_When_source_is_Success_Returns_onSuccess_function_evaluation()
         {
-            var source = "a".ToMaybe();
+            var source = "a".ToResult();
 
             var actual = await source.SelectMany(value => Task.FromResult(Result<int>.Fail(value)));
 
@@ -234,7 +78,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_of_T_When_source_is_None_Returns_Fail_result()
         {
-            var source = Maybe<int>.None();
+            var source = Result<int>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
@@ -250,7 +94,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_of_T_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
         {
-            var source = Maybe<int>.None();
+            var source = Result<int>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()), () => Task.FromResult(Result<string>.Fail("error from onNoneSelector")));
 
@@ -262,7 +106,7 @@ public class SelectMany_Async_methods
         public async Task Given_target_is_Result_of_T_When_source_is_Fail_Returns_Fail_result()
         {
             var error = new Error();
-            var source = Maybe<int>.Fail(error);
+            var source = Result<int>.Fail(error);
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
@@ -273,7 +117,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_of_T_and_onSuccess_function_is_null_Throws_ArgumentNullException()
         {
-            var source = Maybe<int>.Fail();
+            var source = Result<int>.Fail();
 
             Func<Task> act = () => source.SelectMany((Func<int, Task<Result<string>>>)null!);
 
@@ -343,38 +187,6 @@ public class SelectMany_Async_methods
             var source = Result.Fail();
 
             Func<Task> act = () => source.SelectMany((Func<Task<Result<string>>>)null!);
-
-            await act.Should().ThrowExactlyAsync<ArgumentNullException>();
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_When_source_is_Success_Returns_onSuccess_function_evaluation()
-        {
-            var source = Result.Success();
-
-            var actual = await source.SelectMany(() => Task.FromResult(Maybe<int>.Success(1)));
-
-            actual.IsSuccess.Should().BeTrue();
-            actual.Value.Should().Be(1);
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_When_source_is_Fail_Returns_Fail_result()
-        {
-            var source = Result.Fail("a");
-
-            var actual = await source.SelectMany(() => Task.FromResult(Maybe<int>.Success(1)));
-
-            actual.IsFail.Should().BeTrue();
-            actual.Error.Message.Should().Be("a");
-        }
-
-        [Fact]
-        public async Task Given_target_is_Maybe_of_T_and_onSuccess_function_is_null_Throws_ArgumentNullException()
-        {
-            var source = Result.Fail();
-
-            Func<Task> act = () => source.SelectMany((Func<Task<Maybe<string>>>)null!);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }

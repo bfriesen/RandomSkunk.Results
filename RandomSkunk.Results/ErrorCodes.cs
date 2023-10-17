@@ -61,10 +61,6 @@ public static class ErrorCodes
     /// <summary>
     /// Indicates that the result has no value.
     /// </summary>
-    /// <remarks>
-    /// This error code is to used to indicate that a <c>Fail</c> <see cref="Result{T}"/> is equivalent to
-    /// <see cref="Maybe{T}.None()"/>.
-    /// </remarks>
     public const int NoValue = -404;
 
     /// <summary>

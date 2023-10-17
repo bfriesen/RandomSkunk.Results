@@ -13,7 +13,7 @@ public class WeatherProfileClient
         _httpClient = httpClient;
     }
 
-    public Task<Maybe<List<WeatherProfile>>> GetWeatherProfiles()
+    public Task<Result<List<WeatherProfile>>> GetWeatherProfiles()
     {
         // Using the RandomSkunk.Results.Http package, make a request to the server to get the weather profiles.
         // Any errors from making the request are automatically captured in the result.

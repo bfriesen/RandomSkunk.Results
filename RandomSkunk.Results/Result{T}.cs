@@ -1,7 +1,7 @@
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// Defines a result with a required value.
+/// Defines a result with a value.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
 public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
@@ -45,8 +45,15 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     public bool IsFail => _outcome == Outcome.Fail;
 
     /// <summary>
+    /// Gets a value indicating whether this is a <c>None</c> result.
+    /// </summary>
+    /// <returns><see langword="true"/> if this is a <c>None</c> result; otherwise, <see langword="false"/>.</returns>
+    public bool IsNone => _outcome == Outcome.Fail && GetError().ErrorCode == ErrorCodes.NoValue;
+
+    /// <summary>
     /// Gets a value indicating whether this is an uninitialized instance of the <see cref="Result{T}"/> struct.
     /// </summary>
+    /// <returns><see langword="true"/> if this is an uninitialized result; otherwise, <see langword="false"/>.</returns>
     public bool IsUninitialized => _outcome == Outcome.Fail && _error is null;
 
     /// <summary>
@@ -166,6 +173,12 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             });
 
     /// <summary>
+    /// Creates a <c>None</c> result.
+    /// </summary>
+    /// <returns>A <c>None</c> result.</returns>
+    public static Result<T> None() => new(Errors.NoValue());
+
+    /// <summary>
     /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
     /// result with error code <see cref="ErrorCodes.NoValue"/> is returned instead.
     /// </summary>
@@ -175,17 +188,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     public static Result<T> FromValue(T? value) =>
         value is not null
             ? Success(value)
-            : Errors.NoValue();
-
-    /// <summary>
-    /// Converts this <see cref="Result{T}"/> to an equivalent <see cref="Maybe{T}"/>. If this is a <c>Success</c> result, then a
-    /// <c>Success</c> result with the same value is returned. Otherwise, if the <c>Fail</c> result's error has error code
-    /// <see cref="ErrorCodes.NoValue"/>, then a <c>None</c> result is returned. For any other error code, a new <c>Fail</c>
-    /// result with the same error is returned.
-    /// </summary>
-    /// <returns>The equivalent <see cref="Result{T}"/>.</returns>
-    public Maybe<T> AsMaybe() =>
-        SelectMany(Maybe<T>.Success);
+            : None();
 
     /// <summary>
     /// Gets the value of the <c>Success</c> result, or the specified fallback value if it is a <c>Fail</c> result.
@@ -301,6 +304,70 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     }
 
     /// <summary>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
+    /// is <c>Success</c> or <c>Fail</c>.
+    /// </summary>
+    /// <typeparam name="TReturn">The return type of the match method.</typeparam>
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>. The non-null value of the
+    ///     <c>Success</c> result is passed to this function.</param>
+    /// <param name="onNone">The function to evaluate if the result is <c>None</c>.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
+    /// <returns>The result of the matching function evaluation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
+    public TReturn Match<TReturn>(
+        Func<T, TReturn> onSuccess,
+        Func<TReturn> onNone,
+        Func<Error, TReturn> onFail)
+    {
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onNone is null) throw new ArgumentNullException(nameof(onNone));
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+
+        if (_outcome == Outcome.Success)
+            return onSuccess(_value!);
+
+        var error = GetError();
+        if (error.ErrorCode == ErrorCodes.NoValue)
+            return onNone();
+
+        return onFail(error);
+    }
+
+    /// <summary>
+    /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
+    /// is <c>Success</c> or <c>Fail</c>.
+    /// </summary>
+    /// <typeparam name="TReturn">The return type of the match method.</typeparam>
+    /// <param name="onSuccess">The function to evaluate if the result is <c>Success</c>. The non-null value of the
+    ///     <c>Success</c> result is passed to this function.</param>
+    /// <param name="onNone">The function to evaluate if the result is <c>None</c>.</param>
+    /// <param name="onFail">The function to evaluate if the result is <c>Fail</c>. The non-null error of the <c>Fail</c> result
+    ///     is passed to this function.</param>
+    /// <returns>A task that represents the asynchronous match operation, which wraps the result of the matching function
+    ///     evaluation.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onSuccess"/> is <see langword="null"/> or if
+    ///     <paramref name="onFail"/> is <see langword="null"/>.</exception>
+    public Task<TReturn> Match<TReturn>(
+        Func<T, Task<TReturn>> onSuccess,
+        Func<Task<TReturn>> onNone,
+        Func<Error, Task<TReturn>> onFail)
+    {
+        if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+
+        if (_outcome == Outcome.Success)
+            return onSuccess(_value!);
+
+        var error = GetError();
+        if (error.ErrorCode == ErrorCodes.NoValue)
+            return onNone();
+
+        return onFail(error);
+    }
+
+    /// <summary>
     /// Invokes the <paramref name="onFailCallback"/> function if the current result is a <c>Fail</c> result.
     /// </summary>
     /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result.</param>
@@ -370,6 +437,60 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         }
 
         return this;
+    }
+
+    /// <summary>
+    /// Invokes the <paramref name="onNoneCallback"/> function if the current result is a <c>None</c> result.
+    /// </summary>
+    /// <param name="onNoneCallback">A callback function to invoke if this is a <c>None</c> result.</param>
+    /// <returns>The current result.</returns>
+    public Result<T> OnNone(Action onNoneCallback)
+    {
+        if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
+
+        if (_outcome != Outcome.Fail || GetError().ErrorCode != ErrorCodes.NoValue)
+            return this;
+
+        try
+        {
+            onNoneCallback();
+            return this;
+        }
+        catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+        {
+            return Errors.Canceled(ex);
+        }
+        catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+        {
+            return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneCallback)));
+        }
+    }
+
+    /// <summary>
+    /// Invokes the <paramref name="onNoneCallback"/> function if the current result is a <c>None</c> result.
+    /// </summary>
+    /// <param name="onNoneCallback">A callback function to invoke if this is a <c>None</c> result.</param>
+    /// <returns>The current result.</returns>
+    public async Task<Result<T>> OnNone(Func<Task> onNoneCallback)
+    {
+        if (onNoneCallback is null) throw new ArgumentNullException(nameof(onNoneCallback));
+
+        if (_outcome != Outcome.Fail || GetError().ErrorCode != ErrorCodes.NoValue)
+            return this;
+
+        try
+        {
+            await onNoneCallback().ConfigureAwait(ContinueOnCapturedContext);
+            return this;
+        }
+        catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+        {
+            return Errors.Canceled(ex);
+        }
+        catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+        {
+            return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneCallback)));
+        }
     }
 
     /// <summary>
@@ -489,29 +610,27 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     }
 
     /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form as a
-    /// <c>Success</c> result by passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is
-    /// projected to the new form as a <c>Fail</c> result with the same error.
+    /// Rescues a <c>Fail</c> result by returning the output of the <paramref name="onFail"/> function. If the current result is
+    /// <c>Success</c>, nothing happens and the current result is returned. Rescues a <c>None</c> result with the
+    /// <paramref name="onNone"/> function.
     /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
-    /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Result<TReturn> Select<TReturn>(Func<T, TReturn> onSuccessSelector)
+    /// <param name="onFail">The function that rescues a failed operation.</param>
+    /// <param name="onNone">The function that rescues a <c>None</c> result.</param>
+    /// <returns>The output of the <paramref name="onFail"/> function if the current result is <c>Fail</c>, or the same result if
+    ///     it is <c>Success</c>.</returns>
+    public Result<T> Rescue(Func<Error, Result<T>> onFail, Func<Result<T>> onNone)
     {
-        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
-        if (_outcome == Outcome.Success)
+        if (_outcome == Outcome.Fail)
         {
+            var error = GetError();
             try
             {
-                return onSuccessSelector(_value!);
+                if (error.ErrorCode == ErrorCodes.NoValue)
+                    return onNone();
+
+                return onFail(error);
             }
             catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
@@ -519,11 +638,47 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
             }
         }
 
-        return GetError();
+        return this;
+    }
+
+    /// <summary>
+    /// Rescues a <c>Fail</c> result by returning the output of the <paramref name="onFail"/> function. If the current result is
+    /// <c>Success</c>, nothing happens and the current result is returned. Rescues a <c>None</c> result with the
+    /// <paramref name="onNone"/> function.
+    /// </summary>
+    /// <param name="onFail">The function that rescues a failed operation.</param>
+    /// <param name="onNone">The function that rescues a <c>None</c> result.</param>
+    /// <returns>The output of the <paramref name="onFail"/> function if the current result is <c>Fail</c>, or the same result if
+    ///     it is <c>Success</c>.</returns>
+    public async Task<Result<T>> Rescue(Func<Error, Task<Result<T>>> onFail, Func<Task<Result<T>>> onNone)
+    {
+        if (onFail is null) throw new ArgumentNullException(nameof(onFail));
+
+        if (_outcome == Outcome.Fail)
+        {
+            var error = GetError();
+            try
+            {
+                if (error.ErrorCode == ErrorCodes.NoValue)
+                    return await onNone();
+
+                return await onFail(GetError());
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
+            }
+        }
+
+        return this;
     }
 
     /// <summary>
@@ -539,188 +694,12 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// </remarks>
     /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
     /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Result<TReturn>> Select<TReturn>(Func<T, Task<TReturn>> onSuccessSelector)
-    {
-        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
-
-        if (_outcome == Outcome.Success)
-        {
-            try
-            {
-                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
-            }
-            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
-            }
-        }
-
-        return GetError();
-    }
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form
-    /// as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Result<TReturn> SelectMany<TReturn>(Func<T, Result<TReturn>> onSuccessSelector)
-    {
-        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
-
-        if (_outcome == Outcome.Success)
-        {
-            try
-            {
-                return onSuccessSelector(_value!);
-            }
-            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
-            }
-        }
-
-        return GetError();
-    }
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form
-    /// as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Result<TReturn>> SelectMany<TReturn>(Func<T, Task<Result<TReturn>>> onSuccessSelector)
-    {
-        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
-
-        if (_outcome == Outcome.Success)
-        {
-            try
-            {
-                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
-            }
-            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
-            }
-        }
-
-        return GetError();
-    }
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
-    /// its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Result SelectMany(Func<T, Result> onSuccessSelector)
-    {
-        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
-
-        if (_outcome == Outcome.Success)
-        {
-            try
-            {
-                return onSuccessSelector(_value!);
-            }
-            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
-            }
-        }
-
-        return GetError();
-    }
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
-    /// its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form as a
-    /// <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Result> SelectMany(Func<T, Task<Result>> onSuccessSelector)
-    {
-        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
-
-        if (_outcome == Outcome.Success)
-        {
-            try
-            {
-                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
-            }
-            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
-            {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
-            }
-        }
-
-        return GetError();
-    }
-
-    /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form
-    /// as a <c>Fail</c> result with the same error.
-    /// </summary>
-    /// <remarks>
-    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
-    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
-    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
-    /// (and may or may not be <c>Success</c>).
-    /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
-    /// <returns>The projected result.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public Maybe<TReturn> SelectMany<TReturn>(Func<T, Maybe<TReturn>> onSuccessSelector)
+    public Result<TReturn> Select<TReturn>(
+        Func<T, TReturn> onSuccessSelector,
+        Func<TReturn>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -741,16 +720,30 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         }
 
         var error = GetError();
-        if (error.ErrorCode == ErrorCodes.NoValue)
-            return Maybe<TReturn>.None();
+
+        if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
+        {
+            try
+            {
+                return onNoneSelector();
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
+            }
+        }
 
         return error;
     }
 
     /// <summary>
-    /// Projects the result into a new <see cref="Maybe{T}"/> form: a <c>Success</c> result is projected to the new form by
-    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form
-    /// as a <c>Fail</c> result with the same error.
+    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form as a
+    /// <c>Success</c> result by passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is
+    /// projected to the new form as a <c>Fail</c> result with the same error.
     /// </summary>
     /// <remarks>
     /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
@@ -758,12 +751,14 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
     /// (and may or may not be <c>Success</c>).
     /// </remarks>
-    /// <typeparam name="TReturn">The type of the <see cref="Maybe{T}"/> returned by <paramref name="onSuccessSelector"/>.
-    ///     </typeparam>
-    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
+    /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
-    public async Task<Maybe<TReturn>> SelectMany<TReturn>(Func<T, Task<Maybe<TReturn>>> onSuccessSelector)
+    public async Task<Result<TReturn>> Select<TReturn>(
+        Func<T, Task<TReturn>> onSuccessSelector,
+        Func<Task<TReturn>>? onNoneSelector = null)
     {
         if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
 
@@ -784,8 +779,246 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         }
 
         var error = GetError();
-        if (error.ErrorCode == ErrorCodes.NoValue)
-            return Maybe<TReturn>.None();
+
+        if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
+        {
+            try
+            {
+                return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
+            }
+        }
+
+        return error;
+    }
+
+    /// <summary>
+    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
+    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form
+    /// as a <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and may or may not be <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
+    ///     </typeparam>
+    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
+    /// <returns>The projected result.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public Result<TReturn> SelectMany<TReturn>(
+        Func<T, Result<TReturn>> onSuccessSelector,
+        Func<Result<TReturn>>? onNoneSelector = null)
+    {
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (_outcome == Outcome.Success)
+        {
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+            }
+        }
+
+        var error = GetError();
+
+        if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
+        {
+            try
+            {
+                return onNoneSelector();
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
+            }
+        }
+
+        return error;
+    }
+
+    /// <summary>
+    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form by
+    /// passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form
+    /// as a <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and may or may not be <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the <see cref="Result{T}"/> returned by <paramref name="onSuccessSelector"/>.
+    ///     </typeparam>
+    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
+    /// <returns>The projected result.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public async Task<Result<TReturn>> SelectMany<TReturn>(
+        Func<T, Task<Result<TReturn>>> onSuccessSelector,
+        Func<Task<Result<TReturn>>>? onNoneSelector = null)
+    {
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (_outcome == Outcome.Success)
+        {
+            try
+            {
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+            }
+        }
+
+        var error = GetError();
+
+        if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
+        {
+            try
+            {
+                return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
+            }
+        }
+
+        return error;
+    }
+
+    /// <summary>
+    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
+    /// its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form as a
+    /// <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
+    /// <returns>The projected result.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public Result SelectMany(
+        Func<T, Result> onSuccessSelector,
+        Func<Result>? onNoneSelector = null)
+    {
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (_outcome == Outcome.Success)
+        {
+            try
+            {
+                return onSuccessSelector(_value!);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+            }
+        }
+
+        var error = GetError();
+
+        if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
+        {
+            try
+            {
+                return onNoneSelector();
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
+            }
+        }
+
+        return error;
+    }
+
+    /// <summary>
+    /// Projects the result into a new <see cref="Result"/> form: a <c>Success</c> result is projected to the new form by passing
+    /// its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is projected to the new form as a
+    /// <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <param name="onSuccessSelector">A transform funtion to apply to the value of a <c>Success</c> result.</param>
+    /// <param name="onNoneSelector">An optional transform function to apply to a <c>None</c> result.</param>
+    /// <returns>The projected result.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public async Task<Result> SelectMany(
+        Func<T, Task<Result>> onSuccessSelector,
+        Func<Task<Result>>? onNoneSelector = null)
+    {
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (_outcome == Outcome.Success)
+        {
+            try
+            {
+                return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+            }
+        }
+
+        var error = GetError();
+
+        if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
+        {
+            try
+            {
+                return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
+            }
+        }
 
         return error;
     }
@@ -826,33 +1059,6 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
     /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
     /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>A <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
-    ///     the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Maybe<TReturn> SelectMany<TIntermediate, TReturn>(
-        Func<T, Maybe<TIntermediate>> intermediateSelector,
-        Func<T, TIntermediate, TReturn> returnSelector)
-    {
-        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
-        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
-
-        return SelectMany(
-            sourceValue => intermediateSelector(sourceValue).Select(
-                intermediateValue => returnSelector(sourceValue, intermediateValue)));
-    }
-
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
     /// <returns>A <see cref="Result{T}"/> whose value is the result of invoking the transform function
     ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
     ///     the source result to the final result.</returns>
@@ -861,33 +1067,6 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public Task<Result<TReturn>> SelectMany<TIntermediate, TReturn>(
         Func<T, Task<Result<TIntermediate>>> intermediateSelector,
-        Func<T, TIntermediate, TReturn> returnSelector)
-    {
-        if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
-        if (returnSelector is null) throw new ArgumentNullException(nameof(returnSelector));
-
-        return SelectMany(
-            sourceValue => intermediateSelector(sourceValue).Select(
-                intermediateValue => returnSelector(sourceValue, intermediateValue)));
-    }
-
-    /// <summary>
-    /// Projects the value of a result to an intermediate result and invokes a result selector function on the values of the
-    /// source and intermediate results.
-    /// </summary>
-    /// <typeparam name="TIntermediate">The type of the intermediate result, as collected by
-    ///     <paramref name="intermediateSelector"/>.</typeparam>
-    /// <typeparam name="TReturn">The type of the returned result value.</typeparam>
-    /// <param name="intermediateSelector">A transform function to apply to the value of the input result.</param>
-    /// <param name="returnSelector">A transform function to apply to the value of the intermediate result.</param>
-    /// <returns>A <see cref="Maybe{T}"/> whose value is the result of invoking the transform function
-    ///     <paramref name="intermediateSelector"/> on the value of this result and then mapping the values of that result and
-    ///     the source result to the final result.</returns>
-    /// <exception cref="ArgumentNullException">If <paramref name="intermediateSelector"/> is <see langword="null"/>, or if
-    ///     <paramref name="returnSelector"/> is <see langword="null"/>.</exception>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public Task<Maybe<TReturn>> SelectMany<TIntermediate, TReturn>(
-        Func<T, Task<Maybe<TIntermediate>>> intermediateSelector,
         Func<T, TIntermediate, TReturn> returnSelector)
     {
         if (intermediateSelector is null) throw new ArgumentNullException(nameof(intermediateSelector));
@@ -968,6 +1147,38 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     }
 
     /// <summary>
+    /// Gets a <c>Fail</c> result if the current result is <c>None</c>; otherwise returns the same result.
+    /// </summary>
+    /// <param name="getError">An optional function that gets the <c>Fail</c> result's error. If <see langword="null"/>, a
+    ///     generic error is used.</param>
+    /// <returns>A <c>Fail</c> result if the current result is <c>None</c>, or the same result if it is <c>Success</c> or
+    ///     <c>Fail</c>.</returns>
+    public Result<T> ToFailIfNone(Func<Error>? getError = null)
+    {
+        if (IsNone)
+            return getError?.Invoke();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Gets a <c>None</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>
+    /// result; otherwise returns the same result.
+    /// </summary>
+    /// <param name="predicate">The delegate that determines whether to return a <c>None</c> result.</param>
+    /// <returns>A <c>None</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
+    ///     did not.</returns>
+    public Result<T> ToNoneIf(Func<T, bool> predicate)
+    {
+        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+
+        if (_outcome == Outcome.Success && predicate(_value!))
+            return None();
+
+        return this;
+    }
+
+    /// <summary>
     /// Truncates the <see cref="Result{T}"/> into an equivalent <see cref="Result"/>. If it is a <c>Success</c> result, then its
     /// value is ignored and a valueless <c>Success</c> result is returned. Otherwise, a <c>Fail</c> result with the same error
     /// as is returned.
@@ -1036,14 +1247,6 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
         Match(
             value => $"Success({(value is string ? $"\"{value}\"" : $"{value}")})",
             error => $"Fail({error.Title}: \"{error.Message}\")");
-
-    /// <inheritdoc/>
-    Error IResult.GetNonSuccessError() =>
-        _outcome switch
-        {
-            Outcome.Fail => GetError(),
-            _ => throw Exceptions.CannotAccessErrorUnlessNonSuccess(),
-        };
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private Error GetError() => _error ?? Error.DefaultError;

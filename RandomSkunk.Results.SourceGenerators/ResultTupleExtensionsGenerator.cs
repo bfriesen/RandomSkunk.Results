@@ -32,8 +32,6 @@ public class ResultTupleExtensionsGenerator : ISourceGenerator
                 .AppendAsyncSelectManyResultMethod(tupleCount)
                 .AppendSelectManyResultOfTMethod(tupleCount)
                 .AppendAsyncSelectManyResultOfTMethod(tupleCount)
-                .AppendSelectManyMaybeOfTMethod(tupleCount)
-                .AppendAsyncSelectManyMaybeOfTMethod(tupleCount)
                 .AppendEndRegion();
         }
 

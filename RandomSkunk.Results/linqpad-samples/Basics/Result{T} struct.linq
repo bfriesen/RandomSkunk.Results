@@ -13,10 +13,13 @@
 Result<string> successResult = Result<string>.Success("abc");
 
 // Note that passing null to the Success method will result in a thrown exception.
-// Result<string> thrownResult = Result<string>.Success(null!);
+// _ = Result<string>.Success(null!);
 
 // Unsuccessful operations are represented by a Fail result, which has an error that describes what went wrong.
 Result<string> failResult = Result<string>.Fail("Something went wrong.");
+
+// Operations that do not have a value are represented by a None result.
+Result<string> noneResult = Result<string>.None;
 
 // A Result<T> "Success" has the following properties:
 // - IsSuccess: true
@@ -29,5 +32,13 @@ successResult.Dump(nameof(successResult));
 // - IsSuccess: false
 // - IsFail: true
 // - Value: Throws an exception because IsSuccess is false
-// - Error: A non-null Error object that describes what went wrong
+// - Error: The non-null Error object that describes what went wrong
 failResult.Dump(nameof(failResult));
+
+// A Result<T> "None" has the following properties:
+// - IsSuccess: false
+// - IsNone: true
+// - IsFail: true
+// - Value: Throws an exception because IsSuccess is false
+// - Error: The non-null Error object with an ErrorCode of ErrorCodes.NoValue
+noneResult.Dump(nameof(noneResult));

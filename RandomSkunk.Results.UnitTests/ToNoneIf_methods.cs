@@ -2,12 +2,12 @@ namespace RandomSkunk.Results.UnitTests;
 
 public class ToNoneIf_methods
 {
-    public class For_Maybe_of_T
+    public class For_Result_of_T
     {
         [Fact]
         public void GivenSuccessResult_WhenPredicateReturnsTrue_ReturnsFailResult()
         {
-            var result = Maybe<int>.Success(123);
+            var result = Result<int>.Success(123);
 
             var actual = result.ToNoneIf(value => true);
 
@@ -17,7 +17,7 @@ public class ToNoneIf_methods
         [Fact]
         public void GivenSuccessResult_WhenPredicateReturnsFalse_ReturnsSameResult()
         {
-            var result = Maybe<int>.Success(123);
+            var result = Result<int>.Success(123);
 
             var actual = result.ToNoneIf(value => false);
 
@@ -27,7 +27,7 @@ public class ToNoneIf_methods
         [Fact]
         public void GivenFailResult_WhenPredicateReturnsTrue_ReturnsSameResult()
         {
-            var result = Maybe<int>.Fail();
+            var result = Result<int>.Fail();
 
             var actual = result.ToNoneIf(value => true);
 
@@ -37,7 +37,7 @@ public class ToNoneIf_methods
         [Fact]
         public void GivenNoneResult_WhenPredicateReturnsTrue_ReturnsSameResult()
         {
-            var result = Maybe<int>.None();
+            var result = Result<int>.None();
 
             var actual = result.ToNoneIf(value => true);
 

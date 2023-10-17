@@ -6,15 +6,15 @@ namespace ExampleBlazorApp.Client;
 // This class demonstrates how an app can create common error-handling extension methods for use throughout the app.
 public static class ResultErrorHandlingExtensions
 {
-    public static Task<TResult> OnNonSuccessLogAndAlert<TResult>(this TResult sourceResult, IJSRuntime js)
+    public static Task<TResult> OnFailLogAndAlert<TResult>(this TResult sourceResult, IJSRuntime js)
         where TResult : IResult =>
-        sourceResult.OnNonSuccess(async error =>
+        sourceResult.OnFail(async error =>
         {
             await js.InvokeVoidAsync("console.log", error.ToString());
             await js.InvokeVoidAsync("alert", error.Message);
         });
 
-    public static async Task<TResult> OnNonSuccessLogAndAlert<TResult>(this Task<TResult> sourceResult, IJSRuntime js)
+    public static async Task<TResult> OnFailLogAndAlert<TResult>(this Task<TResult> sourceResult, IJSRuntime js)
         where TResult : IResult =>
-        await (await sourceResult).OnNonSuccessLogAndAlert(js);
+        await (await sourceResult).OnFailLogAndAlert(js);
 }

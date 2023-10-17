@@ -86,49 +86,6 @@ public static class HttpResponseExtensions
         sourceResponse.ReadResultFromJsonAsync<T>(null, cancellationToken);
 
     /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
-    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this HttpResponseMessage sourceResponse,
-        JsonSerializerOptions? options,
-        CancellationToken cancellationToken = default)
-    {
-        if (sourceResponse is null) throw new ArgumentNullException(nameof(sourceResponse));
-        options ??= _defaultOptions;
-
-        if (sourceResponse.IsSuccessStatusCode)
-            return await ReadMaybeValue<T>(sourceResponse.Content, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-
-        var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-        var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
-        return error.ErrorCode == ErrorCodes.NoValue
-            ? Maybe<T>.None()
-            : error;
-    }
-
-    /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this HttpResponseMessage sourceResponse,
-        CancellationToken cancellationToken = default) =>
-        sourceResponse.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
-
-    /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
     /// <c>Fail</c> result.
     /// </summary>
@@ -194,37 +151,6 @@ public static class HttpResponseExtensions
         sourceResponse.ReadResultFromJsonAsync<T>(null, cancellationToken);
 
     /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
-    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Result<HttpResponseMessage> sourceResponse,
-        JsonSerializerOptions? options,
-        CancellationToken cancellationToken = default) =>
-        sourceResponse.SelectMany(response => response.ReadMaybeFromJsonAsync<T>(options, cancellationToken));
-
-    /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Result<HttpResponseMessage> sourceResponse,
-        CancellationToken cancellationToken = default) =>
-        sourceResponse.ReadMaybeFromJsonAsync<T>(null, cancellationToken);
-
-    /// <summary>
     /// Gets a <see cref="Result"/> value representing the HTTP response.
     /// </summary>
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Result"/>.</param>
@@ -281,37 +207,6 @@ public static class HttpResponseExtensions
         this Task<HttpResponseMessage> sourceResponse,
         CancellationToken cancellationToken = default) =>
         await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-
-    /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
-    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<HttpResponseMessage> sourceResponse,
-        JsonSerializerOptions? options,
-        CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-
-    /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<HttpResponseMessage> sourceResponse,
-        CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage"/> has a success status code; otherwise, returns a
@@ -373,37 +268,6 @@ public static class HttpResponseExtensions
         CancellationToken cancellationToken = default) =>
         await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadResultFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
-    /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
-    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<Result<HttpResponseMessage>> sourceResponse,
-        JsonSerializerOptions? options,
-        CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-
-    /// <summary>
-    /// Reads the HTTP content and returns a <see cref="Maybe{T}"/> value representing the result from deserializing the content
-    /// as JSON in an asynchronous operation.
-    /// </summary>
-    /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to convert to a <see cref="Maybe{T}"/>.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>The maybe result representing the response content.</returns>
-    public static async Task<Maybe<T>> ReadMaybeFromJsonAsync<T>(
-        this Task<Result<HttpResponseMessage>> sourceResponse,
-        CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).ReadMaybeFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-
     private static async Task<Result<T>> ReadResultValue<T>(
         HttpContent content,
         JsonSerializerOptions options,
@@ -415,30 +279,6 @@ public static class HttpResponseExtensions
 
             if (value is null)
                 return Result<T>.Fail("Response content was the literal string \"null\".");
-
-            return value;
-        }
-        catch (TaskCanceledException ex)
-        {
-            return Errors.Canceled(ex);
-        }
-        catch (Exception ex)
-        {
-            return Error.FromException(ex, "Error reading value from response content.");
-        }
-    }
-
-    private static async Task<Maybe<T>> ReadMaybeValue<T>(
-        HttpContent content,
-        JsonSerializerOptions options,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            var value = await content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-
-            if (value is null)
-                return Maybe<T>.None();
 
             return value;
         }

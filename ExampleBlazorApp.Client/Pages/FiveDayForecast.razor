@@ -68,6 +68,6 @@ else
             .OnSuccess(forcasts => _forecasts = forcasts)
 
             // If it was not successful, log to the browser console and alert the user.
-            .OnNonSuccessLogAndAlert(JS);
+            .OnFailLogAndAlert(JS);
     }
 }

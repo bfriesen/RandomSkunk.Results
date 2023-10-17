@@ -59,20 +59,9 @@ public static partial class ResultSqlMapper
         /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
         ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Result<T> TryReadFirstOrDefault<T>()
-            where T : struct =>
-            TryCatch.AsResult(() => _gridReader.ReadFirstOrDefault<T>());
-
-        /// <summary>
-        /// Read an individual row of the next grid of results.
-        /// </summary>
-        /// <typeparam name="T">The type to read.</typeparam>
-        /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
-        ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
-        ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Maybe<T> TryReadFirstOrNone<T>()
+        public Result<T> TryReadFirstOrNone<T>()
             where T : class =>
-            TryCatch.AsMaybe(() => _gridReader.ReadFirstOrDefault<T>());
+            TryCatch.AsResult(() => _gridReader.ReadFirstOrDefault<T>());
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -91,20 +80,9 @@ public static partial class ResultSqlMapper
         /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
         ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Result<T> TryReadSingleOrDefault<T>()
-            where T : struct =>
-            TryCatch.AsResult(() => _gridReader.ReadSingleOrDefault<T>());
-
-        /// <summary>
-        /// Read an individual row of the next grid of results.
-        /// </summary>
-        /// <typeparam name="T">The type to read.</typeparam>
-        /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
-        ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
-        ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Maybe<T> TryReadSingleOrNone<T>()
+        public Result<T> TryReadSingleOrNone<T>()
             where T : class =>
-            TryCatch.AsMaybe(() => _gridReader.ReadSingleOrDefault<T>());
+            TryCatch.AsResult(() => _gridReader.ReadSingleOrDefault<T>());
 
         /// <summary>
         /// Read the next grid of results.
@@ -134,20 +112,9 @@ public static partial class ResultSqlMapper
         /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
         ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Task<Result<T>> TryReadFirstOrDefaultAsync<T>()
-            where T : struct =>
-            TryCatch.AsResult(() => _gridReader.ReadFirstOrDefaultAsync<T>());
-
-        /// <summary>
-        /// Read an individual row of the next grid of results.
-        /// </summary>
-        /// <typeparam name="T">The type to read.</typeparam>
-        /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
-        ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
-        ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Task<Maybe<T>> TryReadFirstOrNoneAsync<T>()
+        public Task<Result<T>> TryReadFirstOrNoneAsync<T>()
             where T : class =>
-            TryCatch.AsMaybe(() => _gridReader.ReadFirstOrDefaultAsync<T>());
+            TryCatch.AsResult(() => _gridReader.ReadFirstOrDefaultAsync<T>());
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -166,19 +133,8 @@ public static partial class ResultSqlMapper
         /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
         ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Task<Result<T>> TryReadSingleOrDefaultAsync<T>()
-            where T : struct =>
-            TryCatch.AsResult(() => _gridReader.ReadSingleOrDefaultAsync<T>());
-
-        /// <summary>
-        /// Read an individual row of the next grid of results.
-        /// </summary>
-        /// <typeparam name="T">The type to read.</typeparam>
-        /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
-        ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
-        ///     column-name===member-name mapping is assumed (case insensitive).</returns>
-        public Task<Maybe<T>> TryReadSingleOrNoneAsync<T>()
+        public Task<Result<T>> TryReadSingleOrNoneAsync<T>()
             where T : class =>
-            TryCatch.AsMaybe(() => _gridReader.ReadSingleOrDefaultAsync<T>());
+            TryCatch.AsResult(() => _gridReader.ReadSingleOrDefaultAsync<T>());
     }
 }

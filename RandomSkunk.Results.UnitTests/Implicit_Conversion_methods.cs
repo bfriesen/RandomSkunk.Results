@@ -31,28 +31,4 @@ public class Implicit_Conversion_methods
             result.Error.Title.Should().Be(expectedError.Title);
         }
     }
-
-    public class For_Maybe_of_T
-    {
-        [Fact]
-        public void Given_nonnull_value_Returns_Success_result()
-        {
-            string? value = "abc";
-
-            Maybe<string> result = value;
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(value);
-        }
-
-        [Fact]
-        public void Given_null_value_Returns_None_result()
-        {
-            string? value = null;
-
-            Maybe<string> result = value;
-
-            result.IsNone.Should().BeTrue();
-        }
-    }
 }
