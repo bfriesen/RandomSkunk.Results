@@ -123,7 +123,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(
         Exception exception,
-        string errorMessage = Error.DefaultFromExceptionMessage,
+        string errorMessage = Error._defaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null) =>

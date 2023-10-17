@@ -16,8 +16,8 @@ namespace RandomSkunk.Results;
 [JsonConverter(typeof(ErrorJsonConverter))]
 public record class Error
 {
-    internal const string DefaultMessage = "An error occurred.";
-    internal const string DefaultFromExceptionMessage = "An exception was thrown. See InnerError for details.";
+    private const string _defaultMessage = "An error occurred.";
+    internal const string _defaultFromExceptionMessage = "An exception was thrown. See InnerError for details.";
     private const string _messageFormatForExceptionThrownInCallback = "An exception was thrown in the '{0}' callback parameter. See InnerError for details.";
 
     private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
@@ -28,7 +28,6 @@ public record class Error
     private readonly string _title;
     private readonly string _message;
     private readonly string? _identifier;
-    private readonly string? _stackTrace;
     private readonly IReadOnlyDictionary<string, object> _extensions;
 
     /// <summary>
@@ -37,7 +36,7 @@ public record class Error
     public Error()
     {
         _title = _defaultTitleCache.GetOrAdd(GetType(), type => Format.AsSentenceCase(type.Name));
-        _message = DefaultMessage;
+        _message = _defaultMessage;
         _extensions = _emptyExtensions;
     }
 
@@ -48,7 +47,7 @@ public record class Error
     public Error(params (string Key, object Value)[] extensions)
     {
         _title = _defaultTitleCache.GetOrAdd(GetType(), type => Format.AsSentenceCase(type.Name));
-        _message = DefaultMessage;
+        _message = _defaultMessage;
         _extensions = new ReadOnlyDictionary<string, object>(extensions.ToDictionary(item => item.Key, item => item.Value));
     }
 
@@ -76,7 +75,7 @@ public record class Error
     public string Message
     {
         get => _message;
-        init => _message = string.IsNullOrWhiteSpace(value) ? DefaultMessage : value;
+        init => _message = string.IsNullOrWhiteSpace(value) ? _defaultMessage : value;
     }
 
     /// <summary>
@@ -138,7 +137,7 @@ public record class Error
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
     public static Error FromException(
         Exception exception,
-        string message = DefaultFromExceptionMessage,
+        string message = _defaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? identifier = null,
         string? title = null)
@@ -149,7 +148,7 @@ public record class Error
 
         return new Error
         {
-            Message = message ?? DefaultFromExceptionMessage,
+            Message = message ?? _defaultFromExceptionMessage,
             Title = title!,
             ErrorCode = errorCode,
             Identifier = identifier,

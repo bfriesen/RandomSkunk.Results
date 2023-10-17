@@ -138,7 +138,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Fail(
         Exception exception,
-        string errorMessage = Error.DefaultFromExceptionMessage,
+        string errorMessage = Error._defaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
         string? errorIdentifier = null,
         string? errorTitle = null) =>

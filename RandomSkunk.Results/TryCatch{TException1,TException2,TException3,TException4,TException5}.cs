@@ -60,11 +60,11 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
 
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
-        if (exception3Handler is null) exception3Handler = _defaultException3Handler;
-        if (exception4Handler is null) exception4Handler = _defaultException4Handler;
-        if (exception5Handler is null) exception5Handler = _defaultException5Handler;
+        exception1Handler ??= _defaultException1Handler;
+        exception2Handler ??= _defaultException2Handler;
+        exception3Handler ??= _defaultException3Handler;
+        exception4Handler ??= _defaultException4Handler;
+        exception5Handler ??= _defaultException5Handler;
 
         try
         {
@@ -133,11 +133,11 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
 
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
-        if (exception3Handler is null) exception3Handler = _defaultException3Handler;
-        if (exception4Handler is null) exception4Handler = _defaultException4Handler;
-        if (exception5Handler is null) exception5Handler = _defaultException5Handler;
+        exception1Handler ??= _defaultException1Handler;
+        exception2Handler ??= _defaultException2Handler;
+        exception3Handler ??= _defaultException3Handler;
+        exception4Handler ??= _defaultException4Handler;
+        exception5Handler ??= _defaultException5Handler;
 
         try
         {
@@ -208,11 +208,11 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
 
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
-        if (exception3Handler is null) exception3Handler = _defaultException3Handler;
-        if (exception4Handler is null) exception4Handler = _defaultException4Handler;
-        if (exception5Handler is null) exception5Handler = _defaultException5Handler;
+        exception1Handler ??= _defaultException1Handler;
+        exception2Handler ??= _defaultException2Handler;
+        exception3Handler ??= _defaultException3Handler;
+        exception4Handler ??= _defaultException4Handler;
+        exception5Handler ??= _defaultException5Handler;
 
         try
         {
@@ -283,11 +283,11 @@ public static class TryCatch<TException1, TException2, TException3, TException4,
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));
 
-        if (exception1Handler is null) exception1Handler = _defaultException1Handler;
-        if (exception2Handler is null) exception2Handler = _defaultException2Handler;
-        if (exception3Handler is null) exception3Handler = _defaultException3Handler;
-        if (exception4Handler is null) exception4Handler = _defaultException4Handler;
-        if (exception5Handler is null) exception5Handler = _defaultException5Handler;
+        exception1Handler ??= _defaultException1Handler;
+        exception2Handler ??= _defaultException2Handler;
+        exception3Handler ??= _defaultException3Handler;
+        exception4Handler ??= _defaultException4Handler;
+        exception5Handler ??= _defaultException5Handler;
 
         try
         {

@@ -5,35 +5,35 @@ namespace RandomSkunk.Results;
 /// </summary>
 public static class Errors
 {
-    internal const string BadRequestTitle = "Bad Request";
-    internal const string BadRequestMessage = "The operation cannot be processed due to a client error.";
+    private const string _badRequestTitle = "Bad Request";
+    private const string _badRequestMessage = "The operation cannot be processed due to a client error.";
 
-    internal const string UnauthorizedTitle = "Unauthorized";
-    internal const string UnauthorizedMessage = "The operation was not completed because no credentials or invalid credentials were provided.";
+    private const string _unauthorizedTitle = "Unauthorized";
+    private const string _unauthorizedMessage = "The operation was not completed because no credentials or invalid credentials were provided.";
 
-    internal const string ForbiddenTitle = "Forbidden";
-    internal const string ForbiddenMessage = "The operation was not completed because the provided credentials, while valid, do not grant sufficient privileges.";
+    private const string _forbiddenTitle = "Forbidden";
+    private const string _forbiddenMessage = "The operation was not completed because the provided credentials, while valid, do not grant sufficient privileges.";
 
-    internal const string NotFoundTitle = "Not Found";
-    internal const string NotFoundMessage = "The target resource cannot be found.";
+    private const string _notFoundTitle = "Not Found";
+    private const string _notFoundMessage = "The target resource cannot be found.";
 
-    internal const string GoneTitle = "Gone";
-    internal const string GoneMessage = "The target resource is no longer available.";
+    private const string _goneTitle = "Gone";
+    private const string _goneMessage = "The target resource is no longer available.";
 
-    internal const string InternalServerErrorTitle = "Internal Server Error";
-    internal const string InternalServerErrorMessage = "An unexpected condition prevented the operation from completing successfully.";
+    private const string _internalServerErrorTitle = "Internal Server Error";
+    private const string _internalServerErrorMessage = "An unexpected condition prevented the operation from completing successfully.";
 
-    internal const string NotImplementedTitle = "Not Implemented";
-    internal const string NotImplementedMessage = "The operation is not implemented.";
+    private const string _notImplementedTitle = "Not Implemented";
+    private const string _notImplementedMessage = "The operation is not implemented.";
 
-    internal const string BadGatewayTitle = "Bad Gateway";
-    internal const string BadGatewayMessage = "The response from the upstream service was invalid.";
+    private const string _badGatewayTitle = "Bad Gateway";
+    private const string _badGatewayMessage = "The response from the upstream service was invalid.";
 
-    internal const string GatewayTimeoutTitle = "Gateway Timeout";
-    internal const string GatewayTimeoutMessage = "The operation from the upstream service timed out.";
+    private const string _gatewayTimeoutTitle = "Gateway Timeout";
+    private const string _gatewayTimeoutMessage = "The operation from the upstream service timed out.";
 
-    internal const string UnexpectedNullValueTitle = "Unexpected Null Value";
-    internal const string UnexpectedNullValueMessage = "The value was null when it was not expected to be.";
+    private const string _unexpectedNullValueTitle = "Unexpected Null Value";
+    private const string _unexpectedNullValueMessage = "The value was null when it was not expected to be.";
 
     /// <summary>
     /// Creates an <see cref="Error"/> indicating that the operation cannot be processed due to a client error.
@@ -44,14 +44,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Bad Request error.</param>
     /// <returns>A Bad Request error.</returns>
     public static Error BadRequest(
-        string errorMessage = BadRequestMessage,
+        string errorMessage = _badRequestMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? BadRequestMessage,
-            Title = BadRequestTitle,
+            Message = errorMessage ?? _badRequestMessage,
+            Title = _badRequestTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadRequest,
             Extensions = extensions!,
@@ -68,14 +68,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Unauthorized error.</param>
     /// <returns>An Unauthorized error.</returns>
     public static Error Unauthorized(
-        string errorMessage = UnauthorizedMessage,
+        string errorMessage = _unauthorizedMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? UnauthorizedMessage,
-            Title = UnauthorizedTitle,
+            Message = errorMessage ?? _unauthorizedMessage,
+            Title = _unauthorizedTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Unauthorized,
             Extensions = extensions!,
@@ -91,14 +91,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Forbidden error.</param>
     /// <returns>A Forbidden error.</returns>
     public static Error Forbidden(
-        string errorMessage = ForbiddenMessage,
+        string errorMessage = _forbiddenMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? ForbiddenMessage,
-            Title = ForbiddenTitle,
+            Message = errorMessage ?? _forbiddenMessage,
+            Title = _forbiddenTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Forbidden,
             Extensions = extensions!,
@@ -114,14 +114,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Not Found error.</param>
     /// <returns>A Not Found error.</returns>
     public static Error NotFound(
-        string errorMessage = NotFoundMessage,
+        string errorMessage = _notFoundMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? NotFoundMessage,
-            Title = NotFoundTitle,
+            Message = errorMessage ?? _notFoundMessage,
+            Title = _notFoundTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotFound,
             Extensions = extensions!,
@@ -137,14 +137,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Gone error.</param>
     /// <returns>A Gone error.</returns>
     public static Error Gone(
-        string errorMessage = GoneMessage,
+        string errorMessage = _goneMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? GoneMessage,
-            Title = GoneTitle,
+            Message = errorMessage ?? _goneMessage,
+            Title = _goneTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.Gone,
             Extensions = extensions!,
@@ -161,14 +161,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Internal Server Error error.</param>
     /// <returns>An Internal Server Error error.</returns>
     public static Error InternalServerError(
-        string errorMessage = InternalServerErrorMessage,
+        string errorMessage = _internalServerErrorMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? InternalServerErrorMessage,
-            Title = InternalServerErrorTitle,
+            Message = errorMessage ?? _internalServerErrorMessage,
+            Title = _internalServerErrorTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.InternalServerError,
             Extensions = extensions!,
@@ -184,14 +184,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Not Implemented error.</param>
     /// <returns>A Not Implemented error.</returns>
     public static Error NotImplemented(
-        string errorMessage = NotImplementedMessage,
+        string errorMessage = _notImplementedMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? NotImplementedMessage,
-            Title = NotImplementedTitle,
+            Message = errorMessage ?? _notImplementedMessage,
+            Title = _notImplementedTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.NotImplemented,
             Extensions = extensions!,
@@ -207,14 +207,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Bad Gateway error.</param>
     /// <returns>A Bad Gateway error.</returns>
     public static Error BadGateway(
-        string errorMessage = BadGatewayMessage,
+        string errorMessage = _badGatewayMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? BadGatewayMessage,
-            Title = BadGatewayTitle,
+            Message = errorMessage ?? _badGatewayMessage,
+            Title = _badGatewayTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.BadGateway,
             Extensions = extensions!,
@@ -230,14 +230,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Gateway Timeout error.</param>
     /// <returns>A Gateway Timeout error.</returns>
     public static Error GatewayTimeout(
-        string errorMessage = GatewayTimeoutMessage,
+        string errorMessage = _gatewayTimeoutMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? GatewayTimeoutMessage,
-            Title = GatewayTimeoutTitle,
+            Message = errorMessage ?? _gatewayTimeoutMessage,
+            Title = _gatewayTimeoutTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.GatewayTimeout,
             Extensions = extensions!,
@@ -253,14 +253,14 @@ public static class Errors
     /// <param name="innerError">The optional <see cref="Error"/> instance that caused the Unexpected Null Value error.</param>
     /// <returns>A Unexpected Null Value error.</returns>
     public static Error UnexpectedNullValue(
-        string errorMessage = UnexpectedNullValueMessage,
+        string errorMessage = _unexpectedNullValueMessage,
         string? errorIdentifier = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new()
         {
-            Message = errorMessage ?? UnexpectedNullValueMessage,
-            Title = UnexpectedNullValueTitle,
+            Message = errorMessage ?? _unexpectedNullValueMessage,
+            Title = _unexpectedNullValueTitle,
             Identifier = errorIdentifier,
             ErrorCode = ErrorCodes.UnexpectedNullValue,
             Extensions = extensions!,
