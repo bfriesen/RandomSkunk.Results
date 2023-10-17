@@ -40,7 +40,7 @@ public static class TryCatch<TException>
         }
         catch (TException ex)
         {
-            return Result.Fail(exceptionHandler(ex));
+            return exceptionHandler(ex);
         }
     }
 
@@ -74,7 +74,7 @@ public static class TryCatch<TException>
         }
         catch (TException ex)
         {
-            return Result.Fail(exceptionHandler(ex));
+            return exceptionHandler(ex);
         }
     }
 
@@ -103,7 +103,7 @@ public static class TryCatch<TException>
         try
         {
             var value = sourceDelegate();
-            return Result<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -111,7 +111,7 @@ public static class TryCatch<TException>
         }
         catch (TException ex)
         {
-            return Result<T>.Fail(exceptionHandler(ex));
+            return exceptionHandler(ex);
         }
     }
 
@@ -140,7 +140,7 @@ public static class TryCatch<TException>
         try
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
-            return Result<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -148,7 +148,7 @@ public static class TryCatch<TException>
         }
         catch (TException ex)
         {
-            return Result<T>.Fail(exceptionHandler(ex));
+            return exceptionHandler(ex);
         }
     }
 
@@ -177,7 +177,7 @@ public static class TryCatch<TException>
         try
         {
             var value = sourceDelegate();
-            return Maybe<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -185,7 +185,7 @@ public static class TryCatch<TException>
         }
         catch (TException ex)
         {
-            return Maybe<T>.Fail(exceptionHandler(ex));
+            return exceptionHandler(ex);
         }
     }
 
@@ -214,7 +214,7 @@ public static class TryCatch<TException>
         try
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
-            return Maybe<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -222,7 +222,7 @@ public static class TryCatch<TException>
         }
         catch (TException ex)
         {
-            return Maybe<T>.Fail(exceptionHandler(ex));
+            return exceptionHandler(ex);
         }
     }
 }

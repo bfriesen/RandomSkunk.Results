@@ -13,8 +13,7 @@ public static class FactoryExtensions
     /// <param name="sourceValue">The value. Can be <see langword="null"/>.</param>
     /// <returns>A <c>Success</c> result if <paramref name="sourceValue"/> is not <see langword="null"/>; otherwise, a
     ///     <c>Fail</c> result with a generated stack trace.</returns>
-    public static Result<T> ToResult<T>(this T? sourceValue) =>
-        Result<T>.FromValue(sourceValue);
+    public static Result<T> ToResult<T>(this T? sourceValue) => sourceValue;
 
     /// <summary>
     /// Creates a maybe from the specified value.
@@ -23,6 +22,5 @@ public static class FactoryExtensions
     /// <param name="sourceValue">The value. Can be <see langword="null"/>.</param>
     /// <returns>A <c>Success</c> result if <paramref name="sourceValue"/> is not null; otherwise, a <c>None</c> result.
     ///     </returns>
-    public static Maybe<T> ToMaybe<T>(this T? sourceValue) =>
-        Maybe<T>.FromValue(sourceValue);
+    public static Maybe<T> ToMaybe<T>(this T? sourceValue) => sourceValue;
 }

@@ -365,7 +365,7 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
 
-                return Result<TReturn>.FromValue(value);
+                return value;
             }
             catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
@@ -373,7 +373,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -383,7 +383,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error);
+            return error;
         }
     }
 
@@ -432,7 +432,7 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@").ConfigureAwait(AwaitSettings.ContinueOnCapturedContext);
 
-                return Result<TReturn>.FromValue(value);
+                return value;
             }
             catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
@@ -440,7 +440,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -450,7 +450,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error);
+            return error;
         }
     }
 
@@ -503,7 +503,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -513,7 +513,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result.Fail(error);
+            return error;
         }
     }
 
@@ -566,7 +566,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -576,7 +576,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result.Fail(error);
+            return error;
         }
     }
 
@@ -630,7 +630,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -640,7 +640,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error);
+            return error;
         }
     }
 
@@ -694,7 +694,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -704,7 +704,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Result<TReturn>.Fail(error);
+            return error;
         }
     }
 
@@ -758,7 +758,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
+                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
         }
         else
@@ -768,7 +768,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Maybe<TReturn>.Fail(error);
+            return error;
         }
     }
 
@@ -822,7 +822,7 @@ public static class ResultTupleExtensions
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-               return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector))); 
+               return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector))); 
             }
         }
         else
@@ -832,7 +832,7 @@ public static class ResultTupleExtensions
             .AppendItemNParameters(tupleCount)
             .Append(@");
 
-            return Maybe<TReturn>.Fail(error);
+            return error;
         }
     }
 

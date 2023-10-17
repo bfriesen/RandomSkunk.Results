@@ -29,7 +29,7 @@ public static class HttpResponseExtensions
         options ??= _defaultOptions;
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
-        return Result.Fail(error);
+        return error;
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public static class HttpResponseExtensions
 
         var problemDetails = await ReadProblemDetails(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
-        return Result<T>.Fail(error);
+        return error;
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public static class HttpResponseExtensions
         var error = GetErrorFromProblemDetails(problemDetails, sourceResponse, options);
         return error.ErrorCode == ErrorCodes.NoValue
             ? Maybe<T>.None()
-            : Maybe<T>.Fail(error);
+            : error;
     }
 
     /// <summary>
@@ -416,7 +416,7 @@ public static class HttpResponseExtensions
             if (value is null)
                 return Result<T>.Fail("Response content was the literal string \"null\".");
 
-            return value.ToResult();
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -424,7 +424,7 @@ public static class HttpResponseExtensions
         }
         catch (Exception ex)
         {
-            return Result<T>.Fail(ex, "Error reading value from response content.");
+            return Error.FromException(ex, "Error reading value from response content.");
         }
     }
 
@@ -440,7 +440,7 @@ public static class HttpResponseExtensions
             if (value is null)
                 return Maybe<T>.None();
 
-            return value.ToMaybe();
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -448,7 +448,7 @@ public static class HttpResponseExtensions
         }
         catch (Exception ex)
         {
-            return Maybe<T>.Fail(ex, "Error reading value from response content.");
+            return Error.FromException(ex, "Error reading value from response content.");
         }
     }
 

@@ -186,7 +186,7 @@ public static class EnumerableExtensions
                 return enumerator.Current.ToResultOrFailIfNull("The first element was null.");
         }
 
-        return Result<T>.Fail(SequenceContainsNoElements());
+        return SequenceContainsNoElements();
     }
 
     /// <summary>
@@ -352,7 +352,7 @@ public static class EnumerableExtensions
                 return item.ToResultOrFailIfNull("The first matching element was null.");
         }
 
-        return Result<T>.Fail(SequenceContainsNoMatchingElements());
+        return SequenceContainsNoMatchingElements();
     }
 
     /// <summary>
@@ -545,7 +545,7 @@ public static class EnumerableExtensions
             }
         }
 
-        return Result<T>.Fail(SequenceContainsNoElements());
+        return SequenceContainsNoElements();
     }
 
     /// <summary>
@@ -713,7 +713,7 @@ public static class EnumerableExtensions
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var result = Result<T>.Fail(SequenceContainsNoMatchingElements());
+        Result<T> result = SequenceContainsNoMatchingElements();
         foreach (T item in sourceSequence)
             if (predicate(item)) result = item.ToResultOrFailIfNull("The last matching element was null.");
 
@@ -894,21 +894,21 @@ public static class EnumerableExtensions
             var count = list.Count;
             return count switch
             {
-                0 => Result<T>.Fail(SequenceContainsNoElements()),
+                0 => SequenceContainsNoElements(),
                 1 => list[0].ToResultOrFailIfNull("The single element was null."),
-                _ => Result<T>.Fail(SequenceContainsMoreThanOneElement(count)),
+                _ => SequenceContainsMoreThanOneElement(count),
             };
         }
         else
         {
             using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (!enumerator.MoveNext())
-                return Result<T>.Fail(SequenceContainsNoElements());
+                return SequenceContainsNoElements();
 
             T value = enumerator.Current;
 
             if (enumerator.MoveNext())
-                return Result<T>.Fail(SequenceContainsMoreThanOneElement());
+                return SequenceContainsMoreThanOneElement();
 
             return value.ToResultOrFailIfNull("The single element was null.");
         }
@@ -991,7 +991,7 @@ public static class EnumerableExtensions
             {
                 0 => Maybe<T>.None(),
                 1 => list[0].ToMaybeOrFailIfNull("The single element was null."),
-                _ => Maybe<T>.Fail(SequenceContainsMoreThanOneElement(count)),
+                _ => SequenceContainsMoreThanOneElement(count),
             };
         }
         else
@@ -1005,7 +1005,7 @@ public static class EnumerableExtensions
                 return current.ToMaybeOrFailIfNull("The single element was null.");
         }
 
-        return Maybe<T>.Fail(SequenceContainsMoreThanOneElement());
+        return SequenceContainsMoreThanOneElement();
     }
 
     /// <summary>
@@ -1095,9 +1095,9 @@ public static class EnumerableExtensions
 
         return count switch
         {
-            0 => Result<T>.Fail(SequenceContainsNoMatchingElements()),
+            0 => SequenceContainsNoMatchingElements(),
             1 => result,
-            _ => Result<T>.Fail(SequenceContainsMoreThanOneMatchingElement(count)),
+            _ => SequenceContainsMoreThanOneMatchingElement(count),
         };
     }
 
@@ -1202,7 +1202,7 @@ public static class EnumerableExtensions
         {
             0 => Maybe<T>.None(),
             1 => result,
-            _ => Maybe<T>.Fail(SequenceContainsMoreThanOneMatchingElement(count)),
+            _ => SequenceContainsMoreThanOneMatchingElement(count),
         };
     }
 
@@ -1302,7 +1302,7 @@ public static class EnumerableExtensions
             }
         }
 
-        return Result<T>.Fail(IndexOutOfRange());
+        return IndexOutOfRange();
     }
 
     /// <summary>
@@ -1464,13 +1464,13 @@ public static class EnumerableExtensions
 
     private static Result<T> ToResultOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
         value is not null
-            ? value.ToResult()
-            : Result<T>.Fail(Errors.UnexpectedNullValue(string.Format(errorMessageFormat, errorMessageArgs)));
+            ? value
+            : Errors.UnexpectedNullValue(string.Format(errorMessageFormat, errorMessageArgs));
 
     private static Maybe<T> ToMaybeOrFailIfNull<T>(this T value, string errorMessageFormat, params object[] errorMessageArgs) =>
         value is not null
-            ? value.ToMaybe()
-            : Maybe<T>.Fail(Errors.UnexpectedNullValue(string.Format(errorMessageFormat, errorMessageArgs)));
+            ? value
+            : Errors.UnexpectedNullValue(string.Format(errorMessageFormat, errorMessageArgs));
 
     private static Error IndexOutOfRange() =>
         Errors.NotFound("Index was out of range. Must be non-negative and less than the size of the collection.");

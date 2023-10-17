@@ -50,11 +50,11 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
-            return Result.Fail(exception1Handler(ex));
+            return exception1Handler(ex);
         }
         catch (TException2 ex)
         {
-            return Result.Fail(exception2Handler(ex));
+            return exception2Handler(ex);
         }
     }
 
@@ -95,11 +95,11 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
-            return Result.Fail(exception1Handler(ex));
+            return exception1Handler(ex);
         }
         catch (TException2 ex)
         {
-            return Result.Fail(exception2Handler(ex));
+            return exception2Handler(ex);
         }
     }
 
@@ -134,7 +134,7 @@ public static class TryCatch<TException1, TException2>
         try
         {
             var value = sourceDelegate();
-            return Result<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -142,11 +142,11 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
-            return Result<T>.Fail(exception1Handler(ex));
+            return exception1Handler(ex);
         }
         catch (TException2 ex)
         {
-            return Result<T>.Fail(exception2Handler(ex));
+            return exception2Handler(ex);
         }
     }
 
@@ -181,7 +181,7 @@ public static class TryCatch<TException1, TException2>
         try
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
-            return Result<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -189,11 +189,11 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
-            return Result<T>.Fail(exception1Handler(ex));
+            return exception1Handler(ex);
         }
         catch (TException2 ex)
         {
-            return Result<T>.Fail(exception2Handler(ex));
+            return exception2Handler(ex);
         }
     }
 
@@ -228,7 +228,7 @@ public static class TryCatch<TException1, TException2>
         try
         {
             var value = sourceDelegate();
-            return Maybe<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -236,11 +236,11 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
-            return Maybe<T>.Fail(exception1Handler(ex));
+            return exception1Handler(ex);
         }
         catch (TException2 ex)
         {
-            return Maybe<T>.Fail(exception2Handler(ex));
+            return exception2Handler(ex);
         }
     }
 
@@ -275,7 +275,7 @@ public static class TryCatch<TException1, TException2>
         try
         {
             var value = await sourceDelegate().ConfigureAwait(ContinueOnCapturedContext);
-            return Maybe<T>.FromValue(value);
+            return value;
         }
         catch (TaskCanceledException ex)
         {
@@ -283,11 +283,11 @@ public static class TryCatch<TException1, TException2>
         }
         catch (TException1 ex)
         {
-            return Maybe<T>.Fail(exception1Handler(ex));
+            return exception1Handler(ex);
         }
         catch (TException2 ex)
         {
-            return Maybe<T>.Fail(exception2Handler(ex));
+            return exception2Handler(ex);
         }
     }
 }

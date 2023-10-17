@@ -25,7 +25,7 @@ public static class ListExtensions
         {
             var result = action(item);
             if (result.TryGetError(out var error))
-                return Result<IReadOnlyList<T>>.Fail(error);
+                return error;
         }
 
         return Result<IReadOnlyList<T>>.Success(sourceList);
@@ -49,7 +49,7 @@ public static class ListExtensions
         {
             var result = action(sourceList[i], i);
             if (result.TryGetError(out var error))
-                return Result<IReadOnlyList<T>>.Fail(error);
+                return error;
         }
 
         return Result<IReadOnlyList<T>>.Success(sourceList);
@@ -73,7 +73,7 @@ public static class ListExtensions
         {
             var result = await action(item).ConfigureAwait(ContinueOnCapturedContext);
             if (result.TryGetError(out var error))
-                return Result<IReadOnlyList<T>>.Fail(error);
+                return error;
         }
 
         return Result<IReadOnlyList<T>>.Success(sourceList);
@@ -97,7 +97,7 @@ public static class ListExtensions
         {
             var result = await action(sourceList[i], i).ConfigureAwait(ContinueOnCapturedContext);
             if (result.TryGetError(out var error))
-                return Result<IReadOnlyList<T>>.Fail(error);
+                return error;
         }
 
         return Result<IReadOnlyList<T>>.Success(sourceList);
