@@ -66,7 +66,7 @@ public class Select_methods
         [Fact]
         public void When_IsNone_Returns_None()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = source.Select(value => value.ToString());
 
@@ -76,7 +76,7 @@ public class Select_methods
         [Fact]
         public void Given_onNoneSelector_is_provided_When_IsNone_Returns_result_from_onNoneSelector()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = source.Select(value => value.ToString(), () => "value from onNoneSelector");
 

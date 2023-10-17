@@ -73,7 +73,7 @@ public class AsNonNullable_extension_methods
         [Fact]
         public void When_IsNone_Returns_None_result()
         {
-            Maybe<int?> nullableResult = Maybe<int?>.None;
+            Maybe<int?> nullableResult = Maybe<int?>.None();
 
             Maybe<int> nonNullableResult = nullableResult.AsNonNullable();
 
@@ -109,7 +109,7 @@ public class AsNonNullable_extension_methods
         [Fact]
         public async Task Given_task_of_result_When_IsNone_Returns_Task_of_None_result()
         {
-            Maybe<int?> nullableResult = Maybe<int?>.None;
+            Maybe<int?> nullableResult = Maybe<int?>.None();
             Task<Maybe<int?>> nullableResultTask = Task.FromResult(nullableResult);
 
             Task<Maybe<int>> nonNullableResultTask = nullableResultTask.AsNonNullable();

@@ -100,7 +100,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetError_When_IsNone_Throws_InvalidStateException()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             Action act = () => _ = source.Error;
 
@@ -131,7 +131,7 @@ public class Unsafe_extensions_methods
         [Fact]
         public void GetValue_When_IsNone_Throws_InvalidStateException()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             Action act = () => _ = source.Value;
 

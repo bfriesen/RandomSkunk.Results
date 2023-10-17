@@ -66,7 +66,7 @@ public class SelectAsync_methods
         [Fact]
         public async Task When_IsNone_Returns_None()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = await source.Select(value => Task.FromResult(value.ToString()));
 
@@ -76,7 +76,7 @@ public class SelectAsync_methods
         [Fact]
         public async Task Given_onNoneSelector_is_provided_When_IsNone_Returns_result_from_selector()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = await source.Select(value => Task.FromResult(value.ToString()), () => Task.FromResult("value from onNoneSelector"));
 

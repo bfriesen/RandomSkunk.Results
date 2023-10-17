@@ -82,7 +82,7 @@ public class TryGetError_methods
         [Fact]
         public void Given_None_result_Returns_false_with_out_parameter_null()
         {
-            var result = Maybe<int>.None;
+            var result = Maybe<int>.None();
 
             var returnValue = result.TryGetError(out var error);
 

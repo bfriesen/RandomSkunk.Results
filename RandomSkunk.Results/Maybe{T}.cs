@@ -43,11 +43,6 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     }
 
     /// <summary>
-    /// Gets a <c>None</c> result.
-    /// </summary>
-    public static Maybe<T> None => new(none: true, null);
-
-    /// <summary>
     /// Gets a value indicating whether this is a <c>Success</c> result.
     /// </summary>
     /// <returns><see langword="true"/> if this is a <c>Success</c> result; otherwise, <see langword="false"/>.</returns>
@@ -186,6 +181,12 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             });
 
     /// <summary>
+    /// Creates a <c>None</c> result.
+    /// </summary>
+    /// <returns>A <c>None</c> result.</returns>
+    public static Maybe<T> None() => new(none: true, null);
+
+    /// <summary>
     /// Creates a maybe from the specified value.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
@@ -193,7 +194,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
     public static Maybe<T> FromValue(T? value) =>
         value is not null
             ? Success(value)
-            : None;
+            : None();
 
     /// <summary>
     /// Converts this <see cref="Maybe{T}"/> to an equivalent <see cref="Result{T}"/>. If this is a <c>Success</c> result, then a
@@ -665,7 +666,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Maybe<TReturn>.None;
+                return Maybe<TReturn>.None();
 
             try
             {
@@ -726,7 +727,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Maybe<TReturn>.None;
+                return Maybe<TReturn>.None();
 
             try
             {
@@ -787,7 +788,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Maybe<TReturn>.None;
+                return Maybe<TReturn>.None();
 
             try
             {
@@ -848,7 +849,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (_outcome == Outcome.None)
         {
             if (onNoneSelector is null)
-                return Maybe<TReturn>.None;
+                return Maybe<TReturn>.None();
 
             try
             {
@@ -1303,7 +1304,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
         if (_outcome == Outcome.Success && predicate(_value!))
-            return None;
+            return None();
 
         return this;
     }

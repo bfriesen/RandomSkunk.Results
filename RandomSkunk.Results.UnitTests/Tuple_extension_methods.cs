@@ -12,7 +12,7 @@ public class Tuple_extension_methods
             yield return new object[] { Result.Fail("a", 1), Result<int>.Success(123), Maybe<int>.Success(456) };
             yield return new object[] { Result.Success(), Result<int>.Fail("b", 2), Maybe<int>.Success(456) };
             yield return new object[] { Result.Success(), Result<int>.Success(123), Maybe<int>.Fail("c", 3) };
-            yield return new object[] { Result.Success(), Result<int>.Success(123), Maybe<int>.None };
+            yield return new object[] { Result.Success(), Result<int>.Success(123), Maybe<int>.None() };
             yield return new object[] { Result.Fail("a", 1), Result<int>.Fail("b", 2), Maybe<int>.Fail("c", 3) };
         }
     }

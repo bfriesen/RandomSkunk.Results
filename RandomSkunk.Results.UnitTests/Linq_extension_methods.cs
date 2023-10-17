@@ -146,7 +146,7 @@ public class Linq_extension_methods
         public void Given_early_none_result_Returns_none_result()
         {
             var result =
-                from n in Maybe<int>.None
+                from n in Maybe<int>.None()
                 let n2 = n * 2
                 from s in $"n2: {n2}".ToMaybe()
                 select s;
@@ -173,7 +173,7 @@ public class Linq_extension_methods
             var result =
                 from n in 1.ToMaybe()
                 let n2 = n * 2
-                from s in Maybe<string>.None
+                from s in Maybe<string>.None()
                 select s;
 
             result.IsNone.Should().BeTrue();
@@ -196,9 +196,9 @@ public class Linq_extension_methods
         public void Given_early_and_late_none_results_Returns_none_result()
         {
             var result =
-                from r1 in Maybe<int>.None
+                from r1 in Maybe<int>.None()
                 let abc = "abc"
-                from r2 in Maybe<int>.None
+                from r2 in Maybe<int>.None()
                 select abc;
 
             result.IsNone.Should().BeTrue();

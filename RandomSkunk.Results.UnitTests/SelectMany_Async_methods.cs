@@ -132,7 +132,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Maybe_of_T_When_source_is_None_Returns_None()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()));
 
@@ -142,7 +142,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Maybe_of_T_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToMaybe()), () => Task.FromResult(Maybe<string>.Fail("error from onNoneSelector")));
 
@@ -174,7 +174,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_When_source_is_None_Returns_Fail_result()
         {
-            var source = Maybe<string>.None;
+            var source = Maybe<string>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()));
 
@@ -190,7 +190,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
         {
-            var source = Maybe<string>.None;
+            var source = Maybe<string>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(Result.Success()), () => Task.FromResult(Result.Fail("error from onNoneSelector")));
 
@@ -234,7 +234,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_of_T_When_source_is_None_Returns_Fail_result()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()));
 
@@ -250,7 +250,7 @@ public class SelectMany_Async_methods
         [Fact]
         public async Task Given_target_is_Result_of_T_and_onNoneSelector_is_provided_When_source_is_None_Returns_result_from_onNoneSelector()
         {
-            var source = Maybe<int>.None;
+            var source = Maybe<int>.None();
 
             var actual = await source.SelectMany(value => Task.FromResult(value.ToString().ToResult()), () => Task.FromResult(Result<string>.Fail("error from onNoneSelector")));
 

@@ -27,7 +27,7 @@ public class ToFailIfNone_method
     [Fact]
     public void GivenNoneResult_WhenGetErrorParameterIsSpecified_ReturnsFailResultWithErrorFromIt()
     {
-        var result = Maybe<int>.None;
+        var result = Maybe<int>.None();
         var error = new Error { Title = "a", Message = "b", Identifier = "c", ErrorCode = 12345 };
 
         var actual = result.ToFailIfNone(() => error);
@@ -40,7 +40,7 @@ public class ToFailIfNone_method
     [Fact]
     public void GivenNoneResult_WhenGetErrorParameterIsNotSpecified_ReturnsFailResultWithGenericError()
     {
-        var result = Maybe<int>.None;
+        var result = Maybe<int>.None();
 
         var actual = result.ToFailIfNone();
 

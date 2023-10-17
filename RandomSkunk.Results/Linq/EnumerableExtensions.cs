@@ -270,7 +270,7 @@ public static class EnumerableExtensions
                 return enumerator.Current.ToMaybeOrFailIfNull("The first element was null.");
         }
 
-        return Maybe<T>.None;
+        return Maybe<T>.None();
     }
 
     /// <summary>
@@ -445,7 +445,7 @@ public static class EnumerableExtensions
                 return item.ToMaybeOrFailIfNull("The first matching element was null.");
         }
 
-        return Maybe<T>.None;
+        return Maybe<T>.None();
     }
 
     /// <summary>
@@ -637,7 +637,7 @@ public static class EnumerableExtensions
             }
         }
 
-        return Maybe<T>.None;
+        return Maybe<T>.None();
     }
 
     /// <summary>
@@ -804,7 +804,7 @@ public static class EnumerableExtensions
         if (sourceSequence is null) throw new ArgumentNullException(nameof(sourceSequence));
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
 
-        var result = Maybe<T>.None;
+        var result = Maybe<T>.None();
         foreach (T item in sourceSequence)
             if (predicate(item)) result = item.ToMaybeOrFailIfNull("The last matching element was null.");
 
@@ -989,7 +989,7 @@ public static class EnumerableExtensions
             var count = list.Count;
             return count switch
             {
-                0 => Maybe<T>.None,
+                0 => Maybe<T>.None(),
                 1 => list[0].ToMaybeOrFailIfNull("The single element was null."),
                 _ => Maybe<T>.Fail(SequenceContainsMoreThanOneElement(count)),
             };
@@ -998,7 +998,7 @@ public static class EnumerableExtensions
         {
             using IEnumerator<T> enumerator = sourceSequence.GetEnumerator();
             if (!enumerator.MoveNext())
-                return Maybe<T>.None;
+                return Maybe<T>.None();
 
             T current = enumerator.Current;
             if (!enumerator.MoveNext())
@@ -1200,7 +1200,7 @@ public static class EnumerableExtensions
 
         return count switch
         {
-            0 => Maybe<T>.None,
+            0 => Maybe<T>.None(),
             1 => result,
             _ => Maybe<T>.Fail(SequenceContainsMoreThanOneMatchingElement(count)),
         };
@@ -1399,7 +1399,7 @@ public static class EnumerableExtensions
             }
         }
 
-        return Maybe<T>.None;
+        return Maybe<T>.None();
     }
 
     /// <summary>

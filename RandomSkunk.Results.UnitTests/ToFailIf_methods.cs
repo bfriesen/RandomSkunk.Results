@@ -118,7 +118,7 @@ public class ToFailIf_methods
         [Fact]
         public void GivenNoneResult_WhenPredicateReturnsTrue_ReturnsSameResult()
         {
-            var result = Maybe<int>.None;
+            var result = Maybe<int>.None();
             var error = new Error();
 
             var actual = result.ToFailIf(value => true, value => error);

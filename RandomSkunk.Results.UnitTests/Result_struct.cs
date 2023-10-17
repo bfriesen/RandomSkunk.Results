@@ -218,7 +218,7 @@ public class Result_struct
         [Fact]
         public void Given_IsNone_Returns_Fail_result()
         {
-            Maybe<Unit> resultOfUnit = Maybe<Unit>.None;
+            Maybe<Unit> resultOfUnit = Maybe<Unit>.None();
 
             Result result = resultOfUnit;
 

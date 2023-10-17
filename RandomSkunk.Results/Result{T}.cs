@@ -738,7 +738,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
-            return Maybe<TReturn>.None;
+            return Maybe<TReturn>.None();
 
         return Maybe<TReturn>.Fail(error);
     }
@@ -781,7 +781,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
 
         var error = GetError();
         if (error.ErrorCode == ErrorCodes.NoValue)
-            return Maybe<TReturn>.None;
+            return Maybe<TReturn>.None();
 
         return Maybe<TReturn>.Fail(error);
     }

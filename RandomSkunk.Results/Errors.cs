@@ -273,7 +273,7 @@ public static class Errors
     /// <returns>A No Value error.</returns>
     /// <remarks>
     /// This error is to used to indicate that a <c>Fail</c> <see cref="Result{T}"/> is equivalent to
-    /// <see cref="Maybe{T}.None"/>.
+    /// <see cref="Maybe{T}.None()"/>.
     /// </remarks>
     public static Error NoValue() =>
         new()
