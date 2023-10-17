@@ -367,11 +367,11 @@ public static class ResultTupleExtensions
 
                 return Result<TReturn>.FromValue(value);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
@@ -434,11 +434,11 @@ public static class ResultTupleExtensions
 
                 return Result<TReturn>.FromValue(value);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
@@ -497,11 +497,11 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
@@ -560,11 +560,11 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
@@ -624,11 +624,11 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
@@ -688,11 +688,11 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
@@ -752,11 +752,11 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector)));
             }
@@ -816,11 +816,11 @@ public static class ResultTupleExtensions
             .AppendItemNValueParameters(tupleCount)
             .Append(@");
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onAllSuccessSelector))); 
             }

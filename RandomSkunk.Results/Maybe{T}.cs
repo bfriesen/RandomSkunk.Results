@@ -360,7 +360,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 onFailCallback(GetError());
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -368,7 +368,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
                     Errors.Canceled(ex),
                 }));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -396,7 +396,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -404,7 +404,7 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
                     Errors.Canceled(ex),
                 }));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -432,11 +432,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 onNoneCallback();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneCallback)));
             }
@@ -460,11 +460,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 await onNoneCallback().ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneCallback)));
             }
@@ -488,11 +488,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 onSuccessCallback(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
             }
@@ -516,11 +516,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
             }
@@ -548,11 +548,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onFail(GetError());
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
             }
@@ -563,11 +563,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onNone();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNone)));
             }
@@ -595,11 +595,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onFail(GetError());
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
             }
@@ -610,11 +610,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onNone();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNone)));
             }
@@ -652,11 +652,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onSuccessSelector(_value!).ToMaybe();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -671,11 +671,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onNoneSelector().ToMaybe();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
@@ -713,11 +713,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return (await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext)).ToMaybe();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -732,11 +732,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return (await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext)).ToMaybe();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
@@ -774,11 +774,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -793,11 +793,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onNoneSelector();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
@@ -835,11 +835,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -854,11 +854,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
@@ -889,11 +889,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -908,11 +908,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onNoneSelector();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
@@ -943,11 +943,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -962,11 +962,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
@@ -1005,11 +1005,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -1024,11 +1024,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return onNoneSelector();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }
@@ -1067,11 +1067,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -1086,11 +1086,11 @@ public readonly struct Maybe<T> : IResult<T>, IEquatable<Maybe<T>>
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onNoneSelector)));
             }

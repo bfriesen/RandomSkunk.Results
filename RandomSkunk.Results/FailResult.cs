@@ -11,6 +11,15 @@ public static class FailResult
     private static Func<Error, Error>? _replaceError;
 
     /// <summary>
+    /// Gets or sets a value indicating whether exceptions that are thrown by callback function parameters are caught and
+    /// returned as a <c>Fail</c> result.
+    /// </summary>
+    /// <remarks>
+    /// The default value of this property is <see langword="true"/>.
+    /// </remarks>
+    public static bool CatchCallbackExceptions { get; set; } = true;
+
+    /// <summary>
     /// Sets the callback function that will be invoked whenever a <c>Fail</c> result is created.
     /// </summary>
     /// <param name="onFailCallback">The callback function.</param>

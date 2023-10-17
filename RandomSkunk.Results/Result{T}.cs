@@ -311,7 +311,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 onFailCallback(GetError());
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -319,7 +319,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
                     Errors.Canceled(ex),
                 }));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -347,7 +347,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -355,7 +355,7 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
                     Errors.Canceled(ex),
                 }));
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(CompositeError.CreateOrGetSingle(new[]
                 {
@@ -383,11 +383,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 onSuccessCallback(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
             }
@@ -411,11 +411,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
             }
@@ -441,11 +441,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return onFail(GetError());
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
             }
@@ -471,11 +471,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return await onFail(GetError());
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
             }
@@ -509,11 +509,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return onSuccessSelector(_value!).ToResult();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -547,11 +547,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return (await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext)).ToResult();
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -586,11 +586,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -625,11 +625,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -656,11 +656,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -687,11 +687,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Result.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -726,11 +726,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
@@ -769,11 +769,11 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex)
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Errors.Canceled(ex);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
                 return Maybe<TReturn>.Fail(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
             }
