@@ -16,7 +16,7 @@ public class ToFailIfNone_method
     [Fact]
     public void GivenFailResult_ReturnsSameResult()
     {
-        var result = Result<int>.Fail(errorMessage: "1", errorCode: 54321, errorIdentifier: "2", errorTitle: "3");
+        var result = Result<int>.Fail(message: "1", errorCode: 54321, identifier: "2", title: "3");
         var error = new Error { Title = "a", Message = "b", Identifier = "c", ErrorCode = 12345 };
 
         var actual = result.ToFailIfNone(() => error);

@@ -139,43 +139,43 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="errorMessage">The error message.</param>
+    /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
-    /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Fail(
         Exception exception,
-        string errorMessage = Error._defaultFromExceptionMessage,
+        string message = Error._defaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
-        string? errorIdentifier = null,
-        string? errorTitle = null) =>
-        new(Error.FromException(exception, errorMessage, errorCode, errorIdentifier, errorTitle));
+        string? identifier = null,
+        string? title = null) =>
+        new(Error.FromException(exception, message, errorCode, identifier, title));
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
     /// </summary>
-    /// <param name="errorMessage">The error message.</param>
+    /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.InternalServerError"/>.</param>
-    /// <param name="errorIdentifier">The optional identifier of the error.</param>
-    /// <param name="errorTitle">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
+    /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
     ///     </param>
     /// <param name="extensions">Additional properties for the error.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Fail(
-        string errorMessage,
+        string message,
         int? errorCode = ErrorCodes.InternalServerError,
-        string? errorIdentifier = null,
-        string? errorTitle = null,
+        string? identifier = null,
+        string? title = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new(new Error
         {
-            Message = errorMessage,
-            Title = errorTitle!,
-            Identifier = errorIdentifier,
+            Message = message,
+            Title = title!,
+            Identifier = identifier,
             ErrorCode = errorCode,
             Extensions = extensions!,
             InnerError = innerError,
