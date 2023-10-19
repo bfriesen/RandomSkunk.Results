@@ -3,7 +3,7 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines a result without a value.
 /// </summary>
-public readonly struct Result : IResult<Unit>, IEquatable<Result>
+public readonly struct Result : IEquatable<Result>
 {
     private readonly Outcome _outcome;
     private readonly Error? _error;
@@ -56,12 +56,6 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         _outcome == Outcome.Fail
             ? GetError()
             : throw Exceptions.CannotAccessErrorUnlessFail();
-
-    /// <inheritdoc/>
-    Unit IResult<Unit>.Value =>
-        _outcome == Outcome.Success
-            ? Unit.Value
-            : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
     /// <summary>
     /// Converts the specified <see cref="Results.Error"/> into a <c>Fail</c> result with the same error.

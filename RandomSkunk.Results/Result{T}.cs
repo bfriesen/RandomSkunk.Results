@@ -4,7 +4,7 @@ namespace RandomSkunk.Results;
 /// Defines a result with a value.
 /// </summary>
 /// <typeparam name="T">The type of the result value.</typeparam>
-public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
+public readonly struct Result<T> : IEquatable<Result<T>>
 {
     private readonly Outcome _outcome;
     private readonly T? _value;

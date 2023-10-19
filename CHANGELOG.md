@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning].
     - Remove `Else`, `Or`, and `Where` methods.
     - Remove the `Maybe<T>` struct.
     - Remove tuple extension methods.
+    - Remove `IResult` and `IResult<T>` interfaces.
 
 ## [1.4.0] - 2023-06-28
 
