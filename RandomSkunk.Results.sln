@@ -33,8 +33,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleBlazorApp.Client", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleBlazorApp.Server", "ExampleBlazorApp.Server\ExampleBlazorApp.Server.csproj", "{43AC1C8A-FBF8-4454-A8E4-57C0D346E3C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.SourceGenerators", "RandomSkunk.Results.SourceGenerators\RandomSkunk.Results.SourceGenerators.csproj", "{2307C283-230A-49FC-A74F-E778F87ED267}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Polyfill", "Polyfill\Polyfill.shproj", "{7F657C31-DE12-4708-951A-8179FA2CA8AE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomSkunk.Results.Analyzers", "RandomSkunk.Results.Analyzers\RandomSkunk.Results.Analyzers.csproj", "{81D2C765-4686-4F15-8D45-FD50A6D903EC}"
@@ -86,10 +84,6 @@ Global
 		{43AC1C8A-FBF8-4454-A8E4-57C0D346E3C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43AC1C8A-FBF8-4454-A8E4-57C0D346E3C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43AC1C8A-FBF8-4454-A8E4-57C0D346E3C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2307C283-230A-49FC-A74F-E778F87ED267}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2307C283-230A-49FC-A74F-E778F87ED267}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2307C283-230A-49FC-A74F-E778F87ED267}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2307C283-230A-49FC-A74F-E778F87ED267}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81D2C765-4686-4F15-8D45-FD50A6D903EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81D2C765-4686-4F15-8D45-FD50A6D903EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81D2C765-4686-4F15-8D45-FD50A6D903EC}.Release|Any CPU.ActiveCfg = Release|Any CPU

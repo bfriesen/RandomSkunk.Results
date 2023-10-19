@@ -47,10 +47,6 @@
 		<None Condition="'$(Configuration)'=='Release'" Include="linqpad-samples\**\*.*" Pack="true" PackagePath="\linqpad-samples" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\RandomSkunk.Results.SourceGenerators\RandomSkunk.Results.SourceGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-	</ItemGroup>
-
 	<ItemGroup Condition="$(DefineConstants.Contains('INCLUDE_ANALYZERS'))">
 		<ProjectReference Include="..\RandomSkunk.Results.Analyzers\RandomSkunk.Results.Analyzers.csproj" />
 	</ItemGroup>

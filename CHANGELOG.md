@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning].
 - RandomSkunk.Results:
     - Remove `Else`, `Or`, and `Where` methods.
     - Remove the `Maybe<T>` struct.
+    - Remove tuple extension methods.
 
 ## [1.4.0] - 2023-06-28
 
