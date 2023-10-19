@@ -36,16 +36,4 @@ public class ToFailIfNone_method
         actual.IsFail.Should().BeTrue();
         actual.Error.Should().Be(error);
     }
-
-    [Fact]
-    public void GivenNoneResult_WhenGetErrorParameterIsNotSpecified_ReturnsFailResultWithGenericError()
-    {
-        var result = Result<int>.None();
-
-        var actual = result.ToFailIfNone();
-
-        actual.Should().NotBe(result);
-        actual.IsFail.Should().BeTrue();
-        actual.Error.Should().Be(Error.DefaultError);
-    }
 }

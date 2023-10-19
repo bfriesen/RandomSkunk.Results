@@ -1024,12 +1024,36 @@ public static class ResultExtensions
     /// result; otherwise returns the same result.
     /// </summary>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="predicate">The delegate that determines whether to return a <c>Fail</c> result.</param>
-    /// <param name="getError">An optional function that gets the <c>Fail</c> result's error. If <see langword="null"/>, a
-    ///     generic error is used.</param>
+    /// <param name="predicate">A function that determines whether to return a <c>Fail</c> result.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
     /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
     ///     did not.</returns>
-    public static async Task<Result> ToFailIf(this Task<Result> sourceResult, Func<bool> predicate, Func<Error>? getError = null) =>
+    public static async Task<Result> ToFailIf(this Task<Result> sourceResult, Func<bool> predicate, Func<Error> getError) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError);
+
+    /// <summary>
+    /// Gets a <c>Fail</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>
+    /// result; otherwise returns the same result.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that determines whether to return a <c>Fail</c> result.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
+    /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
+    ///     did not.</returns>
+    public static async Task<Result> ToFailIf(this Task<Result> sourceResult, Func<bool> predicate, Func<Task<Error>> getError) =>
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError).ConfigureAwait(ContinueOnCapturedContext);
+
+    /// <summary>
+    /// Gets a <c>Fail</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>
+    /// result; otherwise returns the same result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="predicate">A function that determines whether to return a <c>Fail</c> result.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
+    /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
+    ///     did not.</returns>
+    public static async Task<Result<T>> ToFailIf<T>(this Task<Result<T>> sourceResult, Func<T, bool> predicate, Func<T, Error> getError) =>
         (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError);
 
     /// <summary>
@@ -1038,25 +1062,34 @@ public static class ResultExtensions
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="predicate">The delegate that determines whether to return a <c>Fail</c> result.</param>
-    /// <param name="getError">An optional function that gets the <c>Fail</c> result's error. If <see langword="null"/>, a
-    ///     generic error is used.</param>
+    /// <param name="predicate">A function that determines whether to return a <c>Fail</c> result.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
     /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
     ///     did not.</returns>
-    public static async Task<Result<T>> ToFailIf<T>(this Task<Result<T>> sourceResult, Func<T, bool> predicate, Func<T, Error>? getError = null) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError);
+    public static async Task<Result<T>> ToFailIf<T>(this Task<Result<T>> sourceResult, Func<T, bool> predicate, Func<T, Task<Error>> getError) =>
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIf(predicate, getError).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Gets a <c>Fail</c> result if the current result is <c>None</c>; otherwise returns the same result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="getError">An optional function that gets the <c>Fail</c> result's error. If <see langword="null"/>, a
-    ///     generic error is used.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
     /// <returns>A <c>Fail</c> result if the current result is <c>None</c>, or the same result if it is <c>Success</c> or
     ///     <c>Fail</c>.</returns>
-    public static async Task<Result<T>> ToFailIfNone<T>(this Task<Result<T>> sourceResult, Func<Error>? getError = null) =>
+    public static async Task<Result<T>> ToFailIfNone<T>(this Task<Result<T>> sourceResult, Func<Error> getError) =>
         (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIfNone(getError);
+
+    /// <summary>
+    /// Gets a <c>Fail</c> result if the current result is <c>None</c>; otherwise returns the same result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
+    /// <returns>A <c>Fail</c> result if the current result is <c>None</c>, or the same result if it is <c>Success</c> or
+    ///     <c>Fail</c>.</returns>
+    public static async Task<Result<T>> ToFailIfNone<T>(this Task<Result<T>> sourceResult, Func<Task<Error>> getError) =>
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFailIfNone(getError).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Gets a <c>None</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>

@@ -1139,17 +1139,36 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// Gets a <c>Fail</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>
     /// result; otherwise returns the same result.
     /// </summary>
-    /// <param name="predicate">The delegate that determines whether to return a <c>Fail</c> result.</param>
-    /// <param name="getError">An optional function that gets the <c>Fail</c> result's error. If <see langword="null"/>, a
-    ///     generic error is used.</param>
+    /// <param name="predicate">A function that determines whether to return a <c>Fail</c> result.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
     /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
     ///     did not.</returns>
-    public Result<T> ToFailIf(Func<T, bool> predicate, Func<T, Error>? getError = null)
+    public Result<T> ToFailIf(Func<T, bool> predicate, Func<T, Error> getError)
     {
         if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+        if (getError is null) throw new ArgumentNullException(nameof(getError));
 
         if (_outcome == Outcome.Success && predicate(_value!))
-            return getError?.Invoke(_value!);
+            return getError.Invoke(_value!);
+
+        return this;
+    }
+
+    /// <summary>
+    /// Gets a <c>Fail</c> result if <paramref name="predicate"/> returns <see langword="true"/> and this is a <c>Success</c>
+    /// result; otherwise returns the same result.
+    /// </summary>
+    /// <param name="predicate">A function that determines whether to return a <c>Fail</c> result.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
+    /// <returns>A <c>Fail</c> result if <paramref name="predicate"/> returned <see langword="true"/>, or the same result if it
+    ///     did not.</returns>
+    public async Task<Result<T>> ToFailIf(Func<T, bool> predicate, Func<T, Task<Error>> getError)
+    {
+        if (predicate is null) throw new ArgumentNullException(nameof(predicate));
+        if (getError is null) throw new ArgumentNullException(nameof(getError));
+
+        if (_outcome == Outcome.Success && predicate(_value!))
+            return await getError.Invoke(_value!).ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -1157,14 +1176,31 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
     /// <summary>
     /// Gets a <c>Fail</c> result if the current result is <c>None</c>; otherwise returns the same result.
     /// </summary>
-    /// <param name="getError">An optional function that gets the <c>Fail</c> result's error. If <see langword="null"/>, a
-    ///     generic error is used.</param>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
     /// <returns>A <c>Fail</c> result if the current result is <c>None</c>, or the same result if it is <c>Success</c> or
     ///     <c>Fail</c>.</returns>
-    public Result<T> ToFailIfNone(Func<Error>? getError = null)
+    public Result<T> ToFailIfNone(Func<Error> getError)
     {
+        if (getError is null) throw new ArgumentNullException(nameof(getError));
+
         if (IsNone)
-            return getError?.Invoke();
+            return getError.Invoke();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Gets a <c>Fail</c> result if the current result is <c>None</c>; otherwise returns the same result.
+    /// </summary>
+    /// <param name="getError">A function that gets the <c>Fail</c> result's error.</param>
+    /// <returns>A <c>Fail</c> result if the current result is <c>None</c>, or the same result if it is <c>Success</c> or
+    ///     <c>Fail</c>.</returns>
+    public async Task<Result<T>> ToFailIfNone(Func<Task<Error>> getError)
+    {
+        if (getError is null) throw new ArgumentNullException(nameof(getError));
+
+        if (IsNone)
+            return await getError.Invoke();
 
         return this;
     }
@@ -1226,6 +1262,22 @@ public readonly struct Result<T> : IResult<T>, IEquatable<Result<T>>
 
         return _outcome == Outcome.Fail
             ? onFailGetError(GetError())
+            : this;
+    }
+
+    /// <summary>
+    /// Replaces the error of a <c>Fail</c> result, otherwise does nothing.
+    /// </summary>
+    /// <param name="onFailGetError">A function that returns the error for the returned <c>Fail</c> result.</param>
+    /// <returns>A new <c>Fail</c> result with its error specified by the <paramref name="onFailGetError"/> function if this is a
+    ///     <c>Fail</c> result; otherwise, the current result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="onFailGetError"/> is <see langword="null"/>.</exception>
+    public async Task<Result<T>> WithError(Func<Error, Task<Error>> onFailGetError)
+    {
+        if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
+
+        return _outcome == Outcome.Fail
+            ? await onFailGetError(GetError())
             : this;
     }
 
