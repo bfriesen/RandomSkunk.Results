@@ -21,7 +21,7 @@ public readonly struct Result : IEquatable<Result>
         _outcome = Outcome.Fail;
         _error = error;
 
-        FailResult.Handle(ref _error);
+        FailResult.InvokeCallback(_error);
     }
 
     private enum Outcome

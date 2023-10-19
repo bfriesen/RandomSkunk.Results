@@ -23,7 +23,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         _value = default;
         _error = error;
 
-        FailResult.Handle(ref _error);
+        FailResult.InvokeCallback(_error);
     }
 
     private enum Outcome
