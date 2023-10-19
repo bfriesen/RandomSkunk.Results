@@ -158,6 +158,102 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         });
 
     /// <summary>
+    /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
+    /// <c>Fail</c> result.
+    /// </summary>
+    /// <param name="callback">A callback function to invoke.</param>
+    /// <returns>The current result.</returns>
+    public Result Finally(Action<Result> callback)
+    {
+        if (callback is null) throw new ArgumentNullException(nameof(callback));
+
+        try
+        {
+            callback(this);
+        }
+        catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+        {
+            var error = Errors.Canceled(ex);
+
+            if (_outcome == Outcome.Success)
+                return error;
+
+            return CompositeError.Create(
+                new[]
+                {
+                    GetError(),
+                    error,
+                },
+                $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
+        }
+        catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+        {
+            var error = Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(callback)));
+
+            if (_outcome == Outcome.Success)
+                return error;
+
+            return CompositeError.Create(
+                new[]
+                {
+                    GetError(),
+                    error,
+                },
+                $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
+    /// <c>Fail</c> result.
+    /// </summary>
+    /// <param name="callback">A callback function to invoke.</param>
+    /// <returns>The current result.</returns>
+    public async Task<Result> Finally(Func<Result, Task> callback)
+    {
+        if (callback is null) throw new ArgumentNullException(nameof(callback));
+
+        try
+        {
+            await callback(this);
+        }
+        catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+        {
+            var error = Errors.Canceled(ex);
+
+            if (_outcome == Outcome.Success)
+                return error;
+
+            return CompositeError.Create(
+                new[]
+                {
+                    GetError(),
+                    error,
+                },
+                $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
+        }
+        catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+        {
+            var error = Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(callback)));
+
+            if (_outcome == Outcome.Success)
+                return error;
+
+            return CompositeError.Create(
+                new[]
+                {
+                    GetError(),
+                    error,
+                },
+                $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
+        }
+
+        return this;
+    }
+
+    /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
     /// is <c>Success</c> or <c>Fail</c>.
     /// </summary>

@@ -46,6 +46,48 @@ public static class ResultExtensions
         (await result.ConfigureAwait(ContinueOnCapturedContext)).AsNonNullable();
 
     /// <summary>
+    /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
+    /// <c>Fail</c> result.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="callback">A callback function to invoke.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<Result> Finally(this Task<Result> sourceResult, Action<Result> callback) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Finally(callback);
+
+    /// <summary>
+    /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
+    /// <c>Fail</c> result.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="callback">A callback function to invoke.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<Result> Finally(this Task<Result> sourceResult, Func<Result, Task> callback) =>
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Finally(callback).ConfigureAwait(ContinueOnCapturedContext);
+
+    /// <summary>
+    /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
+    /// <c>Fail</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="callback">A callback function to invoke.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<Result<T>> Finally<T>(this Task<Result<T>> sourceResult, Action<Result<T>> callback) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Finally(callback);
+
+    /// <summary>
+    /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
+    /// <c>Fail</c> result.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="callback">A callback function to invoke.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<Result<T>> Finally<T>(this Task<Result<T>> sourceResult, Func<Result<T>, Task> callback) =>
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Finally(callback).ConfigureAwait(ContinueOnCapturedContext);
+
+    /// <summary>
     /// Flattens the nested result.
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
