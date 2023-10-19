@@ -5,7 +5,7 @@ namespace RandomSkunk.Results.Http;
 /// </summary>
 public static class HttpClientExtensions
 {
-    private static readonly Func<Exception, Error> _defaultGetError = GetError;
+    private static readonly Func<Exception, Error> _defaultExceptionHandler = GetBadGatewayError;
 
     /// <summary>
     /// Sends a DELETE request to the specified Uri with a cancellation token as an asynchronous operation. A
@@ -13,7 +13,8 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -25,11 +26,11 @@ public static class HttpClientExtensions
     public static Task<Result<HttpResponseMessage>> TryDeleteAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
             () => sourceHttpClient.DeleteAsync(requestUri, cancellationToken),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
@@ -37,7 +38,8 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -49,11 +51,11 @@ public static class HttpClientExtensions
     public static Task<Result<HttpResponseMessage>> TryGetAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
             () => sourceHttpClient.GetAsync(requestUri, cancellationToken),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
@@ -62,7 +64,8 @@ public static class HttpClientExtensions
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -76,12 +79,12 @@ public static class HttpClientExtensions
     public static Task<Result<TValue>> TryGetFromJsonAsync<TValue>(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         return sourceHttpClient
-            .TryGetAsync(requestUri, getError, cancellationToken)
+            .TryGetAsync(requestUri, exceptionHandler, cancellationToken)
             .SelectMany(response => response.TryReadFromJsonAsync<TValue>(options, cancellationToken)
                 .Finally(_ => response.Dispose()));
     }
@@ -95,7 +98,8 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -108,11 +112,11 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
             () => sourceHttpClient.PatchAsync(requestUri, content!, cancellationToken),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Sends a PATCH request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -122,7 +126,8 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -137,12 +142,12 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return sourceHttpClient.TryPatchAsync(requestUri, content, getError, cancellationToken);
+        return sourceHttpClient.TryPatchAsync(requestUri, content, exceptionHandler, cancellationToken);
     }
 
 #endif
@@ -154,7 +159,8 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -167,11 +173,11 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
             () => sourceHttpClient.PostAsync(requestUri, content!, cancellationToken),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Sends a POST request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -181,7 +187,8 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -196,12 +203,12 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return sourceHttpClient.TryPostAsync(requestUri, content, getError, cancellationToken);
+        return sourceHttpClient.TryPostAsync(requestUri, content, exceptionHandler, cancellationToken);
     }
 
     /// <summary>
@@ -211,7 +218,8 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -224,11 +232,11 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
             () => sourceHttpClient.PutAsync(requestUri, content!, cancellationToken),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Sends a PUT request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -238,7 +246,8 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -253,12 +262,12 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return sourceHttpClient.TryPutAsync(requestUri, content, getError, cancellationToken);
+        return sourceHttpClient.TryPutAsync(requestUri, content, exceptionHandler, cancellationToken);
     }
 
     /// <summary>
@@ -267,7 +276,8 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="request">The HTTP request message to send.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -279,11 +289,11 @@ public static class HttpClientExtensions
     public static Task<Result<HttpResponseMessage>> TrySendAsync(
         this HttpClient sourceHttpClient,
         HttpRequestMessage request,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
             () => sourceHttpClient.SendAsync(request, cancellationToken),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 
 #if NET5_0_OR_GREATER
     /// <summary>
@@ -291,7 +301,8 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -303,11 +314,11 @@ public static class HttpClientExtensions
     public static Task<Result<byte[]>> TryGetByteArrayAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<Exception, Error>? getError = null,
+        Func<Exception, Error>? exceptionHandler = null,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
             () => sourceHttpClient.GetByteArrayAsync(requestUri, cancellationToken),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 #else
     // The different signature for lower targets is because before .NET 5, HttpClient.GetByteArrayAsync didn't have
     // an overload with a cancellation token, and it didn't throw a TaskCanceledException due to request timeout.
@@ -317,7 +328,7 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -327,12 +338,12 @@ public static class HttpClientExtensions
     public static Task<Result<byte[]>> TryGetByteArrayAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<Exception, Error>? getError = null) =>
+        Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch<HttpRequestException>.AsResult(
             () => sourceHttpClient.GetByteArrayAsync(requestUri),
-            getError ?? _defaultGetError);
+            exceptionHandler ?? _defaultExceptionHandler);
 #endif
 
-    private static Error GetError(Exception ex) =>
+    private static Error GetBadGatewayError(Exception ex) =>
         Error.FromException(ex, "The HTTP request failed. See InnerError for details.", ErrorCodes.BadGateway);
 }
