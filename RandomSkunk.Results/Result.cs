@@ -64,16 +64,6 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             : throw Exceptions.CannotAccessValueUnlessSuccess(GetError());
 
     /// <summary>
-    /// Truncates the <see cref="Result{T}"/> of type <see cref="Unit"/> into an equivalent <see cref="Result"/>. If it is a
-    /// <c>Success</c> result, then its value is ignored and a valueless <c>Success</c> result is returned. If it is a
-    /// <c>None</c> result, then a <c>Fail</c> result with error code <see cref="ErrorCodes.NoValue"/> is returned. Otherwise, a
-    /// <c>Fail</c> result with the same error as is returned.
-    /// </summary>
-    /// <param name="sourceResult">The source result.</param>
-    /// <returns>An equivalent <see cref="Result"/>.</returns>
-    public static implicit operator Result(Result<Unit> sourceResult) => sourceResult.Truncate();
-
-    /// <summary>
     /// Converts the specified <see cref="Results.Error"/> into a <c>Fail</c> result with the same error.
     /// </summary>
     /// <param name="error">The error for the new <c>Fail</c> result.</param>
