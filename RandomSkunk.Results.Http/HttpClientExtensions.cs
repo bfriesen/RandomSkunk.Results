@@ -82,7 +82,7 @@ public static class HttpClientExtensions
     {
         return sourceHttpClient
             .TryGetAsync(requestUri, getError, cancellationToken)
-            .SelectMany(response => response.ReadResultFromJsonAsync<TValue>(options, cancellationToken)
+            .SelectMany(response => response.TryReadFromJsonAsync<TValue>(options, cancellationToken)
                 .Finally(_ => response.Dispose()));
     }
 
