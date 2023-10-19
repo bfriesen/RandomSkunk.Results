@@ -5,6 +5,8 @@ namespace RandomSkunk.Results.Dapper;
 /// </summary>
 public static partial class ResultSqlMapper
 {
+    private static readonly Func<Exception, Error> _defaultExceptionHandler = GetBadGatewayError;
+
     /// <summary>
     /// Execute parameterized SQL.
     /// </summary>
@@ -14,8 +16,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this query.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The number of rows affected.</returns>
     public static Result<int> TryExecute(
         this IDbConnection cnn,
@@ -27,7 +34,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Execute(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL that selects a single value.
@@ -39,8 +46,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this command.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The first cell returned, as <typeparamref name="T"/>.</returns>
     public static Result<T> TryExecuteScalar<T>(
         this IDbConnection cnn,
@@ -52,7 +64,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.ExecuteScalar<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL and return an <see cref="IDataReader"/>.
@@ -63,8 +75,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this command.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An <see cref="IDataReader"/> that can be used to iterate over the results of the SQL query.</returns>
     /// <remarks>
     /// This is typically used when the results of a query are not processed by Dapper, for example, used to fill a
@@ -80,7 +97,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.ExecuteReader(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Executes a query, returning the data typed as <typeparamref name="T"/>.
@@ -93,8 +110,13 @@ public static partial class ResultSqlMapper
     /// <param name="buffered">Whether to buffer results in memory.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>A sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the data from the
     ///     first column is assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping is
     ///     assumed (case insensitive).</returns>
@@ -109,7 +131,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query<T>(sql, param, transaction, buffered, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -121,8 +143,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
     ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
     ///     column-name===member-name mapping is assumed (case insensitive).</returns>
@@ -136,7 +163,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryFirst<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -148,8 +175,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The first of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried then the
     ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
     ///     column-name===member-name mapping is assumed (case insensitive).</returns>
@@ -164,7 +196,7 @@ public static partial class ResultSqlMapper
         where T : class =>
         TryCatch.AsResult(
             () => cnn.QueryFirstOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -176,8 +208,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
     ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
     ///     column-name===member-name mapping is assumed (case insensitive).</returns>
@@ -191,7 +228,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QuerySingle<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Executes a single-row query, returning the data typed as <typeparamref name="T"/>.
@@ -203,8 +240,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The single element of a sequence of data of the supplied type; if a basic type (int, string, etc) is queried
     ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
     ///     column-name===member-name mapping is assumed (case insensitive).</returns>
@@ -219,7 +261,7 @@ public static partial class ResultSqlMapper
         where T : class =>
         TryCatch.AsResult(
             () => cnn.QuerySingleOrDefault<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a command that returns multiple result sets, and access each in turn.
@@ -230,8 +272,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this query.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>A <see cref="GridReader"/> for reading the multiple queries.</returns>
     public static Result<GridReader> TryQueryMultiple(
         this IDbConnection cnn,
@@ -243,7 +290,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => new GridReader(cnn.QueryMultiple(sql, param, transaction, commandTimeout, commandType)),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 2 input types. This returns a single type, combined from the raw types via
@@ -261,8 +308,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Result<IEnumerable<TReturn>> TryQuery<TFirst, TSecond, TReturn>(
         this IDbConnection cnn,
@@ -277,7 +329,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 3 input types. This returns a single type, combined from the raw types via
@@ -296,8 +348,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Result<IEnumerable<TReturn>> TryQuery<TFirst, TSecond, TThird, TReturn>(
         this IDbConnection cnn,
@@ -312,7 +369,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 4 input types. This returns a single type, combined from the raw types via
@@ -332,8 +389,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Result<IEnumerable<TReturn>> TryQuery<TFirst, TSecond, TThird, TFourth, TReturn>(
         this IDbConnection cnn,
@@ -348,7 +410,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 5 input types. This returns a single type, combined from the raw types via
@@ -369,8 +431,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Result<IEnumerable<TReturn>> TryQuery<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(
         this IDbConnection cnn,
@@ -385,7 +452,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 6 input types. This returns a single type, combined from the raw types via
@@ -407,8 +474,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Result<IEnumerable<TReturn>> TryQuery<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(
         this IDbConnection cnn,
@@ -423,7 +495,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with 7 input types. If you need more types -> use Query with Type[] parameter. This returns
@@ -446,8 +518,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Result<IEnumerable<TReturn>> TryQuery<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(
         this IDbConnection cnn,
@@ -462,7 +539,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform a multi-mapping query with an arbitrary number of input types. This returns a single type, combined from the raw
@@ -479,8 +556,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Result<IEnumerable<TReturn>> TryQuery<TReturn>(
         this IDbConnection cnn,
@@ -496,7 +578,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.Query(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a query asynchronously using Task.
@@ -508,8 +590,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>A sequence of data of <typeparamref name="T"/>; if a basic type (int, string, etc) is queried then the data from
     ///     the first column in assumed, otherwise an instance is created per row, and a direct column-name===member-name mapping
     ///     is assumed (case insensitive).</returns>
@@ -523,7 +610,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -535,8 +622,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The first result.</returns>
     public static Task<Result<T>> TryQueryFirstAsync<T>(
         this IDbConnection cnn,
@@ -548,7 +640,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryFirstAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -560,8 +652,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The first result or <c>None</c>.</returns>
     public static Task<Result<T>> TryQueryFirstOrNoneAsync<T>(
         this IDbConnection cnn,
@@ -574,7 +671,7 @@ public static partial class ResultSqlMapper
         where T : class =>
         TryCatch.AsResult(
             () => cnn.QueryFirstOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -586,8 +683,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The single result.</returns>
     public static Task<Result<T>> TryQuerySingleAsync<T>(
         this IDbConnection cnn,
@@ -599,7 +701,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QuerySingleAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a single-row query asynchronously using Task.
@@ -611,8 +713,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use, if any.</param>
     /// <param name="commandTimeout">The command timeout (in seconds).</param>
     /// <param name="commandType">The type of command to execute.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The single result or <c>None</c>.</returns>
     public static Task<Result<T>> TryQuerySingleOrNoneAsync<T>(
         this IDbConnection cnn,
@@ -625,7 +732,7 @@ public static partial class ResultSqlMapper
         where T : class =>
         TryCatch.AsResult(
             () => cnn.QuerySingleOrDefaultAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a command asynchronously using Task.
@@ -636,8 +743,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this query.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The number of rows affected.</returns>
     public static Task<Result<int>> TryExecuteAsync(
         this IDbConnection cnn,
@@ -649,7 +761,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.ExecuteAsync(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 2 input types. This returns a single type, combined from the raw types
@@ -667,8 +779,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Task<Result<IEnumerable<TReturn>>> TryQueryAsync<TFirst, TSecond, TReturn>(
         this IDbConnection cnn,
@@ -683,7 +800,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 3 input types. This returns a single type, combined from the raw types
@@ -702,8 +819,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Task<Result<IEnumerable<TReturn>>> TryQueryAsync<TFirst, TSecond, TThird, TReturn>(
         this IDbConnection cnn,
@@ -718,7 +840,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 4 input types. This returns a single type, combined from the raw types
@@ -738,8 +860,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Task<Result<IEnumerable<TReturn>>> TryQueryAsync<TFirst, TSecond, TThird, TFourth, TReturn>(
         this IDbConnection cnn,
@@ -754,7 +881,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 5 input types. This returns a single type, combined from the raw types
@@ -775,8 +902,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Task<Result<IEnumerable<TReturn>>> TryQueryAsync<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(
         this IDbConnection cnn,
@@ -791,7 +923,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 6 input types. This returns a single type, combined from the raw types
@@ -813,8 +945,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Task<Result<IEnumerable<TReturn>>> TryQueryAsync<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(
         this IDbConnection cnn,
@@ -829,7 +966,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with 7 input types. This returns a single type, combined from the raw types
@@ -852,8 +989,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Task<Result<IEnumerable<TReturn>>> TryQueryAsync<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(
         this IDbConnection cnn,
@@ -868,7 +1010,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Perform an asynchronous multi-mapping query with an arbitrary number of input types. This returns a single type, combined
@@ -885,8 +1027,13 @@ public static partial class ResultSqlMapper
     /// <param name="splitOn">The field we should split and read the second object from (default: "Id").</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An enumerable of <typeparamref name="TReturn"/>.</returns>
     public static Task<Result<IEnumerable<TReturn>>> TryQueryAsync<TReturn>(
         this IDbConnection cnn,
@@ -902,7 +1049,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.QueryAsync(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute a command that returns multiple result sets, and access each in turn.
@@ -913,8 +1060,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this query.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>A <see cref="GridReader"/> for reading the multiple queries.</returns>
     public static Task<Result<GridReader>> TryQueryMultipleAsync(
         this IDbConnection cnn,
@@ -926,7 +1078,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             async () => new GridReader(await cnn.QueryMultipleAsync(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext)),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL and return an <see cref="IDataReader"/>.
@@ -937,8 +1089,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this command.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An <see cref="IDataReader"/> that can be used to iterate over the results of the SQL query.</returns>
     /// <remarks>
     /// This is typically used when the results of a query are not processed by Dapper, for example, used to fill a
@@ -954,7 +1111,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL and return a <see cref="DbDataReader"/>.
@@ -965,8 +1122,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this command.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>An <see cref="DbDataReader"/> that can be used to iterate over the results of the SQL query.</returns>
     public static Task<Result<DbDataReader>> TryExecuteReaderAsync(
         this DbConnection cnn,
@@ -978,7 +1140,7 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
 
     /// <summary>
     /// Execute parameterized SQL that selects a single value.
@@ -990,8 +1152,13 @@ public static partial class ResultSqlMapper
     /// <param name="transaction">The transaction to use for this command.</param>
     /// <param name="commandTimeout">Number of seconds before command execution timeout.</param>
     /// <param name="commandType">Whether it is a stored proc or a batch.</param>
-    /// <param name="exceptionHandler">An optional function that maps a caught <see cref="Exception"/> to a <c>Fail</c> result's
-    ///     error. If <see langword="null"/>, the error is created by calling <see cref="Error.FromException"/>.</param>
+    /// <param name="exceptionHandler">An optional function that maps a caught exception to the returned <c>Fail</c> result's
+    ///     error.
+    ///     <para>
+    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
+    ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
+    ///     </para>
+    /// </param>
     /// <returns>The first cell returned, as <typeparamref name="T"/>.</returns>
     public static Task<Result<T>> TryExecuteScalarAsync<T>(
         this IDbConnection cnn,
@@ -1003,5 +1170,8 @@ public static partial class ResultSqlMapper
         Func<Exception, Error>? exceptionHandler = null) =>
         TryCatch.AsResult(
             () => cnn.ExecuteScalarAsync<T>(sql, param, transaction, commandTimeout, commandType),
-            exceptionHandler);
+            exceptionHandler ?? _defaultExceptionHandler);
+
+    private static Error GetBadGatewayError(Exception ex) =>
+        Error.FromException(ex, "The Dapper SQL request failed. See InnerError for details.", ErrorCodes.BadGateway);
 }
