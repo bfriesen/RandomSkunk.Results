@@ -35,7 +35,7 @@ public record class Error
     /// </summary>
     public Error()
     {
-        _title = _defaultTitleCache.GetOrAdd(GetType(), type => Format.AsSentenceCase(type.Name));
+        _title = GetTypeNameAsSentenceCase(GetType());
         _message = _defaultMessage;
         _extensions = _emptyExtensions;
     }
@@ -44,11 +44,13 @@ public record class Error
     /// Initializes a new instance of the <see cref="Error"/> class.
     /// </summary>
     /// <param name="extensions">Additional properties for the error.</param>
-    public Error(params (string Key, object Value)[] extensions)
+    public Error(params (string Key, object Value)[]? extensions)
     {
-        _title = _defaultTitleCache.GetOrAdd(GetType(), type => Format.AsSentenceCase(type.Name));
+        _title = GetTypeNameAsSentenceCase(GetType());
         _message = _defaultMessage;
-        _extensions = new ReadOnlyDictionary<string, object>(extensions.ToDictionary(item => item.Key, item => item.Value));
+        _extensions = extensions is null
+            ? _emptyExtensions
+            : new ReadOnlyDictionary<string, object>(extensions.Where(x => x.Value is not null).ToDictionary(x => x.Key, x => x.Value));
     }
 
     /// <summary>
@@ -317,11 +319,12 @@ public record class Error
     public sealed override string ToString()
     {
         var sb = new StringBuilder();
-
         AppendError(sb, this, null);
-
         return sb.ToString();
     }
+
+    private static string GetTypeNameAsSentenceCase(Type type) =>
+        _defaultTitleCache.GetOrAdd(type, t => Format.AsSentenceCase(t.Name));
 
     private static void AppendError(StringBuilder sb, Error error, string? indention)
     {
@@ -377,26 +380,6 @@ public record class Error
                 sb.Append(indention + "   ").Append(extensionProperty.Key).Append(": ").AppendLine(extensionProperty.Value.ToString());
         }
     }
-
-    /// <summary>
-    /// Gets an extensions dictionary containing the specified items. If an item value is <see langword="null"/>, the item is not
-    /// added to the dictionary.
-    /// </summary>
-    /// <param name="extensions">A collection of extension items. If an item value is <see langword="null"/>, the item is not
-    ///     added to the dictionary.</param>
-    /// <returns>An extensions dictionary.</returns>
-    protected static IReadOnlyDictionary<string, object> GetExtensions(params (string Key, object Value)[] extensions) =>
-        new ReadOnlyDictionary<string, object>(extensions.Where(x => x.Value is not null).ToDictionary(x => x.Key, x => x.Value));
-
-    /// <summary>
-    /// Gets an extensions dictionary containing a single item with the specified key and value. If <paramref name="value"/> is
-    /// <see langword="null"/>, an item is not added to the dictionary.
-    /// </summary>
-    /// <param name="key">The item key.</param>
-    /// <param name="value">The item value. If <see langword="null"/>, an item is not added to the dictionary.</param>
-    /// <returns>An extensions dictionary.</returns>
-    protected static IReadOnlyDictionary<string, object> GetExtensions(string key, object value) =>
-        GetExtensions((key, value));
 
     private static string Indent(string value, string? indention, string? firstLineIndentation = null)
     {

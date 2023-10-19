@@ -148,14 +148,14 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
         new(new Error
-            {
-                Message = errorMessage,
-                Title = errorTitle!,
-                Identifier = errorIdentifier,
-                ErrorCode = errorCode,
-                Extensions = extensions!,
-                InnerError = innerError,
-            });
+        {
+            Message = errorMessage,
+            Title = errorTitle!,
+            Identifier = errorIdentifier,
+            ErrorCode = errorCode,
+            Extensions = extensions!,
+            InnerError = innerError,
+        });
 
     /// <summary>
     /// Evaluates either the <paramref name="onSuccess"/> or <paramref name="onFail"/> function depending on whether the result
@@ -221,19 +221,23 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
-                return CompositeError.CreateOrGetSingle(new[]
-                {
-                    GetError(),
-                    Errors.Canceled(ex),
-                });
+                return CompositeError.Create(
+                    new[]
+                    {
+                        GetError(),
+                        Errors.Canceled(ex),
+                    },
+                    $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return CompositeError.CreateOrGetSingle(new[]
-                {
-                    GetError(),
-                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
-                });
+                return CompositeError.Create(
+                    new[]
+                    {
+                        GetError(),
+                        Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                    },
+                    $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
             }
         }
 
@@ -257,19 +261,23 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
             {
-                return CompositeError.CreateOrGetSingle(new[]
-                {
-                    GetError(),
-                    Errors.Canceled(ex),
-                });
+                return CompositeError.Create(
+                    new[]
+                    {
+                        GetError(),
+                        Errors.Canceled(ex),
+                    },
+                    $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return CompositeError.CreateOrGetSingle(new[]
-                {
-                    GetError(),
-                    Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
-                });
+                return CompositeError.Create(
+                    new[]
+                    {
+                        GetError(),
+                        Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                    },
+                    $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
             }
         }
 
