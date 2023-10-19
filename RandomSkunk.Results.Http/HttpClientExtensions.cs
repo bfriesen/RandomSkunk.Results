@@ -5,8 +5,7 @@ namespace RandomSkunk.Results.Http;
 /// </summary>
 public static class HttpClientExtensions
 {
-    private static readonly Func<HttpRequestException, Error> _defaultGetHttpError = GetHttpError;
-    private static readonly Func<TaskCanceledException, Error> _defaultGetTimeoutError = GetTimeoutError;
+    private static readonly Func<Exception, Error> _defaultGetError = GetError;
 
     /// <summary>
     /// Sends a DELETE request to the specified Uri with a cancellation token as an asynchronous operation. A
@@ -14,18 +13,10 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -34,13 +25,11 @@ public static class HttpClientExtensions
     public static Task<Result<HttpResponseMessage>> TryDeleteAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
+        TryCatch.AsResult(
             () => sourceHttpClient.DeleteAsync(requestUri, cancellationToken),
-            getHttpError ?? _defaultGetHttpError,
-            getTimeoutError ?? _defaultGetTimeoutError);
+            getError ?? _defaultGetError);
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
@@ -48,18 +37,10 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -68,13 +49,11 @@ public static class HttpClientExtensions
     public static Task<Result<HttpResponseMessage>> TryGetAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
+        TryCatch.AsResult(
             () => sourceHttpClient.GetAsync(requestUri, cancellationToken),
-            getHttpError ?? _defaultGetHttpError,
-            getTimeoutError ?? _defaultGetTimeoutError);
+            getError ?? _defaultGetError);
 
     /// <summary>
     /// Sends a GET request to the specified Uri and gets the value that results from deserializing the response body as JSON in
@@ -83,18 +62,10 @@ public static class HttpClientExtensions
     /// <typeparam name="TValue">The target type to deserialize to.</typeparam>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
@@ -102,18 +73,17 @@ public static class HttpClientExtensions
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The task object representing the asynchronous operation.</returns>
-    public static async Task<Result<TValue>> TryGetFromJsonAsync<TValue>(
+    public static Task<Result<TValue>> TryGetFromJsonAsync<TValue>(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
-        var responseResult = await sourceHttpClient.TryGetAsync(requestUri, getHttpError, getTimeoutError, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-        var returnResult = await responseResult.ReadResultFromJsonAsync<TValue>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-        responseResult.OnSuccess(response => response.Dispose());
-        return returnResult;
+        return sourceHttpClient
+            .TryGetAsync(requestUri, getError, cancellationToken)
+            .SelectMany(response => response.ReadResultFromJsonAsync<TValue>(options, cancellationToken)
+                .Finally(_ => response.Dispose()));
     }
 
 #if !NETSTANDARD2_0
@@ -125,18 +95,10 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -146,13 +108,11 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
+        TryCatch.AsResult(
             () => sourceHttpClient.PatchAsync(requestUri, content!, cancellationToken),
-            getHttpError ?? _defaultGetHttpError,
-            getTimeoutError ?? _defaultGetTimeoutError);
+            getError ?? _defaultGetError);
 
     /// <summary>
     /// Sends a PATCH request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -162,18 +122,10 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
@@ -185,13 +137,12 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return sourceHttpClient.TryPatchAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
+        return sourceHttpClient.TryPatchAsync(requestUri, content, getError, cancellationToken);
     }
 
 #endif
@@ -203,18 +154,10 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -224,13 +167,11 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
+        TryCatch.AsResult(
             () => sourceHttpClient.PostAsync(requestUri, content!, cancellationToken),
-            getHttpError ?? _defaultGetHttpError,
-            getTimeoutError ?? _defaultGetTimeoutError);
+            getError ?? _defaultGetError);
 
     /// <summary>
     /// Sends a POST request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -240,18 +181,10 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
@@ -263,13 +196,12 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return sourceHttpClient.TryPostAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
+        return sourceHttpClient.TryPostAsync(requestUri, content, getError, cancellationToken);
     }
 
     /// <summary>
@@ -279,18 +211,10 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="content">The HTTP request content sent to the server.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -300,13 +224,11 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         HttpContent? content,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
+        TryCatch.AsResult(
             () => sourceHttpClient.PutAsync(requestUri, content!, cancellationToken),
-            getHttpError ?? _defaultGetHttpError,
-            getTimeoutError ?? _defaultGetTimeoutError);
+            getError ?? _defaultGetError);
 
     /// <summary>
     /// Sends a PUT request to the specified Uri containing the value serialized as JSON in the request body. A
@@ -316,18 +238,10 @@ public static class HttpClientExtensions
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
     /// <param name="value">The value to serialize.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
@@ -339,13 +253,12 @@ public static class HttpClientExtensions
         this HttpClient sourceHttpClient,
         string? requestUri,
         TValue value,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         var content = JsonContent.Create(value, mediaType: null, options);
-        return sourceHttpClient.TryPutAsync(requestUri, content, getHttpError, getTimeoutError, cancellationToken);
+        return sourceHttpClient.TryPutAsync(requestUri, content, getError, cancellationToken);
     }
 
     /// <summary>
@@ -354,18 +267,10 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="request">The HTTP request message to send.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -374,13 +279,11 @@ public static class HttpClientExtensions
     public static Task<Result<HttpResponseMessage>> TrySendAsync(
         this HttpClient sourceHttpClient,
         HttpRequestMessage request,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
+        TryCatch.AsResult(
             () => sourceHttpClient.SendAsync(request, cancellationToken),
-            getHttpError ?? _defaultGetHttpError,
-            getTimeoutError ?? _defaultGetTimeoutError);
+            getError ?? _defaultGetError);
 
 #if NET5_0_OR_GREATER
     /// <summary>
@@ -388,18 +291,10 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
-    ///     </para>
-    /// </param>
-    /// <param name="getTimeoutError">An optional function that maps a caught <see cref="TaskCanceledException"/> to the returned
-    ///     <c>Fail</c> result's error.
-    ///     <para>
-    ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
-    ///     and assigned error code <see cref="ErrorCodes.GatewayTimeout"/>.
     ///     </para>
     /// </param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -408,13 +303,11 @@ public static class HttpClientExtensions
     public static Task<Result<byte[]>> TryGetByteArrayAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<HttpRequestException, Error>? getHttpError = null,
-        Func<TaskCanceledException, Error>? getTimeoutError = null,
+        Func<Exception, Error>? getError = null,
         CancellationToken cancellationToken = default) =>
-        TryCatch<HttpRequestException, TaskCanceledException>.AsResult(
+        TryCatch.AsResult(
             () => sourceHttpClient.GetByteArrayAsync(requestUri, cancellationToken),
-            getHttpError ?? _defaultGetHttpError,
-            getTimeoutError ?? _defaultGetTimeoutError);
+            getError ?? _defaultGetError);
 #else
     // The different signature for lower targets is because before .NET 5, HttpClient.GetByteArrayAsync didn't have
     // an overload with a cancellation token, and it didn't throw a TaskCanceledException due to request timeout.
@@ -424,8 +317,7 @@ public static class HttpClientExtensions
     /// </summary>
     /// <param name="sourceHttpClient">The HTTP client used to send the request.</param>
     /// <param name="requestUri">The Uri the request is sent to.</param>
-    /// <param name="getHttpError">An optional function that maps a caught <see cref="HttpRequestException"/> to the returned
-    ///     <c>Fail</c> result's error.
+    /// <param name="getError">An optional function that maps a caught exception to the returned <c>Fail</c> result's error.
     ///     <para>
     ///     When <see langword="null"/> or not provided, the error is created with the <see cref="Error.FromException"/> method
     ///     and assigned error code <see cref="ErrorCodes.BadGateway"/>.
@@ -435,15 +327,12 @@ public static class HttpClientExtensions
     public static Task<Result<byte[]>> TryGetByteArrayAsync(
         this HttpClient sourceHttpClient,
         string? requestUri,
-        Func<HttpRequestException, Error>? getHttpError = null) =>
+        Func<Exception, Error>? getError = null) =>
         TryCatch<HttpRequestException>.AsResult(
             () => sourceHttpClient.GetByteArrayAsync(requestUri),
-            getHttpError ?? _defaultGetHttpError);
+            getError ?? _defaultGetError);
 #endif
 
-    private static Error GetHttpError(HttpRequestException ex) =>
-        Error.FromException(ex, "The HTTP request failed.", ErrorCodes.BadGateway);
-
-    private static Error GetTimeoutError(TaskCanceledException ex) =>
-        Error.FromException(ex, "The HTTP request timed out.", ErrorCodes.GatewayTimeout);
+    private static Error GetError(Exception ex) =>
+        Error.FromException(ex, "The HTTP request failed. See InnerError for details.", ErrorCodes.BadGateway);
 }
