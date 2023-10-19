@@ -158,8 +158,8 @@ public record class Error
         };
     }
 
-    internal static string GetMessageForExceptionThrownInCallback(string callbackName) =>
-        string.Format(_messageFormatForExceptionThrownInCallback, callbackName);
+    internal static Error FromExceptionThrownInCallback(Exception ex, string callbackName) =>
+        FromException(ex, string.Format(_messageFormatForExceptionThrownInCallback, callbackName));
 
     private static Error CreateInnerError(Exception exception)
     {

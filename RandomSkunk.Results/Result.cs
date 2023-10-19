@@ -68,7 +68,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// </summary>
     /// <param name="error">The error for the new <c>Fail</c> result.</param>
     /// <returns>A <c>Fail</c> result with the specified error.</returns>
-    public static implicit operator Result(Error? error) => Fail(error);
+    public static implicit operator Result(Error? error) => new(error ?? new Error());
 
     /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
@@ -99,7 +99,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
     /// </summary>
     /// <param name="error">An error that describes the failure. If <see langword="null"/>, a default error is used.</param>
     /// <returns>A <c>Fail</c> result.</returns>
-    public static Result Fail(Error? error = null) => new(error ?? new Error());
+    public static Result Fail(Error? error = null) => error;
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -117,7 +117,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         int? errorCode = ErrorCodes.CaughtException,
         string? identifier = null,
         string? title = null) =>
-        new(Error.FromException(exception, message, errorCode, identifier, title));
+        Error.FromException(exception, message, errorCode, identifier, title);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -137,7 +137,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         string? title = null,
         IReadOnlyDictionary<string, object>? extensions = null,
         Error? innerError = null) =>
-        new(new Error
+        new Error
         {
             Message = message,
             Title = title!,
@@ -145,7 +145,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             ErrorCode = errorCode,
             Extensions = extensions!,
             InnerError = innerError,
-        });
+        };
 
     /// <summary>
     /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
@@ -178,7 +178,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         }
         catch (Exception ex) when (FailResult.CatchCallbackExceptions)
         {
-            var error = Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(callback)));
+            var error = Error.FromExceptionThrownInCallback(ex, nameof(callback));
 
             if (_outcome == Outcome.Success)
                 return error;
@@ -226,7 +226,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
         }
         catch (Exception ex) when (FailResult.CatchCallbackExceptions)
         {
-            var error = Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(callback)));
+            var error = Error.FromExceptionThrownInCallback(ex, nameof(callback));
 
             if (_outcome == Outcome.Success)
                 return error;
@@ -321,7 +321,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
                     new[]
                     {
                         GetError(),
-                        Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                        Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
                     },
                     $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
             }
@@ -361,7 +361,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
                     new[]
                     {
                         GetError(),
-                        Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFailCallback))),
+                        Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
                     },
                     $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
             }
@@ -391,7 +391,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessCallback));
             }
         }
 
@@ -419,7 +419,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessCallback)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessCallback));
             }
         }
 
@@ -449,7 +449,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
             }
         }
 
@@ -479,7 +479,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onFail)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
             }
         }
 
@@ -518,7 +518,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
             }
         }
 
@@ -557,7 +557,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
             }
         }
 
@@ -588,7 +588,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
             }
         }
 
@@ -619,7 +619,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
             }
         }
 
@@ -658,7 +658,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
             }
         }
 
@@ -697,7 +697,7 @@ public readonly struct Result : IResult<Unit>, IEquatable<Result>
             }
             catch (Exception ex) when (FailResult.CatchCallbackExceptions)
             {
-                return Error.FromException(ex, Error.GetMessageForExceptionThrownInCallback(nameof(onSuccessSelector)));
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
             }
         }
 
