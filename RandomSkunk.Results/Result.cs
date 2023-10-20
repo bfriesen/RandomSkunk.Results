@@ -102,8 +102,7 @@ public readonly struct Result : IEquatable<Result>
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
-    ///     </param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(
         Exception exception,
@@ -119,8 +118,7 @@ public readonly struct Result : IEquatable<Result>
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.InternalServerError"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
-    ///     </param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
     /// <param name="extensions">Additional properties for the error.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <returns>A <c>Fail</c> result.</returns>

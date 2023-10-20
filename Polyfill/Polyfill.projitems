@@ -10,15 +10,9 @@
     </Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\DisallowNullAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\NotNullAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\NotNullWhenAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\RequiresUnreferencedCodeAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics.CodeAnalysis\UnconditionalSuppressMessageAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System.Diagnostics\StackTraceHiddenAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)System.Runtime.CompilerServices\IsExternalInit.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System.Runtime.CompilerServices\RuntimeHelpers.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Index.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)System\Range.cs" />
   </ItemGroup>
 </Project>

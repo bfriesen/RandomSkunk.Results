@@ -185,7 +185,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     /// Creates a <c>None</c> result.
     /// </summary>
     /// <returns>A <c>None</c> result.</returns>
-    public static Result<T> None() => new(Errors.NoValue());
+    public static Result<T> None() => Errors.NoValue();
 
     /// <summary>
     /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>

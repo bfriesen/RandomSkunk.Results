@@ -109,6 +109,5 @@ Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Polyfill\Polyfill.projitems*{7f657c31-de12-4708-951a-8179fa2ca8ae}*SharedItemsImports = 13
 		Polyfill\Polyfill.projitems*{a1236493-5bd7-48e0-9ff9-bc538985f24d}*SharedItemsImports = 5
-		Polyfill\Polyfill.projitems*{ae4b494a-8a45-4ce3-b7a5-308a4a45bff4}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

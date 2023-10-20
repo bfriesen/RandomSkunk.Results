@@ -4,6 +4,7 @@ namespace RandomSkunk.Results;
 
 internal static class Format
 {
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
     private static readonly Regex _wordBreak = new(
         @"
         _+                  # One or more underscores.
@@ -33,6 +34,7 @@ internal static class Format
                             #   Example: Between '3' and 'A' in '123Abc'.
 ",
         RegexOptions.IgnorePatternWhitespace);
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
     private static readonly MatchEvaluator _replaceWithSingleSpace = m => " ";
 

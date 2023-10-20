@@ -10,6 +10,7 @@ public class Result_struct
         result.IsFail.Should().BeTrue();
         result.IsSuccess.Should().BeFalse();
         result.Error.Should().BeSameAs(Error.DefaultError);
+        result.IsUninitialized.Should().BeTrue();
     }
 
     public class Create
