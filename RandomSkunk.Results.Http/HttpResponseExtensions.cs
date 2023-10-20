@@ -5,6 +5,8 @@ namespace RandomSkunk.Results.Http;
 /// </summary>
 public static class HttpResponseExtensions
 {
+    private const int _defaultErrorCode = ErrorCodes.BadGateway;
+
     private static readonly JsonSerializerOptions _defaultOptions = new(JsonSerializerDefaults.Web);
 
     /// <summary>
@@ -12,6 +14,7 @@ public static class HttpResponseExtensions
     /// response is true; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -19,15 +22,18 @@ public static class HttpResponseExtensions
     /// <returns>A result representing the response.</returns>
     public static async Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
         this HttpResponseMessage sourceResponse,
-        JsonSerializerOptions? options,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
+        if (getNonSuccessResponseError is null) throw new ArgumentNullException(nameof(getNonSuccessResponseError));
+
         if (sourceResponse.IsSuccessStatusCode)
             return sourceResponse;
 
         options ??= _defaultOptions;
 
-        var error = await ReadError(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        var error = await ReadError(sourceResponse, getNonSuccessResponseError, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         return error;
     }
 
@@ -36,19 +42,30 @@ public static class HttpResponseExtensions
     /// response is true; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
         this HttpResponseMessage sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.TryEnsureSuccessStatusCode(null, cancellationToken);
+        sourceResponse.TryEnsureSuccessStatusCode(
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP
     /// response is true; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -56,22 +73,10 @@ public static class HttpResponseExtensions
     /// <returns>A result representing the response.</returns>
     public static async Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
         this Task<HttpResponseMessage> sourceResponse,
-        JsonSerializerOptions? options,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryEnsureSuccessStatusCode(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-
-    /// <summary>
-    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP
-    /// response is true; otherwise, returns a <c>Fail</c> result.
-    /// </summary>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
-    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
-    ///     cancellation.</param>
-    /// <returns>A result representing the response.</returns>
-    public static Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
-        this Task<HttpResponseMessage> sourceResponse,
-        CancellationToken cancellationToken = default) =>
-        sourceResponse.TryEnsureSuccessStatusCode(null, cancellationToken);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryEnsureSuccessStatusCode(getNonSuccessResponseError, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP
@@ -80,33 +85,73 @@ public static class HttpResponseExtensions
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
-        this Result<HttpResponseMessage> sourceResponse,
-        JsonSerializerOptions? options,
+        this Task<HttpResponseMessage> sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.SelectMany(response => response.TryEnsureSuccessStatusCode(options, cancellationToken));
+        sourceResponse.TryEnsureSuccessStatusCode(
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP
     /// response is true; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
         this Result<HttpResponseMessage> sourceResponse,
-        CancellationToken cancellationToken = default) =>
-        sourceResponse.TryEnsureSuccessStatusCode(null, cancellationToken);
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (getNonSuccessResponseError is null) throw new ArgumentNullException(nameof(getNonSuccessResponseError));
+
+        return sourceResponse.SelectMany(response => response.TryEnsureSuccessStatusCode(getNonSuccessResponseError, options, cancellationToken));
+    }
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP
     /// response is true; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
+    /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
+    ///     cancellation.</param>
+    /// <returns>A result representing the response.</returns>
+    public static Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
+        this Result<HttpResponseMessage> sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
+        CancellationToken cancellationToken = default) =>
+        sourceResponse.TryEnsureSuccessStatusCode(
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
+
+    /// <summary>
+    /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP
+    /// response is true; otherwise, returns a <c>Fail</c> result.
+    /// </summary>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -114,29 +159,44 @@ public static class HttpResponseExtensions
     /// <returns>A result representing the response.</returns>
     public static async Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
         this Task<Result<HttpResponseMessage>> sourceResponse,
-        JsonSerializerOptions? options,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryEnsureSuccessStatusCode(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryEnsureSuccessStatusCode(getNonSuccessResponseError, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Returns a <c>Success</c> result if the <see cref="HttpResponseMessage.IsSuccessStatusCode"/> property for the HTTP
     /// response is true; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to verify that it has a success status code.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>A result representing the response.</returns>
     public static Task<Result<HttpResponseMessage>> TryEnsureSuccessStatusCode(
         this Task<Result<HttpResponseMessage>> sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.TryEnsureSuccessStatusCode(null, cancellationToken);
+        sourceResponse.TryEnsureSuccessStatusCode(
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="exceptionHandler">A function that maps a caught exception to the returned <c>Fail</c> result's error.
+    ///     </param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -144,30 +204,25 @@ public static class HttpResponseExtensions
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> TryReadFromJsonAsync<T>(
         this HttpResponseMessage sourceResponse,
-        JsonSerializerOptions? options,
+        Func<Exception, Error> exceptionHandler,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         if (sourceResponse is null) throw new ArgumentNullException(nameof(sourceResponse));
+        if (exceptionHandler is null) throw new ArgumentNullException(nameof(exceptionHandler));
+        if (getNonSuccessResponseError is null) throw new ArgumentNullException(nameof(getNonSuccessResponseError));
+
         options ??= _defaultOptions;
 
         if (sourceResponse.IsSuccessStatusCode)
         {
-            try
-            {
-                var value = await sourceResponse.Content.ReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
-                return value;
-            }
-            catch (TaskCanceledException ex)
-            {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex)
-            {
-                return Error.FromException(ex, $"Unable to read JSON content as type {typeof(T).Name}.", ErrorCodes.InternalServerError);
-            }
+            return await TryCatch.AsResult(
+                () => sourceResponse.Content.ReadFromJsonAsync<T>(options, cancellationToken),
+                exceptionHandler);
         }
 
-        var error = await ReadError(sourceResponse, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        var error = await ReadError(sourceResponse, getNonSuccessResponseError, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
         return error;
     }
 
@@ -176,21 +231,37 @@ public static class HttpResponseExtensions
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> TryReadFromJsonAsync<T>(
         this HttpResponseMessage sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.TryReadFromJsonAsync<T>(null, cancellationToken);
+        sourceResponse.TryReadFromJsonAsync<T>(
+            ex => GetReadFromJsonError(ex, typeof(T), errorCode, errorIdentifier),
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="exceptionHandler">A function that maps a caught exception to the returned <c>Fail</c> result's error.
+    ///     </param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -198,30 +269,53 @@ public static class HttpResponseExtensions
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> TryReadFromJsonAsync<T>(
         this Result<HttpResponseMessage> sourceResponse,
-        JsonSerializerOptions? options,
-        CancellationToken cancellationToken = default) =>
-        sourceResponse.SelectMany(response => response.TryReadFromJsonAsync<T>(options, cancellationToken));
+        Func<Exception, Error> exceptionHandler,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        if (exceptionHandler is null) throw new ArgumentNullException(nameof(exceptionHandler));
+        if (getNonSuccessResponseError is null) throw new ArgumentNullException(nameof(getNonSuccessResponseError));
+
+        return sourceResponse.SelectMany(response => response.TryReadFromJsonAsync<T>(exceptionHandler, getNonSuccessResponseError, options, cancellationToken));
+    }
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
     public static Task<Result<T>> TryReadFromJsonAsync<T>(
         this Result<HttpResponseMessage> sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
         CancellationToken cancellationToken = default) =>
-        sourceResponse.TryReadFromJsonAsync<T>(null, cancellationToken);
+        sourceResponse.TryReadFromJsonAsync<T>(
+            ex => GetReadFromJsonError(ex, typeof(T), errorCode, errorIdentifier),
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="exceptionHandler">A function that maps a caught exception to the returned <c>Fail</c> result's error.
+    ///     </param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -229,30 +323,48 @@ public static class HttpResponseExtensions
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> TryReadFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
-        JsonSerializerOptions? options,
+        Func<Exception, Error> exceptionHandler,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryReadFromJsonAsync<T>(exceptionHandler, getNonSuccessResponseError, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
-    public static async Task<Result<T>> TryReadFromJsonAsync<T>(
+    public static Task<Result<T>> TryReadFromJsonAsync<T>(
         this Task<HttpResponseMessage> sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryReadFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        sourceResponse.TryReadFromJsonAsync<T>(
+            ex => GetReadFromJsonError(ex, typeof(T), errorCode, errorIdentifier),
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="exceptionHandler">A function that maps a caught exception to the returned <c>Fail</c> result's error.
+    ///     </param>
+    /// <param name="getNonSuccessResponseError">A function that creates the error for a non-successful HTTP response.</param>
     /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
     ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
@@ -260,23 +372,49 @@ public static class HttpResponseExtensions
     /// <returns>The result representing the response content.</returns>
     public static async Task<Result<T>> TryReadFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
-        JsonSerializerOptions? options,
+        Func<Exception, Error> exceptionHandler,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
+        JsonSerializerOptions? options = null,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryReadFromJsonAsync<T>(options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryReadFromJsonAsync<T>(exceptionHandler, getNonSuccessResponseError, options, cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Reads the HTTP content and returns a <see cref="Result{T}"/> value representing the result from deserializing the content
     /// as JSON in an asynchronous operation.
     /// </summary>
     /// <typeparam name="T">The type of the returned result value.</typeparam>
-    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the <see cref="Result{T}"/>.</param>
+    /// <param name="sourceResponse">The <see cref="HttpResponseMessage"/> to read from in order to get the
+    ///     <see cref="Result{T}"/>.</param>
+    /// <param name="options">Options to control the behavior during deserialization. The default options are those specified by
+    ///     <see cref="JsonSerializerDefaults.Web"/>.</param>
+    /// <param name="errorIdentifier">The identifier of the error created if the operation is not successful.</param>
+    /// <param name="errorCode">The error code of the error created if the operation is not successful.</param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of
     ///     cancellation.</param>
     /// <returns>The result representing the response content.</returns>
-    public static async Task<Result<T>> TryReadFromJsonAsync<T>(
+    public static Task<Result<T>> TryReadFromJsonAsync<T>(
         this Task<Result<HttpResponseMessage>> sourceResponse,
+        JsonSerializerOptions? options = null,
+        string? errorIdentifier = null,
+        int errorCode = _defaultErrorCode,
         CancellationToken cancellationToken = default) =>
-        await (await sourceResponse.ConfigureAwait(ContinueOnCapturedContext)).TryReadFromJsonAsync<T>(cancellationToken).ConfigureAwait(ContinueOnCapturedContext);
+        sourceResponse.TryReadFromJsonAsync<T>(
+            ex => GetReadFromJsonError(ex, typeof(T), errorCode, errorIdentifier),
+            (problemDetailsError, statusCode) => GetNonSuccessResponseError(problemDetailsError, statusCode, errorCode, errorIdentifier),
+            options,
+            cancellationToken);
+
+    internal static Error GetReadFromJsonError(Exception ex, Type type, int errorCode, string? identifier) =>
+        Error.FromException(ex, $"Unable to read JSON content as type '{type.FullName}'.", errorCode, identifier);
+
+    internal static Error GetNonSuccessResponseError(Error problemDetailsError, HttpStatusCode statusCode, int errorCode, string? identifier) =>
+        new()
+        {
+            Message = $"Response status code does not indicate success: {(int)statusCode} ({Format.AsSentenceCase(statusCode.ToString())}). See InnerError for details.",
+            ErrorCode = errorCode,
+            Identifier = identifier,
+            InnerError = problemDetailsError,
+        };
 
     private static async Task<ProblemDetails> ReadProblemDetails(
         HttpResponseMessage response,
@@ -312,6 +450,7 @@ public static class HttpResponseExtensions
 
     private static async Task<Error> ReadError(
         HttpResponseMessage response,
+        Func<Error, HttpStatusCode, Error> getNonSuccessResponseError,
         JsonSerializerOptions options,
         CancellationToken cancellationToken)
     {
@@ -358,22 +497,17 @@ public static class HttpResponseExtensions
         if (problemDetails.Instance != null)
             extensions["problemDetailsInstance"] = problemDetails.Instance;
 
-        var error = new Error
+        var problemDetailsError = new Error
         {
-            Message = $"Response status code does not indicate success: {(int)response.StatusCode} ({response.StatusCode}). See InnerError for details.",
-            ErrorCode = ErrorCodes.BadGateway,
-            InnerError = new Error
-            {
-                Message = problemDetails.Detail!,
-                Title = problemDetails.Title!,
-                Extensions = extensions!,
-                ErrorCode = errorCode ?? problemDetails.Status ?? (int)response.StatusCode,
-                Identifier = identifier,
-                InnerError = innerError,
-            },
+            Message = problemDetails.Detail!,
+            Title = problemDetails.Title!,
+            Extensions = extensions!,
+            ErrorCode = errorCode ?? problemDetails.Status ?? (int)response.StatusCode,
+            Identifier = identifier,
+            InnerError = innerError,
         };
 
-        return error;
+        return getNonSuccessResponseError(problemDetailsError, response.StatusCode);
     }
 
     private static Error? TryDeserializeError(JsonElement element, JsonSerializerOptions options)

@@ -6,43 +6,69 @@ namespace RandomSkunk.Results.Dapper;
 public static class ExecuteResultExtensions
 {
     /// <summary>
-    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is one;
-    /// otherwise, returns a <c>Fail</c> result.
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result and its value is one; otherwise, returns a
+    /// <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
+    /// <param name="errorIdentifier">The optional error identifier to use for a <c>Fail</c> result.</param>
+    /// <param name="errorCode">The optional error code to use for a <c>Fail</c> result.</param>
     /// <returns>A result representing a database query that affected one row.</returns>
-    public static Result EnsureOneRowAffected(this Result<int> sourceResult) =>
-        sourceResult.EnsureNRowsAffected(1);
+    public static Result<int> EnsureOneRowAffected(
+        this Result<int> sourceResult,
+        string? errorIdentifier = null,
+        int? errorCode = null) =>
+        sourceResult.EnsureNRowsAffected(1, errorIdentifier, errorCode);
 
     /// <summary>
-    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is one;
-    /// otherwise, returns a <c>Fail</c> result.
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result and its value is one; otherwise, returns a
+    /// <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
+    /// <param name="errorIdentifier">The optional error identifier to use for a <c>Fail</c> result.</param>
+    /// <param name="errorCode">The optional error code to use for a <c>Fail</c> result.</param>
     /// <returns>A result representing a database query that affected one row.</returns>
-    public static async Task<Result> EnsureOneRowAffected(this Task<Result<int>> sourceResult) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureOneRowAffected();
+    public static async Task<Result<int>> EnsureOneRowAffected(
+        this Task<Result<int>> sourceResult,
+        string? errorIdentifier = null,
+        int? errorCode = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureOneRowAffected(errorIdentifier, errorCode);
 
     /// <summary>
-    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is equal to
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result and its value is equal to
     /// <paramref name="affectedRows"/>; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
     /// <param name="affectedRows">The expected number of affected rows.</param>
+    /// <param name="errorIdentifier">The optional error identifier to use for a <c>Fail</c> result.</param>
+    /// <param name="errorCode">The optional error code to use for a <c>Fail</c> result.</param>
     /// <returns>A result representing a database query that affected N rows.</returns>
-    public static Result EnsureNRowsAffected(this Result<int> sourceResult, int affectedRows) =>
-        sourceResult.SelectMany(affectedRowCount =>
-            affectedRowCount == affectedRows
-                ? Result.Success()
-                : Result.Fail($"Expected {affectedRows} row{(affectedRows != 1 ? "s" : null)} to be affected, but was {affectedRowCount}."));
+    public static Result<int> EnsureNRowsAffected(
+        this Result<int> sourceResult,
+        int affectedRows,
+        string? errorIdentifier = null,
+        int? errorCode = null) =>
+        sourceResult.ToFailIf(
+            affectedRowCount => affectedRowCount == affectedRows,
+            affectedRowCount => new Error
+            {
+                Message = $"Expected {affectedRows} row{(affectedRows != 1 ? "s" : null)} to be affected, but was {affectedRowCount}.",
+                Identifier = errorIdentifier,
+                ErrorCode = errorCode,
+            });
 
     /// <summary>
-    /// Returns a <c>Success</c> result if <paramref name="sourceResult"/> is a <c>Success</c> result and its value is equal to
+    /// Returns <paramref name="sourceResult"/> if it is a <c>Success</c> result and its value is equal to
     /// <paramref name="affectedRows"/>; otherwise, returns a <c>Fail</c> result.
     /// </summary>
     /// <param name="sourceResult">A result whose value represents the number of rows affected by a database query.</param>
     /// <param name="affectedRows">The expected number of affected rows.</param>
+    /// <param name="errorIdentifier">The optional error identifier to use for a <c>Fail</c> result.</param>
+    /// <param name="errorCode">The optional error code to use for a <c>Fail</c> result.</param>
     /// <returns>A result representing a database query that affected N rows.</returns>
-    public static async Task<Result> EnsureNRowsAffected(this Task<Result<int>> sourceResult, int affectedRows) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureNRowsAffected(affectedRows);
+    public static async Task<Result<int>> EnsureNRowsAffected(
+        this Task<Result<int>> sourceResult,
+        int affectedRows,
+        string? errorIdentifier = null,
+        int? errorCode = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureNRowsAffected(affectedRows, errorIdentifier, errorCode);
 }
