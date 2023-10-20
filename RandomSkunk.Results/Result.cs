@@ -493,6 +493,82 @@ public readonly struct Result : IEquatable<Result>
     /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
     /// <returns>The projected result.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public Result<TReturn> Select<TReturn>(Func<TReturn> onSuccessSelector)
+    {
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (_outcome == Outcome.Success)
+        {
+            try
+            {
+                return onSuccessSelector();
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+            }
+        }
+
+        return GetError();
+    }
+
+    /// <summary>
+    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form as a
+    /// <c>Success</c> result by passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is
+    /// projected to the new form as a <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and may or may not be <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
+    /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <returns>The projected result.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
+    public async Task<Result<TReturn>> Select<TReturn>(Func<Task<TReturn>> onSuccessSelector)
+    {
+        if (onSuccessSelector is null) throw new ArgumentNullException(nameof(onSuccessSelector));
+
+        if (_outcome == Outcome.Success)
+        {
+            try
+            {
+                return await onSuccessSelector().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex) when (FailResult.CatchCallbackExceptions)
+            {
+                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+            }
+        }
+
+        return GetError();
+    }
+
+    /// <summary>
+    /// Projects the result into a new <see cref="Result{T}"/> form: a <c>Success</c> result is projected to the new form as a
+    /// <c>Success</c> result by passing its value to the <paramref name="onSuccessSelector"/> function; a <c>Fail</c> result is
+    /// projected to the new form as a <c>Fail</c> result with the same error.
+    /// </summary>
+    /// <remarks>
+    /// The difference between <c>Select</c> and <c>SelectMany</c> is in the return value of their <c>onSuccessSelector</c>
+    /// function. The selector for <c>Select</c> returns a regular (non-result) value, which is the value of the returned
+    /// <c>Success</c> result. The selector for <c>SelectMany</c> returns a result value, which is itself the returned result
+    /// (and may or may not be <c>Success</c>).
+    /// </remarks>
+    /// <typeparam name="TReturn">The type of the value returned by <paramref name="onSuccessSelector"/>.</typeparam>
+    /// <param name="onSuccessSelector">A transform function to apply to the value of a <c>Success</c> result.</param>
+    /// <returns>The projected result.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="onSuccessSelector"/> is <see langword="null"/>.</exception>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public Result<TReturn> Select<TReturn>(Func<Unit, TReturn> onSuccessSelector)
     {
