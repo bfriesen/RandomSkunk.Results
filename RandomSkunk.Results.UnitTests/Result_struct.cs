@@ -178,29 +178,4 @@ public class Result_struct
             fail1.Should().NotBe(fail2);
         }
     }
-
-    public class ImplicitConversionFromResultOfUnit
-    {
-        [Fact]
-        public void Given_IsSuccess_Returns_Success_result()
-        {
-            Result<Unit> resultOfUnit = Result<Unit>.Success(Unit.Value);
-
-            Result result = resultOfUnit;
-
-            result.IsSuccess.Should().BeTrue();
-        }
-
-        [Fact]
-        public void Given_IsFail_Returns_Fail_result()
-        {
-            Error error = new();
-            Result<Unit> resultOfUnit = Result<Unit>.Fail(error);
-
-            Result result = resultOfUnit;
-
-            result.IsFail.Should().BeTrue();
-            result.Error.Should().BeSameAs(error);
-        }
-    }
 }

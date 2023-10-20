@@ -144,7 +144,7 @@ WHERE City = @City AND Month = @Month;";
                     // If the insert/update failed, roll back the transaction.
                     await upsertResult.OnFail(error => transaction.RollbackAsync());
 
-                    return upsertResult;
+                    return upsertResult.Truncate();
                 })
 
             // If everything has been successful, commit the transaction.

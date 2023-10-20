@@ -94,15 +94,6 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     public static implicit operator Result<T>(Error? error) => new(error ?? new Error());
 
     /// <summary>
-    /// Truncates the <see cref="Result{T}"/> into an equivalent <see cref="Result"/>. If it is a <c>Success</c> result, then its
-    /// value is ignored and a valueless <c>Success</c> result is returned. Otherwise, a <c>Fail</c> result with the same error
-    /// as is returned.
-    /// </summary>
-    /// <param name="sourceResult">The source result.</param>
-    /// <returns>An equivalent <see cref="Result"/>.</returns>
-    public static implicit operator Result(Result<T> sourceResult) => sourceResult.Truncate();
-
-    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>

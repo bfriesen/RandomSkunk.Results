@@ -27,7 +27,7 @@ public class WeatherProfileClient
         Result<HttpResponseMessage> responseResult = await _httpClient.TryPostAsJsonAsync("WeatherProfiles", weatherProfile);
 
         // Since the caller doesn't care about the actual HttpResponse, just make sure it has a success status code.
-        Result result = await responseResult.TryEnsureSuccessStatusCode();
+        Result result = await responseResult.TryEnsureSuccessStatusCode().Truncate();
         return result;
     }
 
@@ -38,7 +38,7 @@ public class WeatherProfileClient
         Result<HttpResponseMessage> responseResult = await _httpClient.TryPutAsJsonAsync("WeatherProfiles", weatherProfile);
 
         // Since the caller doesn't care about the actual HttpResponse, just make sure it has a success status code.
-        Result result = await responseResult.TryEnsureSuccessStatusCode();
+        Result result = await responseResult.TryEnsureSuccessStatusCode().Truncate();
         return result;
     }
 }
