@@ -140,6 +140,15 @@ public readonly struct Result : IEquatable<Result>
         };
 
     /// <summary>
+    /// Creates a <c>Success</c> result with the specified value.
+    /// </summary>
+    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <param name="value">The value of the <c>Success</c> result. Must not be <see langword="null"/>.</param>
+    /// <returns>A <c>Success</c> result.</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="value"/> is <see langword="null"/>.</exception>
+    public static Result<T> Success<T>(T value) => Result<T>.Success(value);
+
+    /// <summary>
     /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
     /// result with error code <see cref="ErrorCodes.NoValue"/> is returned instead.
     /// </summary>

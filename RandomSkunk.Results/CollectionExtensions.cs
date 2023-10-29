@@ -27,7 +27,7 @@ public static class CollectionExtensions
                 return error;
         }
 
-        return Result<IReadOnlyCollection<T>>.Success(sourceCollection);
+        return Result.Success(sourceCollection);
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ public static class CollectionExtensions
                 return error;
         }
 
-        return Result<IReadOnlyCollection<T>>.Success(sourceCollection);
+        return Result.Success(sourceCollection);
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public static class CollectionExtensions
                 return error;
         }
 
-        return Result<IReadOnlyCollection<T>>.Success(sourceCollection);
+        return Result.Success(sourceCollection);
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ public static class CollectionExtensions
                 return error;
         }
 
-        return Result<IReadOnlyCollection<T>>.Success(sourceCollection);
+        return Result.Success(sourceCollection);
     }
 
     /// <summary>
