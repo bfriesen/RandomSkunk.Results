@@ -4,58 +4,10 @@ namespace RandomSkunk.Results.UnitTests;
 
 public class Enumerable_extension_methods
 {
-    public class For_First
+    public class For_FirstOrNone
     {
         [Fact]
-        public void OrFail_When_not_empty_and_first_is_not_null_Returns_Success()
-        {
-            var seq = Enumerable.Range(1, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.FirstOrFail();
-            var listResult = list.FirstOrFail();
-
-            seqResult.IsSuccess.Should().BeTrue();
-            seqResult.Value.Should().Be(1);
-
-            listResult.IsSuccess.Should().BeTrue();
-            listResult.Value.Should().Be(1);
-        }
-
-        [Fact]
-        public void OrFail_When_empty_Returns_Fail_404()
-        {
-            var seq = Enumerable.Empty<int>();
-            var list = seq.ToList();
-
-            var seqResult = seq.FirstOrFail();
-            var listResult = list.FirstOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-        }
-
-        [Fact]
-        public void OrFail_When_not_empty_and_first_is_null_Returns_Fail_n1404()
-        {
-            var seq = Enumerable.Repeat<int?>(null, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.FirstOrFail();
-            var listResult = list.FirstOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-        }
-
-        [Fact]
-        public void OrNone_When_not_empty_and_first_is_not_null_Returns_Success()
+        public void When_not_empty_and_first_is_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -71,7 +23,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_empty_Returns_None()
+        public void When_empty_Returns_None()
         {
             var seq = Enumerable.Empty<int>();
             var list = seq.ToList();
@@ -84,7 +36,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_first_is_null_Returns_Fail_n1404()
+        public void When_not_empty_and_first_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -100,40 +52,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_Given_predicate_When_first_matched_and_not_null_Returns_Success()
-        {
-            var seq = Enumerable.Range(1, 10);
-
-            var seqResult = seq.FirstOrFail(x => x > 4);
-
-            seqResult.IsSuccess.Should().BeTrue();
-            seqResult.Value.Should().Be(5);
-        }
-
-        [Fact]
-        public void OrFail_Given_predicate_When_not_matched_Returns_Fail_404()
-        {
-            var seq = Enumerable.Empty<int>();
-
-            var seqResult = seq.FirstOrFail(x => x == 20);
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-        }
-
-        [Fact]
-        public void OrFail_Given_predicate_When_matched_and_null_Returns_Fail_n1404()
-        {
-            var seq = Enumerable.Repeat<int?>(null, 10);
-
-            var seqResult = seq.FirstOrFail(x => x is null);
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-        }
-
-        [Fact]
-        public void OrNone_Given_predicate_When_first_matched_and_not_null_Returns_Success()
+        public void Given_predicate_When_first_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
 
@@ -144,7 +63,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_not_matched_Returns_None()
+        public void Given_predicate_When_not_matched_Returns_None()
         {
             var seq = Enumerable.Empty<int>();
 
@@ -154,7 +73,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_first_matched_and_null_Returns_Fail_n1404()
+        public void Given_predicate_When_first_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
 
@@ -165,58 +84,10 @@ public class Enumerable_extension_methods
         }
     }
 
-    public class For_Last
+    public class For_LastOrNone
     {
         [Fact]
-        public void OrFail_When_not_empty_and_last_is_not_null_Returns_Success()
-        {
-            var seq = Enumerable.Range(1, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.LastOrFail();
-            var listResult = list.LastOrFail();
-
-            seqResult.IsSuccess.Should().BeTrue();
-            seqResult.Value.Should().Be(10);
-
-            listResult.IsSuccess.Should().BeTrue();
-            listResult.Value.Should().Be(10);
-        }
-
-        [Fact]
-        public void OrFail_When_empty_Returns_Fail_404()
-        {
-            var seq = Enumerable.Empty<int>();
-            var list = seq.ToList();
-
-            var seqResult = seq.LastOrFail();
-            var listResult = list.LastOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-        }
-
-        [Fact]
-        public void OrFail_When_not_empty_and_last_is_null_Returns_Fail_n1404()
-        {
-            var seq = Enumerable.Repeat<int?>(null, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.LastOrFail();
-            var listResult = list.LastOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-        }
-
-        [Fact]
-        public void OrNone_When_not_empty_and_last_is_not_null_Returns_Success()
+        public void When_not_empty_and_last_is_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -232,7 +103,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_empty_Returns_None()
+        public void When_empty_Returns_None()
         {
             var seq = Enumerable.Empty<int>();
             var list = seq.ToList();
@@ -245,7 +116,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_last_is_null_Returns_Fail_n1404()
+        public void When_not_empty_and_last_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
@@ -261,40 +132,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_Given_predicate_When_last_matched_and_not_null_Returns_Success()
-        {
-            var seq = Enumerable.Range(1, 10);
-
-            var seqResult = seq.LastOrFail(x => x < 6);
-
-            seqResult.IsSuccess.Should().BeTrue();
-            seqResult.Value.Should().Be(5);
-        }
-
-        [Fact]
-        public void OrFail_Given_predicate_When_not_matched_Returns_Fail_404()
-        {
-            var seq = Enumerable.Empty<int>();
-
-            var seqResult = seq.LastOrFail(x => x == 20);
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-        }
-
-        [Fact]
-        public void OrFail_Given_predicate_When_matched_and_null_Returns_Fail_n1404()
-        {
-            var seq = Enumerable.Repeat<int?>(null, 10);
-
-            var seqResult = seq.LastOrFail(x => x is null);
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-        }
-
-        [Fact]
-        public void OrNone_Given_predicate_When_last_matched_and_not_null_Returns_Success()
+        public void Given_predicate_When_last_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
 
@@ -305,7 +143,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_not_matched_Returns_None()
+        public void Given_predicate_When_not_matched_Returns_None()
         {
             var seq = Enumerable.Empty<int>();
 
@@ -315,7 +153,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_last_matched_and_null_Returns_Fail_n1404()
+        public void Given_predicate_When_last_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
 
@@ -326,74 +164,10 @@ public class Enumerable_extension_methods
         }
     }
 
-    public class For_Single
+    public class For_SingleOrNone
     {
         [Fact]
-        public void OrFail_When_not_empty_and_single_is_not_null_Returns_Success()
-        {
-            var seq = Enumerable.Range(1, 1);
-            var list = seq.ToList();
-
-            var seqResult = seq.SingleOrFail();
-            var listResult = list.SingleOrFail();
-
-            seqResult.IsSuccess.Should().BeTrue();
-            seqResult.Value.Should().Be(1);
-
-            listResult.IsSuccess.Should().BeTrue();
-            listResult.Value.Should().Be(1);
-        }
-
-        [Fact]
-        public void OrFail_When_empty_Returns_Fail_404()
-        {
-            var seq = Enumerable.Empty<int>();
-            var list = seq.ToList();
-
-            var seqResult = seq.SingleOrFail();
-            var listResult = list.SingleOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-        }
-
-        [Fact]
-        public void OrFail_When_more_than_one_element_Returns_Fail_400()
-        {
-            var seq = Enumerable.Range(1, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.SingleOrFail();
-            var listResult = list.SingleOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
-        }
-
-        [Fact]
-        public void OrFail_When_not_empty_and_single_is_null_Returns_Fail_n1404()
-        {
-            var seq = Enumerable.Repeat<int?>(null, 1);
-            var list = seq.ToList();
-
-            var seqResult = seq.SingleOrFail();
-            var listResult = list.SingleOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-        }
-
-        [Fact]
-        public void OrNone_When_not_empty_and_single_is_not_null_Returns_Success()
+        public void When_not_empty_and_single_is_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 1);
             var list = seq.ToList();
@@ -409,7 +183,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_empty_Returns_None()
+        public void When_empty_Returns_None()
         {
             var seq = Enumerable.Empty<int>();
             var list = seq.ToList();
@@ -422,7 +196,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_more_than_one_element_Returns_Fail_400()
+        public void When_more_than_one_element_Returns_Fail_400()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -438,7 +212,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_not_empty_and_single_is_null_Returns_Fail_n1404()
+        public void When_not_empty_and_single_is_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 1);
             var list = seq.ToList();
@@ -454,56 +228,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrFail_Given_predicate_When_single_matched_and_not_null_Returns_Success()
-        {
-            var seq = Enumerable.Range(5, 1);
-
-            var seqResult = seq.SingleOrFail(x => x > 4);
-
-            seqResult.IsSuccess.Should().BeTrue();
-            seqResult.Value.Should().Be(5);
-        }
-
-        [Fact]
-        public void OrFail_Given_predicate_When_multiple_matched_Returns_Fail_400()
-        {
-            var seq = Enumerable.Range(1, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.SingleOrFail(x => x > 4);
-            var listResult = list.SingleOrFail(x => x > 4);
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.BadRequest);
-        }
-
-        [Fact]
-        public void OrFail_Given_predicate_When_not_matched_Returns_Fail_404()
-        {
-            var seq = Enumerable.Empty<int>();
-
-            var seqResult = seq.SingleOrFail(x => x == 20);
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-        }
-
-        [Fact]
-        public void OrFail_Given_predicate_When_single_matched_and_null_Returns_Fail_n1404()
-        {
-            var seq = Enumerable.Repeat<int?>(null, 1);
-
-            var seqResult = seq.SingleOrFail(x => x is null);
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-        }
-
-        [Fact]
-        public void OrNone_Given_predicate_When_single_matched_and_not_null_Returns_Success()
+        public void Given_predicate_When_single_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(5, 1);
 
@@ -514,7 +239,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_not_matched_Returns_None()
+        public void Given_predicate_When_not_matched_Returns_None()
         {
             var seq = Enumerable.Empty<int>();
 
@@ -524,7 +249,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_multiple_matched_Returns_Fail_400()
+        public void Given_predicate_When_multiple_matched_Returns_Fail_400()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -540,7 +265,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_Given_predicate_When_single_matched_and_null_Returns_Fail_n1404()
+        public void Given_predicate_When_single_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 1);
 
@@ -551,58 +276,10 @@ public class Enumerable_extension_methods
         }
     }
 
-    public class For_ElementAt
+    public class For_ElementAtOrNone
     {
         [Fact]
-        public void OrFail_When_element_at_matched_and_not_null_Returns_Success()
-        {
-            var seq = Enumerable.Range(1, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.FirstOrFail();
-            var listResult = list.FirstOrFail();
-
-            seqResult.IsSuccess.Should().BeTrue();
-            seqResult.Value.Should().Be(1);
-
-            listResult.IsSuccess.Should().BeTrue();
-            listResult.Value.Should().Be(1);
-        }
-
-        [Fact]
-        public void OrFail_When_element_at_out_of_range_Returns_Fail_404()
-        {
-            var seq = Enumerable.Empty<int>();
-            var list = seq.ToList();
-
-            var seqResult = seq.FirstOrFail();
-            var listResult = list.FirstOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.NotFound);
-        }
-
-        [Fact]
-        public void OrFail_When_element_at_matched_and_null_Returns_Fail_n1404()
-        {
-            var seq = Enumerable.Repeat<int?>(null, 10);
-            var list = seq.ToList();
-
-            var seqResult = seq.FirstOrFail();
-            var listResult = list.FirstOrFail();
-
-            seqResult.IsFail.Should().BeTrue();
-            seqResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-
-            listResult.IsFail.Should().BeTrue();
-            listResult.Error.ErrorCode.Should().Be(ErrorCodes.UnexpectedNullValue);
-        }
-
-        [Fact]
-        public void OrNone_When_element_at_matched_and_not_null_Returns_Success()
+        public void When_element_at_matched_and_not_null_Returns_Success()
         {
             var seq = Enumerable.Range(1, 10);
             var list = seq.ToList();
@@ -618,7 +295,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_element_at_out_of_range_Returns_None()
+        public void When_element_at_out_of_range_Returns_None()
         {
             var seq = Enumerable.Empty<int>();
             var list = seq.ToList();
@@ -631,7 +308,7 @@ public class Enumerable_extension_methods
         }
 
         [Fact]
-        public void OrNone_When_element_at_matched_and_null_Returns_Fail_n1404()
+        public void When_element_at_matched_and_null_Returns_Fail_n1404()
         {
             var seq = Enumerable.Repeat<int?>(null, 10);
             var list = seq.ToList();
