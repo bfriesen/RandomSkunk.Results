@@ -3,29 +3,29 @@ using System.Linq;
 
 namespace RandomSkunk.Results.UnitTests;
 
-public class List_extension_methods
+public class Collection_extension_methods
 {
-    public class For_ForEach
+    public class For_TryForEach
     {
         [Fact]
         public void When_all_elements_produce_Success_results_Returns_Success()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
-            var result = list.ForEach(value => Result.Success());
+            var result = collection.TryForEach(value => Result.Success());
 
             result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Equal(list);
+            result.Value.Should().BeSameAs(collection);
         }
 
         [Fact]
         public void When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
             var valuesEvaluated = new List<int>();
 
-            var result = list.ForEach(value =>
+            var result = collection.TryForEach(value =>
             {
                 valuesEvaluated.Add(value);
                 return value < 5 ? Result.Success() : Result.Fail();
@@ -36,27 +36,27 @@ public class List_extension_methods
         }
     }
 
-    public class For_Async_ForEach
+    public class For_Async_TryForEach
     {
         [Fact]
         public async Task When_all_elements_produce_Success_results_Returns_Success()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
-            var result = await list.ForEach(value => Task.FromResult(Result.Success()));
+            var result = await collection.TryForEach(value => Task.FromResult(Result.Success()));
 
             result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Equal(list);
+            result.Value.Should().BeSameAs(collection);
         }
 
         [Fact]
         public async Task When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
             var valuesEvaluated = new List<int>();
 
-            var result = await list.ForEach(value =>
+            var result = await collection.TryForEach(value =>
             {
                 valuesEvaluated.Add(value);
                 return Task.FromResult(value < 5 ? Result.Success() : Result.Fail());
@@ -67,35 +67,35 @@ public class List_extension_methods
         }
     }
 
-    public class For_ForEach_with_index
+    public class For_TryForEach_with_index
     {
         [Fact]
         public void When_all_elements_produce_Success_results_Returns_Success()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
             var indices = new List<int>();
 
-            var result = list.ForEach((value, index) =>
+            var result = collection.TryForEach((value, index) =>
             {
                 indices.Add(index);
                 return Result.Success();
             });
 
             result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Equal(list);
+            result.Value.Should().BeSameAs(collection);
             indices.Should().Equal(Enumerable.Range(0, 10));
         }
 
         [Fact]
         public void When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
             var valuesEvaluated = new List<int>();
             var indices = new List<int>();
 
-            var result = list.ForEach((value, index) =>
+            var result = collection.TryForEach((value, index) =>
             {
                 valuesEvaluated.Add(value);
                 indices.Add(index);
@@ -108,35 +108,35 @@ public class List_extension_methods
         }
     }
 
-    public class For_Async_ForEach_with_index
+    public class For_Async_TryForEach_with_index
     {
         [Fact]
         public async Task When_all_elements_produce_Success_results_Returns_Success()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
             var indices = new List<int>();
 
-            var result = await list.ForEach((value, index) =>
+            var result = await collection.TryForEach((value, index) =>
             {
                 indices.Add(index);
                 return Task.FromResult(Result.Success());
             });
 
             result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Equal(list);
+            result.Value.Should().BeSameAs(collection);
             indices.Should().Equal(Enumerable.Range(0, 10));
         }
 
         [Fact]
         public async Task When_an_element_produces_Fail_result_Returns_Fail_and_no_more_elements_are_evaluated()
         {
-            var list = Enumerable.Range(1, 10).ToArray();
+            var collection = Enumerable.Range(1, 10).ToArray();
 
             var valuesEvaluated = new List<int>();
             var indices = new List<int>();
 
-            var result = await list.ForEach((value, index) =>
+            var result = await collection.TryForEach((value, index) =>
             {
                 valuesEvaluated.Add(value);
                 indices.Add(index);

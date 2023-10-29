@@ -4,7 +4,7 @@ public class WeatherProfile
 {
     public string City { get; set; } = null!;
 
-    public IEnumerable<MonthlyTemperature> MonthlyTemperatures { get; init; } = new List<MonthlyTemperature>();
+    public IReadOnlyCollection<MonthlyTemperature> MonthlyTemperatures { get; init; } = new List<MonthlyTemperature>();
 
     public WeatherProfile Clone() =>
         new()

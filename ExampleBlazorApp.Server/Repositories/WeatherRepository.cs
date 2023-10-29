@@ -122,7 +122,7 @@ WHERE City = @City AND Month = @Month;";
 
             // Insert/update each monthly temperature record if everything has been successful so far. If updating
             // any of the monthly temperatures fail, the query short-circuits.
-            from weatherProfileUpdated in weatherProfile.MonthlyTemperatures.ForEach(async monthlyTemperature =>
+            from weatherProfileUpdated in weatherProfile.MonthlyTemperatures.TryForEach(async monthlyTemperature =>
                 {
                     var param = new
                     {
