@@ -140,6 +140,16 @@ public readonly struct Result : IEquatable<Result>
         };
 
     /// <summary>
+    /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
+    /// result with error code <see cref="ErrorCodes.NoValue"/> is returned instead.
+    /// </summary>
+    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <param name="value">The value. Can be <see langword="null"/>.</param>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
+    ///     result.</returns>
+    public static Result<T> FromValue<T>(T? value) => Result<T>.FromValue(value);
+
+    /// <summary>
     /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
     /// <c>Fail</c> result.
     /// </summary>
