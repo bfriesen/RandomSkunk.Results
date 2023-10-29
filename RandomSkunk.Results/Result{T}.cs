@@ -83,7 +83,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
     /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
-    ///     result with a generated stack trace.</returns>
+    ///     result.</returns>
     public static implicit operator Result<T>(T? value) => FromValue(value);
 
     /// <summary>
@@ -184,7 +184,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
     /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
-    ///     result with a generated stack trace.</returns>
+    ///     result.</returns>
     public static Result<T> FromValue(T? value) =>
         value is not null
             ? Success(value)
