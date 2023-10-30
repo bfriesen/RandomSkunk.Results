@@ -200,39 +200,46 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     {
         if (callback is null) throw new ArgumentNullException(nameof(callback));
 
-        try
+        if (!ResultSettings.CatchCallbackExceptions)
         {
             callback(this);
         }
-        catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+        else
         {
-            var error = Errors.Canceled(ex);
+            try
+            {
+                callback(this);
+            }
+            catch (TaskCanceledException ex)
+            {
+                var error = Errors.Canceled(ex);
 
-            if (_outcome == Outcome.Success)
-                return error;
+                if (_outcome == Outcome.Success)
+                    return error;
 
-            return CompositeError.Create(
-                new[]
-                {
+                return CompositeError.Create(
+                    new[]
+                    {
                     GetError(),
                     error,
-                },
-                $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
-        }
-        catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-        {
-            var error = Error.FromExceptionThrownInCallback(ex, nameof(callback));
+                    },
+                    $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
+            }
+            catch (Exception ex)
+            {
+                var error = Error.FromExceptionThrownInCallback(ex, nameof(callback));
 
-            if (_outcome == Outcome.Success)
-                return error;
+                if (_outcome == Outcome.Success)
+                    return error;
 
-            return CompositeError.Create(
-                new[]
-                {
+                return CompositeError.Create(
+                    new[]
+                    {
                     GetError(),
                     error,
-                },
-                $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
+                    },
+                    $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
+            }
         }
 
         return this;
@@ -248,39 +255,46 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     {
         if (callback is null) throw new ArgumentNullException(nameof(callback));
 
-        try
+        if (!ResultSettings.CatchCallbackExceptions)
         {
             await callback(this);
         }
-        catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+        else
         {
-            var error = Errors.Canceled(ex);
+            try
+            {
+                await callback(this);
+            }
+            catch (TaskCanceledException ex)
+            {
+                var error = Errors.Canceled(ex);
 
-            if (_outcome == Outcome.Success)
-                return error;
+                if (_outcome == Outcome.Success)
+                    return error;
 
-            return CompositeError.Create(
-                new[]
-                {
+                return CompositeError.Create(
+                    new[]
+                    {
                     GetError(),
                     error,
-                },
-                $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
-        }
-        catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-        {
-            var error = Error.FromExceptionThrownInCallback(ex, nameof(callback));
+                    },
+                    $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
+            }
+            catch (Exception ex)
+            {
+                var error = Error.FromExceptionThrownInCallback(ex, nameof(callback));
 
-            if (_outcome == Outcome.Success)
-                return error;
+                if (_outcome == Outcome.Success)
+                    return error;
 
-            return CompositeError.Create(
-                new[]
-                {
+                return CompositeError.Create(
+                    new[]
+                    {
                     GetError(),
                     error,
-                },
-                $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
+                    },
+                    $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
+            }
         }
 
         return this;
@@ -474,29 +488,36 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Fail)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 onFailCallback(GetError());
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return CompositeError.Create(
-                    new[]
-                    {
+                try
+                {
+                    onFailCallback(GetError());
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return CompositeError.Create(
+                        new[]
+                        {
                         GetError(),
                         Errors.Canceled(ex),
-                    },
-                    $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return CompositeError.Create(
-                    new[]
-                    {
+                        },
+                        $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
+                catch (Exception ex)
+                {
+                    return CompositeError.Create(
+                        new[]
+                        {
                         GetError(),
                         Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
-                    },
-                    $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                        },
+                        $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
             }
         }
 
@@ -514,29 +535,36 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Fail)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return CompositeError.Create(
-                    new[]
-                    {
+                try
+                {
+                    await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return CompositeError.Create(
+                        new[]
+                        {
                         GetError(),
                         Errors.Canceled(ex),
-                    },
-                    $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return CompositeError.Create(
-                    new[]
-                    {
+                        },
+                        $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
+                catch (Exception ex)
+                {
+                    return CompositeError.Create(
+                        new[]
+                        {
                         GetError(),
                         Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
-                    },
-                    $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                        },
+                        $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
             }
         }
 
@@ -555,19 +583,27 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         if (_outcome != Outcome.Fail || GetError().ErrorCode != ErrorCodes.NoValue)
             return this;
 
-        try
+        if (!ResultSettings.CatchCallbackExceptions)
         {
             onNoneCallback();
-            return this;
         }
-        catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+        else
         {
-            return Errors.Canceled(ex);
+            try
+            {
+                onNoneCallback();
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex)
+            {
+                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneCallback));
+            }
         }
-        catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-        {
-            return Error.FromExceptionThrownInCallback(ex, nameof(onNoneCallback));
-        }
+
+        return this;
     }
 
     /// <summary>
@@ -582,19 +618,27 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         if (_outcome != Outcome.Fail || GetError().ErrorCode != ErrorCodes.NoValue)
             return this;
 
-        try
+        if (!ResultSettings.CatchCallbackExceptions)
         {
             await onNoneCallback().ConfigureAwait(ContinueOnCapturedContext);
-            return this;
         }
-        catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+        else
         {
-            return Errors.Canceled(ex);
+            try
+            {
+                await onNoneCallback().ConfigureAwait(ContinueOnCapturedContext);
+            }
+            catch (TaskCanceledException ex)
+            {
+                return Errors.Canceled(ex);
+            }
+            catch (Exception ex)
+            {
+                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneCallback));
+            }
         }
-        catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-        {
-            return Error.FromExceptionThrownInCallback(ex, nameof(onNoneCallback));
-        }
+
+        return this;
     }
 
     /// <summary>
@@ -608,17 +652,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 onSuccessCallback(_value!);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessCallback));
+                try
+                {
+                    onSuccessCallback(_value!);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessCallback));
+                }
             }
         }
 
@@ -636,17 +687,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessCallback));
+                try
+                {
+                    await onSuccessCallback(_value!).ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessCallback));
+                }
             }
         }
 
@@ -666,17 +724,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Fail)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onFail(GetError());
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                try
+                {
+                    return onFail(GetError());
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                }
             }
         }
 
@@ -696,17 +761,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Fail)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onFail(GetError());
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                try
+                {
+                    return await onFail(GetError());
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                }
             }
         }
 
@@ -733,31 +805,45 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
             if (error.ErrorCode == ErrorCodes.NoValue)
             {
-                try
+                if (!ResultSettings.CatchCallbackExceptions)
                 {
                     return onNone();
                 }
-                catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+                else
                 {
-                    return Errors.Canceled(ex);
-                }
-                catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-                {
-                    return Error.FromExceptionThrownInCallback(ex, nameof(onNone));
+                    try
+                    {
+                        return onNone();
+                    }
+                    catch (TaskCanceledException ex)
+                    {
+                        return Errors.Canceled(ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        return Error.FromExceptionThrownInCallback(ex, nameof(onNone));
+                    }
                 }
             }
 
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onFail(GetError());
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                try
+                {
+                    return onFail(GetError());
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                }
             }
         }
 
@@ -784,31 +870,45 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
             if (error.ErrorCode == ErrorCodes.NoValue)
             {
-                try
+                if (!ResultSettings.CatchCallbackExceptions)
                 {
                     return await onNone();
                 }
-                catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+                else
                 {
-                    return Errors.Canceled(ex);
-                }
-                catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-                {
-                    return Error.FromExceptionThrownInCallback(ex, nameof(onNone));
+                    try
+                    {
+                        return await onNone();
+                    }
+                    catch (TaskCanceledException ex)
+                    {
+                        return Errors.Canceled(ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        return Error.FromExceptionThrownInCallback(ex, nameof(onNone));
+                    }
                 }
             }
 
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onFail(GetError());
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                try
+                {
+                    return await onFail(GetError());
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onFail));
+                }
             }
         }
 
@@ -839,17 +939,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                try
+                {
+                    return onSuccessSelector(_value!);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                }
             }
         }
 
@@ -857,17 +964,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onNoneSelector();
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                try
+                {
+                    return onNoneSelector();
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                }
             }
         }
 
@@ -898,17 +1012,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                try
+                {
+                    return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                }
             }
         }
 
@@ -916,17 +1037,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                try
+                {
+                    return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                }
             }
         }
 
@@ -958,17 +1086,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                try
+                {
+                    return onSuccessSelector(_value!);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                }
             }
         }
 
@@ -976,17 +1111,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onNoneSelector();
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                try
+                {
+                    return onNoneSelector();
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                }
             }
         }
 
@@ -1018,17 +1160,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                try
+                {
+                    return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                }
             }
         }
 
@@ -1036,17 +1185,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                try
+                {
+                    return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                }
             }
         }
 
@@ -1070,17 +1226,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onSuccessSelector(_value!);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                try
+                {
+                    return onSuccessSelector(_value!);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                }
             }
         }
 
@@ -1088,17 +1251,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return onNoneSelector();
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                try
+                {
+                    return onNoneSelector();
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                }
             }
         }
 
@@ -1122,17 +1292,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (_outcome == Outcome.Success)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                try
+                {
+                    return await onSuccessSelector(_value!).ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onSuccessSelector));
+                }
             }
         }
 
@@ -1140,17 +1317,24 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (onNoneSelector is not null && error.ErrorCode == ErrorCodes.NoValue)
         {
-            try
+            if (!ResultSettings.CatchCallbackExceptions)
             {
                 return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
             }
-            catch (TaskCanceledException ex) when (ResultSettings.CatchCallbackExceptions)
+            else
             {
-                return Errors.Canceled(ex);
-            }
-            catch (Exception ex) when (ResultSettings.CatchCallbackExceptions)
-            {
-                return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                try
+                {
+                    return await onNoneSelector().ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return Errors.Canceled(ex);
+                }
+                catch (Exception ex)
+                {
+                    return Error.FromExceptionThrownInCallback(ex, nameof(onNoneSelector));
+                }
             }
         }
 
