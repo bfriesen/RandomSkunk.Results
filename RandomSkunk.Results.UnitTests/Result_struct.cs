@@ -36,57 +36,28 @@ public class Result_struct
         }
     }
 
-    public class Match
+    public class ErrorProperty
     {
         [Fact]
-        public void When_IsSuccess_Returns_success_function_evaluation()
+        public void When_IsFail_Returns_error()
         {
-            var result = Result.Success();
+            var error = new Error();
+            var source = Result.Fail(error);
 
-            var actual = result.Match(
-                () => 1,
-                error => -1);
+            var actual = source.Error;
 
-            actual.Should().Be(1);
+            actual.Should().BeSameAs(error);
         }
 
         [Fact]
-        public void When_IsFail_Returns_fail_function_evaluation()
+        public void When_IsSuccess_Throws_InvalidStateException()
         {
-            var result = Result.Fail();
+            var source = Result.Success();
 
-            var actual = result.Match(
-                () => 1,
-                error => -1);
+            Action act = () => _ = source.Error;
 
-            actual.Should().Be(-1);
-        }
-    }
-
-    public class Async_Match
-    {
-        [Fact]
-        public async Task When_IsSuccess_Returns_success_function_evaluation()
-        {
-            var result = Result.Success();
-
-            var actual = await result.Match(
-                () => Task.FromResult(1),
-                error => Task.FromResult(-1));
-
-            actual.Should().Be(1);
-        }
-
-        [Fact]
-        public async Task When_IsFail_Returns_fail_function_evaluation()
-        {
-            var result = Result.Fail();
-
-            var actual = await result.Match(
-                () => Task.FromResult(1),
-                error => Task.FromResult(-1));
-
-            actual.Should().Be(-1);
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessErrorUnlessFailMessage);
         }
     }
 

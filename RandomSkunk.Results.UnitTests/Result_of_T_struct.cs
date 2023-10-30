@@ -37,57 +37,52 @@ public class Result_of_T_struct
         }
     }
 
-    public class Match
+    public class Error_property
     {
         [Fact]
-        public void When_IsSuccess_Returns_success_function_evaluation()
+        public void When_IsFail_Returns_error()
         {
-            var result = 1.ToResult();
+            var error = new Error();
+            var source = Result<int>.Fail(error);
 
-            var actual = result.Match(
-                value => value + 1,
-                error => -1);
+            var actual = source.Error;
 
-            actual.Should().Be(2);
+            actual.Should().BeSameAs(error);
         }
 
         [Fact]
-        public void When_IsFail_Returns_fail_function_evaluation()
+        public void When_IsSuccess_Throws_InvalidStateException()
         {
-            var result = Result<int>.Fail();
+            var source = 1.ToResult();
 
-            var actual = result.Match(
-                value => value + 1,
-                error => -1);
+            Action act = () => _ = source.Error;
 
-            actual.Should().Be(-1);
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessErrorUnlessFailMessage);
         }
     }
 
-    public class Async_Match
+    public class Value_property
     {
         [Fact]
-        public async Task When_IsSuccess_Returns_success_function_evaluation()
+        public void When_IsSuccess_Returns_value()
         {
-            var result = 1.ToResult();
+            var source = 1.ToResult();
 
-            var actual = await result.Match(
-                value => Task.FromResult(value + 1),
-                error => Task.FromResult(-1));
+            var actual = source.Value;
 
-            actual.Should().Be(2);
+            actual.Should().Be(1);
         }
 
         [Fact]
-        public async Task When_IsFail_Returns_fail_function_evaluation()
+        public void When_IsFail_Throws_InvalidStateException()
         {
-            var result = Result<int>.Fail();
+            var source = Result<int>.Fail();
 
-            var actual = await result.Match(
-                value => Task.FromResult(value + 1),
-                error => Task.FromResult(-1));
+            Action act = () => _ = source.Value;
 
-            actual.Should().Be(-1);
+            act.Should().ThrowExactly<InvalidStateException>()
+                .WithMessage(CannotAccessValueUnlessSuccessMessage);
         }
     }
 
