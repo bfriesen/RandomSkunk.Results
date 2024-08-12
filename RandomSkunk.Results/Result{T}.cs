@@ -257,13 +257,13 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
         if (!ResultSettings.CatchCallbackExceptions)
         {
-            await callback(this);
+            await callback(this).ConfigureAwait(ContinueOnCapturedContext);
         }
         else
         {
             try
             {
-                await callback(this);
+                await callback(this).ConfigureAwait(ContinueOnCapturedContext);
             }
             catch (TaskCanceledException ex)
             {
@@ -763,13 +763,13 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         {
             if (!ResultSettings.CatchCallbackExceptions)
             {
-                return await onFail(GetError());
+                return await onFail(GetError()).ConfigureAwait(ContinueOnCapturedContext);
             }
             else
             {
                 try
                 {
-                    return await onFail(GetError());
+                    return await onFail(GetError()).ConfigureAwait(ContinueOnCapturedContext);
                 }
                 catch (TaskCanceledException ex)
                 {
@@ -872,13 +872,13 @@ public readonly struct Result<T> : IEquatable<Result<T>>
             {
                 if (!ResultSettings.CatchCallbackExceptions)
                 {
-                    return await onNone();
+                    return await onNone().ConfigureAwait(ContinueOnCapturedContext);
                 }
                 else
                 {
                     try
                     {
-                        return await onNone();
+                        return await onNone().ConfigureAwait(ContinueOnCapturedContext);
                     }
                     catch (TaskCanceledException ex)
                     {
@@ -893,13 +893,13 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
             if (!ResultSettings.CatchCallbackExceptions)
             {
-                return await onFail(GetError());
+                return await onFail(GetError()).ConfigureAwait(ContinueOnCapturedContext);
             }
             else
             {
                 try
                 {
-                    return await onFail(GetError());
+                    return await onFail(GetError()).ConfigureAwait(ContinueOnCapturedContext);
                 }
                 catch (TaskCanceledException ex)
                 {
@@ -1459,7 +1459,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
         if (_outcome == Outcome.Success && predicate(_value!))
-            return getError.Invoke(_value!);
+            return getError(_value!);
 
         return this;
     }
@@ -1478,7 +1478,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
         if (_outcome == Outcome.Success && predicate(_value!))
-            return await getError.Invoke(_value!).ConfigureAwait(ContinueOnCapturedContext);
+            return await getError(_value!).ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -1494,7 +1494,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
         if (IsNone)
-            return getError.Invoke();
+            return getError();
 
         return this;
     }
@@ -1510,7 +1510,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         if (getError is null) throw new ArgumentNullException(nameof(getError));
 
         if (IsNone)
-            return await getError.Invoke();
+            return await getError().ConfigureAwait(ContinueOnCapturedContext);
 
         return this;
     }
@@ -1587,7 +1587,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
 
         return _outcome == Outcome.Fail
-            ? await onFailGetError(GetError())
+            ? await onFailGetError(GetError()).ConfigureAwait(ContinueOnCapturedContext)
             : this;
     }
 

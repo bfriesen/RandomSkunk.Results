@@ -225,13 +225,13 @@ public readonly struct Result : IEquatable<Result>
 
         if (!ResultSettings.CatchCallbackExceptions)
         {
-            await callback(this);
+            await callback(this).ConfigureAwait(ContinueOnCapturedContext);
         }
         else
         {
             try
             {
-                await callback(this);
+                await callback(this).ConfigureAwait(ContinueOnCapturedContext);
             }
             catch (TaskCanceledException ex)
             {
@@ -531,13 +531,13 @@ public readonly struct Result : IEquatable<Result>
         {
             if (!ResultSettings.CatchCallbackExceptions)
             {
-                return await onFail(GetError());
+                return await onFail(GetError()).ConfigureAwait(ContinueOnCapturedContext);
             }
             else
             {
                 try
                 {
-                    return await onFail(GetError());
+                    return await onFail(GetError()).ConfigureAwait(ContinueOnCapturedContext);
                 }
                 catch (TaskCanceledException ex)
                 {
@@ -1159,7 +1159,7 @@ public readonly struct Result : IEquatable<Result>
         if (onFailGetError is null) throw new ArgumentNullException(nameof(onFailGetError));
 
         return _outcome == Outcome.Fail
-            ? await onFailGetError(GetError())
+            ? await onFailGetError(GetError()).ConfigureAwait(ContinueOnCapturedContext)
             : this;
     }
 
