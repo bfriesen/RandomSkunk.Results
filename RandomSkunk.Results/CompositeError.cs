@@ -5,7 +5,7 @@ namespace RandomSkunk.Results;
 /// </summary>
 public record class CompositeError : Error
 {
-    private static readonly string _innerErrorsFieldFullName =
+    internal static readonly string _innerErrorsFieldFullName =
         $"{GetTypeFullName(typeof(CompositeError))}.{nameof(InnerErrors)}";
 
     /// <summary>

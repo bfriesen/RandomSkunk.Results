@@ -1,47 +1,42 @@
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// An <see cref="Exception"/> implementation for an <see cref="Error"/>.
+/// An <see cref="AggregateException"/> implementation for an <see cref="CompositeError"/>.
 /// </summary>
-public partial class ErrorException : Exception
+public class CompositeErrorException : AggregateException
 {
-    [StringSyntax(StringSyntaxAttribute.Regex)]
-    private const string _dataPropertyPattern = @"^System\.Exception\.Data\.";
-
-    [StringSyntax(StringSyntaxAttribute.Regex)]
-    private const string _hexSpecifierPattern = "^0x";
-
     private readonly string? _stackTrace;
     private string? _source;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ErrorException"/> class.
+    /// Initializes a new instance of the <see cref="CompositeErrorException"/> class.
     /// </summary>
-    /// <param name="originalError">The original <see cref="Error"/>.</param>
-    public ErrorException(Error originalError)
-        : base(originalError.Message, originalError.InnerError)
+    /// <param name="compositeError">The original <see cref="CompositeError"/>.</param>
+    public CompositeErrorException(CompositeError compositeError)
+        : base(compositeError.Message, compositeError.InnerErrors.Select(error => (Exception)error))
     {
         Dictionary<string, object> extensions;
 #if NET7_0_OR_GREATER
-        extensions = new(originalError.Extensions);
+        extensions = new(compositeError.Extensions);
 #else
         extensions = [];
-        foreach (var item in originalError.Extensions)
+        foreach (var item in compositeError.Extensions)
             ((IDictionary<string, object>)extensions).Add(item);
 #endif
 
         Extensions = new ReadOnlyDictionary<string, object>(extensions);
 
-        if (originalError.TryGet(Error._originalExceptionTypeExtensionName, out string? originalExceptionType))
+        extensions.Remove(CompositeError._innerErrorsFieldFullName);
+
+        if (compositeError.TryGet(Error._originalExceptionTypeExtensionName, out string? originalExceptionType))
         {
             OriginalExceptionType = originalExceptionType;
             extensions.Remove(Error._originalExceptionTypeExtensionName);
         }
 
-        if (originalError.TryGet("System.Exception.StackTrace", out string? stackTrace))
+        if (compositeError.TryGet("System.Exception.StackTrace", out string? stackTrace))
         {
             _stackTrace = stackTrace;
             extensions.Remove("System.Exception.StackTrace");
@@ -51,7 +46,7 @@ public partial class ErrorException : Exception
             _stackTrace = null;
         }
 
-        if (originalError.TryGet("System.Exception.Source", out string? source))
+        if (compositeError.TryGet("System.Exception.Source", out string? source))
         {
             _source = source;
             extensions.Remove("System.Exception.Source");
@@ -61,15 +56,15 @@ public partial class ErrorException : Exception
             _source = null;
         }
 
-        if (originalError.TryGet("System.Exception.HResult", out string? hresultString)
-            && (int.TryParse(HexSpecifierRegex().Replace(hresultString, string.Empty), NumberStyles.HexNumber, null, out var hresult)
+        if (compositeError.TryGet("System.Exception.HResult", out string? hresultString)
+            && (int.TryParse(ErrorException.HexSpecifierRegex().Replace(hresultString, string.Empty), NumberStyles.HexNumber, null, out var hresult)
                 || int.TryParse(hresultString, out hresult)))
         {
             HResult = hresult;
             extensions.Remove("System.Exception.HResult");
         }
 
-        if (originalError.TryGet("System.Exception.HelpLink", out string? helpLink))
+        if (compositeError.TryGet("System.Exception.HelpLink", out string? helpLink))
         {
             HelpLink = helpLink;
             extensions.Remove("System.Exception.HelpLink");
@@ -77,12 +72,12 @@ public partial class ErrorException : Exception
 
         foreach (var dataItem in extensions.Where(item => item.Key.StartsWith("System.Exception.Data.")))
         {
-            var key = DataPropertyRegex().Replace(dataItem.Key, string.Empty);
+            var key = ErrorException.DataPropertyRegex().Replace(dataItem.Key, string.Empty);
             Data[key] = dataItem.Value;
             extensions.Remove(dataItem.Key);
         }
 
-        OriginalError = originalError;
+        OriginalError = compositeError;
     }
 
     /// <inheritdoc/>
@@ -94,7 +89,7 @@ public partial class ErrorException : Exception
     /// <summary>
     /// Gets the <see cref="OriginalError"/> for this exception.
     /// </summary>
-    public Error OriginalError { get; }
+    public CompositeError OriginalError { get; }
 
     /// <summary>
     /// Gets the title for the error.
@@ -121,26 +116,4 @@ public partial class ErrorException : Exception
     /// <see langword="null"/> if <see cref="OriginalError"/> was not created from an <see cref="Exception"/>.
     /// </summary>
     public string? OriginalExceptionType { get; }
-
-#if NET7_0_OR_GREATER
-    [GeneratedRegex(_dataPropertyPattern)]
-    internal static partial Regex DataPropertyRegex();
-
-    [GeneratedRegex(_hexSpecifierPattern)]
-    internal static partial Regex HexSpecifierRegex();
-#else
-    internal static Regex DataPropertyRegex() => DataPropertyRegex_0.Instance;
-
-    internal static Regex HexSpecifierRegex() => HexSpecifierRegex_1.Instance;
-
-    private static class DataPropertyRegex_0
-    {
-        public static readonly Regex Instance = new(_dataPropertyPattern, RegexOptions.Compiled);
-    }
-
-    private static class HexSpecifierRegex_1
-    {
-        public static readonly Regex Instance = new(_hexSpecifierPattern, RegexOptions.Compiled);
-    }
-#endif
 }

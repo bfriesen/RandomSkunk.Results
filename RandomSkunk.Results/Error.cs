@@ -125,14 +125,17 @@ public record class Error
     internal static Error DefaultError => _defaultError.Value;
 
     /// <summary>
-    /// Converts the specified <see cref="Error"/> into an <see cref="ErrorException"/>.
+    /// Converts the specified <see cref="Error"/> into an <see cref="Exception"/>.
     /// </summary>
     /// <param name="error">The <see cref="Error"/> to convert.</param>
     [return: NotNullIfNotNull(nameof(error))]
-    public static implicit operator ErrorException?(Error? error)
+    public static implicit operator Exception?(Error? error)
     {
         if (error is null)
             return null;
+
+        if (error is CompositeError compositeError)
+            return new CompositeErrorException(compositeError);
 
         return new ErrorException(error);
     }
@@ -167,6 +170,9 @@ public record class Error
 
         if (exception is ErrorException errorException)
             return errorException.OriginalError;
+
+        if (exception is CompositeErrorException compositeErrorException)
+            return compositeErrorException.OriginalError;
 
         return CreateError(exception, errorCode, identifier);
     }
@@ -294,6 +300,18 @@ public record class Error
             .Where(x => x.Value is not null);
         foreach (var dataEntry in dataEntries)
             extensions[$"System.Exception.Data.{dataEntry.Key}"] = dataEntry.Value!;
+
+        if (exception is AggregateException aggregateException && aggregateException.InnerExceptions.Count > 1)
+        {
+            var innerErrors = aggregateException.InnerExceptions.Select(ex => CreateError(ex));
+            return new CompositeError(innerErrors, exception.Message)
+            {
+                Title = exceptionType.Name,
+                ErrorCode = errorCode,
+                Identifier = identifier,
+                Extensions = new ReadOnlyDictionary<string, object>(extensions),
+            };
+        }
 
         Error? innerError = null;
         if (exception.InnerException != null)
