@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning].
     - Don't create nested error in `Error.FromException` method.
     - Rearrange `errorCode` and `identifier` parameters in `Error.FromException`, `Result.Fail`, and `Result<T>.Fail` methods.
     - Replace `CompositeError.Create` factory method with public constructor.
+    - Rename `CompositeError.Errors` property to `InnerErrors`.
 
 - RandomSkunk.Results.AspNetCore:
     - In the `ToActionResult` extension methods, change the optional parameter from `Func<int, int>? getHttpStatusCode` to `Func<Error, IActionResult>? onFail`.

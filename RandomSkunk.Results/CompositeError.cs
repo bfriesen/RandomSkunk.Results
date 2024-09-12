@@ -5,32 +5,33 @@ namespace RandomSkunk.Results;
 /// </summary>
 public record class CompositeError : Error
 {
-    private static readonly string _errorsFieldFullName =
-        $"{GetTypeFullName(typeof(CompositeError))}.{nameof(Errors)}";
+    private static readonly string _innerErrorsFieldFullName =
+        $"{GetTypeFullName(typeof(CompositeError))}.{nameof(InnerErrors)}";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CompositeError"/> class.
     /// </summary>
-    /// <param name="errors">The errors that make up this instance of <see cref="CompositeError"/>.</param>
+    /// <param name="innerErrors">The multiple errors that caused the current error.</param>
     /// <param name="messageDetail">The message of the composite error.</param>
-    /// <exception cref="ArgumentNullException">If <paramref name="errors"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException">If <paramref name="errors"/> does not contain at least two errors.</exception>
-    public CompositeError(IEnumerable<Error> errors, string? messageDetail = null)
-        : base((_errorsFieldFullName, errors?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(errors))))
+    /// <exception cref="ArgumentNullException">If <paramref name="innerErrors"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">If <paramref name="innerErrors"/> does not contain at least two errors.
+    ///     </exception>
+    public CompositeError(IEnumerable<Error> innerErrors, string? messageDetail = null)
+        : base((_innerErrorsFieldFullName, innerErrors?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(innerErrors))))
     {
-        if (Errors.Count < 2)
-            throw new ArgumentException("Sequence must contain at least two errors.", nameof(errors));
+        if (InnerErrors.Count < 2)
+            throw new ArgumentException("Sequence must contain at least two errors.", nameof(innerErrors));
 
-        var defaultMessage = $"{GetNumberName(Errors.Count)} errors occurred.";
+        var defaultMessage = $"{GetNumberName(InnerErrors.Count)} errors occurred.";
         var message = string.IsNullOrEmpty(messageDetail) ? defaultMessage : defaultMessage + ' ' + messageDetail;
         Message = message;
     }
 
     /// <summary>
-    /// Gets the errors that make up this instance of <see cref="CompositeError"/>.
+    /// Gets the multiple <see cref="Error"/> instances that caused the current error.
     /// </summary>
-    public IReadOnlyList<Error> Errors =>
-        TryGet<IReadOnlyList<Error>>(_errorsFieldFullName, out var errors) ? errors : [];
+    public IReadOnlyList<Error> InnerErrors =>
+        TryGet<IReadOnlyList<Error>>(_innerErrorsFieldFullName, out var errors) ? errors : [];
 
     /// <summary>
     /// Creates a composite error from the specified non-empty sequence of errors if it contains more than one error, otherwise

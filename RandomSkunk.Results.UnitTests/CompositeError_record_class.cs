@@ -11,11 +11,11 @@ public class CompositeError_record_class
         {
             var error1 = new Error { Message = "Error 1" };
             var error2 = new Error { Message = "Error 2" };
-            var errors = new[] { error1, error2 };
+            var innerErrors = new[] { error1, error2 };
 
-            var compositeError = new CompositeError(errors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
+            var compositeError = new CompositeError(innerErrors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
 
-            compositeError.Errors.Should().Equal(errors);
+            compositeError.InnerErrors.Should().Equal(innerErrors);
             compositeError.Message.Should().Be($"Two errors occurred. My message details.");
             compositeError.ErrorCode.Should().Be(123);
             compositeError.Identifier.Should().Be("test_identifier");
@@ -24,9 +24,9 @@ public class CompositeError_record_class
         [Fact]
         public void GivenErrorsParameterIsNull_ThrowsException()
         {
-            IEnumerable<Error> errors = null!;
+            IEnumerable<Error> innerErrors = null!;
 
-            var act = () => new CompositeError(errors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
+            var act = () => new CompositeError(innerErrors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
 
             act.Should().ThrowExactly<ArgumentNullException>().WithMessage("*errors*");
         }
@@ -35,9 +35,9 @@ public class CompositeError_record_class
         public void GivenErrorsParameterContainsFewerThanTwoItems_ThrowsException()
         {
             var error1 = new Error { Message = "Error 1" };
-            var errors = new[] { error1 };
+            var innerErrors = new[] { error1 };
 
-            var act = () => new CompositeError(errors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
+            var act = () => new CompositeError(innerErrors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
 
             act.Should().ThrowExactly<ArgumentException>().WithMessage("*Sequence must contain at least two errors.*");
         }
@@ -49,9 +49,9 @@ public class CompositeError_record_class
         public void GivenErrorsParameterHasOneItem_ReturnsItem()
         {
             var error1 = new Error { Message = "Error 1" };
-            var errors = new[] { error1 };
+            var innerErrors = new[] { error1 };
 
-            var error = CompositeError.CreateOrGetSingle(errors);
+            var error = CompositeError.CreateOrGetSingle(innerErrors);
             error.Should().BeSameAs(error1);
         }
 
@@ -60,21 +60,21 @@ public class CompositeError_record_class
         {
             var error1 = new Error { Message = "Error 1" };
             var error2 = new Error { Message = "Error 2" };
-            var errors = new[] { error1, error2 };
+            var innerErrors = new[] { error1, error2 };
 
-            var error = CompositeError.CreateOrGetSingle(errors);
+            var error = CompositeError.CreateOrGetSingle(innerErrors);
 
             var compositeError = error.Should().BeOfType<CompositeError>().Subject;
-            compositeError.Errors.Should().Equal(errors);
+            compositeError.InnerErrors.Should().Equal(innerErrors);
             compositeError.Message.Should().Be($"Two errors occurred.");
         }
 
         [Fact]
         public void GivenErrorsParameterIsNull_ThrowsException()
         {
-            IEnumerable<Error> errors = null!;
+            IEnumerable<Error> innerErrors = null!;
 
-            var act = () => CompositeError.CreateOrGetSingle(errors);
+            var act = () => CompositeError.CreateOrGetSingle(innerErrors);
 
             act.Should().ThrowExactly<ArgumentNullException>().WithMessage("*errors*");
         }
@@ -82,9 +82,9 @@ public class CompositeError_record_class
         [Fact]
         public void GivenErrorsParameterContainsZeroItems_ThrowsException()
         {
-            var errors = Array.Empty<Error>();
+            var innerErrors = Array.Empty<Error>();
 
-            var act = () => CompositeError.CreateOrGetSingle(errors);
+            var act = () => CompositeError.CreateOrGetSingle(innerErrors);
 
             act.Should().ThrowExactly<ArgumentException>().WithMessage("*Sequence must contain at least one error.*");
         }
