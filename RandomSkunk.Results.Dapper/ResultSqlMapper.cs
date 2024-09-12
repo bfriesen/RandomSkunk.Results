@@ -999,7 +999,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            async () => await cnn.QueryAsync<T>(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1050,7 +1050,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryFirstAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            async () => await cnn.QueryFirstAsync<T>(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1150,7 +1150,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QuerySingleAsync<T>(sql, param, transaction, commandTimeout, commandType),
+            async () => await cnn.QuerySingleAsync<T>(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1306,7 +1306,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            async () => await cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1374,7 +1374,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            async () => await cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1444,7 +1444,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            async () => await cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1516,7 +1516,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            async () => await cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1590,7 +1590,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            async () => await cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1666,7 +1666,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            async () => await cnn.QueryAsync(sql, map, param, transaction, buffered, splitOn, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1738,7 +1738,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.QueryAsync(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType),
+            async () => await cnn.QueryAsync(sql, types, map, param, transaction, buffered, splitOn, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1846,7 +1846,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
+            async () => await cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -1897,7 +1897,7 @@ public static partial class ResultSqlMapper
         int? commandTimeout = null,
         CommandType? commandType = null) =>
         TryCatch.AsResult(
-            () => cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType),
+            async () => await cnn.ExecuteReaderAsync(sql, param, transaction, commandTimeout, commandType).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>

@@ -271,7 +271,7 @@ public record class Error
                 .Select(p => new { p.Name, Value = FormatValue(p.GetValue(exception)), FullName = GetPropertyFullName(p) })
                 .Where(p => p.Value is not null)
                 .OrderBy(p => p.Name)
-                .ToDictionary(p => p.FullName, p => p.Value!);
+                .ToDictionary(p => p.FullName, p => (object)p.Value!);
 
         extensions[_originalExceptionTypeExtensionName] = exceptionTypeFullName;
 
@@ -313,7 +313,7 @@ public record class Error
     }
 
     [return: NotNullIfNotNull(nameof(value))]
-    private static object? FormatValue(object? value)
+    private static string? FormatValue(object? value)
     {
         if (value is null)
             return null;

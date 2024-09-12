@@ -6,7 +6,7 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
     private static readonly JsonEncodedText Message = JsonEncodedText.Encode("Message");
     private static readonly JsonEncodedText ErrorCode = JsonEncodedText.Encode("ErrorCode");
     private static readonly JsonEncodedText Identifier = JsonEncodedText.Encode("Identifier");
-    private static readonly JsonEncodedText Type = JsonEncodedText.Encode("Type");
+    private static readonly new JsonEncodedText Type = JsonEncodedText.Encode("Type");
     private static readonly JsonEncodedText InnerError = JsonEncodedText.Encode("InnerError");
 #pragma warning restore IDE1006 // Naming Styles
 

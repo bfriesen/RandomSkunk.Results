@@ -1084,23 +1084,15 @@ public static class ResultExtensions
     public static async Task<Result> Truncate<T>(this Task<Result<T>> sourceResult) =>
         (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).Truncate();
 
-    private class DisposableResult<TDisposable> : IDisposable
+    private class DisposableResult<TDisposable>(Result<TDisposable> source) : IDisposable
         where TDisposable : IDisposable
     {
-        private readonly Result<TDisposable> _source;
-
-        public DisposableResult(Result<TDisposable> source) => _source = source;
-
-        public void Dispose() => _source.OnSuccess(value => value.Dispose());
+        public void Dispose() => source.OnSuccess(value => value.Dispose());
     }
 
-    private class AsyncDisposableResult<TAsyncDisposable> : IAsyncDisposable
+    private class AsyncDisposableResult<TAsyncDisposable>(Result<TAsyncDisposable> source) : IAsyncDisposable
         where TAsyncDisposable : IAsyncDisposable
     {
-        private readonly Result<TAsyncDisposable> _source;
-
-        public AsyncDisposableResult(Result<TAsyncDisposable> source) => _source = source;
-
-        public async ValueTask DisposeAsync() => await _source.OnSuccess(value => value.DisposeAsync().AsTask()).ConfigureAwait(ContinueOnCapturedContext);
+        public async ValueTask DisposeAsync() => await source.OnSuccess(value => value.DisposeAsync().AsTask()).ConfigureAwait(ContinueOnCapturedContext);
     }
 }

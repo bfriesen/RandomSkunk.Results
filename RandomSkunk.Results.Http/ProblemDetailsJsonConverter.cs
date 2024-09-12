@@ -4,7 +4,7 @@ namespace RandomSkunk.Results.Http;
 internal sealed class ProblemDetailsJsonConverter : JsonConverter<ProblemDetails>
 {
 #pragma warning disable IDE1006 // Naming Styles
-    private static readonly JsonEncodedText Type = JsonEncodedText.Encode("type");
+    private static new readonly JsonEncodedText Type = JsonEncodedText.Encode("type");
     private static readonly JsonEncodedText Title = JsonEncodedText.Encode("title");
     private static readonly JsonEncodedText Status = JsonEncodedText.Encode("status");
     private static readonly JsonEncodedText Detail = JsonEncodedText.Encode("detail");

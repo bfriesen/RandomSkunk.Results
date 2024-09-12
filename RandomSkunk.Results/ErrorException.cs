@@ -24,13 +24,13 @@ public partial class ErrorException : Exception
     public ErrorException(Error originalError)
         : base(originalError.Message, originalError.InnerError)
     {
-        IDictionary<string, object> extensions;
+        Dictionary<string, object> extensions;
 #if NET7_0_OR_GREATER
-        extensions = new Dictionary<string, object>(originalError.Extensions);
+        extensions = new(originalError.Extensions);
 #else
-        extensions = new Dictionary<string, object>();
+        extensions = [];
         foreach (var item in originalError.Extensions)
-            extensions.Add(item);
+            ((IDictionary<string, object>)extensions).Add(item);
 #endif
 
         Extensions = new ReadOnlyDictionary<string, object>(extensions);

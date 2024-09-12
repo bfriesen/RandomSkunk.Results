@@ -2,11 +2,11 @@ using System.Text.RegularExpressions;
 
 namespace RandomSkunk.Results;
 
-internal static class Format
+internal static partial class Format
 {
-#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-    private static readonly Regex _wordBreak = new(
-        @"
+    [StringSyntax(StringSyntaxAttribute.Regex)]
+    private const string _wordBreakPattern =
+        """
         _+                  # One or more underscores.
 
         |                   # ...or...
@@ -32,12 +32,22 @@ internal static class Format
         (?<=\p{N})          # A position after a number,
         (?=\p{L})           # then the same position before a letter.
                             #   Example: Between '3' and 'A' in '123Abc'.
-",
-        RegexOptions.IgnorePatternWhitespace);
-#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
+        """;
 
     private static readonly MatchEvaluator _replaceWithSingleSpace = m => " ";
 
     public static string AsSentenceCase(string csharpIdentifier) =>
-        _wordBreak.Replace(csharpIdentifier, _replaceWithSingleSpace);
+        WordBreakRegex().Replace(csharpIdentifier, _replaceWithSingleSpace);
+
+#if NET7_0_OR_GREATER
+    [GeneratedRegex(_wordBreakPattern, RegexOptions.IgnorePatternWhitespace)]
+    private static partial Regex WordBreakRegex();
+#else
+    private static Regex WordBreakRegex() => WordBreakRegex_0.Instance;
+
+    private static class WordBreakRegex_0
+    {
+        public static readonly Regex Instance = new(_wordBreakPattern, RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+    }
+#endif
 }

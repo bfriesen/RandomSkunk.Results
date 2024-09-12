@@ -28,8 +28,11 @@ public static partial class ResultSqlMapper
         /// <summary>
         /// Dispose the grid, closing and disposing both the underlying reader and command.
         /// </summary>
-        public void Dispose() =>
+        public void Dispose()
+        {
             _gridReader.Dispose();
+            GC.SuppressFinalize(this);
+        }
 
         /// <summary>
         /// Read the next grid of results.
@@ -168,7 +171,7 @@ public static partial class ResultSqlMapper
         ///     the first column is assumed, otherwise an instance is created per row, and a direct column-name===member-name
         ///     mapping is assumed (case insensitive).</returns>
         public Task<Result<IEnumerable<T>>> TryReadAsync<T>(Func<Exception, Error> exceptionHandler, bool buffered = true) =>
-            TryCatch.AsResult(() => _gridReader.ReadAsync<T>(buffered), exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
+            TryCatch.AsResult(async () => await _gridReader.ReadAsync<T>(buffered).ConfigureAwait(ContinueOnCapturedContext), exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
         /// <summary>
         /// Read the next grid of results.
@@ -193,7 +196,7 @@ public static partial class ResultSqlMapper
         ///     data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Result<T>> TryReadFirstAsync<T>(Func<Exception, Error> exceptionHandler) =>
-            TryCatch.AsResult(_gridReader.ReadFirstAsync<T>, exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
+            TryCatch.AsResult(async () => await _gridReader.ReadFirstAsync<T>().ConfigureAwait(ContinueOnCapturedContext), exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
         /// <summary>
         /// Read an individual row of the next grid of results.
@@ -243,7 +246,7 @@ public static partial class ResultSqlMapper
         ///     then the data from the first column in assumed, otherwise an instance is created per row, and a direct
         ///     column-name===member-name mapping is assumed (case insensitive).</returns>
         public Task<Result<T>> TryReadSingleAsync<T>(Func<Exception, Error> exceptionHandler) =>
-            TryCatch.AsResult(_gridReader.ReadSingleAsync<T>, exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
+            TryCatch.AsResult(async () => await _gridReader.ReadSingleAsync<T>().ConfigureAwait(ContinueOnCapturedContext), exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
         /// <summary>
         /// Read an individual row of the next grid of results.

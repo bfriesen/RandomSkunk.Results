@@ -124,7 +124,7 @@ public static class TryCatch
     /// <returns>A result representing the outcome of evaluating the delegate.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceDelegate"/> is <see langword="null"/>.</exception>
     public static async Task<Result<T>> AsResult<T>(
-        Func<Task<T>> sourceDelegate,
+        Func<Task<T?>> sourceDelegate,
         Func<Exception, Error>? exceptionHandler = null)
     {
         if (sourceDelegate is null) throw new ArgumentNullException(nameof(sourceDelegate));

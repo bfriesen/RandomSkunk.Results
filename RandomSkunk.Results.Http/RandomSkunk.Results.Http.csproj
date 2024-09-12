@@ -27,6 +27,7 @@
 		<Description>Using RandomSkunk.Results with System.Net.Http and System.Net.Http.Json.</Description>
 		<Authors>Brian Friesen</Authors>
 		<Copyright>Copyright 2022-2023 (c) Brian Friesen. All rights reserved.</Copyright>
+		<NoWarn>CA1510</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)'=='Release'">

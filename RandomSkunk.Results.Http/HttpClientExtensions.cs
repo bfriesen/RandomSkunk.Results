@@ -22,7 +22,7 @@ public static class HttpClientExtensions
         string? requestUri,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
-            () => sourceHttpClient.DeleteAsync(requestUri, cancellationToken),
+            async () => await sourceHttpClient.DeleteAsync(requestUri, cancellationToken).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -61,7 +61,7 @@ public static class HttpClientExtensions
         string? requestUri,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
-            () => sourceHttpClient.GetAsync(requestUri, cancellationToken),
+            async () => await sourceHttpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -171,7 +171,7 @@ public static class HttpClientExtensions
         HttpContent? content,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
-            () => sourceHttpClient.PatchAsync(requestUri, content!, cancellationToken),
+            async () => await sourceHttpClient.PatchAsync(requestUri, content!, cancellationToken).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -268,7 +268,7 @@ public static class HttpClientExtensions
         HttpContent? content,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
-            () => sourceHttpClient.PostAsync(requestUri, content!, cancellationToken),
+            async () => await sourceHttpClient.PostAsync(requestUri, content!, cancellationToken).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -363,7 +363,7 @@ public static class HttpClientExtensions
         HttpContent? content,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
-            () => sourceHttpClient.PutAsync(requestUri, content!, cancellationToken),
+            async () => await sourceHttpClient.PutAsync(requestUri, content!, cancellationToken).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -456,7 +456,7 @@ public static class HttpClientExtensions
         HttpRequestMessage request,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
-            () => sourceHttpClient.SendAsync(request, cancellationToken),
+            async () => await sourceHttpClient.SendAsync(request, cancellationToken).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
@@ -495,7 +495,7 @@ public static class HttpClientExtensions
         string? requestUri,
         CancellationToken cancellationToken = default) =>
         TryCatch.AsResult(
-            () => sourceHttpClient.GetByteArrayAsync(requestUri, cancellationToken),
+            async () => await sourceHttpClient.GetByteArrayAsync(requestUri, cancellationToken).ConfigureAwait(ContinueOnCapturedContext),
             exceptionHandler ?? throw new ArgumentNullException(nameof(exceptionHandler)));
 
     /// <summary>
