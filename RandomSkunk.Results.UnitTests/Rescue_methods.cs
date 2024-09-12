@@ -42,7 +42,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).Name);
         }
     }
 
@@ -86,7 +86,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).Name);
         }
     }
 
@@ -130,7 +130,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).Name);
         }
     }
 
@@ -174,7 +174,7 @@ public class Rescue_methods
 
             actual.IsFail.Should().BeTrue();
             actual.Error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
-            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).FullName);
+            actual.Error.InnerError!.Title.Should().Be(typeof(Exception).Name);
         }
     }
 }

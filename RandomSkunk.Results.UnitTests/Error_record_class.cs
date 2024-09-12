@@ -16,7 +16,7 @@ public class Error_record_class
             error.Message.Should().Be(exception.Message);
             error.ErrorCode.Should().Be(errorCode);
             error.Identifier.Should().Be(identifier);
-            error.Title.Should().Be(exception.GetType().FullName);
+            error.Title.Should().Be(exception.GetType().Name);
             error.Extensions["System.Exception.StackTrace"].Should().Be(exception.StackTrace);
             error.Extensions["System.Exception.Source"].Should().Be(exception.Source);
             error.Extensions["System.Exception.HResult"].Should().Be($"0x{exception.HResult:x}");
@@ -37,7 +37,7 @@ public class Error_record_class
             error.Message.Should().Be(exception.Message);
             error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
             error.Identifier.Should().BeNull();
-            error.Title.Should().Be(exception.GetType().FullName);
+            error.Title.Should().Be(exception.GetType().Name);
             error.Extensions["System.Exception.StackTrace"].Should().Be(exception.StackTrace);
             error.Extensions["System.Exception.Source"].Should().Be(exception.Source);
             error.Extensions["System.Exception.HResult"].Should().Be($"0x{exception.HResult:x}");

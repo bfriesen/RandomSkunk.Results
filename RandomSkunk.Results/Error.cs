@@ -264,7 +264,6 @@ public record class Error
     private static Error CreateError(Exception exception, int? errorCode = null, string? identifier = null)
     {
         var exceptionType = exception.GetType();
-        var exceptionTypeFullName = GetTypeFullName(exceptionType);
         var properties = _propertiesByExceptionType.GetOrAdd(exceptionType, GetPropertiesForExceptionType);
         var extensions =
             properties
@@ -273,7 +272,7 @@ public record class Error
                 .OrderBy(p => p.Name)
                 .ToDictionary(p => p.FullName, p => (object)p.Value!);
 
-        extensions[_originalExceptionTypeExtensionName] = exceptionTypeFullName;
+        extensions[_originalExceptionTypeExtensionName] = GetTypeFullName(exceptionType);
 
         var dataEntries = exception.Data.OfType<DictionaryEntry>()
             .Select(x => new { x.Key, Value = FormatValue(x.Value) })
@@ -288,7 +287,7 @@ public record class Error
         return new Error
         {
             Message = exception.Message,
-            Title = exceptionTypeFullName,
+            Title = exceptionType.Name,
             ErrorCode = errorCode,
             Identifier = identifier,
             Extensions = new ReadOnlyDictionary<string, object>(extensions),

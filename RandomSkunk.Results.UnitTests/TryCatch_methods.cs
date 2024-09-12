@@ -19,7 +19,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(Exception).FullName);
+                error.Title.Should().Be(typeof(Exception).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -47,7 +47,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(Exception).FullName);
+                error.Title.Should().Be(typeof(Exception).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -74,7 +74,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(Exception).FullName);
+                error.Title.Should().Be(typeof(Exception).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -100,7 +100,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(Exception).FullName);
+                error.Title.Should().Be(typeof(Exception).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -132,7 +132,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -170,7 +170,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -208,7 +208,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -244,7 +244,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -286,7 +286,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -303,7 +303,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(DivideByZeroException).FullName);
+                error.Title.Should().Be(typeof(DivideByZeroException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -341,7 +341,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -358,7 +358,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(DivideByZeroException).FullName);
+                error.Title.Should().Be(typeof(DivideByZeroException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -395,7 +395,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -411,7 +411,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(DivideByZeroException).FullName);
+                error.Title.Should().Be(typeof(DivideByZeroException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -448,7 +448,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(InvalidOperationException).FullName);
+                error.Title.Should().Be(typeof(InvalidOperationException).Name);
 
                 error.InnerError.Should().BeNull();
             }
@@ -464,7 +464,7 @@ public class TryCatch_methods
                 var error = actual.Error;
 
                 error.Message.Should().Be("a");
-                error.Title.Should().Be(typeof(DivideByZeroException).FullName);
+                error.Title.Should().Be(typeof(DivideByZeroException).Name);
 
                 error.InnerError.Should().BeNull();
             }
