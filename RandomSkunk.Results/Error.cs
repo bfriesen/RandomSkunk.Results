@@ -12,10 +12,10 @@ namespace RandomSkunk.Results;
 [JsonConverter(typeof(ErrorJsonConverter))]
 public record class Error
 {
+    internal static readonly string _originalExceptionTypeExtensionName = $"{GetTypeFullName(typeof(Error))}.ExceptionType";
+
     private const string _defaultMessage = "An error occurred.";
     private const string _messageFormatForExceptionThrownInCallback = "An exception was thrown in the '{0}' callback parameter. See InnerError for details.";
-
-    internal static readonly string _originalExceptionTypeExtensionName = $"{GetTypeFullName(typeof(Error))}.ExceptionType";
 
     private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
@@ -171,6 +171,88 @@ public record class Error
         return CreateError(exception, errorCode, identifier);
     }
 
+    /// <summary>
+    /// Gets the extension property with the specified key.
+    /// </summary>
+    /// <typeparam name="T">The type of the extension property.</typeparam>
+    /// <param name="key">The name of the extension property.</param>
+    /// <param name="options">JSON serialization options used to deserialize to the desired type when the actual value is a
+    ///     <see cref="JsonElement"/>.</param>
+    /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found
+    ///     and is of a valid type; otherwise, the default value for the type of the value parameter. This parameter is passed
+    ///     uninitialized.</param>
+    /// <returns><see langword="true"/> if the <see cref="Error"/> contains an extension property with the specified key that is
+    ///     of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
+    ///     </returns>
+    public bool TryGet<T>(string key, JsonSerializerOptions? options, [NotNullWhen(true)] out T? value)
+    {
+        if (_extensions.TryGetValue(key, out var obj) && obj != null)
+        {
+            if (obj is T t)
+            {
+                value = t;
+                return true;
+            }
+
+            if (obj is JsonElement jsonElement)
+            {
+                value = jsonElement.Deserialize<T>(options);
+                return value != null;
+            }
+
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            if (converter.CanConvertFrom(obj.GetType()))
+            {
+                value = (T?)converter.ConvertFrom(obj);
+                return value != null;
+            }
+
+            converter = TypeDescriptor.GetConverter(obj);
+            if (converter.CanConvertTo(typeof(T)))
+            {
+                value = (T?)converter.ConvertTo(obj, typeof(T));
+                return value != null;
+            }
+
+            try
+            {
+                value = (T?)Convert.ChangeType(obj, typeof(T));
+                return value != null;
+            }
+            catch
+            {
+            }
+        }
+
+        value = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Gets the extension property with the specified key.
+    /// </summary>
+    /// <typeparam name="T">The type of the extension property.</typeparam>
+    /// <param name="key">The name of the extension property.</param>
+    /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found
+    ///     and is of a valid type; otherwise, the default value for the type of the value parameter. This parameter is passed
+    ///     uninitialized.</param>
+    /// <returns><see langword="true"/> if the <see cref="Error"/> contains an extension property with the specified key that is
+    ///     of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
+    ///     </returns>
+    public bool TryGet<T>(string key, [NotNullWhen(true)] out T? value) =>
+        TryGet(key, null, out value);
+
+    /// <summary>
+    /// Returns a string that represents the current error.
+    /// </summary>
+    /// <returns>A string that represents the current error.</returns>
+    public sealed override string ToString()
+    {
+        var sb = new StringBuilder();
+        AppendError(sb, this, null);
+        return sb.ToString();
+    }
+
     internal static Error FromExceptionThrownInCallback(Exception ex, string callbackName) =>
         new()
         {
@@ -258,81 +340,6 @@ public record class Error
             .Select(Property.Create)
             .ToList();
         return properties;
-    }
-
-    /// <summary>
-    /// Gets the extension property with the specified key.
-    /// </summary>
-    /// <typeparam name="T">The type of the extension property.</typeparam>
-    /// <param name="key">The name of the extension property.</param>
-    /// <param name="options">JSON serialization options used to deserialize to the desired type when the actual value is a
-    ///     <see cref="JsonElement"/>.</param>
-    /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found
-    ///     and is of a valid type; otherwise, the default value for the type of the value parameter. This parameter is passed
-    ///     uninitialized.</param>
-    /// <returns><see langword="true"/> if the <see cref="Error"/> contains an extension property with the specified key that is
-    ///     of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
-    ///     </returns>
-    public bool TryGet<T>(string key, JsonSerializerOptions? options, [NotNullWhen(true)] out T? value)
-    {
-        if (_extensions.TryGetValue(key, out var obj) && obj != null)
-        {
-            if (obj is T t)
-            {
-                value = t;
-                return true;
-            }
-
-            if (obj is JsonElement jsonElement)
-            {
-                value = jsonElement.Deserialize<T>(options);
-                return value != null;
-            }
-
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            if (converter.CanConvertFrom(obj.GetType()))
-            {
-                value = (T?)converter.ConvertFrom(obj);
-                return value != null;
-            }
-            else
-            {
-                converter = TypeDescriptor.GetConverter(obj);
-                if (converter.CanConvertTo(typeof(T)))
-                {
-                    value = (T?)converter.ConvertTo(obj, typeof(T));
-                    return value != null;
-                }
-            }
-        }
-
-        value = default;
-        return false;
-    }
-
-    /// <summary>
-    /// Gets the extension property with the specified key.
-    /// </summary>
-    /// <typeparam name="T">The type of the extension property.</typeparam>
-    /// <param name="key">The name of the extension property.</param>
-    /// <param name="value">When this method returns, contains the value associated with the specified key, if the key is found
-    ///     and is of a valid type; otherwise, the default value for the type of the value parameter. This parameter is passed
-    ///     uninitialized.</param>
-    /// <returns><see langword="true"/> if the <see cref="Error"/> contains an extension property with the specified key that is
-    ///     of type <typeparamref name="T"/> or convertible to type <typeparamref name="T"/>; otherwise, <see langword="false"/>.
-    ///     </returns>
-    public bool TryGet<T>(string key, [NotNullWhen(true)] out T? value) =>
-        TryGet(key, null, out value);
-
-    /// <summary>
-    /// Returns a string that represents the current error.
-    /// </summary>
-    /// <returns>A string that represents the current error.</returns>
-    public sealed override string ToString()
-    {
-        var sb = new StringBuilder();
-        AppendError(sb, this, null);
-        return sb.ToString();
     }
 
     private static string GetTypeNameAsSentenceCase(Type type) =>
@@ -443,8 +450,8 @@ public record class Error
 
             if (IsHResultProperty)
             {
-                var toStringMethod = typeof(int).GetMethod(nameof(int.ToString), new[] { typeof(string) })!;
-                var concatMethod = typeof(string).GetMethod(nameof(string.Concat), new[] { typeof(string), typeof(string) })!;
+                var toStringMethod = typeof(int).GetMethod(nameof(int.ToString), [typeof(string)])!;
+                var concatMethod = typeof(string).GetMethod(nameof(string.Concat), [typeof(string), typeof(string)])!;
 
                 body =
                     Expression.Call(

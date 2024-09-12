@@ -221,11 +221,10 @@ public readonly struct Result<T> : IEquatable<Result<T>>
                     return error;
 
                 return CompositeError.Create(
-                    new[]
-                    {
-                    GetError(),
-                    error,
-                    },
+                    [
+                        GetError(),
+                        error,
+                    ],
                     $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
             catch (Exception ex)
@@ -236,11 +235,10 @@ public readonly struct Result<T> : IEquatable<Result<T>>
                     return error;
 
                 return CompositeError.Create(
-                    new[]
-                    {
-                    GetError(),
-                    error,
-                    },
+                    [
+                        GetError(),
+                        error,
+                    ],
                     $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
         }
@@ -276,11 +274,10 @@ public readonly struct Result<T> : IEquatable<Result<T>>
                     return error;
 
                 return CompositeError.Create(
-                    new[]
-                    {
-                    GetError(),
-                    error,
-                    },
+                    [
+                        GetError(),
+                        error,
+                    ],
                     $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
             catch (Exception ex)
@@ -291,11 +288,10 @@ public readonly struct Result<T> : IEquatable<Result<T>>
                     return error;
 
                 return CompositeError.Create(
-                    new[]
-                    {
-                    GetError(),
-                    error,
-                    },
+                    [
+                        GetError(),
+                        error,
+                    ],
                     $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
         }
@@ -504,21 +500,19 @@ public readonly struct Result<T> : IEquatable<Result<T>>
                 catch (TaskCanceledException ex)
                 {
                     return CompositeError.Create(
-                        new[]
-                        {
-                        GetError(),
-                        Errors.Canceled(ex),
-                        },
+                        [
+                            GetError(),
+                            Errors.Canceled(ex),
+                        ],
                         $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }
                 catch (Exception ex)
                 {
                     return CompositeError.Create(
-                        new[]
-                        {
-                        GetError(),
-                        Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
-                        },
+                        [
+                            GetError(),
+                            Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
+                        ],
                         $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }
             }
@@ -551,21 +545,19 @@ public readonly struct Result<T> : IEquatable<Result<T>>
                 catch (TaskCanceledException ex)
                 {
                     return CompositeError.Create(
-                        new[]
-                        {
-                        GetError(),
-                        Errors.Canceled(ex),
-                        },
+                        [
+                            GetError(),
+                            Errors.Canceled(ex),
+                        ],
                         $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }
                 catch (Exception ex)
                 {
                     return CompositeError.Create(
-                        new[]
-                        {
-                        GetError(),
-                        Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
-                        },
+                        [
+                            GetError(),
+                            Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback)),
+                        ],
                         $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }
             }

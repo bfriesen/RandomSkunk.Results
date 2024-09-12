@@ -33,13 +33,15 @@ public partial class ErrorException : Exception
             extensions.Add(item);
 #endif
 
-        if (extensions.TryGetValue(Error._originalExceptionTypeExtensionName, out var obj) && obj is string originalExceptionType)
+        Extensions = new ReadOnlyDictionary<string, object>(extensions);
+
+        if (originalError.TryGet(Error._originalExceptionTypeExtensionName, out string? originalExceptionType))
         {
             OriginalExceptionType = originalExceptionType;
             extensions.Remove(Error._originalExceptionTypeExtensionName);
         }
 
-        if (extensions.TryGetValue("System.Exception.StackTrace", out obj) && obj is string stackTrace)
+        if (originalError.TryGet("System.Exception.StackTrace", out string? stackTrace))
         {
             _stackTrace = stackTrace;
             extensions.Remove("System.Exception.StackTrace");
@@ -49,7 +51,7 @@ public partial class ErrorException : Exception
             _stackTrace = null;
         }
 
-        if (extensions.TryGetValue("System.Exception.Source", out obj) && obj is string source)
+        if (originalError.TryGet("System.Exception.Source", out string? source))
         {
             _source = source;
             extensions.Remove("System.Exception.Source");
@@ -59,8 +61,7 @@ public partial class ErrorException : Exception
             _source = null;
         }
 
-        if (extensions.TryGetValue("System.Exception.HResult", out obj)
-            && obj is string hresultString
+        if (originalError.TryGet("System.Exception.HResult", out string? hresultString)
             && (int.TryParse(HexSpecifierRegex().Replace(hresultString, string.Empty), NumberStyles.HexNumber, null, out var hresult)
                 || int.TryParse(hresultString, out hresult)))
         {
@@ -68,7 +69,7 @@ public partial class ErrorException : Exception
             extensions.Remove("System.Exception.HResult");
         }
 
-        if (extensions.TryGetValue("System.Exception.HelpLink", out obj) && obj is string helpLink)
+        if (originalError.TryGet("System.Exception.HelpLink", out string? helpLink))
         {
             HelpLink = helpLink;
             extensions.Remove("System.Exception.HelpLink");
@@ -81,15 +82,14 @@ public partial class ErrorException : Exception
             extensions.Remove(dataItem.Key);
         }
 
-        Extensions = new ReadOnlyDictionary<string, object>(extensions);
         OriginalError = originalError;
     }
 
     /// <inheritdoc/>
-    public override string? StackTrace => _stackTrace ?? base.StackTrace;
+    public override string? StackTrace => base.StackTrace ?? _stackTrace;
 
     /// <inheritdoc/>
-    public override string? Source { get => _source ?? base.Source; set => _source = value; }
+    public override string? Source { get => base.Source ?? _source; set => _source = value; }
 
     /// <summary>
     /// Gets the <see cref="OriginalError"/> for this exception.

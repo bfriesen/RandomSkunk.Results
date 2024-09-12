@@ -19,7 +19,7 @@ public record class CompositeError : Error
     public IReadOnlyList<Error> Errors =>
         TryGet<IReadOnlyList<Error>>(nameof(Errors), out var errors)
             ? errors
-            : Array.Empty<Error>();
+            : [];
 
     /// <summary>
     /// Creates a composite error from the specified sequence of two or more errors.
