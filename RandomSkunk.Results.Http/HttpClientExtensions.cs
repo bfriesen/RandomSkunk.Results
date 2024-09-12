@@ -552,5 +552,11 @@ public static class HttpClientExtensions
 #endif
 
     private static Error GetHttpError(Exception ex, int errorCode, string? identifier) =>
-        Error.FromException(ex, "The HTTP request failed. See InnerError for details.", errorCode, identifier);
+        new()
+        {
+            Message = "The HTTP request failed. See InnerError for details.",
+            ErrorCode = errorCode,
+            Identifier = identifier,
+            InnerError = ex,
+        };
 }

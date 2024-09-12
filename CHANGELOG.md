@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning].
     - Remove the `StackTrace` and `IsSensitive` properties from the `Error` record class.
     - When creating an `Error` from an `Exception`, add items to its `Extensions` for each of the exception's properties.
     - Change `Maybe<T>.None` from property to method.
+    - Don't create nested error in `Error.FromException` method.
 
 - RandomSkunk.Results.AspNetCore:
     - In the `ToActionResult` extension methods, change the optional parameter from `Func<int, int>? getHttpStatusCode` to `Func<Error, IActionResult>? onFail`.
@@ -38,6 +39,8 @@ and this project adheres to [Semantic Versioning].
     - Remove tuple extension methods.
     - Remove `IResult` and `IResult<T>` interfaces.
     - Remove "replace error" feature in `FailResult`.
+    - Remove `message` and `title` parameters from `Error.FromException` method: `message` is always set from the exception's
+      message, and `title` is always set to the name of the exception type.
 
 ## [1.4.0] - 2023-06-28
 

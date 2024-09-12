@@ -1973,5 +1973,11 @@ public static partial class ResultSqlMapper
         cnn.TryExecuteScalarAsync<T>(ex => GetDapperError(ex, errorCode, errorIdentifier), sql, param, transaction, commandTimeout, commandType);
 
     internal static Error GetDapperError(Exception ex, int errorCode, string? identifier) =>
-        Error.FromException(ex, "The Dapper SQL request failed. See InnerError for details.", errorCode, identifier);
+        new()
+        {
+            Message = "The Dapper SQL request failed. See InnerError for details.",
+            ErrorCode = errorCode,
+            Identifier = identifier,
+            InnerError = ex,
+        };
 }

@@ -13,7 +13,6 @@ namespace RandomSkunk.Results;
 public record class Error
 {
     private const string _defaultMessage = "An error occurred.";
-    internal const string _defaultFromExceptionMessage = "An exception was thrown. See InnerError for details.";
     private const string _messageFormatForExceptionThrownInCallback = "An exception was thrown in the '{0}' callback parameter. See InnerError for details.";
 
     internal static readonly string _originalExceptionTypeExtensionName = $"{GetTypeFullName(typeof(Error))}.ExceptionType";
@@ -148,53 +147,42 @@ public record class Error
         if (exception is null)
             return null;
 
-        return FromException(exception);
+        return FromException(exception, errorCode: null);
     }
 
     /// <summary>
     /// Creates an <see cref="Error"/> object from the specified <see cref="Exception"/>.
     /// </summary>
     /// <param name="exception">The exception to create the error from.</param>
-    /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
     public static Error FromException(
         Exception exception,
-        string message = _defaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
-        string? identifier = null,
-        string? title = null)
+        string? identifier = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
 
         if (exception is ErrorException errorException)
             return errorException.OriginalError;
 
-        var innerError = CreateInnerError(exception);
-
-        return new Error
-        {
-            Message = message ?? _defaultFromExceptionMessage,
-            Title = title!,
-            ErrorCode = errorCode,
-            Identifier = identifier,
-            InnerError = innerError,
-        };
+        return CreateError(exception, errorCode, identifier);
     }
 
     internal static Error FromExceptionThrownInCallback(Exception ex, string callbackName) =>
-        FromException(ex, string.Format(_messageFormatForExceptionThrownInCallback, callbackName));
+        new()
+        {
+            Message = string.Format(_messageFormatForExceptionThrownInCallback, callbackName),
+            ErrorCode = ErrorCodes.CaughtException,
+            InnerError = ex,
+        };
 
-    private static Error CreateInnerError(Exception exception)
+    private static Error CreateError(Exception exception, int? errorCode = null, string? identifier = null)
     {
-        Error? innerError = null;
-        if (exception.InnerException != null)
-            innerError = CreateInnerError(exception.InnerException);
-
         var exceptionType = exception.GetType();
+        var exceptionTypeFullName = GetTypeFullName(exceptionType);
         var properties = _propertiesByExceptionType.GetOrAdd(exceptionType, GetPropertiesForExceptionType);
         var extensions =
             properties
@@ -203,7 +191,7 @@ public record class Error
                 .OrderBy(p => p.Name)
                 .ToDictionary(p => p.FullName, p => p.Value!);
 
-        extensions[_originalExceptionTypeExtensionName] = GetTypeFullName(exceptionType);
+        extensions[_originalExceptionTypeExtensionName] = exceptionTypeFullName;
 
         var dataEntries = exception.Data.OfType<DictionaryEntry>()
             .Select(x => new { x.Key, Value = FormatValue(x.Value) })
@@ -211,10 +199,16 @@ public record class Error
         foreach (var dataEntry in dataEntries)
             extensions[$"System.Exception.Data.{dataEntry.Key}"] = dataEntry.Value!;
 
+        Error? innerError = null;
+        if (exception.InnerException != null)
+            innerError = CreateError(exception.InnerException);
+
         return new Error
         {
             Message = exception.Message,
-            Title = GetTypeFullName(exception.GetType()),
+            Title = exceptionTypeFullName,
+            ErrorCode = errorCode,
+            Identifier = identifier,
             Extensions = new ReadOnlyDictionary<string, object>(extensions),
             InnerError = innerError,
         };

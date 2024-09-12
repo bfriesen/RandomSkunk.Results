@@ -288,22 +288,19 @@ public static class Errors
     public static Error Canceled(TaskCanceledException? taskCanceledException = null)
     {
         const string title = "Canceled";
-        const string message = "The operation was canceled.";
 
         if (taskCanceledException is null)
         {
             return new()
             {
                 Title = title,
-                Message = message,
+                Message = "The operation was canceled.",
                 ErrorCode = ErrorCodes.Canceled,
             };
         }
 
         return Error.FromException(
             taskCanceledException,
-            title: title,
-            message: message + " See InnerError for details.",
             errorCode: ErrorCodes.Canceled);
     }
 }

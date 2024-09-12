@@ -405,7 +405,13 @@ public static class HttpResponseExtensions
             cancellationToken);
 
     internal static Error GetReadFromJsonError(Exception ex, Type type, int errorCode, string? identifier) =>
-        Error.FromException(ex, $"Unable to read JSON content as type '{type.FullName}'.", errorCode, identifier);
+        new()
+        {
+            Message = $"Unable to read JSON content as type '{type.FullName}'.",
+            ErrorCode = errorCode,
+            Identifier = identifier,
+            InnerError = ex,
+        };
 
     internal static Error GetNonSuccessResponseError(Error problemDetailsError, HttpStatusCode statusCode, int errorCode, string? identifier) =>
         new()

@@ -8,22 +8,23 @@ public class Error_record_class
         public void When_optional_parameters_are_provided_Properties_are_set_accordingly()
         {
             var exception = GetException();
-            var message = "my-message";
             var errorCode = 1;
             var identifier = "my-identifier";
-            var title = "my-title";
 
-            var error = Error.FromException(exception, message, errorCode, identifier, title);
+            var error = Error.FromException(exception, errorCode, identifier);
 
-            error.Message.Should().Be(message);
+            error.Message.Should().Be(exception.Message);
             error.ErrorCode.Should().Be(errorCode);
             error.Identifier.Should().Be(identifier);
-            error.Title.Should().Be(title);
+            error.Title.Should().Be(exception.GetType().FullName);
+            error.Extensions["System.Exception.StackTrace"].Should().Be(exception.StackTrace);
+            error.Extensions["System.Exception.Source"].Should().Be(exception.Source);
+            error.Extensions["System.Exception.HResult"].Should().Be($"0x{exception.HResult:x}");
+            error.Extensions["System.Exception.HelpLink"].Should().Be(exception.HelpLink);
+            error.Extensions["System.Exception.Data.foo"].Should().Be(exception.Data["foo"]!.ToString());
+            error.Extensions["RandomSkunk.Results.Error.ExceptionType"].Should().Be(typeof(InvalidOperationException).FullName);
 
-            error.InnerError.Should().NotBeNull();
-            error.InnerError!.Message.Should().Be(exception.Message);
-            error.InnerError.Extensions["System.Exception.StackTrace"].Should().Be(exception.StackTrace);
-            error.InnerError.Title.Should().Be(exception.GetType().FullName);
+            error.InnerError.Should().BeNull();
         }
 
         [Fact]
@@ -33,15 +34,18 @@ public class Error_record_class
 
             var error = Error.FromException(exception);
 
-            error.Message.Should().Be(Error._defaultFromExceptionMessage);
+            error.Message.Should().Be(exception.Message);
             error.ErrorCode.Should().Be(ErrorCodes.CaughtException);
             error.Identifier.Should().BeNull();
-            error.Title.Should().Be(nameof(Error));
+            error.Title.Should().Be(exception.GetType().FullName);
+            error.Extensions["System.Exception.StackTrace"].Should().Be(exception.StackTrace);
+            error.Extensions["System.Exception.Source"].Should().Be(exception.Source);
+            error.Extensions["System.Exception.HResult"].Should().Be($"0x{exception.HResult:x}");
+            error.Extensions["System.Exception.HelpLink"].Should().Be(exception.HelpLink);
+            error.Extensions["System.Exception.Data.foo"].Should().Be(exception.Data["foo"]!.ToString());
+            error.Extensions["RandomSkunk.Results.Error.ExceptionType"].Should().Be(typeof(InvalidOperationException).FullName);
 
-            error.InnerError.Should().NotBeNull();
-            error.InnerError!.Message.Should().Be(exception.Message);
-            error.InnerError.Extensions["System.Exception.StackTrace"].Should().Be(exception.StackTrace);
-            error.InnerError.Title.Should().Be(exception.GetType().FullName);
+            error.InnerError.Should().BeNull();
         }
 
         [Fact]
@@ -54,18 +58,18 @@ public class Error_record_class
 
         private static Exception GetException()
         {
-            Exception exception = null!;
             try
             {
-                int i = 0;
-                int j = 1 / i;
+                throw new InvalidOperationException("Oh, no!")
+                {
+                    Data = { ["foo"] = 123 },
+                    HelpLink = "http://example.com",
+                };
             }
             catch (Exception ex)
             {
-                exception = ex;
+                return ex;
             }
-
-            return exception;
         }
     }
 }

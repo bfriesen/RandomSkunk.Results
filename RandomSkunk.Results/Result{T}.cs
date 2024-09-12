@@ -139,19 +139,14 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
-    ///     </param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result<T> Fail(
         Exception exception,
-        string message = Error._defaultFromExceptionMessage,
         int? errorCode = ErrorCodes.CaughtException,
-        string? identifier = null,
-        string? title = null) =>
-        Error.FromException(exception, message, errorCode, identifier, title);
+        string? identifier = null) =>
+        Error.FromException(exception, errorCode, identifier);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
@@ -159,8 +154,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.InternalServerError"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
-    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.
-    ///     </param>
+    /// <param name="title">The optional title for the error. If <see langword="null"/>, then "Error" is used instead.</param>
     /// <param name="extensions">Additional properties for the error.</param>
     /// <param name="innerError">The optional error that is the cause of the current error.</param>
     /// <returns>A <c>Fail</c> result.</returns>
