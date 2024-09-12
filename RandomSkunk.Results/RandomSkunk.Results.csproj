@@ -35,6 +35,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+		<PackageReference Include="RandomSkunk.RuntimePolyfill" Version="1.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="System.Text.Json" Version="7.0.1" />
 	</ItemGroup>
 
@@ -50,7 +54,5 @@
 	<ItemGroup Condition="$(DefineConstants.Contains('INCLUDE_ANALYZERS'))">
 		<ProjectReference Include="..\RandomSkunk.Results.Analyzers\RandomSkunk.Results.Analyzers.csproj" />
 	</ItemGroup>
-
-	<Import Project="..\Polyfill\Polyfill.projitems" Label="Shared" />
 
 </Project>
