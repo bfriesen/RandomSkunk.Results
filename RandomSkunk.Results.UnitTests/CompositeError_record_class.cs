@@ -4,7 +4,7 @@ namespace RandomSkunk.Results.UnitTests;
 
 public class CompositeError_record_class
 {
-    public class Create_method
+    public class Constructor
     {
         [Fact]
         public void GivenErrorsParameterHasTwoOrMoreItems_ReturnsCompositeError()
@@ -13,10 +13,10 @@ public class CompositeError_record_class
             var error2 = new Error { Message = "Error 2" };
             var errors = new[] { error1, error2 };
 
-            var compositeError = CompositeError.Create(errors, "My message details.", 123, "test_identifier");
+            var compositeError = new CompositeError(errors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
 
             compositeError.Errors.Should().Equal(errors);
-            compositeError.Message.Should().Be($"Two errors occurred. See 'Errors' item under Extensions property for details. My message details.");
+            compositeError.Message.Should().Be($"Two errors occurred. My message details.");
             compositeError.ErrorCode.Should().Be(123);
             compositeError.Identifier.Should().Be("test_identifier");
         }
@@ -26,7 +26,7 @@ public class CompositeError_record_class
         {
             IEnumerable<Error> errors = null!;
 
-            var act = () => CompositeError.Create(errors, "My message details.", 123, "test_identifier");
+            var act = () => new CompositeError(errors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
 
             act.Should().ThrowExactly<ArgumentNullException>().WithMessage("*errors*");
         }
@@ -37,7 +37,7 @@ public class CompositeError_record_class
             var error1 = new Error { Message = "Error 1" };
             var errors = new[] { error1 };
 
-            var act = () => CompositeError.Create(errors, "My message details.", 123, "test_identifier");
+            var act = () => new CompositeError(errors, "My message details.") { ErrorCode = 123, Identifier = "test_identifier" };
 
             act.Should().ThrowExactly<ArgumentException>().WithMessage("*Sequence must contain at least two errors.*");
         }
@@ -66,7 +66,7 @@ public class CompositeError_record_class
 
             var compositeError = error.Should().BeOfType<CompositeError>().Subject;
             compositeError.Errors.Should().Equal(errors);
-            compositeError.Message.Should().Be($"Two errors occurred. See 'Errors' item under Extensions property for details.");
+            compositeError.Message.Should().Be($"Two errors occurred.");
         }
 
         [Fact]

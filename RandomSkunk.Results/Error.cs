@@ -261,6 +261,21 @@ public record class Error
             InnerError = ex,
         };
 
+    /// <summary>
+    /// Gets the full name of the type.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>The full name of the type.</returns>
+    protected static string GetTypeFullName(Type type)
+    {
+        if (!string.IsNullOrEmpty(type.FullName))
+            return type.FullName;
+        else if (!string.IsNullOrEmpty(type.Namespace))
+            return $"{type.Namespace}.{type.Name}";
+        else
+            return type.Name;
+    }
+
     private static Error CreateError(Exception exception, int? errorCode = null, string? identifier = null)
     {
         var exceptionType = exception.GetType();
@@ -299,16 +314,6 @@ public record class Error
             var prefix = property.DeclaringType is null ? null : GetTypeFullName(property.DeclaringType) + ".";
             return prefix + property.Name;
         }
-    }
-
-    private static string GetTypeFullName(Type type)
-    {
-        if (!string.IsNullOrEmpty(type.FullName))
-            return type.FullName;
-        else if (!string.IsNullOrEmpty(type.Namespace))
-            return $"{type.Namespace}.{type.Name}";
-        else
-            return type.Name;
     }
 
     [return: NotNullIfNotNull(nameof(value))]
