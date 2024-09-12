@@ -1,10 +1,6 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
-#if NET5_0_OR_GREATER
-using System.Net.Http;
-#endif
-using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace RandomSkunk.Results;
@@ -19,6 +15,8 @@ public record class Error
     private const string _defaultMessage = "An error occurred.";
     internal const string _defaultFromExceptionMessage = "An exception was thrown. See InnerError for details.";
     private const string _messageFormatForExceptionThrownInCallback = "An exception was thrown in the '{0}' callback parameter. See InnerError for details.";
+
+    internal static readonly string _originalExceptionTypeExtensionName = $"{GetTypeFullName(typeof(Error))}.ExceptionType";
 
     private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
@@ -128,6 +126,32 @@ public record class Error
     internal static Error DefaultError => _defaultError.Value;
 
     /// <summary>
+    /// Converts the specified <see cref="Error"/> into an <see cref="ErrorException"/>.
+    /// </summary>
+    /// <param name="error">The <see cref="Error"/> to convert.</param>
+    [return: NotNullIfNotNull(nameof(error))]
+    public static implicit operator ErrorException?(Error? error)
+    {
+        if (error is null)
+            return null;
+
+        return new ErrorException(error);
+    }
+
+    /// <summary>
+    /// Converts the specified <see cref="Exception"/> into an <see cref="Error"/>.
+    /// </summary>
+    /// <param name="exception">The <see cref="Exception"/> to convert.</param>
+    [return: NotNullIfNotNull(nameof(exception))]
+    public static implicit operator Error?(Exception? exception)
+    {
+        if (exception is null)
+            return null;
+
+        return FromException(exception);
+    }
+
+    /// <summary>
     /// Creates an <see cref="Error"/> object from the specified <see cref="Exception"/>.
     /// </summary>
     /// <param name="exception">The exception to create the error from.</param>
@@ -145,6 +169,9 @@ public record class Error
         string? title = null)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
+
+        if (exception is ErrorException errorException)
+            return errorException.OriginalError;
 
         var innerError = CreateInnerError(exception);
 
@@ -167,59 +194,49 @@ public record class Error
         if (exception.InnerException != null)
             innerError = CreateInnerError(exception.InnerException);
 
-        int? errorCode = null;
-        if (exception is ExternalException externalException)
-            errorCode = externalException.ErrorCode;
-
-#if NET5_0_OR_GREATER
-        if (exception is HttpRequestException { StatusCode: not null } httpRequestException)
-            errorCode = (int)httpRequestException.StatusCode;
-#endif
-
-        var properties = _propertiesByExceptionType.GetOrAdd(exception.GetType(), GetPropertiesForExceptionType);
+        var exceptionType = exception.GetType();
+        var properties = _propertiesByExceptionType.GetOrAdd(exceptionType, GetPropertiesForExceptionType);
         var extensions =
             properties
-                .Select(p => new { p.Name, Value = FormatValue(p.GetValue(exception))!, p.DeclaringType })
-                .Where(p => p.Value is not null
-#if NET5_0_OR_GREATER
-                    && (!errorCode.HasValue
-                        || p.Name != nameof(HttpRequestException.StatusCode)
-                        || !typeof(HttpRequestException).IsAssignableFrom(p.DeclaringType))
-#endif
-                    && (!errorCode.HasValue
-                        || p.Name != nameof(ExternalException.ErrorCode)
-                        || !typeof(ExternalException).IsAssignableFrom(p.DeclaringType)))
+                .Select(p => new { p.Name, Value = FormatValue(p.GetValue(exception)), FullName = GetPropertyFullName(p) })
+                .Where(p => p.Value is not null)
                 .OrderBy(p => p.Name)
-                .ToDictionary(p => $"{(p.DeclaringType is null ? null : p.DeclaringType.Name + ".")}{p.Name}", p => p.Value);
+                .ToDictionary(p => p.FullName, p => p.Value!);
+
+        extensions[_originalExceptionTypeExtensionName] = GetTypeFullName(exceptionType);
 
         var dataEntries = exception.Data.OfType<DictionaryEntry>()
-            .Select(x => new { x.Key, Value = FormatValue(x.Value)! })
+            .Select(x => new { x.Key, Value = FormatValue(x.Value) })
             .Where(x => x.Value is not null);
         foreach (var dataEntry in dataEntries)
-            extensions.Add($"Exception.Data.{dataEntry.Key}", dataEntry.Value);
-
-        if (!string.IsNullOrEmpty(exception.StackTrace))
-            extensions.Add("Exception.StackTrace", exception.StackTrace);
-
-        string exceptionFullName;
-        var exceptionType = exception.GetType();
-        if (!string.IsNullOrEmpty(exceptionType.FullName))
-            exceptionFullName = exceptionType.FullName;
-        else if (!string.IsNullOrEmpty(exceptionType.Namespace))
-            exceptionFullName = $"{exceptionType.Namespace}.{exceptionType.Name}";
-        else
-            exceptionFullName = exceptionType.Name;
+            extensions[$"System.Exception.Data.{dataEntry.Key}"] = dataEntry.Value!;
 
         return new Error
         {
             Message = exception.Message,
-            Title = exceptionFullName,
+            Title = GetTypeFullName(exception.GetType()),
             Extensions = new ReadOnlyDictionary<string, object>(extensions),
-            ErrorCode = errorCode,
             InnerError = innerError,
         };
+
+        static string GetPropertyFullName(Property property)
+        {
+            var prefix = property.DeclaringType is null ? null : GetTypeFullName(property.DeclaringType) + ".";
+            return prefix + property.Name;
+        }
     }
 
+    private static string GetTypeFullName(Type type)
+    {
+        if (!string.IsNullOrEmpty(type.FullName))
+            return type.FullName;
+        else if (!string.IsNullOrEmpty(type.Namespace))
+            return $"{type.Namespace}.{type.Name}";
+        else
+            return type.Name;
+    }
+
+    [return: NotNullIfNotNull(nameof(value))]
     private static object? FormatValue(object? value)
     {
         if (value is null)
@@ -228,6 +245,8 @@ public record class Error
             return dateTime.ToString("O");
         if (value is DateTimeOffset dateTimeOffset)
             return dateTimeOffset.ToString("O");
+        if (value is bool b)
+            return b ? "true" : "false";
         return value.ToString()!;
     }
 
@@ -239,7 +258,6 @@ public record class Error
                 nameof(Exception.TargetSite) => false,
                 nameof(Exception.Message) => false,
                 nameof(Exception.Data) => false,
-                nameof(Exception.StackTrace) => false,
                 nameof(Exception.InnerException) => false,
                 _ => !typeof(Exception).IsAssignableFrom(p.PropertyType) && !typeof(IEnumerable<Exception>).IsAssignableFrom(p.PropertyType),
             })

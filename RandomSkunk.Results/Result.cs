@@ -65,6 +65,15 @@ public readonly struct Result : IEquatable<Result>
     public static implicit operator Result(Error? error) => new(error ?? new Error());
 
     /// <summary>
+    /// Converts the specified <see cref="Exception"/> into a <c>Fail</c> result with an <see cref="Error"/> representing the
+    /// exception.
+    /// </summary>
+    /// <param name="exception">The exception to convert to an <see cref="Results.Error"/> for the new <c>Fail</c> result.
+    ///     </param>
+    /// <returns>A <c>Fail</c> result with an error representing the specified exception.</returns>
+    public static implicit operator Result(Exception? exception) => new(exception ?? new Error());
+
+    /// <summary>
     /// Indicates whether the <paramref name="left"/> parameter is equal to the <paramref name="right"/> parameter.
     /// </summary>
     /// <param name="left">The left side of the comparison.</param>

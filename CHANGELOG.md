@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning].
 
 - RandomSkunk.Results:
     - Remove the `StackTrace` and `IsSensitive` properties from the `Error` record class.
-    - When creating an `Error` from an `Exception`, add an item to its `Extensions` named "Exception.StackTrace" and put the exception's stack trace there.
+    - When creating an `Error` from an `Exception`, add items to its `Extensions` for each of the exception's properties.
     - Change `Maybe<T>.None` from property to method.
 
 - RandomSkunk.Results.AspNetCore:
@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning].
     - Add setting to catch exceptions thrown by callbacks (defaults to true).
     - Add `IsUninitialized` property to each result type.
     - Add "None" functionality to `Result<T>`.
+    - Add implicit conversions to and from `Error` and `Exception`.
 
 - RandomSkunk.Results.AspNetCore:
     - Add `GetActionResult` extension method for `Error`.
