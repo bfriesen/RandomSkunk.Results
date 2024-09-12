@@ -147,21 +147,21 @@ public record class Error
         if (exception is null)
             return null;
 
-        return FromException(exception, errorCode: null);
+        return FromException(exception, null, null);
     }
 
     /// <summary>
     /// Creates an <see cref="Error"/> object from the specified <see cref="Exception"/>.
     /// </summary>
     /// <param name="exception">The exception to create the error from.</param>
-    /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <returns>A new <see cref="Error"/> object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="exception"/> is <see langword="null"/>.</exception>
     public static Error FromException(
         Exception exception,
-        int? errorCode = ErrorCodes.CaughtException,
-        string? identifier = null)
+        string? identifier = null,
+        int? errorCode = ErrorCodes.CaughtException)
     {
         if (exception is null) throw new ArgumentNullException(nameof(exception));
 

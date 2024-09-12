@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning].
     - When creating an `Error` from an `Exception`, add items to its `Extensions` for each of the exception's properties.
     - Change `Maybe<T>.None` from property to method.
     - Don't create nested error in `Error.FromException` method.
+    - Rearrange `errorCode` and `identifier` parameters in `Error.FromException`, `Result.Fail`, and `Result<T>.Fail` methods.
 
 - RandomSkunk.Results.AspNetCore:
     - In the `ToActionResult` extension methods, change the optional parameter from `Func<int, int>? getHttpStatusCode` to `Func<Error, IActionResult>? onFail`.

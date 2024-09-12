@@ -11,7 +11,7 @@ public class Error_record_class
             var errorCode = 1;
             var identifier = "my-identifier";
 
-            var error = Error.FromException(exception, errorCode, identifier);
+            var error = Error.FromException(exception, identifier, errorCode);
 
             error.Message.Should().Be(exception.Message);
             error.ErrorCode.Should().Be(errorCode);

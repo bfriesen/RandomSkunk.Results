@@ -108,14 +108,14 @@ public readonly struct Result : IEquatable<Result>
     /// Creates a <c>Fail</c> result.
     /// </summary>
     /// <param name="exception">The exception that caused the failure.</param>
-    /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <param name="identifier">The optional identifier of the error.</param>
+    /// <param name="errorCode">The error code. Default value is <see cref="ErrorCodes.CaughtException"/>.</param>
     /// <returns>A <c>Fail</c> result.</returns>
     public static Result Fail(
         Exception exception,
-        int? errorCode = ErrorCodes.CaughtException,
-        string? identifier = null) =>
-        Error.FromException(exception, errorCode, identifier);
+        string? identifier = null,
+        int? errorCode = ErrorCodes.CaughtException) =>
+        Error.FromException(exception, identifier, errorCode);
 
     /// <summary>
     /// Creates a <c>Fail</c> result.
