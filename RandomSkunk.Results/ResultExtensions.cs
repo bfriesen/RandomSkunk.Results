@@ -66,6 +66,60 @@ public static class ResultExtensions
         (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).AsNonNullable();
 
     /// <summary>
+    /// Throws an exception if the <see cref="Result.IsSuccess"/> property for the result is <see langword="false"/>.
+    /// </summary>
+    /// <param name="sourceResult">The source result.</param>
+    /// <returns>A task representing the default <see cref="Unit"/> value.</returns>
+    public static async Task<Unit> EnsureSuccess(this Task<Result> sourceResult) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureSuccess();
+
+    /// <summary>
+    /// Throws an exception if the <see cref="Result{T}.IsSuccess"/> property for the result is <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <returns>A task representing the value of this result if this is a <c>Success</c> result.</returns>
+    public static async Task<T> EnsureSuccess<T>(this Task<Result<T>> sourceResult) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureSuccess();
+
+    /// <summary>
+    /// Throws an exception if the <see cref="Result{T}.IsSuccess"/> and <see cref="Result{T}.IsNone"/> properties for the result
+    /// are both <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <returns>A task representing either: the value of this result if this is a <c>Success</c> result; or
+    ///     <see langword="null"/> or the <see langword="default"/> of <typeparamref name="T"/> if this is a <c>None</c> result.
+    ///     </returns>
+    public static async Task<T?> EnsureSuccessOrNone<T>(this Task<Result<T>> sourceResult) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureSuccessOrNone();
+
+    /// <summary>
+    /// Throws an exception if the <see cref="Result{T}.IsSuccess"/> and <see cref="Result{T}.IsNone"/> properties for the result
+    /// are both <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="fallbackValue">The fallback value to return if this is a <c>None</c> result.</param>
+    /// <returns>A task representing either: the value of this result if this is a <c>Success</c> result; or
+    ///     <paramref name="fallbackValue"/> if this is a <c>None</c> result.</returns>
+    public static async Task<T?> EnsureSuccessOrNone<T>(this Task<Result<T>> sourceResult, T? fallbackValue) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureSuccessOrNone(fallbackValue);
+
+    /// <summary>
+    /// Throws an exception if the <see cref="Result{T}.IsSuccess"/> and <see cref="Result{T}.IsNone"/> properties for the result
+    /// are both <see langword="false"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="getFallbackValue">A function that creates the fallback value to return if this is a <c>None</c> result.
+    ///     </param>
+    /// <returns>A task representing either: the value of this result if this is a <c>Success</c> result; or the value returned
+    ///     by the <paramref name="getFallbackValue"/> function if this is a <c>None</c> result.</returns>
+    public static async Task<T?> EnsureSuccessOrNone<T>(this Task<Result<T>> sourceResult, Func<T?> getFallbackValue) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).EnsureSuccessOrNone(getFallbackValue);
+
+    /// <summary>
     /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
     /// <c>Fail</c> result.
     /// </summary>

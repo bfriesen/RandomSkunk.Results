@@ -164,6 +164,18 @@ public readonly struct Result : IEquatable<Result>
     public static Result<T> FromValue<T>(T? value) => Result<T>.FromValue(value);
 
     /// <summary>
+    /// Throws an exception if the <see cref="IsSuccess"/> property for the result is <see langword="false"/>.
+    /// </summary>
+    /// <returns>The default <see cref="Unit"/> value.</returns>
+    public Unit EnsureSuccess()
+    {
+        if (_outcome == Outcome.Fail)
+            throw GetError();
+
+        return Unit.Value;
+    }
+
+    /// <summary>
     /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
     /// <c>Fail</c> result.
     /// </summary>

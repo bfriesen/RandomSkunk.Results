@@ -201,6 +201,7 @@ Initial release.
     - Add `FailResult.SetCallbackFunction` and `FailResult.SetReplaceErrorFunction` methods. Functions passed to these methods are invoked whenver a `Fail` result is created.
     - Add `Result<T>.OnFailExcludingNone` methods.
     - Add `AsNullable` result extension methods for `struct` types.
+    - Add `EnsureSuccess` and `EnsureSuccessOrNone` result methods.
 
 ### Removed
 

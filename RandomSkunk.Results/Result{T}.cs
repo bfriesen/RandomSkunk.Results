@@ -194,6 +194,83 @@ public readonly struct Result<T> : IEquatable<Result<T>>
             : None();
 
     /// <summary>
+    /// Throws an exception if the <see cref="IsSuccess"/> property for the result is <see langword="false"/>.
+    /// </summary>
+    /// <returns>The value of this result if this is a <c>Success</c> result.</returns>
+    public T EnsureSuccess()
+    {
+        if (_outcome == Outcome.Fail)
+            throw GetError();
+
+        return _value!;
+    }
+
+    /// <summary>
+    /// Throws an exception if the <see cref="IsSuccess"/> and <see cref="IsNone"/> properties for the result are both
+    /// <see langword="false"/>.
+    /// </summary>
+    /// <returns>The value of this result if this is a <c>Success</c> result; otherwise, <see langword="null"/> or the
+    ///     <see langword="default"/> of <typeparamref name="T"/> if this is a <c>None</c> result.</returns>
+    public T? EnsureSuccessOrNone()
+    {
+        if (_outcome == Outcome.Fail)
+        {
+            var error = GetError();
+            if (error.ErrorCode != ErrorCodes.NoValue)
+                throw error;
+
+            return default;
+        }
+
+        return _value!;
+    }
+
+    /// <summary>
+    /// Throws an exception if the <see cref="IsSuccess"/> and <see cref="IsNone"/> properties for the result are both
+    /// <see langword="false"/>.
+    /// </summary>
+    /// <param name="fallbackValue">The fallback value to return if this is a <c>None</c> result.</param>
+    /// <returns>The value of this result if this is a <c>Success</c> result; otherwise, <paramref name="fallbackValue"/> if this
+    ///     is a <c>None</c> result.</returns>
+    public T? EnsureSuccessOrNone(T? fallbackValue)
+    {
+        if (_outcome == Outcome.Fail)
+        {
+            var error = GetError();
+            if (error.ErrorCode != ErrorCodes.NoValue)
+                throw error;
+
+            return fallbackValue;
+        }
+
+        return _value!;
+    }
+
+    /// <summary>
+    /// Throws an exception if the <see cref="IsSuccess"/> and <see cref="IsNone"/> properties for the result are both
+    /// <see langword="false"/>.
+    /// </summary>
+    /// <param name="getFallbackValue">A function that creates the fallback value to return if this is a <c>None</c> result.
+    ///     </param>
+    /// <returns>The value of this result if this is a <c>Success</c> result; otherwise, the value returned by the
+    ///     <paramref name="getFallbackValue"/> function if this is a <c>None</c> result.</returns>
+    public T? EnsureSuccessOrNone(Func<T?> getFallbackValue)
+    {
+        if (getFallbackValue is null) throw new ArgumentNullException(nameof(getFallbackValue));
+
+        if (_outcome == Outcome.Fail)
+        {
+            var error = GetError();
+            if (error.ErrorCode != ErrorCodes.NoValue)
+                throw error;
+
+            return getFallbackValue();
+        }
+
+        return _value!;
+    }
+
+    /// <summary>
     /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
     /// <c>Fail</c> result.
     /// </summary>
