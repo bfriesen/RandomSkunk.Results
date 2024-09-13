@@ -19,7 +19,7 @@ public record class Error
 
     private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
-    private static readonly Lazy<Error> _defaultError = new(() => new Error());
+    private static readonly Lazy<Error> _defaultError = new(() => new Error { Message = "This error indicates that its result was uninitialized.", Title = "Uninitialized Result" });
     private static readonly IReadOnlyDictionary<string, object> _emptyExtensions = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
 
     private readonly string _title;
