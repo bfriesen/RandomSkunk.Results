@@ -26,6 +26,26 @@ public static class ResultExtensions
         new AsyncDisposableResult<TAsyncDisposable>(sourceResult);
 
     /// <summary>
+    /// Gets an equivalent result with a nullable type.
+    /// </summary>
+    /// <typeparam name="T">The non-nullable type of the source result.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <returns>The equivalant result.</returns>
+    public static Result<T?> AsNullable<T>(this Result<T> sourceResult)
+        where T : struct =>
+        sourceResult.Select<T?>(value => value);
+
+    /// <summary>
+    /// Gets an equivalent result with a nullable type.
+    /// </summary>
+    /// <typeparam name="T">The non-nullable type of the source result.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <returns>The equivalant result.</returns>
+    public static async Task<Result<T?>> AsNullable<T>(this Task<Result<T>> sourceResult)
+        where T : struct =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).AsNullable();
+
+    /// <summary>
     /// Gets an equivalent result with a non-nullable type.
     /// </summary>
     /// <typeparam name="T">The nullable type of the source result.</typeparam>
