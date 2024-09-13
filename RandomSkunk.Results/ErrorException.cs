@@ -122,6 +122,9 @@ public partial class ErrorException : Exception
     /// </summary>
     public string? OriginalExceptionType { get; }
 
+    /// <inheritdoc/>
+    public override string ToString() => OriginalError.ToString();
+
 #if NET7_0_OR_GREATER
     [GeneratedRegex(_dataPropertyPattern)]
     internal static partial Regex DataPropertyRegex();

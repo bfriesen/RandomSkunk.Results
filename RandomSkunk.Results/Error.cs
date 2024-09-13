@@ -369,43 +369,77 @@ public record class Error
 
     private static void AppendError(StringBuilder sb, Error error, string? indention)
     {
+        const string _standardIndention = "    ";
+
         AppendSummary(sb, error, indention);
 
-        for (var innerError = error.InnerError; innerError is not null; innerError = innerError.InnerError)
+        if (error.InnerError is not null)
         {
-            sb.Append(" ---> ");
-            AppendSummary(sb, innerError, indention is null ? "      " : indention);
+            sb.Append(MakeArrow(indention));
+            AppendError(sb, error.InnerError, indention + _standardIndention);
         }
 
         foreach (var extensionProperty in error.Extensions)
         {
             if (extensionProperty.Value is Error propertyError)
             {
-                sb.Append(" ---> ").Append(extensionProperty.Key).Append(": ");
-                AppendError(sb, propertyError, indention is null ? "      " : indention);
+                sb.Append(MakeArrow(indention)).Append(extensionProperty.Key).Append(": ");
+                AppendError(sb, propertyError, indention is null ? _standardIndention : indention + _standardIndention);
             }
             else if (extensionProperty.Value is IEnumerable<Error> propertyErrors)
             {
                 foreach (var x in propertyErrors.Select((e, i) => new { e, i }))
                 {
-                    sb.Append(" ---> ").Append(extensionProperty.Key).Append('[').Append(x.i).Append("]: ");
-                    AppendError(sb, x.e, indention is null ? "      " : indention);
+                    sb.Append(MakeArrow(indention)).Append(extensionProperty.Key).Append('[').Append(x.i).Append("]: ");
+                    AppendError(sb, x.e, indention is null ? _standardIndention : indention + _standardIndention);
                 }
             }
+        }
+
+        static string MakeArrow(string? indention)
+        {
+            var size = (indention?.Length ?? 0) + _standardIndention.Length;
+            var sb = new StringBuilder(size);
+            for (int i = 0; i < size; i++)
+            {
+                if (i == 0 || i == size - 1)
+                    sb.Append(' ');
+                else if (i == size - 2)
+                    sb.Append('>');
+                else
+                    sb.Append('-');
+            }
+
+            return sb.ToString();
         }
     }
 
     private static void AppendSummary(StringBuilder sb, Error error, string? indention)
     {
+        const string _halfIndention = "  ";
+        const string _stackTraceIndention = " ";
+
         sb.Append(error.Title).Append(": ").AppendLine(Indent(error.Message, indention));
 
         if (error.ErrorCode.HasValue)
-            sb.Append(indention + "   ").Append("Error Code: ").AppendLine(ErrorCodes.GetDescription(error.ErrorCode.Value));
+            sb.Append(indention + _halfIndention).Append("Error Code: ").AppendLine(ErrorCodes.GetDescription(error.ErrorCode.Value));
 
         if (error.Identifier is not null)
-            sb.Append(indention + "   ").Append("Identifier: ").AppendLine(error.Identifier);
+            sb.Append(indention + _halfIndention).Append("Identifier: ").AppendLine(error.Identifier);
 
-        foreach (var extensionProperty in error.Extensions)
+        var extensions = error.Extensions.ToList();
+        extensions.Sort((lhs, rhs) =>
+        {
+            if (lhs.Key == "System.Exception.StackTrace")
+                return 1;
+
+            if (rhs.Key == "System.Exception.StackTrace")
+                return -1;
+
+            return lhs.Key.CompareTo(rhs.Key);
+        });
+
+        foreach (var extensionProperty in extensions)
         {
             if (extensionProperty.Value is null
                 || extensionProperty.Value is Error
@@ -415,10 +449,12 @@ public record class Error
             }
 
             var extensionPropertyValue = extensionProperty.Value.ToString() ?? string.Empty;
-            if (extensionPropertyValue.Contains('\n'))
-                sb.Append(indention + "   ").Append(extensionProperty.Key).AppendLine(":").AppendLine(Indent(extensionPropertyValue, indention + "   ", indention + "   "));
+            if (extensionProperty.Key == "System.Exception.StackTrace")
+                sb.Append(indention + _halfIndention).Append(extensionProperty.Key).AppendLine(":").AppendLine(Indent(extensionPropertyValue, indention + _stackTraceIndention, indention + _stackTraceIndention));
+            else if (extensionPropertyValue.Contains('\n'))
+                sb.Append(indention + _halfIndention).Append(extensionProperty.Key).AppendLine(":").AppendLine(Indent(extensionPropertyValue, indention + _halfIndention, indention + _halfIndention));
             else
-                sb.Append(indention + "   ").Append(extensionProperty.Key).Append(": ").AppendLine(extensionProperty.Value.ToString());
+                sb.Append(indention + _halfIndention).Append(extensionProperty.Key).Append(": ").AppendLine(extensionProperty.Value.ToString());
         }
     }
 

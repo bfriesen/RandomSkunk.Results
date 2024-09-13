@@ -116,4 +116,7 @@ public class CompositeErrorException : AggregateException
     /// <see langword="null"/> if <see cref="OriginalError"/> was not created from an <see cref="Exception"/>.
     /// </summary>
     public string? OriginalExceptionType { get; }
+
+    /// <inheritdoc/>
+    public override string ToString() => OriginalError.ToString();
 }
