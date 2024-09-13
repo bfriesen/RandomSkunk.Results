@@ -82,6 +82,9 @@ public static class ErrorExtensions
         if (sourceError.InnerError is not null)
             problemDetails.Extensions["errorInnerError"] = sourceError.InnerError;
 
+        foreach (var extension in sourceError.Extensions)
+            problemDetails.Extensions[extension.Key] = extension.Value;
+
         return problemDetails;
     }
 
