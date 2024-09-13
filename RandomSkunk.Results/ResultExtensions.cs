@@ -29,21 +29,21 @@ public static class ResultExtensions
     /// Gets an equivalent result with a non-nullable type.
     /// </summary>
     /// <typeparam name="T">The nullable type of the source result.</typeparam>
-    /// <param name="result">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <returns>The equivalant result.</returns>
-    public static Result<T> AsNonNullable<T>(this Result<T?> result)
+    public static Result<T> AsNonNullable<T>(this Result<T?> sourceResult)
         where T : struct =>
-        result.Select(value => value!.Value);
+        sourceResult.Select(value => value!.Value);
 
     /// <summary>
     /// Gets an equivalent result with a non-nullable type.
     /// </summary>
     /// <typeparam name="T">The nullable type of the source result.</typeparam>
-    /// <param name="result">The source result.</param>
+    /// <param name="sourceResult">The source result.</param>
     /// <returns>The equivalant result.</returns>
-    public static async Task<Result<T>> AsNonNullable<T>(this Task<Result<T?>> result)
+    public static async Task<Result<T>> AsNonNullable<T>(this Task<Result<T?>> sourceResult)
         where T : struct =>
-        (await result.ConfigureAwait(ContinueOnCapturedContext)).AsNonNullable();
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).AsNonNullable();
 
     /// <summary>
     /// Invokes the <paramref name="callback"/> function regardless of whether the current result is a <c>Success</c> or
