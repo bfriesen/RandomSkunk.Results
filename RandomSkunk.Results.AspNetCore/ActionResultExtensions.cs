@@ -46,22 +46,36 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
     ///     <paramref name="onSuccess"/> function; otherwise the <see cref="IActionResult"/> returned by the
     ///     <paramref name="onFail"/> function.</returns>
     public static IActionResult ToActionResult<T>(
         this Result<T> sourceResult,
         Func<T, IActionResult> onSuccess,
-        Func<Error, IActionResult>? onFail = null)
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null)
     {
         if (onSuccess is null)
             throw new ArgumentNullException(nameof(onSuccess));
 
         onFail ??= _defaultOnFail;
 
-        return sourceResult.Match(
-            onSuccess: onSuccess,
-            onFail: onFail);
+        if (onNone is null)
+        {
+            return sourceResult.Match(
+                onSuccess: onSuccess,
+                onFail: onFail);
+        }
+        else
+        {
+            return sourceResult.Match(
+                onSuccess: onSuccess,
+                onNone: onNone,
+                onFail: onFail);
+        }
     }
 
     /// <summary>
@@ -90,14 +104,18 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, the <see cref="IActionResult"/> returned by the
     ///     <paramref name="onSuccess"/> function; otherwise the <see cref="IActionResult"/> returned by the
     ///     <paramref name="onFail"/> function.</returns>
     public static async Task<IActionResult> ToActionResult<T>(
         this Task<Result<T>> sourceResult,
         Func<T, IActionResult> onSuccess,
-        Func<Error, IActionResult>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(onSuccess, onFail);
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(onSuccess, onFail, onNone);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> that represents the source <see cref="Result"/>.
@@ -143,14 +161,16 @@ public static class ActionResultExtensions
     public static IActionResult ToActionResult<T>(
         this Result<T> sourceResult,
         int successStatusCode = 200,
-        Func<Error, IActionResult>? onFail = null)
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null)
     {
         if (successStatusCode < 200 || successStatusCode > 299)
             throw new ArgumentOutOfRangeException(nameof(successStatusCode), successStatusCode, "Must be between 200 and 299 inclusive.");
 
         return sourceResult.ToActionResult(
             value => new ObjectResult(value) { StatusCode = successStatusCode },
-            onFail);
+            onFail,
+            onNone);
     }
 
     /// <summary>
@@ -183,6 +203,9 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, an <see cref="ObjectResult"/> for its value; otherwise the
     ///     <see cref="IActionResult"/> returned by the <paramref name="onFail"/> function.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="successStatusCode"/> is less than 200 or greater than
@@ -190,8 +213,9 @@ public static class ActionResultExtensions
     public static async Task<IActionResult> ToActionResult<T>(
         this Task<Result<T>> sourceResult,
         int successStatusCode = 200,
-        Func<Error, IActionResult>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(successStatusCode, onFail);
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToActionResult(successStatusCode, onFail, onNone);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that represents the source <see cref="Result{T}"/>.
@@ -202,20 +226,25 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, a <see cref="FileContentResult"/> with file contents from its value;
     ///     otherwise the <see cref="IActionResult"/> returned by the <paramref name="onFail"/> function.</returns>
     public static IActionResult ToFileActionResult(
         this Result<byte[]> sourceResult,
         string contentType,
         string? fileDownloadName = null,
-        Func<Error, IActionResult>? onFail = null)
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null)
     {
         if (string.IsNullOrEmpty(contentType))
             throw new ArgumentNullException(nameof(contentType));
 
         return sourceResult.ToActionResult(
             fileContents => new FileContentResult(fileContents, contentType) { FileDownloadName = fileDownloadName },
-            onFail);
+            onFail,
+            onNone);
     }
 
     /// <summary>
@@ -227,14 +256,18 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, a <see cref="FileContentResult"/> with file contents from its value;
     ///     otherwise the <see cref="IActionResult"/> returned by the <paramref name="onFail"/> function.</returns>
     public static async Task<IActionResult> ToFileActionResult(
         this Task<Result<byte[]>> sourceResult,
         string contentType,
         string? fileDownloadName = null,
-        Func<Error, IActionResult>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, onFail);
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, onFail, onNone);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for a file that represents the source <see cref="Result{T}"/>.
@@ -245,20 +278,25 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, a <see cref="FileStreamResult"/> with file stream from its value;
     ///     otherwise the <see cref="IActionResult"/> returned by the <paramref name="onFail"/> function.</returns>
     public static IActionResult ToFileActionResult(
         this Result<Stream> sourceResult,
         string contentType,
         string? fileDownloadName = null,
-        Func<Error, IActionResult>? onFail = null)
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null)
     {
         if (string.IsNullOrEmpty(contentType))
             throw new ArgumentNullException(nameof(contentType));
 
         return sourceResult.ToActionResult(
             fileStream => new FileStreamResult(fileStream, contentType) { FileDownloadName = fileDownloadName },
-            onFail);
+            onFail,
+            onNone);
     }
 
     /// <summary>
@@ -270,14 +308,18 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, a <see cref="FileStreamResult"/> with file stream from its value;
     ///     otherwise the <see cref="IActionResult"/> returned by the <paramref name="onFail"/> function.</returns>
     public static async Task<IActionResult> ToFileActionResult(
         this Task<Result<Stream>> sourceResult,
         string contentType,
         string? fileDownloadName = null,
-        Func<Error, IActionResult>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, onFail);
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToFileActionResult(contentType, fileDownloadName, onFail, onNone);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for JSON that represents the source <see cref="Result{T}"/>.
@@ -295,15 +337,20 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, a <see cref="JsonResult"/>; otherwise the <see cref="IActionResult"/>
     ///     returned by the <paramref name="onFail"/> function.</returns>
     public static IActionResult ToJsonActionResult<T>(
         this Result<T> sourceResult,
         object? serializerSettings = null,
-        Func<Error, IActionResult>? onFail = null) =>
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null) =>
         sourceResult.ToActionResult(
             value => new JsonResult(value, serializerSettings),
-            onFail);
+            onFail,
+            onNone);
 
     /// <summary>
     /// Gets an <see cref="IActionResult"/> for JSON that represents the source <see cref="Result{T}"/>.
@@ -321,11 +368,15 @@ public static class ActionResultExtensions
     /// <param name="onFail">An optional function that is used to get an <see cref="IActionResult"/> from an <see cref="Error"/>.
     ///     If <see langword="null"/>, a function that returns an <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/>
     ///     describing the non-success result is used instead.</param>
+    /// <param name="onNone">An optional function that is used to get an <see cref="IActionResult"/> when the source result is a
+    ///     <c>None</c> result. If <see langword="null"/> or not provided, <paramref name="onFail"/> (or its default) handles
+    ///     <c>None</c> results.</param>
     /// <returns>If the source result is <c>Success</c>, a <see cref="JsonResult"/>; otherwise the <see cref="IActionResult"/>
     ///     returned by the <paramref name="onFail"/> function.</returns>
     public static async Task<IActionResult> ToJsonActionResult<T>(
         this Task<Result<T>> sourceResult,
         object? serializerSettings = null,
-        Func<Error, IActionResult>? onFail = null) =>
-        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToJsonActionResult(serializerSettings, onFail);
+        Func<Error, IActionResult>? onFail = null,
+        Func<IActionResult>? onNone = null) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).ToJsonActionResult(serializerSettings, onFail, onNone);
 }
