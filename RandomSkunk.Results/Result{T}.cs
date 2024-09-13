@@ -79,10 +79,10 @@ public readonly struct Result<T> : IEquatable<Result<T>>
 
     /// <summary>
     /// Converts the specified value into a <c>Success</c> result with the same value. A <see langword="null"/> value is
-    /// converted into a <c>Fail</c> result with error code <see cref="ErrorCodes.BadRequest"/>.
+    /// converted into a <c>None</c> result.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>None</c>
     ///     result.</returns>
     public static implicit operator Result<T>(T? value) => FromValue(value);
 
@@ -182,11 +182,11 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     public static Result<T> None() => Errors.NoValue();
 
     /// <summary>
-    /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.NoValue"/> is returned instead.
+    /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>None</c>
+    /// result is returned instead.
     /// </summary>
     /// <param name="value">The value. Can be <see langword="null"/>.</param>
-    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>Fail</c>
+    /// <returns>A <c>Success</c> result if <paramref name="value"/> is not <see langword="null"/>; otherwise, a <c>None</c>
     ///     result.</returns>
     public static Result<T> FromValue(T? value) =>
         value is not null

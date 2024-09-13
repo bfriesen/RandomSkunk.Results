@@ -21,8 +21,8 @@ public static class ErrorExtensions
     /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from an
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
-    ///     This function discards the sign of the number and all but the last three digits of the number are used. For example,
-    ///     passing -123456 returns 456.</param>
+    ///     This function discards the sign of the number and all but the last three digits. For example, passing -123456 returns
+    ///     456.</param>
     /// <returns>An <see cref="ObjectResult"/> for a <see cref="ProblemDetails"/> describing the error.</returns>
     public static IActionResult GetActionResult(
         this Error sourceError,
@@ -50,8 +50,8 @@ public static class ErrorExtensions
     /// <param name="getHttpStatusCode">An optional function that is used to get an HTTP status code from the
     ///     <see cref="Error.ErrorCode"/>. If <see langword="null"/> or not provided, then the following function is used:
     ///     <code>errorCode => Math.Abs(errorCode) % 1000</code>
-    ///     This function discards the sign of the number and all but the last three digits of the number are used. For example,
-    ///     passing -123456 returns 456.</param>
+    ///     This function discards the sign of the number and all but the last three digits. For example, passing -123456 returns
+    ///     456.</param>
     /// <returns>The equivalent problem details object.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="sourceError"/> is <see langword="null"/>.</exception>
     public static ProblemDetails GetProblemDetails(
@@ -91,8 +91,8 @@ public static class ErrorExtensions
     /// <remarks>
     /// This method maps an error code to an HTTP status code according to the following function:
     /// <code>errorCode => Math.Abs(errorCode) % 1000</code>
-    /// This function discards the sign of the number and all but the last three digits of the number are used. For example,
-    /// passing -123456 returns 456.
+    /// This function discards the sign of the number and all but the last three digits. For example, passing -123456 returns
+    /// 456.
     /// </remarks>
     /// <param name="sourceError">The <see cref="Error"/> to get an HTTP status code from.</param>
     /// <returns>The HTTP status code.</returns>

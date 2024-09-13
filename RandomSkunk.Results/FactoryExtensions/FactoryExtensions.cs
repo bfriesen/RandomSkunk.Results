@@ -6,8 +6,8 @@ namespace RandomSkunk.Results.FactoryExtensions;
 public static class FactoryExtensions
 {
     /// <summary>
-    /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>Fail</c>
-    /// result with error code <see cref="ErrorCodes.BadRequest"/> is returned instead.
+    /// Creates a <c>Success</c> result with the specified value. If the value is <see langword="null"/>, then a <c>None</c>
+    /// result is returned instead.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="sourceValue">The value. Can be <see langword="null"/>.</param>
