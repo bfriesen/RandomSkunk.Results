@@ -2,4 +2,4 @@ Basics
 Creating results
 Handling results
 Projecting results
-Fail result hooks
+Settings

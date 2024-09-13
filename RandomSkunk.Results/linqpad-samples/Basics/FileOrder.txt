@@ -1,4 +1,3 @@
 Result struct.linq
 Result{T} struct.linq
-Maybe{T} struct.linq
 Error class.linq

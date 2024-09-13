@@ -19,7 +19,7 @@ Result<string> successResult = Result<string>.Success("abc");
 Result<string> failResult = Result<string>.Fail("Something went wrong.");
 
 // Operations that do not have a value are represented by a None result.
-Result<string> noneResult = Result<string>.None;
+Result<string> noneResult = Result<string>.None();
 
 // A Result<T> "Success" has the following properties:
 // - IsSuccess: true

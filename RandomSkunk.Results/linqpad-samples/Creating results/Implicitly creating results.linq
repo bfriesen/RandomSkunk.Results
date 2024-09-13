@@ -1,23 +1,16 @@
-<Query Kind="Program">
+<Query Kind="Statements">
   <NuGetReference>RandomSkunk.Results</NuGetReference>
   <Namespace>RandomSkunk.Results</Namespace>
 </Query>
 
-void Main()
-{
-    // Success results can be implicitly created from a value.
-    Result<int> resultOfInt = 123;
-    Maybe<string> maybeOfString = "abc";
+// Success results can be implicitly created from a value.
+Result<int> resultOfInt = 123;
 
-    resultOfInt.Dump(nameof(resultOfInt));
-    maybeOfString.Dump(nameof(maybeOfString));
+resultOfInt.Dump(nameof(resultOfInt));
 
-    // Fail results can be implicitly created from an Error.
-    Result result = Errors.BadGateway();
-    Result<string> resultOfString = Errors.BadRequest();
-    Maybe<int> maybeOfInt = Errors.GatewayTimeout();
+// Fail results can be implicitly created from an Error.
+Result result = Errors.BadGateway();
+Result<string> resultOfString = Errors.BadRequest();
 
-    result.Dump(nameof(result));
-    resultOfString.Dump(nameof(resultOfString));
-    maybeOfInt.Dump(nameof(maybeOfInt));
-}
+result.Dump(nameof(result));
+resultOfString.Dump(nameof(resultOfString));

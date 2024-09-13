@@ -33,10 +33,6 @@ void Main()
     Dictionary<string, object> extensions = new() { ["ParamName"] = "someParameter" };
     error = error with { Extensions = extensions };
     
-    // The StackTrace property means the same as Exception.StackTrace. The only difference is that
-    // you can set it youself.
-    error = error with { StackTrace = GetStackTrace() };
-    
     // InnerError means the same thing as Exception.InnerException - it's the error that cause the
     // current error.
     error = error with { InnerError = GetInnerError() };
@@ -47,14 +43,6 @@ void Main()
     // Error.ToString() returns a value similar to Exception.ToString() - all the details about the
     // error are included.
     error.ToString().Dump("ToString()");
-
-    // If we set IsSensitive to true, we get a very short representation of the Error - only the Title,
-    // ErrorCode (if present), and Identifier (if present) are included. Since it is recommended to not
-    // show detailed error information to end users, the IsSensitive flag exists to make displaying
-    // *non-detailed* error information to users very easy - just get a sensitive version of an error
-    // and call ToString() on it.
-    error = error with { IsSensitive = true };
-    error.ToString().Dump("ToString() when IsSensitive is true");
 }
 
 #region Support Code
@@ -68,7 +56,6 @@ private static Error GetInnerError() =>
         Message = "Server did not respond.",
         Title = "Problem",
         ErrorCode = 504,
-        StackTrace = GetStackTrace(2),
     };
 
 #endregion

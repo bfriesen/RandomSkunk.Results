@@ -12,7 +12,6 @@ void Main()
     // Get some random results - re-run this script to get different results.
     Result result = GetRandomResult();
     Result<string> stringResult = GetRandomStringResult();
-    Maybe<string> stringMaybe = GetRandomStringMaybe();
 
     // Handling non-generic Result:
     if (result.IsSuccess)
@@ -35,22 +34,6 @@ void Main()
     {
         // Make sure IsFail is true (or that IsSuccess is false) before directly accessing the error.
         stringResult.Error.ToString().Dump("Fail Result<T>");
-    }
-
-    // Handling Maybe<T>:
-    if (stringMaybe.IsSuccess)
-    {
-        // Make sure IsSuccess is true (or that IsFail and IsNone are both false) before directly accessing the value.
-        stringMaybe.Value.Dump("Success Maybe<T>");
-    }
-    else if (stringMaybe.IsNone)
-    {
-        "None Maybe<T>".Dump("None Maybe<T>");
-    }
-    else
-    {
-        // Make sure IsFail is true (or that IsSuccess and IsNone are both false) before directly accessing the error.
-        stringMaybe.Error.ToString().Dump("Fail Maybe<T>");
     }
 }
 
@@ -77,19 +60,6 @@ private static Result<string> GetRandomStringResult()
             return Result<string>.Success("Success Result<T>");
         default:
             return Result<string>.Fail();
-    }
-}
-
-private static Maybe<string> GetRandomStringMaybe()
-{
-    switch (_random.Next(0, 3))
-    {
-        case 0:
-            return Maybe<string>.Success("Success Maybe<T>");
-        case 1:
-            return Maybe<string>.None;
-        default:
-            return Maybe<string>.Fail();
     }
 }
 

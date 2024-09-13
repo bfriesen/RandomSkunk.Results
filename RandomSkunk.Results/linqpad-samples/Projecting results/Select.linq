@@ -6,9 +6,9 @@
 
 void Main()
 {
-    // The Result<T> and Maybe<T> types have a Select method, used to project the value of one result
-    // to another result using a selector function in the form of Func<T, TReturn>. These Select methods
-    // are very similar to the LINQ Select for IEnumerable<T>.
+    // The Result<T> type has a Select method, used to project the value of one result to another
+    // result using a selector function in the form of Func<T, TReturn>. These Select methods are
+    // very similar to the LINQ Select for IEnumerable<T>.
     
     // This is the selector method that we'll be using in this example to project a DateTime value to
     // it's "F" (full) formatted string value.
@@ -16,7 +16,6 @@ void Main()
     
     // Get the source results. These methods return results with Success/Fail/None randomly determined.
     Result<DateTime> sourceResult = GetRandomDateTimeResult();
-    Maybe<DateTime> sourceMaybe = GetRandomDateTimeMaybe();
 
     // Project the Result<DateTime> to a Result<string> by calling the Select method and passing
     // ToFullString as the selector function. If the source result is Success, then its value is
@@ -24,15 +23,9 @@ void Main()
     // source result is Fail, then the selector is not invoked, instead the Error of the source result
     // becomes the Error of the Fail end result.
     Result<string> endResult = sourceResult.Select(ToFullString);
-
-    // Projecting a Maybe<T> to another maybe works the same way as Result<T>, except if the source maybe
-    // is None, then the end maybe will be None too.
-    Maybe<string> endMaybe = sourceMaybe.Select(ToFullString);
         
     Display(sourceResult);
-    Display(sourceMaybe);
     Display(endResult);
-    Display(endMaybe);
 }
 
 #region Support Code
@@ -50,31 +43,10 @@ private static Result<DateTime> GetRandomDateTimeResult()
     }
 }
 
-private static Maybe<DateTime> GetRandomDateTimeMaybe()
-{
-    switch (_random.Next(0, 4))
-    {
-        case 0:
-            return Maybe<DateTime>.Fail("Unlucky maybe!");
-        case 1:
-            return Maybe<DateTime>.None;
-        default:
-            return Maybe<DateTime>.Success(DateTime.Now);
-    }
-}
-
 private static void Display<T>(Result<T> result, [CallerArgumentExpression(nameof(result))] string? variableName = null)
 {
     result.Match(
         onSuccess: value => value!.ToString(),
-        onFail: error => error.ToString()).Dump(variableName);
-}
-
-private static void Display<T>(Maybe<T> result, [CallerArgumentExpression(nameof(result))] string? variableName = null)
-{
-    result.Match(
-        onSuccess: value => value!.ToString(),
-        onNone: () => "None",
         onFail: error => error.ToString()).Dump(variableName);
 }
 

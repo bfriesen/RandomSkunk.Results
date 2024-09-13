@@ -10,7 +10,6 @@ void Main()
     // Get some random results - re-run this script to get different results.
     Result result = GetRandomResult();
     Result<string> stringResult = GetRandomStringResult();
-    Maybe<string> stringMaybe = GetRandomStringMaybe();
 
     // To safely get the error of any type of result, call the TryGetError(out Error) method.
     if (result.TryGetError(out Error? error))
@@ -22,19 +21,12 @@ void Main()
         error.ToString().Dump("Result<T>.TryGetError");
     else
         "No error".Dump("Result<T>.TryGetError");
-        
-    if (stringMaybe.TryGetError(out error))
-        error.ToString().Dump("Maybe<T>.TryGetError");
-    else
-        "No error".Dump("Maybe<T>.TryGetError");
 
-    // To safely get the value of a Result<T> or Maybe<T>, call the GetValueOr(T) method if you have a fallback value...
+    // To safely get the value of a Result<T>, call the GetValueOr(T) method if you have a fallback value...
     stringResult.GetValueOr("Custom fallback value").Dump("Result<T>.GetValueOr");
-    stringMaybe.GetValueOr("Another custom fallback value").Dump("Maybe<T>.GetValueOr");
 
     // ...or call the GetValueOrDefault() method to fall back to the default value of T.
     stringResult.GetValueOrDefault().Dump("Result<T>.GetValueOrDefault");
-    stringMaybe.GetValueOrDefault().Dump("Maybe<T>.GetValueOrDefault");
 }
 
 #region Support Code
@@ -60,19 +52,6 @@ private static Result<string> GetRandomStringResult()
             return Result<string>.Success("Success Result<T>");
         default:
             return Result<string>.Fail();
-    }
-}
-
-private static Maybe<string> GetRandomStringMaybe()
-{
-    switch (_random.Next(0, 3))
-    {
-        case 0:
-            return Maybe<string>.Success("Success Maybe<T>");
-        case 1:
-            return Maybe<string>.None;
-        default:
-            return Maybe<string>.Fail();
     }
 }
 
