@@ -466,9 +466,10 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     }
 
     /// <summary>
-    /// Invokes the <paramref name="onFailCallback"/> function if the current result is a <c>Fail</c> result.
+    /// Invokes the <paramref name="onFailCallback"/> function if the current result is any kind of <c>Fail</c> result (including
+    /// when its error has error code <see cref="ErrorCodes.NoValue"/>).
     /// </summary>
-    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is any kind of <c>Fail</c> result.</param>
     /// <returns>The current result.</returns>
     public Result<T> OnFail(Action<Error> onFailCallback)
     {
@@ -505,15 +506,98 @@ public readonly struct Result<T> : IEquatable<Result<T>>
     }
 
     /// <summary>
-    /// Invokes the <paramref name="onFailCallback"/> function if the current result is a <c>Fail</c> result.
+    /// Invokes the <paramref name="onFailCallback"/> function if the current result is any kind of <c>Fail</c> result (including
+    /// when its error has error code <see cref="ErrorCodes.NoValue"/>).
     /// </summary>
-    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is any kind of <c>Fail</c> result.</param>
     /// <returns>The current result.</returns>
     public async Task<Result<T>> OnFail(Func<Error, Task> onFailCallback)
     {
         if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
 
         if (_outcome == Outcome.Fail)
+        {
+            if (!ResultSettings.CatchCallbackExceptions)
+            {
+                await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+            }
+            else
+            {
+                try
+                {
+                    await onFailCallback(GetError()).ConfigureAwait(ContinueOnCapturedContext);
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return new CompositeError(
+                        [GetError(), Errors.Canceled(ex)],
+                        $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
+                catch (Exception ex)
+                {
+                    return new CompositeError(
+                        [GetError(), Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback))],
+                        $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
+            }
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Invokes the <paramref name="onFailCallback"/> function if the current result is a <c>Fail</c> result with any error code
+    /// other than <see cref="ErrorCodes.NoValue"/>.
+    /// </summary>
+    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result with any error code other than
+    ///     <see cref="ErrorCodes.NoValue"/>.</param>
+    /// <returns>The current result.</returns>
+    public Result<T> OnFailExcludingNone(Action<Error> onFailCallback)
+    {
+        if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
+
+        if (_outcome == Outcome.Fail && GetError().ErrorCode != ErrorCodes.NoValue)
+        {
+            if (!ResultSettings.CatchCallbackExceptions)
+            {
+                onFailCallback(GetError());
+            }
+            else
+            {
+                try
+                {
+                    onFailCallback(GetError());
+                }
+                catch (TaskCanceledException ex)
+                {
+                    return new CompositeError(
+                        [GetError(), Errors.Canceled(ex)],
+                        $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
+                catch (Exception ex)
+                {
+                    return new CompositeError(
+                        [GetError(), Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback))],
+                        $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
+                }
+            }
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Invokes the <paramref name="onFailCallback"/> function if the current result is a <c>Fail</c> result with any error code
+    /// other than <see cref="ErrorCodes.NoValue"/>.
+    /// </summary>
+    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result with any error code other than
+    ///     <see cref="ErrorCodes.NoValue"/>.</param>
+    /// <returns>The current result.</returns>
+    public async Task<Result<T>> OnFailExcludingNone(Func<Error, Task> onFailCallback)
+    {
+        if (onFailCallback is null) throw new ArgumentNullException(nameof(onFailCallback));
+
+        if (_outcome == Outcome.Fail && GetError().ErrorCode != ErrorCodes.NoValue)
         {
             if (!ResultSettings.CatchCallbackExceptions)
             {

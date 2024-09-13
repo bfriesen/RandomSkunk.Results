@@ -199,6 +199,7 @@ Initial release.
     - Add [StackTraceBoundary] attribute, which lets an app define a "cutting off" point for a stack trace.
     - Add `Error.IsSensitive` property. This property determines whether the `Error.ToString()` method results in a full representation of the error or an abbreviated representation.
     - Add `FailResult.SetCallbackFunction` and `FailResult.SetReplaceErrorFunction` methods. Functions passed to these methods are invoked whenver a `Fail` result is created.
+    - Add `Result<T>.OnFailExcludingNone` methods.
 
 ### Removed
 

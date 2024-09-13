@@ -300,24 +300,50 @@ public static class ResultExtensions
         await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
-    /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
+    /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is any kind of <c>Fail</c>
+    /// result (including when its error has error code <see cref="ErrorCodes.NoValue"/>).
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is any kind of <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> sourceResult, Action<Error> onFailCallback) =>
         (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback);
 
     /// <summary>
-    /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result.
+    /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is any kind of <c>Fail</c>
+    /// result (including when its error has error code <see cref="ErrorCodes.NoValue"/>).
     /// </summary>
     /// <typeparam name="T">The type of the source result value.</typeparam>
     /// <param name="sourceResult">The source result.</param>
-    /// <param name="onFailCallback">A callback function to invoke if the source is a <c>Fail</c> result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is any kind of <c>Fail</c> result.</param>
     /// <returns>The <paramref name="sourceResult"/> result.</returns>
     public static async Task<Result<T>> OnFail<T>(this Task<Result<T>> sourceResult, Func<Error, Task> onFailCallback) =>
         await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFail(onFailCallback).ConfigureAwait(ContinueOnCapturedContext);
+
+    /// <summary>
+    /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result with
+    /// any error code other than <see cref="ErrorCodes.NoValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result with any error code other than
+    ///     <see cref="ErrorCodes.NoValue"/>.</param>
+    /// <returns>The <paramref name="sourceResult"/> result.</returns>
+    public static async Task<Result<T>> OnFailExcludingNone<T>(this Task<Result<T>> sourceResult, Action<Error> onFailCallback) =>
+        (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFailExcludingNone(onFailCallback);
+
+    /// <summary>
+    /// Invokes the <paramref name="onFailCallback"/> function if <paramref name="sourceResult"/> is a <c>Fail</c> result with
+    /// any error code other than <see cref="ErrorCodes.NoValue"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the source result value.</typeparam>
+    /// <param name="sourceResult">The source result.</param>
+    /// <param name="onFailCallback">A callback function to invoke if this is a <c>Fail</c> result with any error code other than
+    ///     <see cref="ErrorCodes.NoValue"/>.</param>
+    /// <returns>The current result.</returns>
+    public static async Task<Result<T>> OnFailExcludingNone<T>(this Task<Result<T>> sourceResult, Func<Error, Task> onFailCallback) =>
+        await (await sourceResult.ConfigureAwait(ContinueOnCapturedContext)).OnFailExcludingNone(onFailCallback).ConfigureAwait(ContinueOnCapturedContext);
 
     /// <summary>
     /// Invokes the <paramref name="onNoneCallback"/> function if <paramref name="sourceResult"/> is a <c>None</c> result.

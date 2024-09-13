@@ -5,8 +5,8 @@
 
 void Main()
 {
-    // Sometime, you need to perform some side effects depending on the outcome of the result.
-    // The OnSuccess, OnNone, and OnFail methods allow you to accomplish this.
+    // Sometimes, you need to perform some side effects depending on the outcome of the result.
+    // The OnSuccess, OnNone, OnFail, and OnFailExcludingNone methods allow you to accomplish this.
     // Each of these methods returns the same result that it was called in, allowing you to
     // chain these methods together.
 
@@ -22,12 +22,24 @@ void Main()
         // The callback function for the OnFail method for Result has an Error parameter, which is the result's error.
         .OnFail(error => error.ToString().Dump("Fail Result"));
     
+	// This differentiates between Fail and None results.
     stringResult
         // The callback function for Result<T> has a T parameter, which is the value of the result.
         .OnSuccess(value => value.Dump("Success Result<T>"))
-        
+
+        // The callback function for the OnNone method for Result<T> doesn't have any parameters, because a None result has no value.
+        .OnNone(() => "None Result<T>".Dump("None Result<T>"))
+
+        // The callback function for the OnFailExcludingNone method for Result<T> has an Error parameter, which is the result's error.
+        .OnFailExcludingNone(error => error.ToString().Dump("Fail Result<T> Excluding None"));
+	
+	// This does not differentiate between Fail and None results.
+    stringResult
+        // The callback function for Result<T> has a T parameter, which is the value of the result.
+        .OnSuccess(value => value.Dump("Success Result<T>"))
+
         // The callback function for the OnFail method for Result<T> has an Error parameter, which is the result's error.
-        .OnFail(error => error.ToString().Dump("Fail Result<T>"));
+        .OnFail(error => error.ToString().Dump("Fail Result<T> Including None"));
 }
 
 #region Support Code
