@@ -452,6 +452,7 @@ public readonly struct Result<T> : IEquatable<Result<T>>
         Func<Error, Task<TReturn>> onFail)
     {
         if (onSuccess is null) throw new ArgumentNullException(nameof(onSuccess));
+        if (onNone is null) throw new ArgumentNullException(nameof(onNone));
         if (onFail is null) throw new ArgumentNullException(nameof(onFail));
 
         if (_outcome == Outcome.Success)
