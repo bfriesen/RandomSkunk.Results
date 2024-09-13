@@ -450,7 +450,7 @@ public static class HttpResponseExtensions
             !string.IsNullOrWhiteSpace(response.ReasonPhrase)
                 ? response.ReasonPhrase
                 : Enum.IsDefined(typeof(HttpStatusCode), response.StatusCode)
-                    ? response.StatusCode.ToString()
+                    ? Format.AsSentenceCase(response.StatusCode.ToString())
                     : null;
     }
 
