@@ -20,12 +20,14 @@ public record class Error
     private static readonly ConcurrentDictionary<Type, string> _defaultTitleCache = new();
     private static readonly ConcurrentDictionary<Type, IEnumerable<Property>> _propertiesByExceptionType = new();
     private static readonly Lazy<Error> _defaultError = new(() => new Error { Message = "This error indicates that its result was uninitialized.", Title = "Uninitialized Result" });
-    private static readonly IReadOnlyDictionary<string, object> _emptyExtensions = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>());
+    private static readonly ReadOnlyDictionary<string, object> _emptyExtensions = new(new Dictionary<string, object>());
 
     private readonly string _title;
     private readonly string _message;
+    private readonly int? _errorCode;
     private readonly string? _identifier;
-    private readonly IReadOnlyDictionary<string, object> _extensions;
+    private readonly ReadOnlyDictionary<string, object> _extensions;
+    private readonly Error? _innerError;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Error"/> class.
@@ -61,7 +63,13 @@ public record class Error
     public string Title
     {
         get => _title;
-        init => _title = string.IsNullOrWhiteSpace(value) ? _title : value;
+        init
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentNullException(nameof(value), "Title cannot be null or whitespace.");
+
+            InitTitle(ref _title, value);
+        }
     }
 
     /// <summary>
@@ -74,13 +82,23 @@ public record class Error
     public string Message
     {
         get => _message;
-        init => _message = string.IsNullOrWhiteSpace(value) ? _defaultMessage : value;
+        init
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                throw new ArgumentNullException(nameof(value), "Message cannot be null or whitespace.");
+
+            InitMessage(ref _message, value);
+        }
     }
 
     /// <summary>
     /// Gets the optional error code.
     /// </summary>
-    public int? ErrorCode { get; init; }
+    public int? ErrorCode
+    {
+        get => _errorCode;
+        init => InitErrorCode(ref _errorCode, value);
+    }
 
     /// <summary>
     /// Gets the optional identifier of the error.
@@ -88,7 +106,7 @@ public record class Error
     public string? Identifier
     {
         get => _identifier;
-        init => _identifier = string.IsNullOrWhiteSpace(value) ? null : value;
+        init => InitIdentifier(ref _identifier, value);
     }
 
     /// <summary>
@@ -99,28 +117,24 @@ public record class Error
         get => _extensions;
         init
         {
-            value ??= _emptyExtensions;
-            if (value.Count > 0)
-            {
-                if (_extensions.Count > 0)
-                {
-                    var extensions = _extensions.ToDictionary(item => item.Key, item => item.Value);
-                    foreach (var item in value)
-                        extensions.Add(item.Key, item.Value);
-                    _extensions = new ReadOnlyDictionary<string, object>(extensions);
-                }
-                else
-                {
-                    _extensions = value;
-                }
-            }
+            if (value is null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (value.Count == 0)
+                return;
+
+            InitExtensions(ref _extensions, value);
         }
     }
 
     /// <summary>
     /// Gets the optional <see cref="Error"/> instance that caused the current error.
     /// </summary>
-    public Error? InnerError { get; init; }
+    public Error? InnerError
+    {
+        get => _innerError;
+        init => InitInnerError(ref _innerError, value);
+    }
 
     internal static Error DefaultError => _defaultError.Value;
 
@@ -266,6 +280,66 @@ public record class Error
             ErrorCode = ErrorCodes.CaughtException,
             InnerError = ex,
         };
+
+    /// <summary>
+    /// Initializes the field that backs the <see cref="Title"/> property.
+    /// </summary>
+    /// <param name="titleField">A reference to the backing title field.</param>
+    /// <param name="value">The new title value. It is the callers responsibility to ensure that this value is not null or
+    ///     whitespace.</param>
+    protected virtual void InitTitle(ref string titleField, string value) =>
+        titleField = value;
+
+    /// <summary>
+    /// Initializes the field that backs the <see cref="Message"/> property.
+    /// </summary>
+    /// <param name="messageField">A reference to the backing message field.</param>
+    /// <param name="value">The new message value. It is the callers responsibility to ensure that this value is not null or
+    ///     whitespace.</param>
+    protected virtual void InitMessage(ref string messageField, string value) =>
+        messageField = value;
+
+    /// <summary>
+    /// Initializes the field that backs the <see cref="ErrorCode"/> property.
+    /// </summary>
+    /// <param name="errorCodeField">A reference to the backing error code field.</param>
+    /// <param name="value">The new error code value.</param>
+    protected virtual void InitErrorCode(ref int? errorCodeField, int? value) =>
+        errorCodeField = value;
+
+    /// <summary>
+    /// Initializes the field that backs the <see cref="Identifier"/> property.
+    /// </summary>
+    /// <param name="identifierField">A reference to the backing identifier field.</param>
+    /// <param name="value">The new identifier value.</param>
+    /// <remarks>
+    /// If the <paramref name="value"/> parameter is <see cref="string.Empty"/>, or if it consists exclusively of white-space
+    /// characters, then the backing field is initialized to <see langword="null"/>.
+    /// </remarks>
+    protected virtual void InitIdentifier(ref string? identifierField, string? value) =>
+        identifierField = string.IsNullOrWhiteSpace(value) ? null : value;
+
+    /// <summary>
+    /// Initializes the field that backs the <see cref="Extensions"/> property.
+    /// </summary>
+    /// <param name="extensionsField">A reference to the backing extensions field.</param>
+    /// <param name="newItems">The new extensions items. It is the callers responsibility to ensure that this value is not null.
+    ///     </param>
+    /// <remarks>
+    /// If the backing field is not empty (i.e. it contains items set by a constructor), it is <em>not</em> overwritten. Instead,
+    /// its items are merged with the <paramref name="newItems"/> parameter and the resulting dictionary is used as the backing
+    /// field. Note that an exception is thrown if there are any duplicate keys in the merged items.
+    /// </remarks>
+    protected virtual void InitExtensions(ref ReadOnlyDictionary<string, object> extensionsField, IEnumerable<KeyValuePair<string, object>> newItems) =>
+        extensionsField = new ReadOnlyDictionary<string, object>(new Dictionary<string, object>(extensionsField.Concat(newItems)));
+
+    /// <summary>
+    /// Initializes the field that backs the <see cref="InnerError"/> property.
+    /// </summary>
+    /// <param name="innerErrorField">A reference to the backing inner error field.</param>
+    /// <param name="value">The new inner error value.</param>
+    protected virtual void InitInnerError(ref Error? innerErrorField, Error? value) =>
+        innerErrorField = value;
 
     /// <summary>
     /// Gets the full name of the type.
