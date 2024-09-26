@@ -3,40 +3,40 @@ using System.Globalization;
 namespace RandomSkunk.Results;
 
 /// <summary>
-/// An <see cref="AggregateException"/> implementation for an <see cref="CompositeError"/>.
+/// An <see cref="AggregateException"/> implementation for an <see cref="AggregateError"/>.
 /// </summary>
-public class CompositeErrorException : AggregateException
+public class AggregateErrorException : AggregateException
 {
     private readonly string? _stackTrace;
     private string? _source;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CompositeErrorException"/> class.
+    /// Initializes a new instance of the <see cref="AggregateErrorException"/> class.
     /// </summary>
-    /// <param name="compositeError">The original <see cref="CompositeError"/>.</param>
-    public CompositeErrorException(CompositeError compositeError)
-        : base(compositeError.Message, compositeError.InnerErrors.Select(error => (Exception)error))
+    /// <param name="aggregateError">The original <see cref="AggregateError"/>.</param>
+    public AggregateErrorException(AggregateError aggregateError)
+        : base(aggregateError.Message, aggregateError.InnerErrors.Select(error => (Exception)error))
     {
         Dictionary<string, object> extensions;
 #if NET7_0_OR_GREATER
-        extensions = new(compositeError.Extensions);
+        extensions = new(aggregateError.Extensions);
 #else
         extensions = [];
-        foreach (var item in compositeError.Extensions)
+        foreach (var item in aggregateError.Extensions)
             ((IDictionary<string, object>)extensions).Add(item);
 #endif
 
         Extensions = new ReadOnlyDictionary<string, object>(extensions);
 
-        extensions.Remove(CompositeError._innerErrorsFieldFullName);
+        extensions.Remove(AggregateError._innerErrorsFieldFullName);
 
-        if (compositeError.TryGet(Error._originalExceptionTypeExtensionName, out string? originalExceptionType))
+        if (aggregateError.TryGet(Error._originalExceptionTypeExtensionName, out string? originalExceptionType))
         {
             OriginalExceptionType = originalExceptionType;
             extensions.Remove(Error._originalExceptionTypeExtensionName);
         }
 
-        if (compositeError.TryGet("System.Exception.StackTrace", out string? stackTrace))
+        if (aggregateError.TryGet("System.Exception.StackTrace", out string? stackTrace))
         {
             _stackTrace = stackTrace;
             extensions.Remove("System.Exception.StackTrace");
@@ -46,7 +46,7 @@ public class CompositeErrorException : AggregateException
             _stackTrace = null;
         }
 
-        if (compositeError.TryGet("System.Exception.Source", out string? source))
+        if (aggregateError.TryGet("System.Exception.Source", out string? source))
         {
             _source = source;
             extensions.Remove("System.Exception.Source");
@@ -56,7 +56,7 @@ public class CompositeErrorException : AggregateException
             _source = null;
         }
 
-        if (compositeError.TryGet("System.Exception.HResult", out string? hresultString)
+        if (aggregateError.TryGet("System.Exception.HResult", out string? hresultString)
             && (int.TryParse(ErrorException.HexSpecifierRegex().Replace(hresultString, string.Empty), NumberStyles.HexNumber, null, out var hresult)
                 || int.TryParse(hresultString, out hresult)))
         {
@@ -64,7 +64,7 @@ public class CompositeErrorException : AggregateException
             extensions.Remove("System.Exception.HResult");
         }
 
-        if (compositeError.TryGet("System.Exception.HelpLink", out string? helpLink))
+        if (aggregateError.TryGet("System.Exception.HelpLink", out string? helpLink))
         {
             HelpLink = helpLink;
             extensions.Remove("System.Exception.HelpLink");
@@ -77,7 +77,7 @@ public class CompositeErrorException : AggregateException
             extensions.Remove(dataItem.Key);
         }
 
-        OriginalError = compositeError;
+        OriginalError = aggregateError;
     }
 
     /// <inheritdoc/>
@@ -89,7 +89,7 @@ public class CompositeErrorException : AggregateException
     /// <summary>
     /// Gets the <see cref="OriginalError"/> for this exception.
     /// </summary>
-    public CompositeError OriginalError { get; }
+    public AggregateError OriginalError { get; }
 
     /// <summary>
     /// Gets the title for the error.

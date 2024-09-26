@@ -134,8 +134,8 @@ public record class Error
         if (error is null)
             return null;
 
-        if (error is CompositeError compositeError)
-            return new CompositeErrorException(compositeError);
+        if (error is AggregateError aggregateError)
+            return new AggregateErrorException(aggregateError);
 
         return new ErrorException(error);
     }
@@ -171,8 +171,8 @@ public record class Error
         if (exception is ErrorException errorException)
             return errorException.OriginalError;
 
-        if (exception is CompositeErrorException compositeErrorException)
-            return compositeErrorException.OriginalError;
+        if (exception is AggregateErrorException aggregateErrorException)
+            return aggregateErrorException.OriginalError;
 
         return CreateError(exception, errorCode, identifier);
     }
@@ -304,7 +304,7 @@ public record class Error
         if (exception is AggregateException aggregateException && aggregateException.InnerExceptions.Count > 1)
         {
             var innerErrors = aggregateException.InnerExceptions.Select(ex => CreateError(ex));
-            return new CompositeError(innerErrors, exception.Message)
+            return new AggregateError(innerErrors, exception.Message)
             {
                 Title = exceptionType.Name,
                 ErrorCode = errorCode,

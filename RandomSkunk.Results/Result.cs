@@ -202,7 +202,7 @@ public readonly struct Result : IEquatable<Result>
                 if (_outcome == Outcome.Success)
                     return error;
 
-                return new CompositeError(
+                return new AggregateError(
                     [GetError(), error],
                     $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
@@ -213,7 +213,7 @@ public readonly struct Result : IEquatable<Result>
                 if (_outcome == Outcome.Success)
                     return error;
 
-                return new CompositeError(
+                return new AggregateError(
                     [GetError(), error],
                     $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
@@ -249,7 +249,7 @@ public readonly struct Result : IEquatable<Result>
                 if (_outcome == Outcome.Success)
                     return error;
 
-                return new CompositeError(
+                return new AggregateError(
                     [GetError(), error],
                     $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
@@ -260,7 +260,7 @@ public readonly struct Result : IEquatable<Result>
                 if (_outcome == Outcome.Success)
                     return error;
 
-                return new CompositeError(
+                return new AggregateError(
                     [GetError(), error],
                     $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(callback)}' function parameter.");
             }
@@ -339,13 +339,13 @@ public readonly struct Result : IEquatable<Result>
                 }
                 catch (TaskCanceledException ex)
                 {
-                    return new CompositeError(
+                    return new AggregateError(
                         [GetError(), Errors.Canceled(ex)],
                         $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }
                 catch (Exception ex)
                 {
-                    return new CompositeError(
+                    return new AggregateError(
                         [GetError(), Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback))],
                         $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }
@@ -378,13 +378,13 @@ public readonly struct Result : IEquatable<Result>
                 }
                 catch (TaskCanceledException ex)
                 {
-                    return new CompositeError(
+                    return new AggregateError(
                         [GetError(), Errors.Canceled(ex)],
                         $"The first error is the original error; the second error is from the TaskCanceledException thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }
                 catch (Exception ex)
                 {
-                    return new CompositeError(
+                    return new AggregateError(
                         [GetError(), Error.FromExceptionThrownInCallback(ex, nameof(onFailCallback))],
                         $"The first error is the original error; the second error is from the Exception thrown when evaluating the '{nameof(onFailCallback)}' function parameter.");
                 }

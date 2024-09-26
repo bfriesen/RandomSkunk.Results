@@ -3,20 +3,20 @@ namespace RandomSkunk.Results;
 /// <summary>
 /// Defines an error that is composed of more than one error.
 /// </summary>
-public record class CompositeError : Error
+public record class AggregateError : Error
 {
     internal static readonly string _innerErrorsFieldFullName =
-        $"{GetTypeFullName(typeof(CompositeError))}.{nameof(InnerErrors)}";
+        $"{GetTypeFullName(typeof(AggregateError))}.{nameof(InnerErrors)}";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CompositeError"/> class.
+    /// Initializes a new instance of the <see cref="AggregateError"/> class.
     /// </summary>
     /// <param name="innerErrors">The multiple errors that caused the current error.</param>
-    /// <param name="messageDetail">The message of the composite error.</param>
+    /// <param name="messageDetail">The message of the aggregate error.</param>
     /// <exception cref="ArgumentNullException">If <paramref name="innerErrors"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentOutOfRangeException">If <paramref name="innerErrors"/> does not contain at least two errors.
     ///     </exception>
-    public CompositeError(IEnumerable<Error> innerErrors, string? messageDetail = null)
+    public AggregateError(IEnumerable<Error> innerErrors, string? messageDetail = null)
         : base((_innerErrorsFieldFullName, innerErrors?.ToList().AsReadOnly() ?? throw new ArgumentNullException(nameof(innerErrors))))
     {
         if (InnerErrors.Count < 2)
@@ -34,11 +34,11 @@ public record class CompositeError : Error
         TryGet<IReadOnlyList<Error>>(_innerErrorsFieldFullName, out var errors) ? errors : [];
 
     /// <summary>
-    /// Creates a composite error from the specified non-empty sequence of errors if it contains more than one error, otherwise
+    /// Creates a aggregate error from the specified non-empty sequence of errors if it contains more than one error, otherwise
     /// returns the single error.
     /// </summary>
     /// <param name="errors">A sequence of one or more errors.</param>
-    /// <returns>If <paramref name="errors"/> contains a single error, that error; otherwise a <see cref="CompositeError"/>
+    /// <returns>If <paramref name="errors"/> contains a single error, that error; otherwise a <see cref="AggregateError"/>
     ///     consisting of the specified errors.</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="errors"/> is <see langword="null"/>.</exception>
     /// <exception cref="ArgumentException">If <paramref name="errors"/> is empty.</exception>
@@ -54,7 +54,7 @@ public record class CompositeError : Error
         if (errorList.Count == 1)
             return errorList[0];
 
-        return new CompositeError(errorList);
+        return new AggregateError(errorList);
     }
 
     private static string GetNumberName(int number) =>
