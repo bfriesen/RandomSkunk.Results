@@ -6,7 +6,7 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
     private static readonly JsonEncodedText Message = JsonEncodedText.Encode("Message");
     private static readonly JsonEncodedText ErrorCode = JsonEncodedText.Encode("ErrorCode");
     private static readonly JsonEncodedText Identifier = JsonEncodedText.Encode("Identifier");
-    private static readonly new JsonEncodedText Type = JsonEncodedText.Encode("Type");
+    private static readonly JsonEncodedText Title = JsonEncodedText.Encode("Title");
     private static readonly JsonEncodedText InnerError = JsonEncodedText.Encode("InnerError");
 #pragma warning restore IDE1006 // Naming Styles
 
@@ -49,9 +49,9 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
         {
             builder.Identifier = propertyValue;
         }
-        else if (TryReadStringProperty(ref reader, Type, out propertyValue))
+        else if (TryReadStringProperty(ref reader, Title, out propertyValue))
         {
-            builder.Type = propertyValue;
+            builder.Title = propertyValue;
         }
         else
         {
@@ -83,7 +83,7 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
             writer.WriteString(Identifier, value.Identifier);
 
         if (value.Title != null)
-            writer.WriteString(Type, value.Title);
+            writer.WriteString(Title, value.Title);
 
         if (value.InnerError != null)
         {
@@ -122,7 +122,7 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
 
         public string? Identifier { get; set; }
 
-        public string? Type { get; set; }
+        public string? Title { get; set; }
 
         public Error? InnerError { get; set; }
 
@@ -132,7 +132,7 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
             new()
             {
                 Message = Message!,
-                Title = Type!,
+                Title = Title!,
                 Extensions = Extensions,
                 ErrorCode = ErrorCode,
                 Identifier = Identifier,
